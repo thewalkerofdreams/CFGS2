@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/TextMainPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/TextMainPage"
+        android:layout_margin="5sp"></TextView>
+
+    <Button
+        android:id="@+id/btnFindBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnFindBook"
+        android:onClick="throwFindBookActivity"
+        android:layout_margin="10sp"></Button>
+
+    <Button
+        android:id="@+id/btnInsertBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnInsertBook"
+        android:onClick="throwInsertBookActivity"
+        android:layout_margin="10sp"></Button>
+
+    <Button
+        android:id="@+id/btnUpdateBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnUpdateBook"
+        android:onClick="throwUpdateBookActivity"
+        android:layout_margin="10sp"></Button>
+
+    <Button
+        android:id="@+id/btnDeleteBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnDeleteBook"
+        android:onClick="throwDeleteBookActivity"
+        android:layout_margin="10sp"></Button>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ClienteApiRest</string>
+    <string name="TextMainPage">Prueba Cliente Api Rest</string>
+    <string name="btnFindBook">Find book</string>
+    <string name="btnDeleteBook">Delete book</string>
+    <string name="btnInsertBook">Insert book</string>
+    <string name="btnUpdateBook">Update book</string>
+    <string name="Search">Search</string>
+    <string name="BookName">Book name</string>
+    <string name="TextDeleteBook">Delete a Book</string>
+    <string name="TextUpdateBook">Update a Book</string>
+    <string name="NumPages">Numbers of pages</string>
+    <string name="AddBook">Add book</string>
+    <string name="Code_Book">Code: </string>
+    <string name="Name_Book">Name: </string>
+    <string name="NumPages_Book">NumPages: </string>
+</resources>
