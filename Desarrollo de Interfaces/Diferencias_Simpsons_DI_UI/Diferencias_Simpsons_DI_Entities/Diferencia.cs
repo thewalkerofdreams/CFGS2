@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Diferencias_Simpsons_DI_Entities
 {
-    public class Diferencia
+    public class Diferencia : INotifyPropertyChanged
     {
         private int _id;
-        private bool _descubierta;
+        private String _borde;
 
         #region Constructores
         public Diferencia()
         {
             _id = 0;
-            _descubierta = false;
+            _borde = "Transparent";
         }
 
         public Diferencia(int id)
         {
             this._id = id;
-            _descubierta = false;
+            _borde = "Transparent";
         }
         #endregion
 
@@ -39,19 +41,31 @@ namespace Diferencias_Simpsons_DI_Entities
             }
         }
 
-        public bool Descubierta
+        public String Borde
         {
             get
             {
-                return _descubierta;
+                return _borde;
             }
             set
             {
-                _descubierta = value;
+                _borde = value;
+                NotifyPropertyChanged("Borde");
             }
         }
 
         #endregion
 
+        #region PropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // Create the OnPropertyChanged method to raise the event
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

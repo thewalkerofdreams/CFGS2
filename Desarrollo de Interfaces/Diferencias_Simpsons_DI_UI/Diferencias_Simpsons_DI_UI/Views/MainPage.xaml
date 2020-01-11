@@ -11,32 +11,29 @@
     <RelativePanel>
         <StackPanel x:Name="StackPanel01" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" Orientation="Horizontal">
             <TextBlock x:Name="Text01" FontSize="30" Text="Diferencias descubiertas: " Margin="5" ></TextBlock>
-            <TextBlock Text="0" FontSize="30" Margin="5"></TextBlock>
+            <TextBlock Text="{x:Bind ViewModel.ContadorDiferencias, Mode=TwoWay}" FontSize="30" Margin="5"></TextBlock>
         </StackPanel>
         <Canvas x:Name="Canvas01" RelativePanel.Below="StackPanel01" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
             <Image Source="/Assets/simpsons_diferencias.PNG" Canvas.Left="300" Canvas.Top="0"></Image>
             <Image Source="/Assets/mapache.PNG" Canvas.Left="716" Canvas.Top="284" Height="114" Width="31"></Image>
             <Image Source="/Assets/neumann.png" Height="39" Width="17" Canvas.Left="716" Canvas.Top="272"></Image>
             <Image Source="/Assets/ada_lovelace.png" Height="27" Width="44" Canvas.Left="1068" Canvas.Top="274" RenderTransformOrigin="0.365,-2.878"></Image>
-            <Ellipse x:Name="Ellipse01" Fill="Transparent" Height="40" Width="36" StrokeThickness="5" Stroke="Red" Canvas.Left="320" Canvas.Top="434" Tapped="Ellipse01_Tapped" Opacity="0"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="302" Canvas.Top="116"/>
-            <Ellipse Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="625" Canvas.Top="219"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="494" Canvas.Top="385"/>
-            <Ellipse Height="92" Width="103" StrokeThickness="5" Stroke="Red" Canvas.Left="604" Canvas.Top="509"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="300" Canvas.Top="316"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="705" Canvas.Top="316"/>
-            <Ellipse Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="1035" Canvas.Top="219" RenderTransformOrigin="0.469,1"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="906" Canvas.Top="394"/>
-            <Ellipse Height="40" Width="36" StrokeThickness="5" Stroke="Red" Canvas.Left="732" Canvas.Top="434"/>
-            <Ellipse Height="92" Width="103" StrokeThickness="5" Stroke="Red" Canvas.Left="1009" Canvas.Top="509"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="714" Canvas.Top="116"/>
-            <Ellipse Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="706" Canvas.Top="272"/>
-            <Ellipse Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="297" Canvas.Top="272"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="657" Canvas.Top="261"/>
-            <Ellipse Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="1063" Canvas.Top="264"/>
+            <Ellipse x:Name="Ellipse01" Fill="Transparent" Height="40" Width="36" StrokeThickness="5" Stroke="Red" Canvas.Left="320" Canvas.Top="434" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse02" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="302" Canvas.Top="116" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse03" Fill="Transparent" Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="625" Canvas.Top="219" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse04" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="494" Canvas.Top="385" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse05" Fill="Transparent" Height="92" Width="103" StrokeThickness="5" Stroke="Red" Canvas.Left="604" Canvas.Top="509" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse06" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="300" Canvas.Top="316" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse6" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="705" Canvas.Top="316" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse3" Fill="Transparent" Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="1035" Canvas.Top="219" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse4" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="906" Canvas.Top="394" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse1" Fill="Transparent" Height="40" Width="36" StrokeThickness="5" Stroke="Red" Canvas.Left="732" Canvas.Top="434" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse5" Fill="Transparent" Height="92" Width="103" StrokeThickness="5" Stroke="Red" Canvas.Left="1009" Canvas.Top="509" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse2" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="714" Canvas.Top="116" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse07" Fill="Transparent" Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="706" Canvas.Top="272" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse7" Fill="Transparent" Height="34" Width="32" StrokeThickness="5" Stroke="Red" Canvas.Left="297" Canvas.Top="272" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse08" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="657" Canvas.Top="261" Opacity="0" Tapped="Ellipse_Tapped"/>
+            <Ellipse x:Name="Ellipse8" Fill="Transparent" Height="50" Width="54" StrokeThickness="5" Stroke="Red" Canvas.Left="1063" Canvas.Top="264" Opacity="0" Tapped="Ellipse_Tapped"/>
         </Canvas>
-
-
-
     </RelativePanel>
 </Page>

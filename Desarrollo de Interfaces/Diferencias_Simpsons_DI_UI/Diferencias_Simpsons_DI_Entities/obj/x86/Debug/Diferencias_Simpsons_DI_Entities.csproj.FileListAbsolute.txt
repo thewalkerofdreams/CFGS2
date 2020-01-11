@@ -2,7 +2,6 @@ C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entiti
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\bin\x86\Debug\Diferencias_Simpsons_DI_Entities.pdb
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\bin\x86\Debug\Diferencias_Simpsons_DI_Entities.pri
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd
-C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\obj\x86\Debug\Diferencias_Simpsons_DI_Entities.csprojAssemblyReference.cache
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\obj\x86\Debug\Diferencias_Simpsons_DI_Entities.csproj.CopyComplete
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\obj\x86\Debug\Diferencias_Simpsons_DI_Entities.dll
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\obj\x86\Debug\Diferencias_Simpsons_DI_Entities.pdb

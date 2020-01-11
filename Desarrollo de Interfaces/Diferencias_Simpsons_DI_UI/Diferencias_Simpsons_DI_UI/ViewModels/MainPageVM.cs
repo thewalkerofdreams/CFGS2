@@ -1,147 +1,29 @@
-﻿using Diferencias_Simpsons_DI_Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 
 namespace Diferencias_Simpsons_DI_UI.ViewModels
 {
     public class MainPageVM : INotifyPropertyChanged
     {
-        private Diferencia _diferenciaSeleccionada;
-        private Diferencia _diferencia01;
-        private Diferencia _diferencia02;
-        private Diferencia _diferencia03;
-        private Diferencia _diferencia04;
-        private Diferencia _diferencia05;
-        private Diferencia _diferencia06;
-        private Diferencia _diferencia07;
-        private Diferencia _diferencia08;
         private int _contadorDiferencias;
-        private String _mensajeVictoria;
+        private int evitarReplicaMensaje;
+
+        #region Constructores
+        public MainPageVM()
+        {
+            _contadorDiferencias = 0;
+            evitarReplicaMensaje = 0;
+        }
+        #endregion
 
         #region Propiedades Públicas
-
-        public Diferencia DiferenciaSeleccionada
-        {
-            get
-            {
-                return _diferenciaSeleccionada;
-            }
-            set
-            {
-                _diferenciaSeleccionada = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia01
-        {
-            get
-            {
-                return _diferencia01;
-            }
-            set
-            {
-                _diferencia01 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia02
-        {
-            get
-            {
-                return _diferencia02;
-            }
-            set
-            {
-                _diferencia02 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia03
-        {
-            get
-            {
-                return _diferencia03;
-            }
-            set
-            {
-                _diferencia03 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia04
-        {
-            get
-            {
-                return _diferencia04;
-            }
-            set
-            {
-                _diferencia04 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia05
-        {
-            get
-            {
-                return _diferencia05;
-            }
-            set
-            {
-                _diferencia05 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia06
-        {
-            get
-            {
-                return _diferencia06;
-            }
-            set
-            {
-                _diferencia06 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia07
-        {
-            get
-            {
-                return _diferencia07;
-            }
-            set
-            {
-                _diferencia07 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Diferencia Diferencia08
-        {
-            get
-            {
-                return _diferencia08;
-            }
-            set
-            {
-                _diferencia08 = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public int ContadorDiferencias
         {
             get
@@ -151,35 +33,31 @@ namespace Diferencias_Simpsons_DI_UI.ViewModels
             set
             {
                 _contadorDiferencias = value;
+                if (_contadorDiferencias == 8)//Si se han encontrado todas las diferencias
+                {
+                    if (evitarReplicaMensaje == 0)//Si el mensaje no se ha replicado por culpa del evento PropertyChanged
+                    {
+                        evitarReplicaMensaje++;
+                        mensajeVictoria();
+                    }
+                }
                 NotifyPropertyChanged();
             }
         }
-
-        public String MensajeVictoria
-        {
-            get
-            {
-                return _mensajeVictoria;
-            }
-            set
-            {
-                _mensajeVictoria = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         #endregion
 
         #region PropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
-
         // Create the OnPropertyChanged method to raise the event
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
         #endregion
+        //Nos permite mostrar un mensaje de victoria por pantalla
+        public async void mensajeVictoria()
+        {
+            await new MessageDialog("¡Has encontrado todos las diferencias!").ShowAsync();
+        }
     }
 }

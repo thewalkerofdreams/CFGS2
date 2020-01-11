@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diferencias_Simpsons_DI_UI", "Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI.csproj", "{65722654-A77F-4628-A2AF-862BCAA79284}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diferencias_Simpsons_DI_Entities", "Diferencias_Simpsons_DI_Entities\Diferencias_Simpsons_DI_Entities.csproj", "{63D6965E-8131-43D0-8A2C-EDC50424F7A1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,26 +45,6 @@ Global
 		{65722654-A77F-4628-A2AF-862BCAA79284}.Release|x86.ActiveCfg = Release|x86
 		{65722654-A77F-4628-A2AF-862BCAA79284}.Release|x86.Build.0 = Release|x86
 		{65722654-A77F-4628-A2AF-862BCAA79284}.Release|x86.Deploy.0 = Release|x86
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|ARM.ActiveCfg = Debug|ARM
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|ARM.Build.0 = Debug|ARM
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|ARM64.Build.0 = Debug|ARM64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|x64.ActiveCfg = Debug|x64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|x64.Build.0 = Debug|x64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|x86.ActiveCfg = Debug|x86
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Debug|x86.Build.0 = Debug|x86
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|ARM.ActiveCfg = Release|ARM
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|ARM.Build.0 = Release|ARM
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|ARM64.ActiveCfg = Release|ARM64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|ARM64.Build.0 = Release|ARM64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|x64.ActiveCfg = Release|x64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|x64.Build.0 = Release|x64
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|x86.ActiveCfg = Release|x86
-		{63D6965E-8131-43D0-8A2C-EDC50424F7A1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

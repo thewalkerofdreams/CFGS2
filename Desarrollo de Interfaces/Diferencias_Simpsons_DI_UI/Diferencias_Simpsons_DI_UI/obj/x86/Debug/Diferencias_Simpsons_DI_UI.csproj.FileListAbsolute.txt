@@ -9,10 +9,7 @@ C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Core\Diferencias_Simpsons_DI_UI.exe
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Diferencias_Simpsons_DI_UI.build.appxrecipe
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\System.Runtime.dll
-C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Diferencias_Simpsons_DI_Entities.dll
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd
-C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Diferencias_Simpsons_DI_Entities.pdb
-C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\Diferencias_Simpsons_DI_Entities.pri
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj\x86\Debug\Diferencias_Simpsons_DI_UI.csprojAssemblyReference.cache
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj\x86\Debug\App.g.i.cs
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj\x86\Debug\App.g.cs
@@ -47,3 +44,5 @@ C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885238160000000.json
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\OpenTK.dll
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\OpenTK.pdb
+C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\bin\x86\Debug\System.Drawing.Common.dll
+C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\obj\x86\Debug\FxResources.System.Drawing.Common.SR.resw

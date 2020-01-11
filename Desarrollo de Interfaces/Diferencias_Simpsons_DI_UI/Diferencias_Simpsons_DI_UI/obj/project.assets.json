@@ -316,17 +316,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -824,17 +820,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -1333,17 +1325,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -1842,17 +1830,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -2350,17 +2334,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -2859,17 +2839,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -3367,17 +3343,13 @@
           "runtimes/win10-x86/nativeassets/uap10.0.15138/clrcompression.dll": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     },
@@ -3876,17 +3848,13 @@
           "build/runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk.targets": {}
         }
       },
-      "Diferencias_Simpsons_DI_Entities/1.0.0": {
-        "type": "project",
-        "framework": "UAP,Version=v10.0.17763",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.9"
-        },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Diferencias_Simpsons_DI_Entities.dll": {}
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
       }
     }
@@ -8335,17 +8303,51 @@
         "runtimes/win10-x86/nativeassets/uap10.0.15138/clrcompression.dll"
       ]
     },
-    "Diferencias_Simpsons_DI_Entities/1.0.0": {
-      "type": "project",
-      "path": "../Diferencias_Simpsons_DI_Entities/Diferencias_Simpsons_DI_Entities.csproj",
-      "msbuildProject": "../Diferencias_Simpsons_DI_Entities/Diferencias_Simpsons_DI_Entities.csproj"
+    "System.Drawing.Common/4.7.0": {
+      "sha512": "v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
+      "type": "package",
+      "path": "system.drawing.common/4.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net461/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net461/System.Drawing.Common.dll",
+        "ref/netcoreapp3.0/System.Drawing.Common.dll",
+        "ref/netcoreapp3.0/System.Drawing.Common.xml",
+        "ref/netstandard2.0/System.Drawing.Common.dll",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll",
+        "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll",
+        "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.xml",
+        "system.drawing.common.4.7.0.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "UAP,Version=v10.0.17763": [
-      "Diferencias_Simpsons_DI_Entities >= 1.0.0",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 6.2.9",
-      "OpenTK >= 3.1.0"
+      "OpenTK >= 3.1.0",
+      "System.Drawing.Common >= 4.7.0"
     ]
   },
   "packageFolders": {
@@ -8378,11 +8380,7 @@
       },
       "frameworks": {
         "uap10.0.17763": {
-          "projectReferences": {
-            "C:\\Users\\Joker\\Desktop\\Diferencias_Simpsons_DI_UI\\Diferencias_Simpsons_DI_Entities\\Diferencias_Simpsons_DI_Entities.csproj": {
-              "projectPath": "C:\\Users\\Joker\\Desktop\\Diferencias_Simpsons_DI_UI\\Diferencias_Simpsons_DI_Entities\\Diferencias_Simpsons_DI_Entities.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       }
     },
@@ -8396,6 +8394,10 @@
           "OpenTK": {
             "target": "Package",
             "version": "[3.1.0, )"
+          },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[4.7.0, )"
           }
         },
         "imports": [

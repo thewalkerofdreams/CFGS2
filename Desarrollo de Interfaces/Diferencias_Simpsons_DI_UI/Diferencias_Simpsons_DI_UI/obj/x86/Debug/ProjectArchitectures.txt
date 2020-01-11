@@ -1,2 +1,1 @@
-C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_Entities\Diferencias_Simpsons_DI_Entities.csproj;x86
 C:\Users\Joker\Desktop\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI\Diferencias_Simpsons_DI_UI.csproj;x86
