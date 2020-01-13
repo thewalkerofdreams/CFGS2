@@ -1,1 +1,2 @@
-C:\Users\ymcampanario\Desktop\Animations_Space_DI\Animations_Space_DI_UI\Animations_Space_DI_UI.csproj;x86
+C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_Space_DI\Animations_Space_DI_Entities\Animations_Space_DI_Entities.csproj;x86
+C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_Space_DI\Animations_Space_DI_UI\Animations_Space_DI_UI.csproj;x86

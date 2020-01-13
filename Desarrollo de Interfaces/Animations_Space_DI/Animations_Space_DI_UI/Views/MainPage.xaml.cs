@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Animations_Space_DI_UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,44 +25,17 @@ namespace Animations_Space_DI_UI
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        MainPageVM mainPageVM {get;}
         public MainPage()
         {
             this.InitializeComponent();
+            mainPageVM = (MainPageVM)this.DataContext;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void allowfocus_Loaded(object sender, RoutedEventArgs e)
         {
-            // Set the input focus to ensure that keyboard events are raised.
-            this.Loaded += delegate { this.Focus(FocusState.Programmatic); };
-        }
-
-        private void MediaButton_Click(object sender, RoutedEventArgs e)
-        {
-            switch ((sender as Button).Name)
-            {
-                //case "PlayButton": DemoMovie.Play(); break;
-                //case "PauseButton": DemoMovie.Pause(); break;
-                //case "StopButton": DemoMovie.Stop(); break;
-            }
-        }
-
-        private static bool IsCtrlKeyPressed()
-        {
-            var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
-            return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-        }
-
-        private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (IsCtrlKeyPressed())
-            {
-                switch (e.Key)
-                {
-                    //case VirtualKey.P: DemoMovie.Play(); break;
-                    //case VirtualKey.A: DemoMovie.Pause(); break;
-                    //case VirtualKey.S: DemoMovie.Stop(); break;
-                }
-            }
+            Window.Current.Content.KeyDown += this.mainPageVM.Grid_KeyDown;
+            Window.Current.Content.KeyUp += this.mainPageVM.Grid_KeyUp;
         }
     }
 }

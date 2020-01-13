@@ -5,10 +5,15 @@
     xmlns:local="using:Animations_Space_DI_UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Animations_Space_DI_UI.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <RelativePanel>
+    <Page.DataContext>
+        <vm:MainPageVM></vm:MainPageVM>
+    </Page.DataContext>
+
+    <RelativePanel Loaded="allowfocus_Loaded">
         <StackPanel x:Name="StackPanel01" Orientation="Horizontal" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
             <TextBlock Text="Vidas: "></TextBlock>
             <TextBlock x:Name="VidasTotales" Text="0" Margin="2,0,0,0"></TextBlock>
@@ -16,7 +21,7 @@
             <TextBlock x:Name="EstrellasEliminadas" Margin="2,0,0,0" Text="0"></TextBlock>
         </StackPanel>
         <Canvas RelativePanel.Below="StackPanel01" Background="Black" Width="700" Height="500">
-            <Image x:Name="nave" Source="/Assets/nave2.png" Width="100" Height="100" Canvas.Top="397" Canvas.Left="300" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
+            <Image x:Name="nave" Source="{Binding Nave.AddressImage, Mode=OneWay}" Width="100" Height="100" Canvas.Top="397" Canvas.Left="{Binding Nave.XPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
         </Canvas>
     </RelativePanel>
 </Page>
