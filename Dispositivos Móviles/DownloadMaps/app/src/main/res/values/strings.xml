@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DownloadMaps</string>
+    <string name="basic_offline_deleted_toast">Delete the last item in the offlineRegions</string>
+    <string name="simple_offline_end_progress_success">Calculate the download percentage</string>
+    <string name="access_token">pk.eyJ1IjoicmFjY29vbm11cmt5IiwiYSI6ImNrNWM3bWpscjAxcXEzZm1zdHZqZ2JmNTIifQ.NEMaG9Fj2j5Z9B2a02PIbg</string>
+</resources>
