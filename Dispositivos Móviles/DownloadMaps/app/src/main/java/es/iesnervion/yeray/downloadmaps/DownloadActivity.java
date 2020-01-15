@@ -1,6 +1,8 @@
 package es.iesnervion.yeray.downloadmaps;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +13,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -30,29 +35,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import es.iesnervion.yeray.downloadmaps.ViewModels.DownloadActivityVM;
 import timber.log.Timber;
 
 /**
  * Download, view, navigate to, and delete an offline region.
  */
 public class DownloadActivity extends AppCompatActivity {
-
-    private static final String TAG = "OffManActivity";
-
-    //JSON encoding/decoding
-    public static final String JSON_CHARSET = "UTF-8";
-    public static final String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
-
+    //ViewModel
+    DownloadActivityVM downloadActivityVM;
     //UI elements
     private MapView mapView;
     private MapboxMap map;
     private ProgressBar progressBar;
     private Button downloadButton;
     private Button listButton;
-
-    private boolean isEndNotified;
-    private int regionSelected;
-
     //Offline objects
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
@@ -64,6 +61,16 @@ public class DownloadActivity extends AppCompatActivity {
         Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_download_map);
 
+        //Pedimos los permisos
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+
+        //TODO Tengo que ver como preguntar por los permisos antes de cargar esta actividad
+
+        downloadActivityVM = ViewModelProviders.of(this).get(DownloadActivityVM.class);
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
@@ -73,12 +80,18 @@ public class DownloadActivity extends AppCompatActivity {
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-                        // Assign progressBar for later use
+                        CameraPosition position = new CameraPosition.Builder()
+                                .target(new LatLng(downloadActivityVM.get_actualLocation().getLatitude(),
+                                        downloadActivityVM.get_actualLocation().getLongitude()))
+                                .zoom(10)
+                                .tilt(20)
+                                .build();
+                        map.setCameraPosition(position);
+                        //Asignamos el progressBar
                         progressBar = findViewById(R.id.progress_bar);
-                        // Set up the offlineManager
+                        //Instanciamos la variable offlineManager
                         offlineManager = OfflineManager.getInstance(DownloadActivity.this);
-                        // Bottom navigation bar button clicks are handled here.
-                        // Download offline button
+                        //Asignamos los botones de la actividad
                         downloadButton = findViewById(R.id.download_button);
                         downloadButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -86,8 +99,6 @@ public class DownloadActivity extends AppCompatActivity {
                                 downloadRegionDialog();
                             }
                         });
-
-                        // List offline regions
                         listButton =  findViewById(R.id.list_button);
                         listButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -101,7 +112,7 @@ public class DownloadActivity extends AppCompatActivity {
         });
     }
 
-    // Override Activity lifecycle methods
+    //Métodos sobrecargados del ciclo de vida de la actividad
     @Override
     public void onResume() {
         super.onResume();
@@ -144,8 +155,16 @@ public class DownloadActivity extends AppCompatActivity {
         mapView.onLowMemory();
     }
 
+    /*
+    * Interfaz
+    * Nombre: downloadRegionDialog
+    * Comentario: Este método muestra un dialogo por pantalla para descargar la región actual.
+    * Cabecera: private void downloadRegionDialog()
+    * Postcondiciones: Si el usuario ha introducido un nombre para la región y ha confirmado guardarlo,
+    * se almacenará esa nueva región. En caso de falta de memoria o conexión el método informa de ello
+    * al usuario.
+    * */
     private void downloadRegionDialog() {
-        //Muestra un dialogo por pantalla cuando el usuario haya pulsado el botón de guardar mapa
         AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
         //Declaramos un editText temporal
         final EditText regionNameEdit = new EditText(DownloadActivity.this);
@@ -199,9 +218,9 @@ public class DownloadActivity extends AppCompatActivity {
                 byte[] metadata;
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put(JSON_FIELD_REGION_NAME, regionName);
+                    jsonObject.put(downloadActivityVM.getJsonFieldRegionName(), regionName);
                     String json = jsonObject.toString();//Pasamos el objeto a un String
-                    metadata = json.getBytes(JSON_CHARSET);//Pasamos esa cadena a un array de bytes
+                    metadata = json.getBytes(downloadActivityVM.getJsonCharset());//Pasamos esa cadena a un array de bytes
                 } catch (Exception exception) {
                     Timber.e("Failed to encode metadata: %s", exception.getMessage());
                     metadata = null;
@@ -226,26 +245,24 @@ public class DownloadActivity extends AppCompatActivity {
     }
 
     private void launchDownload() {
-        //Colocaremos un observador a la barra de descarga y avisaremos al usuario cuando esta finalice.
+        //Colocamos un observador a la barra de descarga y avisaremos al usuario cuando esta finalice.
         offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
             @Override
             public void onStatusChanged(OfflineRegionStatus status) {//Se llamará cuando el estado de la descarga cambie
-                //Calculamos un porcentaje (getRequiredResourceCount nos indica el número de recursos descargados)
+                //Calculamos un porcentaje (getCompletedResourceCount nos indica el número de recursos descargados)
                 double percentage = status.getRequiredResourceCount() >= 0
                         ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) : 0.0;
 
                 if (status.isComplete()) {//Se ha completado la descarga
                     endProgress(getString(R.string.end_progress_success));
-                    return;
                 } else if (status.isRequiredResourceCountPrecise()) {
-                    setPercentage((int) Math.round(percentage));//Indicamos cuando queda de la descarga
+                    setPercentage((int) Math.round(percentage));//Modificamos el porcentaje de descarga en la barra
+                    //Indicamos al usuario como va la descarga
+                    Timber.d("%s/%s resources; %s bytes downloaded.",//Estos mensajes me aparecerán con el debug
+                            String.valueOf(status.getCompletedResourceCount()),
+                            String.valueOf(status.getRequiredResourceCount()),
+                            String.valueOf(status.getCompletedResourceSize()));
                 }
-
-                //Indicamos al usuario como va la descarga
-                Timber.d("%s/%s resources; %s bytes downloaded.",
-                        String.valueOf(status.getCompletedResourceCount()),
-                        String.valueOf(status.getRequiredResourceCount()),
-                        String.valueOf(status.getCompletedResourceSize()));
             }
 
             @Override
@@ -265,86 +282,105 @@ public class DownloadActivity extends AppCompatActivity {
     }
 
     private void downloadedRegionList() {
-    //Creamos una lista de regiones descargadas cuando el usuario pulse el botón del listado
-        regionSelected = 0;//Reseteamos el indicador de la región seleccionada
+        //Creamos una lista de regiones descargadas cuando el usuario pulse el botón del listado
+        downloadActivityVM.set_regionSelected(0);//Reseteamos el indicador de la región seleccionada
 
-        // Query the DB asynchronously
+        //Consulta la base de datos asincronamente
         offlineManager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
             @Override
             public void onList(final OfflineRegion[] offlineRegions) {
-                // Comprueba el resultado, si aún no existen mapas descargados, se informa de ello al usuario
+                //Si aún no existen mapas descargados, se informa de ello al usuario
                 if (offlineRegions == null || offlineRegions.length == 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.toast_no_regions_yet), Toast.LENGTH_SHORT).show();
-                    return;
+                }else{
+                    //Añadimos todos los nombres de las regiones descargadas a la lista
+                    ArrayList<String> offlineRegionsNames = new ArrayList<>();
+                    for (OfflineRegion offlineRegion : offlineRegions) {
+                        offlineRegionsNames.add(downloadActivityVM.getRegionName(offlineRegion));
+                    }
+                    //Para mostrar la lista de regiones en un dialogo, esta debe ser un array de CharSequence
+                    final CharSequence[] items = offlineRegionsNames.toArray(new CharSequence[offlineRegionsNames.size()]);
+
+                    //Creamos un dialogo que contiene la lista de las regiones
+                    AlertDialog dialog = new AlertDialog.Builder(DownloadActivity.this)
+                            .setTitle(getString(R.string.navigate_title))
+                            .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    downloadActivityVM.set_regionSelected(which);//Indicamos la región seleccionada
+                                }
+                            })
+                            .setPositiveButton(getString(R.string.navigate_positive_button), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Toast.makeText(DownloadActivity.this, items[downloadActivityVM.get_regionSelected()], Toast.LENGTH_LONG).show();
+                                    //Obtenemos los límites de la región y el zoom
+                                    LatLngBounds bounds = (offlineRegions[downloadActivityVM.get_regionSelected()].getDefinition()).getBounds();
+                                    double regionZoom = (offlineRegions[downloadActivityVM.get_regionSelected()].getDefinition()).getMinZoom();
+
+                                    //Modificamos la posición de la "camara" sobre el mapa
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(bounds.getCenter())
+                                            .zoom(regionZoom)
+                                            .build();
+
+                                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));//Movemos la "camara"
+                                }
+                            })
+                            .setNeutralButton(getString(R.string.navigate_neutral_button_title), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //Hacemos que el progressBar pase a estado indeterminado y lo hacemos visible para el proceso de eliminación
+                                    progressBar.setIndeterminate(true);
+                                    progressBar.setVisibility(View.VISIBLE);
+
+                                    AlertDialog alertDialog = new AlertDialog.Builder(DownloadActivity.this)
+                                    .setTitle("Confirm Delete")// Setting Alert Dialog Title
+                                    //alertDialogBuilder.setIcon(R.drawable.question);// Icon Of Alert Dialog
+                                    .setMessage("Do you really want delete this route?")// Setting Alert Dialog Message
+                                    .setCancelable(false)//Para que no podamos quitar el dialogo sin contestarlo
+
+                                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            //Comenzamos el proceso de eliminación
+                                            offlineRegions[downloadActivityVM.get_regionSelected()].delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+                                                @Override
+                                                public void onDelete() {
+                                                    //Cuando la región sea eliminada eliminamos el progressbar y le mandamos un mensaje al usuario
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    progressBar.setIndeterminate(false);
+                                                    Toast.makeText(getApplicationContext(), getString(R.string.toast_region_deleted),
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void onError(String error) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    progressBar.setIndeterminate(false);
+                                                    Timber.e( "Error: %s", error);
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    }).create();
+
+                                    alertDialog.show();
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.navigate_negative_button_title), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //Cuando el usuario cancela no pasa nada
+                                }
+                            }).create();
+                    dialog.show();
                 }
-
-                //Añadimos todos los nombres de las regiones descargadas a la lista
-                ArrayList<String> offlineRegionsNames = new ArrayList<>();
-                for (OfflineRegion offlineRegion : offlineRegions) {
-                    offlineRegionsNames.add(getRegionName(offlineRegion));
-                }
-                final CharSequence[] items = offlineRegionsNames.toArray(new CharSequence[offlineRegionsNames.size()]);
-
-                //Creamos un dialogo que contiene la lista de las regiones
-                AlertDialog dialog = new AlertDialog.Builder(DownloadActivity.this)
-                        .setTitle(getString(R.string.navigate_title))
-                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                regionSelected = which;//Indicamos la región seleccionada
-                            }
-                        })
-                        .setPositiveButton(getString(R.string.navigate_positive_button), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Toast.makeText(DownloadActivity.this, items[regionSelected], Toast.LENGTH_LONG).show();
-                                //Obtenemos los límites de la región y el zoom
-                                LatLngBounds bounds = (offlineRegions[regionSelected].getDefinition()).getBounds();
-                                double regionZoom = (offlineRegions[regionSelected].getDefinition()).getMinZoom();
-
-                                //Modificamos la posición de la "camara" sobre el mapa
-                                CameraPosition cameraPosition = new CameraPosition.Builder()
-                                        .target(bounds.getCenter())
-                                        .zoom(regionZoom)
-                                        .build();
-
-                                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));//Movemos la "camara"
-                            }
-                        })
-                        .setNeutralButton(getString(R.string.navigate_neutral_button_title), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                //Hacemos que el progressBar pase a estado indeterminado y lo hacemos visible para el proceso de eliminación
-                                progressBar.setIndeterminate(true);
-                                progressBar.setVisibility(View.VISIBLE);
-
-                                //Comenzamos el proceso de eliminación
-                                offlineRegions[regionSelected].delete(new OfflineRegion.OfflineRegionDeleteCallback() {
-                                    @Override
-                                    public void onDelete() {
-                                    //Cuando la región sea eliminada eliminamos el progressbar y le mandamos un mensaje al usuario
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        progressBar.setIndeterminate(false);
-                                        Toast.makeText(getApplicationContext(), getString(R.string.toast_region_deleted),
-                                                Toast.LENGTH_LONG).show();
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        progressBar.setIndeterminate(false);
-                                        Timber.e( "Error: %s", error);
-                                    }
-                                });
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.navigate_negative_button_title), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                //Cuando el usuario cancela no pasa nada
-                            }
-                        }).create();
-                dialog.show();
             }
 
             @Override
@@ -354,53 +390,32 @@ public class DownloadActivity extends AppCompatActivity {
         });
     }
 
-    private String getRegionName(OfflineRegion offlineRegion) {
-        //Obtenemos el nombre de la región del metadato offlineRegion
-        String regionName;
-
-        try {
-            byte[] metadata = offlineRegion.getMetadata();
-            String json = new String(metadata, JSON_CHARSET);
-            JSONObject jsonObject = new JSONObject(json);
-            regionName = jsonObject.getString(JSON_FIELD_REGION_NAME);
-        } catch (Exception exception) {
-            Timber.e("Failed to decode metadata: %s", exception.getMessage());
-            regionName = "DEFAULT";
-        }
-        return regionName;
-    }
-
-    //Metodos del progress bar
+    //Metodos sobre el progressBar
     private void startProgress() {
         //Deshabilitamos los botones de la pantalla actual
         downloadButton.setEnabled(false);
         listButton.setEnabled(false);
 
         //Iniciamos y mostramos el progress bar
-        isEndNotified = false;
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void setPercentage(final int percentage) {//Modificamos el porcentaje de la barra
+    private void setPercentage(final int percentage) {//Modificamos el estado del porcentaje del progressBar
         progressBar.setIndeterminate(false);
         progressBar.setProgress(percentage);
     }
 
     private void endProgress(final String message) {
-        if (!isEndNotified) {//No lo notificamos más de una vez
-            //Habilitamos los botones
-            downloadButton.setEnabled(true);
-            listButton.setEnabled(true);
+        //Habilitamos los botones
+        downloadButton.setEnabled(true);
+        listButton.setEnabled(true);
 
-            //Paramos y ocultamos la barra de progreso
-            isEndNotified = true;
-            progressBar.setIndeterminate(false);
-            progressBar.setVisibility(View.GONE);
+        //Paramos y ocultamos la barra de progreso
+        progressBar.setIndeterminate(false);
+        progressBar.setVisibility(View.GONE);
 
-            //Mostramos un mensaje
-            Toast.makeText(DownloadActivity.this, message, Toast.LENGTH_LONG).show();
-        }
-
+        //Mostramos un mensaje
+        Toast.makeText(DownloadActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }
