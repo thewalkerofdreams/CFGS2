@@ -20,8 +20,8 @@
             <TextBlock Text="Estrellas eliminadas: " Margin="100,0,0,0"></TextBlock>
             <TextBlock x:Name="EstrellasEliminadas" Margin="2,0,0,0" Text="0"></TextBlock>
         </StackPanel>
-        <Canvas RelativePanel.Below="StackPanel01" Background="Black" Width="700" Height="500">
-            <Image x:Name="nave" Source="{Binding Nave.AddressImage, Mode=OneWay}" Width="100" Height="100" Canvas.Top="397" Canvas.Left="{Binding Nave.XPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
+        <Canvas x:Name="Canvas01" RelativePanel.Below="StackPanel01" Background="Black" Width="700" Height="500">
+            <Image x:Name="nave" Source="{Binding Nave.AddressImage, Mode=OneWay}" Width="100" Height="100" Canvas.Top="397" Canvas.Left="{Binding Nave.XPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Canvas.ZIndex="10"></Image>
         </Canvas>
     </RelativePanel>
 </Page>

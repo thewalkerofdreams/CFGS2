@@ -6,8 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Shapes;
 
 namespace Animations_Space_DI_UI.ViewModels
 {
@@ -62,7 +67,7 @@ namespace Animations_Space_DI_UI.ViewModels
         /// </summary>
         public void move(char direccion)
         {
-            int posicion;
+            int posicion;//Calculamos la posición x
             if (direccion == 'i')
             {
                 posicion = _nave.XPosition - _nave.Movimiento;
@@ -73,14 +78,17 @@ namespace Animations_Space_DI_UI.ViewModels
                 posicion = _nave.XPosition + _nave.Movimiento;
                 _nave.LastMovement = 'd';
             }
-            NotifyPropertyChanged("Nave");
 
-            if (posicion >= 0 && posicion <= 600)
+            if (posicion >= 0 && posicion <= 600)//Si no sobrepasamos los límites
             {
                 _nave.XPosition = posicion;
                 NotifyPropertyChanged("Nave");
             }
         }
+
+        #region Lanzar Estrellas
+        
+        #endregion
 
         #region Eventos
         /// <summary>
@@ -92,16 +100,18 @@ namespace Animations_Space_DI_UI.ViewModels
         {
             if (e.Key == VirtualKey.A)
             {
-                move('i');
+                //move('i');//Turbo
+                _nave.LastMovement = 'i';
                 _dispatcherTimer.Start();
             }
 
             if (e.Key == VirtualKey.D)
             {
-                move('d');
+                //move('d');//Turbo
+                _nave.LastMovement = 'd';
                 _dispatcherTimer.Start();
             }
-
+            NotifyPropertyChanged("Nave");
         }
 
         /// <summary>

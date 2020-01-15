@@ -137,3 +137,7 @@ C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_
 C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_Space_DI\Animations_Space_DI_UI\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
 C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_Space_DI\Animations_Space_DI_UI\obj\x86\Debug\ProjectArchitectures.txt
 C:\Users\Joker\Desktop\CFGS2 - Github\CFGS2\Desarrollo de Interfaces\Animations_Space_DI\Animations_Space_DI_UI\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636758480200000000.json
+C:\Users\ymcampanario\Desktop\Animations_Space_DI\Animations_Space_DI_UI\bin\x86\Debug\Animations_Space_DI_Entities.dll
+C:\Users\ymcampanario\Desktop\Animations_Space_DI\Animations_Space_DI_UI\bin\x86\Debug\Animations_Space_DI_Entities.pdb
+C:\Users\ymcampanario\Desktop\Animations_Space_DI\Animations_Space_DI_UI\bin\x86\Debug\Animations_Space_DI_Entities.pri
+C:\Users\ymcampanario\Desktop\Animations_Space_DI\Animations_Space_DI_UI\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636758480200000000.json
