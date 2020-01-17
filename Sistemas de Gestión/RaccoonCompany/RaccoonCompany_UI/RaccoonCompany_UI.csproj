@@ -70,6 +70,8 @@
     <Content Include="Css\myStyle.css" />
     <Content Include="Js\IndexJS.js" />
     <Content Include="Pages\Index.html" />
+    <Content Include="Resources\Images\icon_delete.png" />
+    <Content Include="Resources\Images\icon_edit.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +86,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
