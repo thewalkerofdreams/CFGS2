@@ -1,65 +1,50 @@
 ﻿$(document).ready(function () {
     // Activate tooltip
     $('[data-toggle="tooltip"]').tooltip();
-
-    // Select/Deselect checkboxes
-    var checkbox = $('table tbody input[type="checkbox"]');
-    $("#selectAll").click(function () {
-        if (this.checked) {
-            checkbox.each(function () {
-                this.checked = true;
-            });
-        } else {
-            checkbox.each(function () {
-                this.checked = false;
-            });
-        }
-    });
-    checkbox.click(function () {
-        if (!this.checked) {
-            $("#selectAll").prop("checked", false);
-        }
-    });
 });
 
-window.onload = inicializa;
+window.onload = inicializa;//Inicializamos los elementos básicos como los botones de la pantalla o la lista de empleados
 
+//Este método nos permite inicializar algunos elementos de la pantalla
 function inicializa() {
     cargarListadoPersonasConDepartamento();
     document.getElementById("btnAddPerson").addEventListener("click", insertarPersona, false);
     document.getElementById("btnSearch").addEventListener("click", filtrarLista, false);
 }
 
+//Este método nos permite mostrar por pantalla los empleados con su departamento específico.
 function cargarListadoPersonasConDepartamento() {
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
 
-    //Definicion estados
-    miLlamada.onreadystatechange = function () {
+    //Definición del estado
+    miLlamada.onreadystatechange = function () {//Cada vez que se actualice el estado se llamará a esta función
 
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada del tipo GET ha sido correcta
             var arrayDepartamentos = JSON.parse(miLlamada.responseText);//Obtenemos la lista de departamentos
-            cargarListadoPersonas(arrayDepartamentos);//Cargamos la lista de personas
+            cargarListadoPersonas(arrayDepartamentos);//Ahora cargaremos la lista de personas con su departamento
         }
     };
 
     miLlamada.send();
 }
 
+//Método llamado por la función cargarListadoPersonasConDepartamento, nos permitirá mostrar por pantalla los
+//empleados con su departamento en específico (Los departamentos se obtienen en la función cargarListadoPersonasConDepartamento)
 function cargarListadoPersonas(arrayDepartamentos) {
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
 
-    //Definicion estados
+    //Definición del estado
     miLlamada.onreadystatechange = function () {
 
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
-            var table = document.getElementById("tBodyEmployee");
-            var arrayPersonas = JSON.parse(miLlamada.responseText);
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada por GET es correcta
+            var table = document.getElementById("tBodyEmployee");//Instanciamos el elemento table de la página html
+            var arrayPersonas = JSON.parse(miLlamada.responseText);//Obtenemos el array de personas (empleados)
 
-            for (i = 0; i < arrayPersonas.length; i++) {
-                var tr = document.createElement('tr');
-                document.getElementById("tBodyEmployee").appendChild(tr);
+            for (i = 0; i < arrayPersonas.length; i++) {//Por cada empleado
+                var tr = document.createElement('tr');//Generemos un tag <tr>
+                document.getElementById("tBodyEmployee").appendChild(tr);//Le agregamos ese tag a la tabla de la página
 
                 var td = document.createElement('td');//Creamos un tag <td> para el nombre del empleado
                 td.innerHTML = "" + arrayPersonas[i].nombre + "";
@@ -75,9 +60,9 @@ function cargarListadoPersonas(arrayDepartamentos) {
 
                 var td4 = document.createElement('td');//Creamos un tag <td> para el departamento del empleado
                 var nombreEncontrado = false;
-                for (j = 0; j < arrayDepartamentos.length && !nombreEncontrado; j++) {
+                for (j = 0; j < arrayDepartamentos.length && !nombreEncontrado; j++) {//Obtenemos el nombre del departamento
                     if (arrayDepartamentos[j].id == arrayPersonas[i].idDepartamento) {
-                        td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";
+                        td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";//Le asignamos el nombre del departamento a la variable tag
                         nombreEncontrado = true;
                     }
                 }
@@ -85,7 +70,7 @@ function cargarListadoPersonas(arrayDepartamentos) {
 
                 var tdButtons = document.createElement("td");//Agregamos un tag <td> para los botones
 
-                var edit = document.createElement("input");
+                var edit = document.createElement("input");//Configuramos el botón de editar para la fila del empleado
                 edit.setAttribute("type", "image");
                 edit.setAttribute("id", arrayPersonas[i].idPersona);
                 edit.setAttribute("src", "../Resources/Images/icon_edit.png");
@@ -93,7 +78,7 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 edit.setAttribute("heigth", "30");
                 edit.addEventListener("click", clickEditar, false);
 
-                var remove = document.createElement("input");
+                var remove = document.createElement("input");//Configuramos el botón de eliminar para la fila del empleado
                 remove.setAttribute("type", "image");
                 remove.setAttribute("id", arrayPersonas[i].idPersona);
                 remove.setAttribute("src", "../Resources/Images/icon_delete.png");
@@ -104,55 +89,53 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
                 tdButtons.appendChild(remove);
 
-                tr.appendChild(tdButtons);//Le asignamos el tag <td> al tag <tr> 
+                tr.appendChild(tdButtons);//Le asignamos la variable td al tag <tr> 
 
-                table.appendChild(tr);//Le asignamos el tag <tr> a la tabla
+                table.appendChild(tr);//Le asignamos la variable tr a la tabla
             }
         }
     };
 
-    miLlamada.send();
+    miLlamada.send();//Realizamos la llamada
 }
 
-function reloadTable() {//Actualizamos la tabla
-    var table = document.getElementById("tableEmployee");
+//Esta función nos va a permitir actualizar la tabla de empleados
+function reloadTable() {
+    var table = document.getElementById("tableEmployee");//Instanciamos el elemento table de la página en una variable
     var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
     for (var i = 1; i < rowCount; i++) {//Eliminamos todas las filas de la tabla
         table.deleteRow(1);
     }
-    cargarListadoPersonasConDepartamento();//Volvemos a cargar el listado de personas
+    cargarListadoPersonasConDepartamento();//Volvemos a cargar el listado de empleados en la tabla
 }
 
-//Hace una peticion get de una persona segun id (GET{ID})
+//Nos permite obtener todos los datos de un empleado en específico
 function consultarPersona(id) {
-
-    var persona;
+    var empleado;
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id, false);
 
     miLlamada.onreadystatechange = function () {
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {
-            persona = JSON.parse(miLlamada.responseText);
+            empleado = JSON.parse(miLlamada.responseText);
         }
     }
 
     miLlamada.send();
 
-    return persona;
+    return empleado;
 }
 
-function clickEditar() {//Lo utilizaremos para actualizar un empleado
+//Esta función se activará cada vez que el usuario desee modificar los datos de un empleado
+function clickEditar() {
+    var edit = document.getElementById("editEmployeeModal");//Instanciamos el modal que aparecerá
+    var save = document.getElementById("inputSaveEmployee");//Intanciamos el boton de guardar que contiene ese modal
+    var cancel = document.getElementById("inputCancelSaveEmployee");//Intanciamos el boton de cancelar que contiene ese modal
+    edit.style.display = "block";//bloqueamos la pantalla para que el usuario no pueda pulsar otra cosa que no sea el modal
 
-    var edit = document.getElementById("editEmployeeModal");
-    var save = document.getElementById("inputSaveEmployee");
-    var cancel = document.getElementById("inputCancelSaveEmployee");
-    edit.style.display = "block";
-
-    var pers = consultarPersona(this.id);
+    var pers = consultarPersona(this.id);//Obtenemos los datos del empleado que se desea modificar
     var id = this.id;
 
-    //var id = document.getElementById("idPersona");
-    //id.setAttribute("value", pers.idPersona);
     document.getElementById("nombreEdit").setAttribute("value", pers.nombre);
     document.getElementById("apellidosEdit").setAttribute("value", pers.apellidos);
     //document.getElementById("telefonoE").setAttribute("value", pers.telefono);
@@ -160,7 +143,7 @@ function clickEditar() {//Lo utilizaremos para actualizar un empleado
     document.getElementById("fechaNacimientoEdit").setAttribute("value", porque2);
     document.getElementById("departamentoEdit").setAttribute("value", pers.idDepartamento);
 
-    save.onclick = function () {
+    save.onclick = function () {//Si el usuario confirma los cambios
         var empleado = new Object();
         empleado.idPersona = id;
         empleado.nombre = document.getElementById("nombreEdit").value;
@@ -173,58 +156,52 @@ function clickEditar() {//Lo utilizaremos para actualizar un empleado
         miLlamada.open("PUT", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id);
         miLlamada.setRequestHeader('Content-type', 'application/json');
 
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si el PUT a sido correcto
             //actualizar
             alert("Employee edited!");
             edit.style.display = "none";
             reloadTable();
         }
 
-        miLlamada.send(JSON.stringify(empleado));
+        miLlamada.send(JSON.stringify(empleado));//Realizamos la llamada
     }
 
-    cancel.onclick = function () {
-        edit.style.display = "none";
+    cancel.onclick = function () {//En caso de cancelación
+        edit.style.display = "none";//Quitamos la pantalla del modal
     }
 }
 
-//Eliminar una persona (DELETE)
+//Este función será llamada cada vez que el usuario desee elimninar un empleado de la lista
 function clickEliminar() {
-
-    //modal
     var id = this.id;
     var modal = document.getElementById("deleteEmployeeModal");
     var acept = document.getElementById("inputAceptDelete");
     var cancel = document.getElementById("inputCancelDelete");
     modal.style.display = "block";
 
-    //Si acepta
     acept.onclick = function () {
         modal.style.display = "none";
 
-        //eliminar
         var llamadaEliminar = new XMLHttpRequest();
         llamadaEliminar.open("DELETE", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id);
         llamadaEliminar.onreadystatechange = function () {
 
             if (llamadaEliminar.readyState == 4 && llamadaEliminar.status == 204) {
-
                 reloadTable();//Actualizamos la tabla
                 alert("Employee deleted!");
             }
         }
-        llamadaEliminar.send();
+        llamadaEliminar.send();//Lanzamos la llamada
     }
 
-    //Si cancela
     cancel.onclick = function () {
         modal.style.display = "none";
     }
 }
 
+//Esta función se lanzará cada vez que el usuario pulse el boton de añadir empleado
 function insertarPersona() {
-
-    var createModal = document.getElementById("addEmployeeModal");
+    var createModal = document.getElementById("addEmployeeModal");//Seleccionamos el modal de la página
     createModal.style.display = "block";
 
     var id = 1;
@@ -245,7 +222,6 @@ function insertarPersona() {
     insertarPersonaPost(empleado);
   
     function insertarPersonaPost(empleado) {//Insertamos el empleado por post
-
         var llamadaInsertar = new XMLHttpRequest();
         llamadaInsertar.open('POST', "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/", false);
         llamadaInsertar.setRequestHeader('Content-type', 'application/json');
@@ -264,6 +240,7 @@ function insertarPersona() {
     
 }
 
+//Este método nos permite realizar un filtrado de nombres sobre la lista de empleados
 function filtrarLista(){
     var table = document.getElementById("tableEmployee");
     var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
@@ -274,31 +251,29 @@ function filtrarLista(){
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
 
-    //Definicion estados
     miLlamada.onreadystatechange = function () {
-
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {
             var arrayDepartamentos = JSON.parse(miLlamada.responseText);//Obtenemos la lista de departamentos
             mostrarListafiltrada(arrayDepartamentos);//Cargamos la lista de personas
         }
     };
 
-    miLlamada.send();
+    miLlamada.send();//Realizamos la llamada
 }
 
+//Esta función es llamada por el método filtrarLista, nos permite mostrar por pantalla el filtro de empleados
 function mostrarListafiltrada(arrayDepartamentos) {
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
 
-    //Definicion estados
     miLlamada.onreadystatechange = function () {
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
-            var table = document.getElementById("tBodyEmployee");
-            var arrayPersonas = JSON.parse(miLlamada.responseText);
-            var textSearch = document.getElementById("inputEmployeeName").value;
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada por GET ha sido correcta
+            var table = document.getElementById("tBodyEmployee");//Obtenemos la tabla
+            var arrayPersonas = JSON.parse(miLlamada.responseText);//Obtenemos los empleados
+            var textSearch = document.getElementById("inputEmployeeName").value;//Almacenamos el valor de la búsqueda
 
             for (i = 0; i < arrayPersonas.length; i++) {
-                if (filtroValido(textSearch, arrayPersonas)) {
+                if (filtroValido(textSearch, arrayPersonas)) {//Si la persona cumple el filtrado...
                     var tr = document.createElement('tr');
                     document.getElementById("tBodyEmployee").appendChild(tr);
 
@@ -356,10 +331,10 @@ function mostrarListafiltrada(arrayDepartamentos) {
     miLlamada.send();
 }
 
+//Esta función nos permite verificar si una persona cumple el filtro de búsqueda, esta función es utilizada en el método mostrarListafiltrada
 function filtroValido(nombreYApellido, arrayPersonas) {
 
     personaValida = false;
-
     for (j = 0; j < arrayPersonas.length && !personaValida; j++)//Recorremos la lista de personas
     {
         if (filtroCadena(nombreYApellido, (arrayPersonas[j].nombre + " " + arrayPersonas[j].apellidos)))//Si el nombre cumple el filtrado
