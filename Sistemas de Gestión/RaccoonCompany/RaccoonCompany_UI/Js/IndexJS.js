@@ -29,7 +29,7 @@ function inicializa() {
     document.getElementById("btnAddPerson").addEventListener("click", insertarPersona, false);
 }
 
-function cargarListadoPersonasConDepartamento(){
+function cargarListadoPersonasConDepartamento() {
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
 
@@ -42,14 +42,82 @@ function cargarListadoPersonasConDepartamento(){
         }
     };
 
-        miLlamada.send();
+    miLlamada.send();
+}
+
+function cargarListadoPersonas(arrayDepartamentos) {
+    var miLlamada = new XMLHttpRequest();
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
+
+    //Definicion estados
+    miLlamada.onreadystatechange = function () {
+
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
+            var table = document.getElementById("tBodyEmployee");
+            var arrayPersonas = JSON.parse(miLlamada.responseText);
+
+            for (i = 0; i < arrayPersonas.length; i++) {
+                var tr = document.createElement('tr');
+                document.getElementById("tBodyEmployee").appendChild(tr);
+
+                var td = document.createElement('td');//Creamos un tag <td> para el nombre del empleado
+                td.innerHTML = "" + arrayPersonas[i].nombre + "";
+                tr.appendChild(td);
+
+                var td2 = document.createElement('td');//Creamos un tag <td> para el apellido del empleado
+                td2.innerHTML = "" + arrayPersonas[i].apellidos + "";
+                tr.appendChild(td2);
+
+                var td3 = document.createElement('td');//Creamos un tag <td> para la fecha de nacimiento del empleado
+                td3.innerHTML = "" + arrayPersonas[i].fechaNacimiento + "";
+                tr.appendChild(td3);
+
+                var td4 = document.createElement('td');//Creamos un tag <td> para el departamento del empleado
+                var nombreEncontrado = false;
+                for (j = 0; j < arrayDepartamentos.length && !nombreEncontrado; j++) {
+                    if (arrayDepartamentos[j].id == arrayPersonas[i].idDepartamento) {
+                        td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";
+                        nombreEncontrado = true;
+                    }
+                }
+                tr.appendChild(td4);
+
+                var tdButtons = document.createElement("td");//Agregamos un tag <td> para los botones
+
+                var edit = document.createElement("input");
+                edit.setAttribute("type", "image");
+                edit.setAttribute("id", arrayPersonas[i].idPersona);
+                edit.setAttribute("src", "../Resources/Images/icon_edit.png");
+                edit.setAttribute("width", "30");
+                edit.setAttribute("heigth", "30");
+                edit.addEventListener("click", clickEditar, false);
+
+                var remove = document.createElement("input");
+                remove.setAttribute("type", "image");
+                remove.setAttribute("id", arrayPersonas[i].idPersona);
+                remove.setAttribute("src", "../Resources/Images/icon_delete.png");
+                remove.setAttribute("width", "30");
+                remove.setAttribute("heigth", "30");
+                remove.addEventListener("click", clickEliminar, false);
+
+                tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
+                tdButtons.appendChild(remove);
+
+                tr.appendChild(tdButtons);//Le asignamos el tag <td> al tag <tr> 
+
+                table.appendChild(tr);//Le asignamos el tag <tr> a la tabla
+            }
+        }
+    };
+
+    miLlamada.send();
 }
 
 function reloadTable() {//Actualizamos la tabla
     var table = document.getElementById("tableEmployee");
     var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
     for (var i = 1; i < rowCount; i++) {//Eliminamos todas las filas de la tabla
-        table.deleteRow(i);
+        table.deleteRow(1);
     }
     cargarListadoPersonasConDepartamento();//Volvemos a cargar el listado de personas
 }
@@ -80,6 +148,7 @@ function clickEditar() {//Lo utilizaremos para actualizar un empleado
     edit.style.display = "block";
 
     var pers = consultarPersona(this.id);
+    var id = this.id;
 
     //var id = document.getElementById("idPersona");
     //id.setAttribute("value", pers.idPersona);
@@ -91,10 +160,8 @@ function clickEditar() {//Lo utilizaremos para actualizar un empleado
     document.getElementById("departamentoEdit").setAttribute("value", pers.idDepartamento);
 
     save.onclick = function () {
-        //id.focus();
-
         var empleado = new Object();
-        empleado.idPersona = this.id;
+        empleado.idPersona = id;
         empleado.nombre = document.getElementById("nombreEdit").value;
         empleado.apellidos = document.getElementById("apellidosEdit").value;
         empleado.telefono = "000000000";
@@ -102,7 +169,7 @@ function clickEditar() {//Lo utilizaremos para actualizar un empleado
         empleado.idDepartamento = document.getElementById("departamentoEdit").value;
 
         var miLlamada = new XMLHttpRequest();
-        miLlamada.open("PUT", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + this.id);
+        miLlamada.open("PUT", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id);
         miLlamada.setRequestHeader('Content-type', 'application/json');
 
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {
@@ -154,104 +221,28 @@ function clickEliminar() {
     }
 }
 
-function cargarListadoPersonas(arrayDepartamentos) {
-    var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
-
-    //Definicion estados
-    miLlamada.onreadystatechange = function () {
-           
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
-            var table = document.getElementById("tBodyEmployee");
-            var arrayPersonas = JSON.parse(miLlamada.responseText);
-
-            for (i = 0; i < arrayPersonas.length; i++) {
-                var tr = document.createElement('tr');
-                document.getElementById("tBodyEmployee").appendChild(tr);
-
-                var td = document.createElement('td');//Creamos un tag <td> para el nombre del empleado
-                td.innerHTML = "" + arrayPersonas[i].nombre + "";
-                tr.appendChild(td);
-
-                var td2 = document.createElement('td');//Creamos un tag <td> para el apellido del empleado
-                td2.innerHTML = "" + arrayPersonas[i].apellidos + "";
-                tr.appendChild(td2);
-
-                var td3 = document.createElement('td');//Creamos un tag <td> para la fecha de nacimiento del empleado
-                td3.innerHTML = "" + arrayPersonas[i].fechaNacimiento + "";
-                tr.appendChild(td3);
-
-                var td4 = document.createElement('td');//Creamos un tag <td> para el departamento del empleado
-                var nombreEncontrado = false;
-                for (j = 0; i < arrayDepartamentos.length && !nombreEncontrado; j++) {
-                    if (arrayDepartamentos[j].id == arrayPersonas[i].idDepartamento) {
-                        td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";
-                        nombreEncontrado = true;
-                    }
-                }    
-                tr.appendChild(td4); 
-
-                var tdButtons = document.createElement("td");//Agregamos un tag <td> para los botones
-                    
-                var edit = document.createElement("input");
-                edit.setAttribute("type", "image");
-                edit.setAttribute("id", arrayPersonas[i].idPersona);
-                edit.setAttribute("src", "../Resources/Images/icon_edit.png");
-                edit.setAttribute("width", "30");
-                edit.setAttribute("heigth", "30");
-                edit.addEventListener("click", clickEditar, false);
-                    
-                var remove = document.createElement("input");
-                remove.setAttribute("type", "image");
-                remove.setAttribute("id", arrayPersonas[i].idPersona);
-                remove.setAttribute("src", "../Resources/Images/icon_delete.png");
-                remove.setAttribute("width", "30");
-                remove.setAttribute("heigth", "30");
-                remove.addEventListener("click", clickEliminar, false);
-
-                tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
-                tdButtons.appendChild(remove);
-
-                tr.appendChild(tdButtons);//Le asignamos el tag <td> al tag <tr> 
-
-                table.appendChild(tr);//Le asignamos el tag <tr> a la tabla
-            } 
-        }
-    };
-
-    miLlamada.send();
-}
-
 function insertarPersona() {
 
     var createModal = document.getElementById("addEmployeeModal");
-    var btnCreate = document.getElementById("btnAddPerson");
-    var btnCancel = document.getElementById("btnCancelPerson");
     createModal.style.display = "block";
 
-    btnCreate.onclick = function () {//Si pulsamos crear...
-        var id = 1;
-        var nombre = document.getElementById("nombre").value;
-        var apellidos = document.getElementById("apellidos").value;
-        var fechaNacimiento = document.getElementById("fechaNacimiento").value;
-        //var telefono = document.getElementById("telefono").value;
-        var idDepartamento = document.getElementById("departamento").value;
+    var id = 1;
+    var nombre = document.getElementById("nombre").value;
+    var apellidos = document.getElementById("apellidos").value;
+    var fechaNacimiento = document.getElementById("fechaNacimiento").value;
+    //var telefono = document.getElementById("telefono").value;
+    var idDepartamento = document.getElementById("departamento").value;
 
-        var empleado = new Object();
-        empleado.idPersona = id;
-        empleado.nombre = nombre;
-        empleado.apellidos = apellidos;
-        empleado.fechaNacimiento = fechaNacimiento;
-        empleado.telefono = "000000000";
-        empleado.idDepartamento = idDepartamento;
+    var empleado = new Object();
+    empleado.idPersona = id;
+    empleado.nombre = nombre;
+    empleado.apellidos = apellidos;
+    empleado.fechaNacimiento = fechaNacimiento;
+    empleado.telefono = "000000000";
+    empleado.idDepartamento = idDepartamento;
 
-        insertarPersonaPost(empleado);
-    }
-
-    btnCancel.onclick = function () {//Si pulsamos cancelar...
-        createModal.style.display = "none";
-    }
-
+    insertarPersonaPost(empleado);
+  
     function insertarPersonaPost(empleado) {//Insertamos el empleado por post
 
         var llamadaInsertar = new XMLHttpRequest();
@@ -259,9 +250,9 @@ function insertarPersona() {
         llamadaInsertar.setRequestHeader('Content-type', 'application/json');
 
         llamadaInsertar.onreadystatechange = function () {
-            if (llamadaInsertar.readyState == 4 && llamadaInsertar.status == 200) {
+            if (llamadaInsertar.readyState == 4 && llamadaInsertar.status == 204) {
+                //createModal.style.display = "none";
                 alert("Employee inserted!");
-                crear.style.display = "none";
                 reloadTable();
             }
         }
