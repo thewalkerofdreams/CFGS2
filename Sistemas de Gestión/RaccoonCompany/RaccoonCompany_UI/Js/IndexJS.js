@@ -27,6 +27,7 @@ window.onload = inicializa;
 function inicializa() {
     cargarListadoPersonasConDepartamento();
     document.getElementById("btnAddPerson").addEventListener("click", insertarPersona, false);
+    document.getElementById("btnSearch").addEventListener("click", filtrarLista, false);
 }
 
 function cargarListadoPersonasConDepartamento() {
@@ -262,3 +263,132 @@ function insertarPersona() {
 
     
 }
+
+function filtrarLista(){
+    var table = document.getElementById("tableEmployee");
+    var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
+    for (var i = 1; i < rowCount; i++) {//Eliminamos todas las filas de la tabla
+        table.deleteRow(1);
+    }
+
+    var miLlamada = new XMLHttpRequest();
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
+
+    //Definicion estados
+    miLlamada.onreadystatechange = function () {
+
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
+            var arrayDepartamentos = JSON.parse(miLlamada.responseText);//Obtenemos la lista de departamentos
+            mostrarListafiltrada(arrayDepartamentos);//Cargamos la lista de personas
+        }
+    };
+
+    miLlamada.send();
+}
+
+function mostrarListafiltrada(arrayDepartamentos) {
+    var miLlamada = new XMLHttpRequest();
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
+
+    //Definicion estados
+    miLlamada.onreadystatechange = function () {
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {
+            var table = document.getElementById("tBodyEmployee");
+            var arrayPersonas = JSON.parse(miLlamada.responseText);
+            var textSearch = document.getElementById("inputEmployeeName").value;
+
+            for (i = 0; i < arrayPersonas.length; i++) {
+                if (filtroValido(textSearch, arrayPersonas)) {
+                    var tr = document.createElement('tr');
+                    document.getElementById("tBodyEmployee").appendChild(tr);
+
+                    var td = document.createElement('td');//Creamos un tag <td> para el nombre del empleado
+                    td.innerHTML = "" + arrayPersonas[i].nombre + "";
+                    tr.appendChild(td);
+
+                    var td2 = document.createElement('td');//Creamos un tag <td> para el apellido del empleado
+                    td2.innerHTML = "" + arrayPersonas[i].apellidos + "";
+                    tr.appendChild(td2);
+
+                    var td3 = document.createElement('td');//Creamos un tag <td> para la fecha de nacimiento del empleado
+                    td3.innerHTML = "" + arrayPersonas[i].fechaNacimiento + "";
+                    tr.appendChild(td3);
+
+                    var td4 = document.createElement('td');//Creamos un tag <td> para el departamento del empleado
+                    var nombreEncontrado = false;
+                    for (j = 0; j < arrayDepartamentos.length && !nombreEncontrado; j++) {
+                        if (arrayDepartamentos[j].id == arrayPersonas[i].idDepartamento) {
+                            td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";
+                            nombreEncontrado = true;
+                        }
+                    }
+                    tr.appendChild(td4);
+
+                    var tdButtons = document.createElement("td");//Agregamos un tag <td> para los botones
+
+                    var edit = document.createElement("input");
+                    edit.setAttribute("type", "image");
+                    edit.setAttribute("id", arrayPersonas[i].idPersona);
+                    edit.setAttribute("src", "../Resources/Images/icon_edit.png");
+                    edit.setAttribute("width", "30");
+                    edit.setAttribute("heigth", "30");
+                    edit.addEventListener("click", clickEditar, false);
+
+                    var remove = document.createElement("input");
+                    remove.setAttribute("type", "image");
+                    remove.setAttribute("id", arrayPersonas[i].idPersona);
+                    remove.setAttribute("src", "../Resources/Images/icon_delete.png");
+                    remove.setAttribute("width", "30");
+                    remove.setAttribute("heigth", "30");
+                    remove.addEventListener("click", clickEliminar, false);
+
+                    tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
+                    tdButtons.appendChild(remove);
+
+                    tr.appendChild(tdButtons);//Le asignamos el tag <td> al tag <tr> 
+
+                    table.appendChild(tr);//Le asignamos el tag <tr> a la tabla
+                }
+            }
+        }
+    };
+
+    miLlamada.send();
+}
+
+function filtroValido(nombreYApellido, arrayPersonas) {
+
+    personaValida = false;
+
+    for (j = 0; j < arrayPersonas.length && !personaValida; j++)//Recorremos la lista de personas
+    {
+        if (filtroCadena(nombreYApellido, (arrayPersonas[j].nombre + " " + arrayPersonas[j].apellidos)))//Si el nombre cumple el filtrado
+        {
+            personaValida = true; 
+        }
+    }
+    return personaValida;
+}
+
+/// Comentario: Este método nos permite saber si una cadena es igual que otra,
+/// si la segunda cadena es más larga pero comparte los mismos carácteres iniciales 
+/// de la primera se dará por válido.
+function filtroCadena(cadena1, cadena2)
+{
+    filtroCadena = true;
+    sizeCadena1 = cadena1.length ;
+    sizeCadena2 = cadena2.length ;
+    if (sizeCadena1 <= sizeCadena2) {
+        for (k = 0; k < sizeCadena1 && filtroCadena; k++)
+        {
+            if (cadena1[k] != cadena2[k]) {
+                filtroCadena = false;
+            }
+        }
+    }
+    else {
+        filtroCadena = false;
+    }
+    return filtroCadena;
+}
+
