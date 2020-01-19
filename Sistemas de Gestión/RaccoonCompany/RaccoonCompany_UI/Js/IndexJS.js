@@ -157,7 +157,6 @@ function clickEditar() {
         miLlamada.setRequestHeader('Content-type', 'application/json');
 
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si el PUT a sido correcto
-            //actualizar
             alert("Employee edited!");
             edit.style.display = "none";
             reloadTable();
@@ -273,7 +272,7 @@ function mostrarListafiltrada(arrayDepartamentos) {
             var textSearch = document.getElementById("inputEmployeeName").value;//Almacenamos el valor de la búsqueda
 
             for (i = 0; i < arrayPersonas.length; i++) {
-                if (filtroValido(textSearch, arrayPersonas)) {//Si la persona cumple el filtrado...
+                if (filtroValido(textSearch, arrayPersonas[i])) {//Si la persona cumple el filtrado...
                     var tr = document.createElement('tr');
                     document.getElementById("tBodyEmployee").appendChild(tr);
 
@@ -332,38 +331,33 @@ function mostrarListafiltrada(arrayDepartamentos) {
 }
 
 //Esta función nos permite verificar si una persona cumple el filtro de búsqueda, esta función es utilizada en el método mostrarListafiltrada
-function filtroValido(nombreYApellido, arrayPersonas) {
-
+function filtroValido(nombreYApellido, persona) {
     personaValida = false;
-    for (j = 0; j < arrayPersonas.length && !personaValida; j++)//Recorremos la lista de personas
+    
+    if (filtroCadena(nombreYApellido, (persona.nombre + " " + persona.apellidos)))//Si el nombre cumple el filtrado
     {
-        if (filtroCadena(nombreYApellido, (arrayPersonas[j].nombre + " " + arrayPersonas[j].apellidos)))//Si el nombre cumple el filtrado
-        {
-            personaValida = true; 
-        }
+        personaValida = true; 
     }
+    
     return personaValida;
 }
 
 /// Comentario: Este método nos permite saber si una cadena es igual que otra,
 /// si la segunda cadena es más larga pero comparte los mismos carácteres iniciales 
 /// de la primera se dará por válido.
-function filtroCadena(cadena1, cadena2)
-{
-    filtroCadena = true;
-    sizeCadena1 = cadena1.length ;
-    sizeCadena2 = cadena2.length ;
+function filtroCadena(cadena1, cadena2) {
+    var filtro = true;
+    var sizeCadena1 = cadena1.length;
+    var sizeCadena2 = cadena2.length;
     if (sizeCadena1 <= sizeCadena2) {
-        for (k = 0; k < sizeCadena1 && filtroCadena; k++)
-        {
+        for (k = 0; k < sizeCadena1 && filtroCadena; k++) {
             if (cadena1[k] != cadena2[k]) {
-                filtroCadena = false;
+                filtro = false;
             }
         }
     }
     else {
         filtroCadena = false;
     }
-    return filtroCadena;
+    return filtro;
 }
-
