@@ -8,7 +8,7 @@ window.onload = inicializa;//Inicializamos los elementos básicos como los boton
 //Este método nos permite inicializar algunos elementos de la pantalla
 function inicializa() {
     cargarListadoPersonasConDepartamento();
-    document.getElementById("btnAddPerson").addEventListener("click", insertarPersona, false);
+    document.getElementById("btnAddPerson").addEventListener("click", insertarEmpleado, false);
     document.getElementById("btnSearch").addEventListener("click", filtrarLista, false);
 }
 
@@ -19,7 +19,6 @@ function cargarListadoPersonasConDepartamento() {
 
     //Definición del estado
     miLlamada.onreadystatechange = function () {//Cada vez que se actualice el estado se llamará a esta función
-
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada del tipo GET ha sido correcta
             var arrayDepartamentos = JSON.parse(miLlamada.responseText);//Obtenemos la lista de departamentos
             cargarListadoPersonas(arrayDepartamentos);//Ahora cargaremos la lista de personas con su departamento
@@ -37,7 +36,6 @@ function cargarListadoPersonas(arrayDepartamentos) {
 
     //Definición del estado
     miLlamada.onreadystatechange = function () {
-
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada por GET es correcta
             var table = document.getElementById("tBodyEmployee");//Instanciamos el elemento table de la página html
             var arrayPersonas = JSON.parse(miLlamada.responseText);//Obtenemos el array de personas (empleados)
@@ -53,6 +51,10 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 var td2 = document.createElement('td');//Creamos un tag <td> para el apellido del empleado
                 td2.innerHTML = "" + arrayPersonas[i].apellidos + "";
                 tr.appendChild(td2);
+
+                var tdPhone = document.createElement('td');
+                tdPhone.innerHTML = "" + arrayPersonas[i].telefono + "";
+                tr.appendChild(tdPhone);
 
                 var td3 = document.createElement('td');//Creamos un tag <td> para la fecha de nacimiento del empleado
                 td3.innerHTML = "" + arrayPersonas[i].fechaNacimiento + "";
@@ -76,7 +78,7 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 edit.setAttribute("src", "../Resources/Images/icon_edit.png");
                 edit.setAttribute("width", "30");
                 edit.setAttribute("heigth", "30");
-                edit.addEventListener("click", clickEditar, false);
+                edit.addEventListener("click", editClick, false);
 
                 var remove = document.createElement("input");//Configuramos el botón de eliminar para la fila del empleado
                 remove.setAttribute("type", "image");
@@ -84,7 +86,7 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 remove.setAttribute("src", "../Resources/Images/icon_delete.png");
                 remove.setAttribute("width", "30");
                 remove.setAttribute("heigth", "30");
-                remove.addEventListener("click", clickEliminar, false);
+                remove.addEventListener("click", removeClick, false);
 
                 tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
                 tdButtons.appendChild(remove);
@@ -102,15 +104,15 @@ function cargarListadoPersonas(arrayDepartamentos) {
 //Esta función nos va a permitir actualizar la tabla de empleados
 function reloadTable() {
     var table = document.getElementById("tableEmployee");//Instanciamos el elemento table de la página en una variable
-    var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
-    for (var i = 1; i < rowCount; i++) {//Eliminamos todas las filas de la tabla
+    var rows = table.rows.length;//Obtenemos el número de filas de la tabla
+    for (var i = 1; i < rows; i++) {//Eliminamos todas las filas de la tabla
         table.deleteRow(1);
     }
     cargarListadoPersonasConDepartamento();//Volvemos a cargar el listado de empleados en la tabla
 }
 
 //Nos permite obtener todos los datos de un empleado en específico
-function consultarPersona(id) {
+function getEmployee(id) {
     var empleado;
     var miLlamada = new XMLHttpRequest();
     miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id, false);
@@ -127,28 +129,28 @@ function consultarPersona(id) {
 }
 
 //Esta función se activará cada vez que el usuario desee modificar los datos de un empleado
-function clickEditar() {
+function editClick() {
     var edit = document.getElementById("editEmployeeModal");//Instanciamos el modal que aparecerá
     var save = document.getElementById("inputSaveEmployee");//Intanciamos el boton de guardar que contiene ese modal
     var cancel = document.getElementById("inputCancelSaveEmployee");//Intanciamos el boton de cancelar que contiene ese modal
     edit.style.display = "block";//bloqueamos la pantalla para que el usuario no pueda pulsar otra cosa que no sea el modal
 
-    var pers = consultarPersona(this.id);//Obtenemos los datos del empleado que se desea modificar
+    var empleado = getEmployee(this.id);//Obtenemos los datos del empleado que se desea modificar
+    var formatoFecha = empleado.fechaNacimiento.substr(0, 4) + "/" + empleado.fechaNacimiento.substr(5, 2) + "/" + empleado.fechaNacimiento.substr(8, 2);
     var id = this.id;
 
-    document.getElementById("nombreEdit").setAttribute("value", pers.nombre);
-    document.getElementById("apellidosEdit").setAttribute("value", pers.apellidos);
-    //document.getElementById("telefonoE").setAttribute("value", pers.telefono);
-    var porque2 = pers.fechaNacimiento.substr(0, 4) + "-" + pers.fechaNacimiento.substr(5, 2) + "-" + pers.fechaNacimiento.substr(8, 2);
-    document.getElementById("fechaNacimientoEdit").setAttribute("value", porque2);
-    document.getElementById("departamentoEdit").setAttribute("value", pers.idDepartamento);
+    document.getElementById("nombreEdit").setAttribute("value", empleado.nombre);
+    document.getElementById("apellidosEdit").setAttribute("value", empleado.apellidos);
+    document.getElementById("telefonoEdit").setAttribute("value", empleado.telefono);
+    document.getElementById("fechaNacimientoEdit").setAttribute("value", formatoFecha);
+    document.getElementById("departamentoEdit").value = empleado.idDepartamento;
 
     save.onclick = function () {//Si el usuario confirma los cambios
         var empleado = new Object();
         empleado.idPersona = id;
         empleado.nombre = document.getElementById("nombreEdit").value;
         empleado.apellidos = document.getElementById("apellidosEdit").value;
-        empleado.telefono = "000000000";
+        empleado.telefono = document.getElementById("telefonoEdit").value;;
         empleado.fechaNacimiento = document.getElementById("fechaNacimientoEdit").value;
         empleado.idDepartamento = document.getElementById("departamentoEdit").value;
 
@@ -171,7 +173,7 @@ function clickEditar() {
 }
 
 //Este función será llamada cada vez que el usuario desee elimninar un empleado de la lista
-function clickEliminar() {
+function removeClick() {
     var id = this.id;
     var modal = document.getElementById("deleteEmployeeModal");
     var acept = document.getElementById("inputAceptDelete");
@@ -199,7 +201,7 @@ function clickEliminar() {
 }
 
 //Esta función se lanzará cada vez que el usuario pulse el boton de añadir empleado
-function insertarPersona() {
+function insertarEmpleado() {
     var createModal = document.getElementById("addEmployeeModal");//Seleccionamos el modal de la página
     createModal.style.display = "block";
 
@@ -207,7 +209,7 @@ function insertarPersona() {
     var nombre = document.getElementById("nombre").value;
     var apellidos = document.getElementById("apellidos").value;
     var fechaNacimiento = document.getElementById("fechaNacimiento").value;
-    //var telefono = document.getElementById("telefono").value;
+    var telefono = document.getElementById("telefono").value;
     var idDepartamento = document.getElementById("departamento").value;
 
     var empleado = new Object();
@@ -215,19 +217,18 @@ function insertarPersona() {
     empleado.nombre = nombre;
     empleado.apellidos = apellidos;
     empleado.fechaNacimiento = fechaNacimiento;
-    empleado.telefono = "000000000";
+    empleado.telefono = telefono;
     empleado.idDepartamento = idDepartamento;
 
-    insertarPersonaPost(empleado);
+    insertarEmpleadoPost(empleado);
   
-    function insertarPersonaPost(empleado) {//Insertamos el empleado por post
+    function insertarEmpleadoPost(empleado) {//Insertamos el empleado por post
         var llamadaInsertar = new XMLHttpRequest();
         llamadaInsertar.open('POST', "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/", false);
         llamadaInsertar.setRequestHeader('Content-type', 'application/json');
 
         llamadaInsertar.onreadystatechange = function () {
             if (llamadaInsertar.readyState == 4 && llamadaInsertar.status == 204) {
-                //createModal.style.display = "none";
                 alert("Employee inserted!");
                 reloadTable();
             }
@@ -235,15 +236,13 @@ function insertarPersona() {
 
         llamadaInsertar.send(JSON.stringify(empleado));
     }
-
-    
 }
 
 //Este método nos permite realizar un filtrado de nombres sobre la lista de empleados
 function filtrarLista(){
     var table = document.getElementById("tableEmployee");
-    var rowCount = table.rows.length;//Obtenemos el número de filas de la tabla
-    for (var i = 1; i < rowCount; i++) {//Eliminamos todas las filas de la tabla
+    var rows = table.rows.length;//Obtenemos el número de filas de la tabla
+    for (var i = 1; i < rows; i++) {//Eliminamos todas las filas de la tabla
         table.deleteRow(1);
     }
 
@@ -284,6 +283,10 @@ function mostrarListafiltrada(arrayDepartamentos) {
                     td2.innerHTML = "" + arrayPersonas[i].apellidos + "";
                     tr.appendChild(td2);
 
+                    var tdPhone = document.createElement('td');
+                    tdPhone.innerHTML = "" + arrayPersonas[i].telefono + "";
+                    tr.appendChild(tdPhone);
+
                     var td3 = document.createElement('td');//Creamos un tag <td> para la fecha de nacimiento del empleado
                     td3.innerHTML = "" + arrayPersonas[i].fechaNacimiento + "";
                     tr.appendChild(td3);
@@ -306,7 +309,7 @@ function mostrarListafiltrada(arrayDepartamentos) {
                     edit.setAttribute("src", "../Resources/Images/icon_edit.png");
                     edit.setAttribute("width", "30");
                     edit.setAttribute("heigth", "30");
-                    edit.addEventListener("click", clickEditar, false);
+                    edit.addEventListener("click", editClick, false);
 
                     var remove = document.createElement("input");
                     remove.setAttribute("type", "image");
@@ -314,7 +317,7 @@ function mostrarListafiltrada(arrayDepartamentos) {
                     remove.setAttribute("src", "../Resources/Images/icon_delete.png");
                     remove.setAttribute("width", "30");
                     remove.setAttribute("heigth", "30");
-                    remove.addEventListener("click", clickEliminar, false);
+                    remove.addEventListener("click", removeClick, false);
 
                     tdButtons.appendChild(edit);//Agregamos los botones al tag <td>
                     tdButtons.appendChild(remove);
@@ -350,7 +353,7 @@ function filtroCadena(cadena1, cadena2) {
     var sizeCadena1 = cadena1.length;
     var sizeCadena2 = cadena2.length;
     if (sizeCadena1 <= sizeCadena2) {
-        for (k = 0; k < sizeCadena1 && filtroCadena; k++) {
+        for (var k = 0; k < sizeCadena1 && filtroCadena; k++) {
             if (cadena1[k] != cadena2[k]) {
                 filtro = false;
             }
