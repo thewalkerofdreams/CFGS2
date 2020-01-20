@@ -136,7 +136,7 @@ function editClick() {
     edit.style.display = "block";//bloqueamos la pantalla para que el usuario no pueda pulsar otra cosa que no sea el modal
 
     var empleado = getEmployee(this.id);//Obtenemos los datos del empleado que se desea modificar
-    var formatoFecha = empleado.fechaNacimiento.substr(0, 4) + "/" + empleado.fechaNacimiento.substr(5, 2) + "/" + empleado.fechaNacimiento.substr(8, 2);
+    var formatoFecha = empleado.fechaNacimiento.substr(0, 4) + "-" + empleado.fechaNacimiento.substr(5, 2) + "-" + empleado.fechaNacimiento.substr(8, 2);
     var id = this.id;
 
     document.getElementById("nombreEdit").setAttribute("value", empleado.nombre);
@@ -158,7 +158,7 @@ function editClick() {
         miLlamada.open("PUT", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id);
         miLlamada.setRequestHeader('Content-type', 'application/json');
 
-        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si el PUT a sido correcto
+        if (miLlamada.readyState == 4 && miLlamada.status == 204) {//Si el PUT a sido correcto
             alert("Employee edited!");
             edit.style.display = "none";
             reloadTable();

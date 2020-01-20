@@ -66,11 +66,11 @@
                         </div>
                         <div class="form-group">
                             <label>Phone</label>
-                            <input type="datetime" class="form-control" id="telefono" required>
+                            <input type="tel" class="form-control" id="telefono" required>
                         </div>
                         <div class="form-group">
                             <label>Birthday</label>
-                            <input type="datetime" class="form-control" id="fechaNacimiento" required>
+                            <input type="date" class="form-control" id="fechaNacimiento" required>
                         </div>
                         <div class="form-group">
                             <label>Departament</label>
@@ -92,23 +92,44 @@
 	<!-- Edit Modal HTML -->
     <div id="editEmployeeModal" class="modal">
         <form id="formE" class="modal-content">
-            <label>FirstName</label>
-            <input type="text" id="nombreEdit" class="form-control" required>
-            <label>LastName</label>
-            <input type="text" id="apellidosEdit" class="form-control" required>
-            <label>Phone</label>
-            <input type="datetime" id="telefonoEdit" class="form-control" required>
-            <label>Birthday</label>
-            <input type="datetime" id="fechaNacimientoEdit" class="form-control" required>
-            <label>Departament</label>
-            <select id="departamentoEdit">
-                <option value="1">Finanza</option>
-                <option value="2">Comercio</option>
-                <option value="3">Marketing</option>
-            </select>
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Employee</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>FirstName</label>
+                    <input type="text" id="nombreEdit" class="form-control" required>
+                </div>
 
+                <div class="form-group">
+                    <label>LastName</label>
+                    <input type="text" id="apellidosEdit" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="telefonoEdit" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Birthday</label>
+                    <input type="date" id="fechaNacimientoEdit" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Departament</label>
+                    <select id="departamentoEdit">
+                        <option value="1">Finanza</option>
+                        <option value="2">Comercio</option>
+                        <option value="3">Marketing</option>
+                    </select>
+                </div>
+            </div>
+            
             <button id="inputCancelSaveEmployee">Cancel</button>
             <button id="inputSaveEmployee">Save</button>
+            
         </form>
     </div>
 	<!-- Delete Modal HTML -->
