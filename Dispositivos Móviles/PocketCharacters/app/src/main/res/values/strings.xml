@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PocketCharacters</string>
+    <string name="title_activity_character_list">CharacterListActivity</string>
+</resources>
