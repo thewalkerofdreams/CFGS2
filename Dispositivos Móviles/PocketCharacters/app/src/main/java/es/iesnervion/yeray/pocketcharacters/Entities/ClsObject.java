@@ -1,19 +1,27 @@
 package es.iesnervion.yeray.pocketcharacters.Entities;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Ignore;
+
 public class ClsObject {
+    @ColumnInfo(name = "type")
     private String _type;
+    @ColumnInfo(name = "name")
     private String _name;
+    @ColumnInfo(name = "description")
     private String _description;
+    @ColumnInfo(name = "gameMode")
     private String _gameMode;
 
     //Constructor
+    @Ignore
     public ClsObject(){
         _type = "DEFAULT";
         _name = "DEFAULT";
         _description = "DEFAULT";
         _gameMode = "DEFAULT";
     }
-
+    @Ignore
     public ClsObject(String type, String name, String description, String gameMode){
         _type = type;
         _name = name;

@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">PocketCharacters</string>
     <string name="title_activity_character_list">CharacterListActivity</string>
+    <string name="title_activity_game_mode_list">GameModeList</string>
+    <string name="character_List">Character List</string>
+    <string name="gameMode_List">GameMode List</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="synchronize_with_server">synchronize with server</string>
+    <string name="mod">MOD</string>
+    <string name="form_type">Type: </string>
+    <string name="form_name">Name: </string>
+    <string name="form_quantity">Quantity: </string>
+    <string name="object_description">Object description...</string>
+    <string name="stat_List">Stat List</string>
+    <string name="type_Object_List">Type Object List</string>
+    <string name="form_phase">Phase: </string>
+    <string name="form_character_name">Character Name: </string>
+    <string name="character_Stats">"Character's Stats"</string>
+    <string name="inventory">Inventory</string>
+    <string name="send_Character">Send Character</string>
 </resources>

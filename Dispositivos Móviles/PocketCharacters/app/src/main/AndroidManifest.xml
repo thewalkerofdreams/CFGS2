@@ -10,10 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CharacterListActivity"
-            android:label="@string/title_activity_character_list"
+            android:name=".Activities.GameModeListActivity"
+            android:label="@string/title_activity_game_mode_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Activities.CharacterListActivity"
+            android:label="@string/title_activity_character_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

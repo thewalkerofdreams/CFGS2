@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="153dp"
+        android:src="@drawable/scroll"
+        android:layout_margin="10sp"></ImageView>
+
+    <Button
+        android:id="@+id/btnStatList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/stat_List"
+        android:layout_margin="10sp"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btnTypeObjectList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/type_Object_List"
+        android:textAlignment="center"
+        android:layout_margin="10sp"/>
+</LinearLayout>

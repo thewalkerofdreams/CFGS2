@@ -1,9 +1,22 @@
 package es.iesnervion.yeray.pocketcharacters.Entities;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity (foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"),
+        @ForeignKey(entity = ClsCharacter.class, parentColumns = "id", childColumns = "characterId")})
 public class ClsStat {
+    @PrimaryKey
+    @ColumnInfo(name = "name")
     private String _name;
+    @ColumnInfo(name = "value")
     private String _value;//no sabemos si el valor de la estadística será numérico
+    @ColumnInfo(name = "characterId")
     private int _characterId;
+    @ColumnInfo(name = "gameMode")
     private String _gameMode;
 
     //Constructores
@@ -13,7 +26,7 @@ public class ClsStat {
         _characterId = 0;
         _gameMode = "DEFAULT";
     }
-
+    @Ignore
     public ClsStat(String name, String value, int characterId, String gameMode){
         _name = name;
         _value = value;

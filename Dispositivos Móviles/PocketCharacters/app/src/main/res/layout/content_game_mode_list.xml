@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.CharacterListActivity"
-    tools:showIn="@layout/activity_character_list">
+    tools:context=".Activities.GameModeListActivity"
+    tools:showIn="@layout/activity_game_mode_list">
+
     <ListView
-        android:id="@+id/ListViewCharacters"
+        android:id="@+id/ListViewGameModes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
