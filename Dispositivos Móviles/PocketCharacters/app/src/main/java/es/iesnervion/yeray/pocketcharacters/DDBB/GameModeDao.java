@@ -8,7 +8,7 @@ import androidx.room.Update;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsGameMode;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 
 public interface GameModeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

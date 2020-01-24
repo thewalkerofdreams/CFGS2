@@ -6,20 +6,23 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsGameMode;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsObjectAndQuantity;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
-@Database(entities = {ClsCharacter.class, ClsGameMode.class, ClsObjectAndQuantity.class, ClsStat.class}, version = 1)
+@Database(entities = {ClsCharacter.class, ClsGameMode.class, ClsObjectAndCharacter.class, ClsStat.class}, version = 1)
 public abstract class AppDataBase  extends RoomDatabase {
 
     private static AppDataBase INSTANCE;//Instancia de la base de datos
 
     public abstract CharacterDao characterDao();
     public abstract GameModeDao gameModeDao();
-    public abstract ObjectAndQuantityDao objectAndQuantityDao();
+    public abstract ObjectDao objectDao();
+    public abstract ObjectTypeDao objectTypeDao();
     public abstract StatDao statDao();
+    public abstract ObjectAndCharacterDao objectAndCharacterDao();
+    public abstract CharacterAndStatDao characterAndStatDao();
 
     public static AppDataBase getDataBase(final Context context){
         if(INSTANCE == null){

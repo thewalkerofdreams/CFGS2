@@ -9,25 +9,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 
 public class CharacterListActivityVM extends AndroidViewModel {
-    private int _idUser;
     private ArrayList<ClsCharacter> _characterList;
 
     public CharacterListActivityVM(Application application){
         super(application);
+        _characterList = new ArrayList<ClsCharacter>();
+        loadList();
     }
 
     //Get Y Set
-    public int get_idUser() {
-        return _idUser;
-    }
-
-    public void set_idUser(int _idUser) {
-        this._idUser = _idUser;
-    }
-
     public ArrayList<ClsCharacter> get_characterList() {
         return _characterList;
     }
@@ -39,18 +32,17 @@ public class CharacterListActivityVM extends AndroidViewModel {
     //Funciones sobre la base de datos
     /*
     * Interfaz
-    * Nombre: setListOfCharacteresFromUser
-    * Comentario: Este método nos permite modificar el estado del atributo "_characterList",
-    * contendrá la lista de personajes del usuario.
-    * Cabecera: public void setListOfCharacteresFromUser()
-    * Precondiciones:
-    *   -El atributo _idUser debe apuntar al usuario correcto.
-    * Postcondiciones: El método carga la lista de personajes del usuario en el atributo "_characterList".
+    * Nombre: loadList
+    * Comentario: Este método nos permite cargar la lista de personajes de la base de datos,
+    * en el atributo "_characterList".
+    * Cabecera: private void loadList()
+    * Postcondiciones: El método carga la lista de persoanjes en el atributo "_characterList" del
+    * ViewModel.
     * */
-    public void setListOfCharacteresFromUser(){
+    private void loadList(){
         ExecutorService myExecutor = Executors.newSingleThreadExecutor();
         myExecutor.execute(() -> {
-            _characterList = new ArrayList<>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters()); //TODO Preguntar a pablo
+            _characterList = new ArrayList<ClsCharacter>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
         });
     }
 }

@@ -1,11 +1,19 @@
-package es.iesnervion.yeray.pocketcharacters.Entities;
+package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
+@Entity (foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"),
+        @ForeignKey(entity = ClsObjectType.class, parentColumns = "id", childColumns = "type")})
 public class ClsObject {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int _id;
     @ColumnInfo(name = "type")
-    private String _type;
+    private int _type;
     @ColumnInfo(name = "name")
     private String _name;
     @ColumnInfo(name = "description")
@@ -14,15 +22,11 @@ public class ClsObject {
     private String _gameMode;
 
     //Constructor
-    @Ignore
     public ClsObject(){
-        _type = "DEFAULT";
-        _name = "DEFAULT";
-        _description = "DEFAULT";
-        _gameMode = "DEFAULT";
     }
+
     @Ignore
-    public ClsObject(String type, String name, String description, String gameMode){
+    public ClsObject(int type, String name, String description, String gameMode){
         _type = type;
         _name = name;
         _description = description;
@@ -30,11 +34,19 @@ public class ClsObject {
     }
 
     //Get Y Set
-    public String get_type() {
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
+    public int get_type() {
         return _type;
     }
 
-    public void set_type(String _type) {
+    public void set_type(int _type) {
         this._type = _type;
     }
 

@@ -8,8 +8,7 @@ import androidx.room.Update;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 public interface StatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

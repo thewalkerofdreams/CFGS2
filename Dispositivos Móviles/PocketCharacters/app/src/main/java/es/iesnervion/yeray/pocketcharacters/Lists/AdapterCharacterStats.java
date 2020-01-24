@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.R;
 
 public class AdapterCharacterStats extends BaseAdapter {

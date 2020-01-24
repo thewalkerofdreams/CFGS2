@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.R;
 
 public class AdapterCharacterList extends BaseAdapter {

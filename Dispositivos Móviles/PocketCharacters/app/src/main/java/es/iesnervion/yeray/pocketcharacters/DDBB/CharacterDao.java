@@ -7,9 +7,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import es.iesnervion.yeray.pocketcharacters.Entities.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 
 public interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -1,4 +1,4 @@
-package es.iesnervion.yeray.pocketcharacters.Entities;
+package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity(foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
 public class ClsCharacter {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;
     @ColumnInfo(name = "gameMode")
@@ -27,7 +27,7 @@ public class ClsCharacter {
     @ColumnInfo(name = "creationDate")
     private Date _creationDate;
     @Ignore
-    private ArrayList<ClsObjectAndQuantity> _inventory;
+    private ArrayList<ClsObjectAndCharacter> _inventory;
 
     //Constructores
     public ClsCharacter(){
@@ -38,10 +38,10 @@ public class ClsCharacter {
         _story = "DEFAULT";
         _stats = new ArrayList<ClsStat>();
         _creationDate = null;
-        _inventory = new ArrayList<ClsObjectAndQuantity>();
+        _inventory = new ArrayList<ClsObjectAndCharacter>();
     }
     @Ignore
-    public ClsCharacter(int id, String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, Date creationDate, ArrayList<ClsObjectAndQuantity> inventory){
+    public ClsCharacter(int id, String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, Date creationDate, ArrayList<ClsObjectAndCharacter> inventory){
         _id = id;
         _gameMode = gameMode;
         _characterName = characterName;
@@ -109,11 +109,11 @@ public class ClsCharacter {
         this._creationDate = _creationDate;
     }
 
-    public ArrayList<ClsObjectAndQuantity> get_inventory() {
+    public ArrayList<ClsObjectAndCharacter> get_inventory() {
         return _inventory;
     }
 
-    public void set_inventory(ArrayList<ClsObjectAndQuantity> _inventory) {
+    public void set_inventory(ArrayList<ClsObjectAndCharacter> _inventory) {
         this._inventory = _inventory;
     }
 }
