@@ -1,5 +1,6 @@
 package es.iesnervion.yeray.pocketcharacters.DDBB;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -7,9 +8,11 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
+@Dao
 public interface StatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStat(ClsStat stat);
@@ -21,7 +24,7 @@ public interface StatDao {
     void deleteStat(ClsStat stat);
 
     @Query("SELECT * FROM ClsStat")
-    ArrayList<ClsStat> getAllStats();
+    List<ClsStat> getAllStats();
 
     @Query("SELECT * FROM ClsStat WHERE name = :name")
     ClsStat getStat(String name);

@@ -52,9 +52,9 @@ public class AdapterCharacterList extends BaseAdapter {
             characterName = v.findViewById(R.id.TextViewCharacterName);
             gameModeName = v.findViewById(R.id.TextViewGameModeName);
             chapterName = v.findViewById(R.id.TextViewChapterName);
-            creationDate = v.findViewById(R.id.TextViewCreationDate);
+            //creationDate = v.findViewById(R.id.TextViewCreationDate);
 
-            holder = new ViewHolder(characterName, gameModeName, chapterName, creationDate);//Almacenamos los datos en el holder
+            holder = new ViewHolder(characterName, gameModeName, chapterName);//Almacenamos los datos en el holder
             v.setTag(holder);//Metemos el objeto en el tag de la vista
         }else{
             holder = (ViewHolder) v.getTag();
@@ -63,18 +63,18 @@ public class AdapterCharacterList extends BaseAdapter {
         holder.get_characterName().setText(_item.get_characterName());
         holder.get_gameModeName().setText(_item.get_gameMode());
         holder.get_chapterName().setText(_item.get_chapterName());
-        holder.get_creationDate().setText(_item.get_creationDate().toString());
+        //holder.get_creationDate().setText(_item.get_creationDate().toString());
         return v;
     }
 
     public class ViewHolder{
         TextView _characterName, _gameModeName, _chapterName, _creationDate;
 
-        public ViewHolder(TextView characterName, TextView gameModeName, TextView chapterName, TextView creationDate) {
+        public ViewHolder(TextView characterName, TextView gameModeName, TextView chapterName) {
             this._characterName = characterName;
             this._gameModeName = gameModeName;
             this._chapterName = chapterName;
-            this._creationDate = creationDate;
+            //this._creationDate = creationDate;
         }
 
         public TextView get_characterName() {
@@ -89,8 +89,8 @@ public class AdapterCharacterList extends BaseAdapter {
             return _chapterName;
         }
 
-        public TextView get_creationDate() {
+        /*public TextView get_creationDate() {
             return _creationDate;
-        }
+        }*/
     }
 }

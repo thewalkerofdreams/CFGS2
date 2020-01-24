@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
@@ -44,5 +45,12 @@ public class CharacterListActivityVM extends AndroidViewModel {
         myExecutor.execute(() -> {
             _characterList = new ArrayList<ClsCharacter>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
         });
+
+        /*//TODO Esto tendremos que cambiarlo
+        try {
+            myExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
     }
 }

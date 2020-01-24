@@ -1,16 +1,19 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 
-@Entity (primaryKeys = {"idCharacter", "stat"}, foreignKeys = {@ForeignKey(entity = ClsStat.class, parentColumns = "name", childColumns = "stat"),
+@Entity (indices = {@Index("idCharacter"), @Index("stat")}, primaryKeys = {"idCharacter", "stat"}, foreignKeys = {@ForeignKey(entity = ClsStat.class, parentColumns = "name", childColumns = "stat"),
         @ForeignKey(entity = ClsCharacter.class, parentColumns = "id", childColumns = "idCharacter")})
 public class ClsCharacterAndStat {
     @ColumnInfo(name = "idCharacter")
     private int _idCharacter;
     @ColumnInfo(name = "stat")
+    @NonNull
     private String _stat;
     @ColumnInfo(name = "value")
     private String _value;

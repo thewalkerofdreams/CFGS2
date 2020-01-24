@@ -1,15 +1,18 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity (foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode")})
+@Entity (indices = {@Index("gameMode")}, foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode")})
 public class ClsStat {
     @PrimaryKey
     @ColumnInfo(name = "name")
+    @NonNull
     private String _name;
     @ColumnInfo(name = "gameMode")
     private String _gameMode;

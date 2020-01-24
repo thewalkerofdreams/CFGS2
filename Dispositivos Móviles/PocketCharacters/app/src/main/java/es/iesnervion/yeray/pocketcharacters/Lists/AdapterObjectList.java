@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
 import es.iesnervion.yeray.pocketcharacters.R;
 
 public class AdapterObjectList extends BaseAdapter {
     private Context _context;
     private int _layout;
-    private ArrayList<ClsObjectAndCharacter> _items;
+    private ArrayList<ClsObjectAndQuantity> _items;
 
-    public AdapterObjectList(Context context, int layout, ArrayList<ClsObjectAndCharacter> items){
+    public AdapterObjectList(Context context, int layout, ArrayList<ClsObjectAndQuantity> items){
         _context = context;
         _layout = layout;
         _items = items;
@@ -29,7 +29,7 @@ public class AdapterObjectList extends BaseAdapter {
     }
 
     @Override
-    public ClsObjectAndCharacter getItem(int position){
+    public ClsObjectAndQuantity getItem(int position){
         return _items.get(position);
     }
 
@@ -43,7 +43,7 @@ public class AdapterObjectList extends BaseAdapter {
         View v = convertView;
         ViewHolder holder;
         TextView objectType, objectName, quantity;
-        ClsObjectAndCharacter _item = getItem(position);
+        ClsObjectAndQuantity _item = getItem(position);
 
         if(v == null){
             LayoutInflater layoutInflater = LayoutInflater.from(this._context);//Inflamos la vista con nuestro propio layout
@@ -59,8 +59,8 @@ public class AdapterObjectList extends BaseAdapter {
             holder = (ViewHolder) v.getTag();
         }
 
-        holder.get_objectType().setText(_item.getObjectType());
-        holder.get_objectName().setText(_item.getObjectName());
+        holder.get_objectType().setText(_item.get_object().get_type());
+        holder.get_objectName().setText(_item.get_object().get_name());
         holder.get_quantity().setText(_item.get_quantity());
         return v;
     }

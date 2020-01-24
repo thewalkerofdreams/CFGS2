@@ -1,5 +1,6 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -9,6 +10,7 @@ import androidx.room.PrimaryKey;
 public class ClsGameMode {
     @PrimaryKey
     @ColumnInfo(name = "name")
+    @NonNull
     private String _name;
 
     //Constructores
@@ -26,5 +28,11 @@ public class ClsGameMode {
 
     public void set_name(String _name) {
         this._name = _name;
+    }
+
+    //Funciones sobreescritas
+    @Override
+    public String toString(){
+        return _name;
     }
 }

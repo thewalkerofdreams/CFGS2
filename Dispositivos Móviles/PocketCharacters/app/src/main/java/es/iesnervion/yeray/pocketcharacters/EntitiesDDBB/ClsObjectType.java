@@ -1,5 +1,6 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -7,10 +8,9 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class ClsObjectType {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private int _id;
+    @PrimaryKey
     @ColumnInfo(name = "name")
+    @NonNull
     private String _name;
 
     //Constructores
@@ -18,20 +18,11 @@ public class ClsObjectType {
     }
 
     @Ignore
-    public ClsObjectType(int id, String name){
-        _id = id;
+    public ClsObjectType(String name){
         _name = name;
     }
 
     //Get Y Set
-    public int get_id() {
-        return _id;
-    }
-
-    public void set_id(int _id) {
-        this._id = _id;
-    }
-
     public String get_name() {
         return _name;
     }

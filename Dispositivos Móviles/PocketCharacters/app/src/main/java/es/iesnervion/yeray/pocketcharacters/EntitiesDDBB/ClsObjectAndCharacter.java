@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 
-@Entity (primaryKeys = {"idCharacter", "idObject"}, foreignKeys = {@ForeignKey(entity = ClsObject.class, parentColumns = "id", childColumns = "idObject"),
+@Entity (indices = {@Index("idCharacter"), @Index("idObject")}, primaryKeys = {"idCharacter", "idObject"}, foreignKeys = {@ForeignKey(entity = ClsObject.class, parentColumns = "id", childColumns = "idObject"),
 @ForeignKey(entity = ClsCharacter.class, parentColumns = "id", childColumns = "idCharacter")})
 public class ClsObjectAndCharacter {
 

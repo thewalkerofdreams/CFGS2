@@ -4,12 +4,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-@Entity(foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
+@Entity(indices = {@Index("gameMode")},foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
 public class ClsCharacter {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -24,8 +25,8 @@ public class ClsCharacter {
     private String _story;
     @Ignore
     private ArrayList<ClsStat> _stats;
-    @ColumnInfo(name = "creationDate")
-    private Date _creationDate;
+    //@ColumnInfo(name = "creationDate")
+    //private Date _creationDate;
     @Ignore
     private ArrayList<ClsObjectAndCharacter> _inventory;
 
@@ -37,18 +38,18 @@ public class ClsCharacter {
         _chapterName = "DEFAULT";
         _story = "DEFAULT";
         _stats = new ArrayList<ClsStat>();
-        _creationDate = null;
+        //_creationDate = null;
         _inventory = new ArrayList<ClsObjectAndCharacter>();
     }
     @Ignore
-    public ClsCharacter(int id, String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, Date creationDate, ArrayList<ClsObjectAndCharacter> inventory){
+    public ClsCharacter(int id, String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, ArrayList<ClsObjectAndCharacter> inventory){
         _id = id;
         _gameMode = gameMode;
         _characterName = characterName;
         _chapterName = chapterName;
         _story = story;
         _stats = stats;
-        _creationDate = creationDate;
+        //_creationDate = creationDate;
         _inventory = inventory;
     }
 
@@ -101,14 +102,14 @@ public class ClsCharacter {
         this._stats = _stats;
     }
 
-    public Date get_creationDate() {
+    /*public Date get_creationDate() {
         return _creationDate;
     }
 
     public void set_creationDate(Date _creationDate) {
         this._creationDate = _creationDate;
     }
-
+*/
     public ArrayList<ClsObjectAndCharacter> get_inventory() {
         return _inventory;
     }

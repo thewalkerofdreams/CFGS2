@@ -1,5 +1,6 @@
 package es.iesnervion.yeray.pocketcharacters.DDBB;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -7,10 +8,12 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 
+@Dao
 public interface ObjectTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertObjectType(ClsObjectType object);
@@ -22,7 +25,7 @@ public interface ObjectTypeDao {
     void deleteObjectType(ClsObjectType object);
 
     @Query("SELECT * FROM ClsObjectType")
-    ArrayList<ClsObjectType> getAllObjectTypes();
+    List<ClsObjectType> getAllObjectTypes();
 
     @Query("SELECT * FROM ClsObjectType WHERE name = :name")
     ClsObjectType getObjectType(String name);

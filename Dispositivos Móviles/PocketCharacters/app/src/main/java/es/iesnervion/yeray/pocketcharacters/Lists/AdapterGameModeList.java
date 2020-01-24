@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.R;
 
-public class AdapterCharacterStats extends BaseAdapter {
+public class AdapterGameModeList extends BaseAdapter {
     private Context _context;
     private int _layout;
-    private ArrayList<ClsStatModel> _items;
+    private ArrayList<ClsGameMode> _items;
 
-    public AdapterCharacterStats(Context context, int layout, ArrayList<ClsStatModel> items){
+    public AdapterGameModeList(Context context, int layout, ArrayList<ClsGameMode> items){
         _context = context;
         _layout = layout;
         _items = items;
@@ -29,7 +29,7 @@ public class AdapterCharacterStats extends BaseAdapter {
     }
 
     @Override
-    public ClsStatModel getItem(int position){
+    public ClsGameMode getItem(int position){
         return _items.get(position);
     }
 
@@ -42,41 +42,34 @@ public class AdapterCharacterStats extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup){
         View v = convertView;
         ViewHolder holder;
-        TextView statName, value;
-        ClsStatModel _item = getItem(position);
+        TextView gameModeName;
+        ClsGameMode _item = getItem(position);
 
         if(v == null){
             LayoutInflater layoutInflater = LayoutInflater.from(this._context);//Inflamos la vista con nuestro propio layout
             v = layoutInflater.inflate(_layout, null);
 
-            statName = v.findViewById(R.id.TextViewStatName);
-            value = v.findViewById(R.id.TextViewStatValue);
+            gameModeName = v.findViewById(R.id.TextViewGameModeName);
 
-            holder = new ViewHolder(statName, value);//Almacenamos los datos en el holder
+            holder = new ViewHolder(gameModeName);//Almacenamos los datos en el holder
             v.setTag(holder);//Metemos el objeto en el tag de la vista
         }else{
             holder = (ViewHolder) v.getTag();
         }
 
-        holder.get_statName().setText(_item.get_name());
-        holder.get_value().setText(_item.get_value());
+        holder.get_gameModeName().setText(_item.get_name());
         return v;
     }
 
     public class ViewHolder{
-        TextView _statName, _value;
+        TextView _gameModeName;
 
-        public ViewHolder(TextView statName, TextView value) {
-            this._statName = statName;
-            this._value = value;
+        public ViewHolder(TextView gameModeName) {
+            this._gameModeName = gameModeName;
         }
 
-        public TextView get_statName() {
-            return _statName;
-        }
-
-        public TextView get_value() {
-            return _value;
+        public TextView get_gameModeName() {
+            return _gameModeName;
         }
     }
 }
