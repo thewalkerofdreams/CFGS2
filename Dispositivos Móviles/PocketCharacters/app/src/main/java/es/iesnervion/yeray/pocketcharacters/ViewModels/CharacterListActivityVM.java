@@ -1,6 +1,7 @@
 package es.iesnervion.yeray.pocketcharacters.ViewModels;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 
@@ -36,21 +37,13 @@ public class CharacterListActivityVM extends AndroidViewModel {
     * Nombre: loadList
     * Comentario: Este método nos permite cargar la lista de personajes de la base de datos,
     * en el atributo "_characterList".
-    * Cabecera: private void loadList()
-    * Postcondiciones: El método carga la lista de persoanjes en el atributo "_characterList" del
+    * Cabecera: public void loadList(String gameMode)
+    * Entrada:
+    *   -String gameMode
+    * Postcondiciones: El método carga la lista de personajes en el atributo "_characterList" del
     * ViewModel.
     * */
-    private void loadList(){
-        ExecutorService myExecutor = Executors.newSingleThreadExecutor();
-        myExecutor.execute(() -> {
-            _characterList = new ArrayList<ClsCharacter>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
-        });
-
-        /*//TODO Esto tendremos que cambiarlo
-        try {
-            myExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+    public void loadList(){
+        _characterList = new ArrayList<ClsCharacter>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
     }
 }

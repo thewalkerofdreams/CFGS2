@@ -1,5 +1,8 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -10,8 +13,10 @@ import androidx.room.PrimaryKey;
 import java.util.ArrayList;
 import java.util.Date;
 
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
+
 @Entity(indices = {@Index("gameMode")},foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
-public class ClsCharacter {
+public class ClsCharacter implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;
@@ -28,7 +33,7 @@ public class ClsCharacter {
     //@ColumnInfo(name = "creationDate")
     //private Date _creationDate;
     @Ignore
-    private ArrayList<ClsObjectAndCharacter> _inventory;
+    private ArrayList<ClsObjectAndQuantity> _inventory;
 
     //Constructores
     public ClsCharacter(){
@@ -39,11 +44,10 @@ public class ClsCharacter {
         _story = "DEFAULT";
         _stats = new ArrayList<ClsStat>();
         //_creationDate = null;
-        _inventory = new ArrayList<ClsObjectAndCharacter>();
+        _inventory = new ArrayList<ClsObjectAndQuantity>();
     }
     @Ignore
-    public ClsCharacter(int id, String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, ArrayList<ClsObjectAndCharacter> inventory){
-        _id = id;
+    public ClsCharacter(String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, ArrayList<ClsObjectAndQuantity> inventory){
         _gameMode = gameMode;
         _characterName = characterName;
         _chapterName = chapterName;
@@ -51,6 +55,17 @@ public class ClsCharacter {
         _stats = stats;
         //_creationDate = creationDate;
         _inventory = inventory;
+    }
+
+    @Ignore
+    public ClsCharacter(String gameMode, String characterName, String chapterName, String story){
+        _gameMode = gameMode;
+        _characterName = characterName;
+        _chapterName = chapterName;
+        _story = story;
+        _stats = new ArrayList<ClsStat>();
+        //_creationDate = creationDate;
+        _inventory = new ArrayList<ClsObjectAndQuantity>();
     }
 
     //Get Y Set
@@ -110,11 +125,49 @@ public class ClsCharacter {
         this._creationDate = _creationDate;
     }
 */
-    public ArrayList<ClsObjectAndCharacter> get_inventory() {
+
+    public ArrayList<ClsObjectAndQuantity> get_inventory() {
         return _inventory;
     }
 
-    public void set_inventory(ArrayList<ClsObjectAndCharacter> _inventory) {
+    public void set_inventory(ArrayList<ClsObjectAndQuantity> _inventory) {
         this._inventory = _inventory;
     }
+
+    //Parceable
+    @Ignore
+    protected ClsCharacter(Parcel in) {
+        _characterName = in.readString();
+        _chapterName = in.readString();
+        _id = in.readInt();
+        _story = in.readString();
+        _gameMode = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_characterName);
+        dest.writeString(_chapterName);
+        dest.writeInt(_id);
+        dest.writeString(_story);
+        dest.writeString(_gameMode);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ClsCharacter> CREATOR = new Parcelable.Creator<ClsCharacter>() {
+        @Override
+        public ClsCharacter createFromParcel(Parcel in) {
+            return new ClsCharacter(in);
+        }
+
+        @Override
+        public ClsCharacter[] newArray(int size) {
+            return new ClsCharacter[size];
+        }
+    };
 }

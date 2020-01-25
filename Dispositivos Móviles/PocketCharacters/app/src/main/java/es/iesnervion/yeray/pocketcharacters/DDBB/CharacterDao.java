@@ -28,4 +28,10 @@ public interface CharacterDao {
 
     @Query("SELECT * FROM ClsCharacter WHERE characterName = :characterName")
     ClsCharacter getCharacter(String characterName);
+
+    @Query("SELECT * FROM ClsCharacter WHERE gameMode = :gameMode AND characterName = :characterName")
+    ClsCharacter getCharacter(String gameMode, String characterName);
+
+    @Query("SELECT * FROM ClsCharacter WHERE gameMode = :gameMode")
+    List<ClsCharacter> getCharactersByGameMode(String gameMode);
 }

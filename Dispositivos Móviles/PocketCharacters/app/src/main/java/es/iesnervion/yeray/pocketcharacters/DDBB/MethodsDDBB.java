@@ -91,6 +91,30 @@ public class MethodsDDBB {
 
     /*
      * Interfaz
+     * Nombre: existAnyGameMode
+     * Comentario: Este método nos permite verificar si existe algun tipo GameMode en la base de
+     * datos.
+     * Cabecera: public boolean existAnyGameMode(Context context)
+     * Entrada:
+     *   -Context context
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
+     * si existe algún GameMode en la base de datos o false en caso contrario.
+     * */
+    public boolean existAnyGameMode(Context context){
+        boolean exist = false;
+        ArrayList<ClsGameMode> gameModes = new ArrayList<ClsGameMode>(AppDataBase.getDataBase(context).gameModeDao().getAllGameModes());
+
+        if (gameModes.size() > 0){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /*
+     * Interfaz
      * Nombre: existObject
      * Comentario: Este método nos permite si existe un objeto en la base
      * de datos con un nombre y gamemode en específico.
@@ -135,6 +159,32 @@ public class MethodsDDBB {
         ClsStat stat = AppDataBase.getDataBase(context).statDao().getStatByGameModeAndName(gameModeName, statName);
 
         if (stat != null){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /*
+     * Interfaz
+     * Nombre: existCharacter
+     * Comentario: Este método nos permite verificar si existe un personaje en la base
+     * de datos con un nombre y gamemode en específico.
+     * Cabecera: public boolean existCharacter(Context context, String gameModeName, String characterName)
+     * Entrada:
+     *   -Context context
+     *   -String gameModeName
+     *   -String characterName
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
+     * si ya existe un personaje con ese nombre y gamemode en la base de datos o false en caso contrario.
+     * */
+    public boolean existCharacter(Context context, String gameModeName, String characterName){
+        boolean exist = false;
+        ClsCharacter character = AppDataBase.getDataBase(context).characterDao().getCharacter(gameModeName, characterName);
+
+        if (character != null){
             exist = true;
         }
 

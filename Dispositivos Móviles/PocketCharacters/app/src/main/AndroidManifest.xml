@@ -39,6 +39,8 @@
         <activity android:name=".Activities.GameModeDatasActivity" />
         <activity android:name=".Activities.NewObjectActivity" />
         <activity android:name=".Activities.EditObjectActivity" />
+        <activity android:name=".Activities.NewCharacterActivity"></activity>
+        <activity android:name=".Activities.CharacterDetailsActivity"></activity>
     </application>
 
 </manifest>
