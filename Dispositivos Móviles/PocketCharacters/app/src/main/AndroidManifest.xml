@@ -10,9 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activities.CharacterObjectListActivity"
+            android:label="@string/title_activity_character_object_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activities.CharacterStatsListActivity"
+            android:label="@string/title_activity_character_stats_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".Activities.StatListActivity"
             android:label="@string/title_activity_stat_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.ObjectTypeListActivity"
             android:label="@string/title_activity_object_type_list"
@@ -39,8 +47,8 @@
         <activity android:name=".Activities.GameModeDatasActivity" />
         <activity android:name=".Activities.NewObjectActivity" />
         <activity android:name=".Activities.EditObjectActivity" />
-        <activity android:name=".Activities.NewCharacterActivity"></activity>
-        <activity android:name=".Activities.CharacterDetailsActivity"></activity>
+        <activity android:name=".Activities.NewCharacterActivity" />
+        <activity android:name=".Activities.CharacterDetailsActivity" />
     </application>
 
 </manifest>

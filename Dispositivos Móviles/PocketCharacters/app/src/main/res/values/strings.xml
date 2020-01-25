@@ -40,4 +40,6 @@
     <string name="already_exist_object">Already exist this object name in the GameMode!</string>
     <string name="title_activity_stat_list">StatListActivity</string>
     <string name="form_chapter">Chapter: </string>
+    <string name="title_activity_character_stats_list">CharacterStatsListActivity</string>
+    <string name="title_activity_character_object_list">CharacterObjectListActivity</string>
 </resources>

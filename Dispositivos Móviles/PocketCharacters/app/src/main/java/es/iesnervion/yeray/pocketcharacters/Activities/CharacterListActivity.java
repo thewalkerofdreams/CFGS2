@@ -30,6 +30,7 @@ import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsCharacterModel;
 import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterListActivityVM;
@@ -68,6 +69,7 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClsCharacter item = (ClsCharacter) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
         Intent intent = new Intent(this, CharacterDetailsActivity.class);
+        //ClsCharacterModel characterModel = new ClsCharacterModel(item, this);
         intent.putExtra("Character", item);
         startActivityForResult(intent, 1);
     }

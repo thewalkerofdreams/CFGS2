@@ -28,12 +28,8 @@ public class ClsCharacter implements Parcelable {
     private String _chapterName;//Sesión de juego
     @ColumnInfo(name = "story")
     private String _story;
-    @Ignore
-    private ArrayList<ClsStat> _stats;
     //@ColumnInfo(name = "creationDate")
     //private Date _creationDate;
-    @Ignore
-    private ArrayList<ClsObjectAndQuantity> _inventory;
 
     //Constructores
     public ClsCharacter(){
@@ -42,19 +38,7 @@ public class ClsCharacter implements Parcelable {
         _characterName = "DEFAULT";
         _chapterName = "DEFAULT";
         _story = "DEFAULT";
-        _stats = new ArrayList<ClsStat>();
         //_creationDate = null;
-        _inventory = new ArrayList<ClsObjectAndQuantity>();
-    }
-    @Ignore
-    public ClsCharacter(String gameMode, String characterName, String chapterName, String story, ArrayList<ClsStat> stats, ArrayList<ClsObjectAndQuantity> inventory){
-        _gameMode = gameMode;
-        _characterName = characterName;
-        _chapterName = chapterName;
-        _story = story;
-        _stats = stats;
-        //_creationDate = creationDate;
-        _inventory = inventory;
     }
 
     @Ignore
@@ -63,9 +47,16 @@ public class ClsCharacter implements Parcelable {
         _characterName = characterName;
         _chapterName = chapterName;
         _story = story;
-        _stats = new ArrayList<ClsStat>();
         //_creationDate = creationDate;
-        _inventory = new ArrayList<ClsObjectAndQuantity>();
+    }
+
+    @Ignore
+    public ClsCharacter(ClsCharacter character){
+        _id = character.get_id();
+        _gameMode = character.get_gameMode();
+        _characterName = character.get_characterName();
+        _chapterName = character.get_chapterName();
+        _story = character.get_story();
     }
 
     //Get Y Set
@@ -109,14 +100,6 @@ public class ClsCharacter implements Parcelable {
         this._story = _story;
     }
 
-    public ArrayList<ClsStat> get_stats() {
-        return _stats;
-    }
-
-    public void set_stats(ArrayList<ClsStat> _stats) {
-        this._stats = _stats;
-    }
-
     /*public Date get_creationDate() {
         return _creationDate;
     }
@@ -125,14 +108,6 @@ public class ClsCharacter implements Parcelable {
         this._creationDate = _creationDate;
     }
 */
-
-    public ArrayList<ClsObjectAndQuantity> get_inventory() {
-        return _inventory;
-    }
-
-    public void set_inventory(ArrayList<ClsObjectAndQuantity> _inventory) {
-        this._inventory = _inventory;
-    }
 
     //Parceable
     @Ignore

@@ -12,6 +12,7 @@ import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 @Dao
 public interface CharacterAndStatDao {
@@ -29,4 +30,11 @@ public interface CharacterAndStatDao {
 
     @Query("SELECT * FROM ClsCharacterAndStat WHERE idCharacter = :idCharacter AND idStat = :idStat")
     ClsCharacterAndStat getCharacterAndStat(int idCharacter, int idStat);
+
+    /*@Query("SELECT S.name, CS.value FROM ClsStat AS S " +
+            "INNER JOIN ClsCharacterAndStat AS CS ON S.id = CS.idStat " +
+            "INNER JOIN ClsCharacter AS C ON CS.idCharacter = C.id " +
+            "WHERE C.id = :idCharacter")
+    ArrayList<ClsStatModel> getStatsAndValueByCharacter(int idCharacter);*/
+
 }
