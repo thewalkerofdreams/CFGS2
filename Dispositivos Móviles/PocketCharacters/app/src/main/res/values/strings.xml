@@ -38,4 +38,5 @@
     <string name="object_name_empty">The object name is empty!</string>
     <string name="object_description_empty">The object description is empty!</string>
     <string name="already_exist_object">Already exist this object name in the GameMode!</string>
+    <string name="title_activity_stat_list">StatListActivity</string>
 </resources>

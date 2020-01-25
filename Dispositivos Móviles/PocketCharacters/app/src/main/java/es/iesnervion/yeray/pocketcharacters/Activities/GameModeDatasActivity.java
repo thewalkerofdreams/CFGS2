@@ -27,4 +27,17 @@ public class GameModeDatasActivity extends AppCompatActivity {
     public void throwObjectListSimpleActivity(View v){
         startActivity(new Intent(this, ObjectListSimpleActivity.class).putExtra("GameMode", getIntent().getStringExtra("GameMode")));
     }
+
+    /*
+     * Interfaz
+     * Nombre: throwStatListActivity
+     * Comentario: Este método nos permite lanzar la actividad StatListActivity.
+     * Cabecera: public void throwStatListActivity(View v)
+     * Entrada:
+     *   -View v
+     * Postcondiciones: El método lanza la actividad StatListActivity.
+     * */
+    public void throwStatListActivity(View v){
+        startActivity(new Intent(this, StatListActivity.class).putExtra("GameMode", getIntent().getStringExtra("GameMode")));
+    }
 }

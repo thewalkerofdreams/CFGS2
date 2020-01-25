@@ -10,6 +10,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 public class MethodsDDBB {
     private boolean exist = false;
@@ -108,6 +109,32 @@ public class MethodsDDBB {
         ClsObject object = AppDataBase.getDataBase(context).objectDao().getObjectByGameModeAndName(gameModeName, objectName);
 
         if (object != null){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /*
+     * Interfaz
+     * Nombre: existStat
+     * Comentario: Este método nos permite verificar si existe un stat en la base
+     * de datos con un nombre y gamemode en específico.
+     * Cabecera: public boolean existStat(Context context, String gameModeName, String statName)
+     * Entrada:
+     *   -Context context
+     *   -String gameModeName
+     *   -String statName
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
+     * si ya existe un stat con ese nombre y gamemode en la base de datos o false en caso contrario.
+     * */
+    public boolean existStat(Context context, String gameModeName, String statName){
+        boolean exist = false;
+        ClsStat stat = AppDataBase.getDataBase(context).statDao().getStatByGameModeAndName(gameModeName, statName);
+
+        if (stat != null){
             exist = true;
         }
 

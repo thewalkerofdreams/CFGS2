@@ -27,6 +27,6 @@ public interface CharacterAndStatDao {
     @Query("SELECT * FROM ClsCharacterAndStat")
     List<ClsCharacterAndStat> getAllCharactersAndStats();
 
-    @Query("SELECT * FROM ClsCharacterAndStat WHERE idCharacter = :idCharacter")
-    ClsCharacterAndStat getCharacterAndStat(String idCharacter);
+    @Query("SELECT * FROM ClsCharacterAndStat WHERE idCharacter = :idCharacter AND idStat = :idStat")
+    ClsCharacterAndStat getCharacterAndStat(int idCharacter, int idStat);
 }

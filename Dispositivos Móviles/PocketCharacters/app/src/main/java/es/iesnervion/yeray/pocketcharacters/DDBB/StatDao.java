@@ -10,11 +10,12 @@ import androidx.room.Update;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 @Dao
 public interface StatDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insertStat(ClsStat stat);
 
     @Update
@@ -28,4 +29,10 @@ public interface StatDao {
 
     @Query("SELECT * FROM ClsStat WHERE name = :name")
     ClsStat getStat(String name);
+
+    @Query("SELECT * FROM ClsStat WHERE gameMode = :gameMode")
+    List<ClsStat> getStatsByGameMode(String gameMode);
+
+    @Query("SELECT * FROM ClsStat WHERE gameMode = :gameMode AND name = :name")
+    ClsStat getStatByGameModeAndName(String gameMode, String name);
 }

@@ -14,7 +14,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 
 @Dao
 public interface CharacterDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insertCharacter(ClsCharacter character);
 
     @Update

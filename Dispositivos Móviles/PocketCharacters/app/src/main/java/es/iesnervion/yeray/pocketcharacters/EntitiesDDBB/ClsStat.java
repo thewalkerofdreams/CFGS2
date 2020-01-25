@@ -10,9 +10,10 @@ import androidx.room.PrimaryKey;
 
 @Entity (indices = {@Index("gameMode")}, foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode")})
 public class ClsStat {
-    @PrimaryKey
+    @PrimaryKey (autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int _id;
     @ColumnInfo(name = "name")
-    @NonNull
     private String _name;
     @ColumnInfo(name = "gameMode")
     private String _gameMode;
@@ -27,6 +28,14 @@ public class ClsStat {
     }
 
     //Get Y Set
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
     public String get_name() {
         return _name;
     }

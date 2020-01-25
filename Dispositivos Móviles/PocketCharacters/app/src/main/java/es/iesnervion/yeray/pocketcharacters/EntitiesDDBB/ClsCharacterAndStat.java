@@ -7,14 +7,13 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 
-@Entity (indices = {@Index("idCharacter"), @Index("stat")}, primaryKeys = {"idCharacter", "stat"}, foreignKeys = {@ForeignKey(entity = ClsStat.class, parentColumns = "name", childColumns = "stat"),
+@Entity (indices = {@Index("idCharacter"), @Index("idStat")}, primaryKeys = {"idCharacter", "idStat"}, foreignKeys = {@ForeignKey(entity = ClsStat.class, parentColumns = "id", childColumns = "idStat"),
         @ForeignKey(entity = ClsCharacter.class, parentColumns = "id", childColumns = "idCharacter")})
 public class ClsCharacterAndStat {
     @ColumnInfo(name = "idCharacter")
     private int _idCharacter;
-    @ColumnInfo(name = "stat")
-    @NonNull
-    private String _stat;
+    @ColumnInfo(name = "idStat")
+    private int _idStat;
     @ColumnInfo(name = "value")
     private String _value;
 
@@ -23,9 +22,9 @@ public class ClsCharacterAndStat {
     }
 
     @Ignore
-    public ClsCharacterAndStat(int idCharacter, String stat, String value){
+    public ClsCharacterAndStat(int idCharacter, int idStat, String value){
         this._idCharacter = idCharacter;
-        this._stat = stat;
+        this._idStat = idStat;
         this._value = value;
     }
 
@@ -38,12 +37,12 @@ public class ClsCharacterAndStat {
         this._idCharacter = _idCharacter;
     }
 
-    public String get_stat() {
-        return _stat;
+    public int get_idStat() {
+        return _idStat;
     }
 
-    public void set_stat(String _stat) {
-        this._stat = _stat;
+    public void set_idStat(int _idStat) {
+        this._idStat = _idStat;
     }
 
     public String get_value() {

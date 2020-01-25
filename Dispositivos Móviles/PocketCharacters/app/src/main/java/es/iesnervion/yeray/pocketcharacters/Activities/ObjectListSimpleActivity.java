@@ -69,7 +69,11 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        ClsObject item = (ClsObject) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+        Intent intent = new Intent(this, EditObjectActivity.class);
+        intent.putExtra("GameMode", getIntent().getStringExtra("GameMode"));
+        intent.putExtra("Object", item);
+        startActivityForResult(intent, 2);
     }
 
     @Override
@@ -138,7 +142,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode >= 1 && requestCode <= 2 ) {
             reloadList();
         }
     }
