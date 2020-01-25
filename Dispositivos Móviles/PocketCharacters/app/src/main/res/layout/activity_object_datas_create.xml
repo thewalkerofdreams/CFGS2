@@ -14,20 +14,21 @@
             android:textSize="16sp"
             android:layout_margin="5sp"></TextView>
 
-        <TextView
-            android:id="@+id/TextViewObjectType"
+        <Spinner
+            android:id="@+id/SpinnerObjectTypeCreate"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="250sp"
             android:background="#FFF"
             android:textSize="16sp"
-            android:layout_margin="5sp"></TextView>
+            android:layout_margin="5sp"></Spinner>
 
         <Button
             android:id="@+id/btnModObjectDatas"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/mod"></Button>
+            android:onClick="saveObject"
+            android:text="@string/create"></Button>
     </LinearLayout>
 
     <LinearLayout
@@ -41,35 +42,14 @@
             android:textSize="16sp"
             android:layout_margin="5sp"></TextView>
 
-        <TextView
-            android:id="@+id/TextViewObjectName"
+        <EditText
+            android:id="@+id/EditTextObjectName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="16sp"
             android:background="#FFF"
             android:minWidth="250sp"
-            android:layout_margin="5sp"></TextView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/form_quantity"
-            android:textSize="16sp"
-            android:layout_margin="5sp"></TextView>
-
-        <TextView
-            android:id="@+id/TextViewObjectQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#FFF"
-            android:textSize="16sp"
-            android:minWidth="232sp"
-            android:layout_margin="5sp"></TextView>
+            android:layout_margin="5sp"></EditText>
     </LinearLayout>
 
     <EditText

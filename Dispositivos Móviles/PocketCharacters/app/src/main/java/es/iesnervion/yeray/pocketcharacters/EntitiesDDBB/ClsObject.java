@@ -1,5 +1,8 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -9,7 +12,7 @@ import androidx.room.PrimaryKey;
 
 @Entity (indices = {@Index("gameMode"), @Index("type")}, foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"),
         @ForeignKey(entity = ClsObjectType.class, parentColumns = "name", childColumns = "type")})
-public class ClsObject {
+public class ClsObject implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;
@@ -74,4 +77,41 @@ public class ClsObject {
     public void set_gameMode(String _gameMode) {
         this._gameMode = _gameMode;
     }
+
+    //Parceable
+    @Ignore
+    protected ClsObject(Parcel in) {
+        _type = in.readString();
+        _name = in.readString();
+        _id = in.readInt();
+        _description = in.readString();
+        _gameMode = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_type);
+        dest.writeString(_name);
+        dest.writeInt(_id);
+        dest.writeString(_description);
+        dest.writeString(_gameMode);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ClsObject> CREATOR = new Parcelable.Creator<ClsObject>() {
+        @Override
+        public ClsObject createFromParcel(Parcel in) {
+            return new ClsObject(in);
+        }
+
+        @Override
+        public ClsObject[] newArray(int size) {
+            return new ClsObject[size];
+        }
+    };
 }

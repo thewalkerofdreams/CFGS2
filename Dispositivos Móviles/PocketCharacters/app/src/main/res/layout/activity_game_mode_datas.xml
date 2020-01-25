@@ -21,7 +21,8 @@
         android:id="@+id/btnTypeObjectList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/type_Object_List"
+        android:text="@string/object_list"
+        android:onClick="throwObjectListSimpleActivity"
         android:textAlignment="center"
         android:layout_margin="10sp"/>
 </LinearLayout>
