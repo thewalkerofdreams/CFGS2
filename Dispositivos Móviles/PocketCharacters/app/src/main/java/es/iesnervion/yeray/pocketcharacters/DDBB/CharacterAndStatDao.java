@@ -12,6 +12,7 @@ import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 @Dao

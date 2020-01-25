@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
-public class CharacterStatsListVM extends AndroidViewModel {
+public class CharacterStatsListActivityVM extends AndroidViewModel {
     private ClsCharacter _character;
     MutableLiveData<ArrayList<ClsStatModel>> _statList;
     MutableLiveData<ClsStatModel> _statSelected;
 
-    public CharacterStatsListVM(Application application) {
+    public CharacterStatsListActivityVM(Application application) {
         super(application);
         _statList = new MutableLiveData<ArrayList<ClsStatModel>>();
         _statSelected = new MutableLiveData<ClsStatModel>();

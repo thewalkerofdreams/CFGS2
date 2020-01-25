@@ -18,12 +18,12 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.R;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListVM;
+import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 
 public class CharacterStatsListFragment extends Fragment {
 
     EditText statName, value;
-    CharacterStatsListVM viewModel;
+    CharacterStatsListActivityVM viewModel;
     Button btnUpdate;
 
     //Constructor por defecto.
@@ -33,7 +33,7 @@ public class CharacterStatsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_edit_stat_fragment, container, false);
-        viewModel = ViewModelProviders.of(getActivity()).get(CharacterStatsListVM.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(CharacterStatsListActivityVM.class);
 
         statName = view.findViewById(R.id.TextViewStatNameFrag);
         value = view.findViewById(R.id.EditTextStatValueFrag);
