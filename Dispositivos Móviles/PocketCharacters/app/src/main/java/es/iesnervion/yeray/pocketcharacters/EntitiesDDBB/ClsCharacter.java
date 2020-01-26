@@ -10,13 +10,14 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
 
 @Entity(indices = {@Index("gameMode")},foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
-public class ClsCharacter implements Parcelable {
+public class ClsCharacter implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;
@@ -110,7 +111,7 @@ public class ClsCharacter implements Parcelable {
 */
 
     //Parceable
-    @Ignore
+    /*@Ignore
     protected ClsCharacter(Parcel in) {
         _characterName = in.readString();
         _chapterName = in.readString();
@@ -144,5 +145,5 @@ public class ClsCharacter implements Parcelable {
         public ClsCharacter[] newArray(int size) {
             return new ClsCharacter[size];
         }
-    };
+    };*/
 }

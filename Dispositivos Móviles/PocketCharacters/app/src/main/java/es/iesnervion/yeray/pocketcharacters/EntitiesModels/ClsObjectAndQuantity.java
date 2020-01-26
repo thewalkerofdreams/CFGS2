@@ -1,11 +1,12 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesModels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 
-public class ClsObjectAndQuantity {
+public class ClsObjectAndQuantity implements Serializable {
     private ClsObject _object;
     private int _quantity;
 

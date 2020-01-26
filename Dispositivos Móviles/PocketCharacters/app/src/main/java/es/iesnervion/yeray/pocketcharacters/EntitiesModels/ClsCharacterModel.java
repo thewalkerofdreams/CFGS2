@@ -6,24 +6,38 @@ import android.os.Parcelable;
 
 import androidx.room.Ignore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
-public class ClsCharacterModel extends ClsCharacter implements Parcelable {
+public class ClsCharacterModel  implements Serializable {
+    private ClsCharacter _character;
     private ArrayList<ClsStatModel> _stats;
     private ArrayList<ClsObjectAndQuantity> _objects;
+    private Context _context;
 
-    public ClsCharacterModel(ClsCharacter character){
-        super(character);
+    public ClsCharacterModel(ClsCharacter character, Context context){
+        _character = character;
         _stats = new ArrayList<>();
         _objects = new ArrayList<>();
+        _context = context;
         loadStats();
     }
 
     //Get Y Set
+    public ClsCharacter get_character() {
+        return _character;
+    }
+
+    public void set_character(ClsCharacter _character) {
+        this._character = _character;
+    }
+
     public ArrayList<ClsStatModel> get_stats() {
         return _stats;
     }
@@ -40,6 +54,14 @@ public class ClsCharacterModel extends ClsCharacter implements Parcelable {
         this._objects = _objects;
     }
 
+    public Context get_context() {
+        return _context;
+    }
+
+    public void set_context(Context _context) {
+        this._context = _context;
+    }
+
     /*
     * Interfaz
     * Nombre: loadStats
@@ -48,12 +70,23 @@ public class ClsCharacterModel extends ClsCharacter implements Parcelable {
     * Postcondiciones: El método carga los stats del personaje en el atributo "-stats".
     * */
     public void loadStats(){
+        //TODO modificar esto cuando sepa hacer los inner joins en room
         //_stats = new ArrayList<ClsStatModel>(AppDataBase.getDataBase(_context).characterAndStatDao().getStatsAndValueByCharacter(get_id()));
+        ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(_context).statDao().getStatsByGameMode(_character.get_gameMode()));
+
+        for(int i = 0; i < stats.size(); i++){
+            ClsCharacterAndStat characterAndStats = AppDataBase.getDataBase(_context).characterAndStatDao().getCharacterAndStat(
+                    _character.get_id(), stats.get(i).get_id());
+            if(characterAndStats != null){
+                ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
+                _stats.add(statModel);
+            }
+        }
     }
 
     //Parcelable
-    @Ignore
-    protected ClsCharacterModel(Parcel in) {
+    /*@Ignore
+    public ClsCharacterModel(Parcel in) {
 
         if (in.readByte() == 0x01) {
             _stats = new ArrayList<ClsStatModel>();
@@ -92,5 +125,5 @@ public class ClsCharacterModel extends ClsCharacter implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(_objects);
         }
-    }
+    }*/
 }

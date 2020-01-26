@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 
-public class CharacterListActivityVM extends AndroidViewModel {
+public class CharacterListActivityVM extends AndroidViewModel implements Serializable {
     private ArrayList<ClsCharacter> _characterList;
 
     public CharacterListActivityVM(Application application){

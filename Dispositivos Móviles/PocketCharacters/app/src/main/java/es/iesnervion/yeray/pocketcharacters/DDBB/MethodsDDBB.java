@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
@@ -185,6 +186,33 @@ public class MethodsDDBB {
         ClsCharacter character = AppDataBase.getDataBase(context).characterDao().getCharacter(gameModeName, characterName);
 
         if (character != null){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /*
+    * Interfaz
+    * Nombre: existStatWithValueByCharacter
+    * Comentario: Este método nos permite verificar si personaje ya tiene un stat específico.
+    * Cabecera: public boolean existStatWithValueByCharacter(Context context, ClsCharacter character, String statName)
+    * Entrada:
+    *   -Context context
+    *   -ClsCharacter character
+    *   -String statName
+    * Salida:
+    *   -boolean exist
+    * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si ya esxiste ese stat
+    * para ese personaje específico.
+    * */
+    public boolean existStatWithValueByCharacter(Context context, ClsCharacter character, ClsStat stat){
+        boolean exist = false;
+
+        ClsCharacterAndStat clsCharacterAndStat = AppDataBase.getDataBase(context).characterAndStatDao().getCharacterAndStat(character.get_id(),
+                stat.get_id());
+
+        if(clsCharacterAndStat != null){
             exist = true;
         }
 

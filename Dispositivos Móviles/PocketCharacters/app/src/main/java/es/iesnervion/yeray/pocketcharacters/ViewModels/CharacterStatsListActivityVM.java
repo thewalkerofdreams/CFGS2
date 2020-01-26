@@ -6,12 +6,16 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
-public class CharacterStatsListActivityVM extends AndroidViewModel {
+public class CharacterStatsListActivityVM extends AndroidViewModel implements Serializable {
     private ClsCharacter _character;
     MutableLiveData<ArrayList<ClsStatModel>> _statList;
     MutableLiveData<ClsStatModel> _statSelected;
@@ -19,6 +23,7 @@ public class CharacterStatsListActivityVM extends AndroidViewModel {
     public CharacterStatsListActivityVM(Application application) {
         super(application);
         _statList = new MutableLiveData<ArrayList<ClsStatModel>>();
+        _statList.setValue(new ArrayList<ClsStatModel>());
         _statSelected = new MutableLiveData<ClsStatModel>();
     }
 
@@ -56,16 +61,18 @@ public class CharacterStatsListActivityVM extends AndroidViewModel {
      * Cabecera: private void loadStatList()
      * Postcondiciones: El método carga la lista de stats.
      * */
-    private void loadStatList(){
-        //TODO Necesito saber como hacer los innner join con room
-        /*ManejadorBaseDeDatos manejador = new ManejadorBaseDeDatos(getApplication());
-        List<Gallina> listGallinas = manejador.getAllHens(nickUsuario);
-        ArrayList<Gallina> henList = new ArrayList<Gallina>();
+    public void loadStatList(){
+        //TODO Necesito saber como hacer los innner join con room para quitar esta burrada
+        _statList.setValue(new ArrayList<ClsStatModel>());
+        ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_character.get_gameMode()));
 
-        for(int i = 0; i < listGallinas.size(); i++){
-            henList.add(listGallinas.get(i));
+        for(int i = 0; i < stats.size(); i++){
+            ClsCharacterAndStat characterAndStats = AppDataBase.getDataBase(getApplication()).characterAndStatDao().getCharacterAndStat(
+                    _character.get_id(), stats.get(i).get_id());
+            if(characterAndStats != null){
+                ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
+                _statList.getValue().add(statModel);
+            }
         }
-
-        this.listadoGallinas.setValue(henList);*/
     }
 }

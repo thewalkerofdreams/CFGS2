@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.EditObjectActivityVM;
 
@@ -24,8 +25,10 @@ public class EditObjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_object_datas_details);
         viewModel = ViewModelProviders.of(this).get(EditObjectActivityVM.class);//Instanciamos el ViewModel
-        viewModel.set_inObject(getIntent().getExtras().getParcelable("Object"));
-        viewModel.set_outObject(getIntent().getExtras().getParcelable("Object"));
+        //viewModel.set_inObject(getIntent().getExtras().getParcelable("Object"));
+        viewModel.set_inObject((ClsObject) getIntent().getExtras().getSerializable("Object"));
+        //viewModel.set_outObject(getIntent().getExtras().getParcelable("Object"));
+        viewModel.set_outObject((ClsObject) getIntent().getExtras().getSerializable("Object"));
 
         objectType = findViewById(R.id.TextViewModObjectType);
         objectName = findViewById(R.id.EditTextModObjectName);

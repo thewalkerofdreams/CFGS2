@@ -8,8 +8,10 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity (indices = {@Index("gameMode")}, foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode")})
-public class ClsStat {
+public class ClsStat implements Serializable {
     @PrimaryKey (autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;

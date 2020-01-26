@@ -1,5 +1,7 @@
 package es.iesnervion.yeray.pocketcharacters.Activities;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
@@ -45,7 +49,9 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         setSupportActionBar(toolbar);
 
         viewModel = ViewModelProviders.of(this).get(CharacterStatsListActivityVM.class);
-        viewModel.set_character(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
+        //viewModel.set_character(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
+        viewModel.set_character((ClsCharacter) getIntent().getExtras().getSerializable("Character01"));
+        //viewModel.loadStatList();
         statList = viewModel.get_statList().getValue();//Obtenemos el listado de stats
         listView = findViewById(R.id.ListViewHens);
 
@@ -88,9 +94,9 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
                 Toast.makeText(getBaseContext(), "Stat deleted!", Toast.LENGTH_SHORT).show();
 
                 //Aquí obtenemos el id del stat a modificar
-                ClsStat stat = AppDataBase.getDataBase(getApplication()).statDao().getStatByGameModeAndName(viewModel.get_character().get_gameMode(), viewModel.get_statSelected().getValue().get_name());
+                ClsStat stat = AppDataBase.getDataBase(getApplication()).statDao().getStatByGameModeAndName(viewModel.get_character().get_gameMode(), item.get_name());
                 ClsCharacterAndStat clsCharacterAndStat = new ClsCharacterAndStat(viewModel.get_character().get_id(),
-                        stat.get_id(), viewModel.get_statSelected().getValue().get_value());
+                        stat.get_id(), item.get_value());
                 //Insertamos los datos en la tabla CharacterAndStat
                 AppDataBase.getDataBase(getApplication()).characterAndStatDao().deleteCharacterAndStat(clsCharacterAndStat);
 
@@ -153,8 +159,15 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         //TODO Cuando estemos en la actividad de creación solo deben aparecer en el spinner los stats que aún no tiene el personaje
         Intent i = new Intent(this, NewCharacterStatActivity.class);
         i.putExtra("Character", viewModel.get_character());
-        startActivity(i);
-        //startActivityForResult(i, 1);
+        startActivityForResult(i, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            reloadList();
+        }
     }
 
     /*
@@ -165,8 +178,11 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
     * Postcondiciones: El método recarga la lista de stats.
     * */
     public void reloadList(){
+        viewModel.loadStatList();
         statList = viewModel.get_statList().getValue();//Obtenemos el listado de stats
         adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, statList);
         listView.setAdapter(adapter);
+        //TODO Corregir este error para que cada vez que eliminemos un stat no vuelva a la pantalla anterior
+        ((CharacterDetailsActivity) getApplicationContext()).reloadList();//Recargamos la lista del mainActivity.
     }
 }

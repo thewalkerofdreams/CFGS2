@@ -1,6 +1,8 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesModels;
 
-public class ClsStatModel {
+import java.io.Serializable;
+
+public class ClsStatModel implements Serializable {
     private String _name;
     private String _value;
 

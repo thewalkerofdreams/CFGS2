@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterStats;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterDetailsActivityVM;
@@ -28,15 +29,19 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_datas);
         viewModel = ViewModelProviders.of(this).get(CharacterDetailsActivityVM.class);//Instanciamos el ViewModel
-        viewModel.set_inCharacter(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
-        viewModel.set_outCharacter(getIntent().getExtras().getParcelable("Character"));
+        //viewModel.set_inCharacter(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
+        viewModel.set_inCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));//Obtenemos el personaje
+        //viewModel.get_inCharacter().loadStats();
+        //viewModel.set_outCharacter(getIntent().getExtras().getParcelable("Character"));
+        viewModel.set_outCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));
+        //viewModel.get_outCharacter().loadStats();
         listView = findViewById(R.id.ListViewStats);
         characterName = findViewById(R.id.CharacterName);
-        characterName.setText(viewModel.get_inCharacter().get_characterName());
+        characterName.setText(viewModel.get_inCharacter().get_character().get_characterName());
         chapterName = findViewById(R.id.PhaseName);
-        chapterName.setText(viewModel.get_inCharacter().get_chapterName());
+        chapterName.setText(viewModel.get_inCharacter().get_character().get_chapterName());
 
-        adapter = new AdapterCharacterStats(this, R.layout.item_object_list_simple, viewModel.get_outCharacter().get_stats());
+        adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, viewModel.get_inCharacter().get_stats());
         listView.setAdapter(adapter);
     }
 
@@ -53,16 +58,16 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     * de error.
     * */
     public void updateNameAndChapter(View v){
-        viewModel.get_outCharacter().set_characterName(characterName.getText().toString());
-        viewModel.get_outCharacter().set_chapterName(chapterName.getText().toString());
+        viewModel.get_outCharacter().get_character().set_characterName(characterName.getText().toString());
+        viewModel.get_outCharacter().get_character().set_chapterName(chapterName.getText().toString());
 
-        if(viewModel.get_outCharacter().get_characterName().length() > 0 && viewModel.get_outCharacter().get_chapterName().length() > 0){
-            if(viewModel.get_inCharacter().get_characterName().equals(viewModel.get_outCharacter().get_characterName())){
+        if(viewModel.get_outCharacter().get_character().get_characterName().length() > 0 && viewModel.get_outCharacter().get_character().get_chapterName().length() > 0){
+            if(viewModel.get_inCharacter().get_character().get_characterName().equals(viewModel.get_outCharacter().get_character().get_characterName())){
                 Toast.makeText(getApplication(), "Already exist a character with this name!", Toast.LENGTH_SHORT).show();
             }else{
-                AppDataBase.getDataBase(getApplication()).characterDao().updateCharacter(viewModel.get_outCharacter());
+                AppDataBase.getDataBase(getApplication()).characterDao().updateCharacter(viewModel.get_outCharacter().get_character());
                 Toast.makeText(getApplication(), "Character saved!", Toast.LENGTH_SHORT).show();
-                viewModel.set_inCharacter(viewModel.get_outCharacter());
+                viewModel.set_inCharacter(viewModel.get_outCharacter().get_character());
             }
         }else{
             Toast.makeText(getApplication(), "The character name and the chapter are required!", Toast.LENGTH_SHORT).show();
@@ -79,6 +84,22 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     * Postcondiciones: El método lanza la actividad CharacterStatsListActivity.
     * */
     public void throwCharacterStatsListActivity(View v){
-        startActivityForResult(new Intent(this, CharacterStatsListActivity.class).putExtra("Character", viewModel.get_inCharacter()), 1);
+        Intent intent = new Intent(this, CharacterStatsListActivity.class);
+        //intent.putExtra("Character01", viewModel.get_inCharacter());
+        intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
+        startActivity(intent);
+    }
+
+    /*
+    * Interfaz
+    * Nombre: reloadList
+    * Comentario: Este método nos permite recargar la lista de stats del personaje.
+    * Cabecera: public void reloadList()
+    * Postcondiciones: El método recarga la lista de stats del personaje.
+    * */
+    public void reloadList(){
+        viewModel.get_outCharacter().loadStats();
+        adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, viewModel.get_inCharacter().get_stats());
+        listView.setAdapter(adapter);
     }
 }

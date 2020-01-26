@@ -12,12 +12,12 @@
         android:id="@+id/ListViewHens"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="380dp"
         android:clickable="true"
         android:minHeight="600sp"
         app:layout_constraintBottom_toTopOf="@+id/FrameLayout01"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></ListView>
 

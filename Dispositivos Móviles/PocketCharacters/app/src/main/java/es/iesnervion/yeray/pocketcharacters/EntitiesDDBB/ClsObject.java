@@ -10,9 +10,11 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity (indices = {@Index("gameMode"), @Index("type")}, foreignKeys = {@ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"),
         @ForeignKey(entity = ClsObjectType.class, parentColumns = "name", childColumns = "type")})
-public class ClsObject implements Parcelable {
+public class ClsObject implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int _id;
@@ -79,7 +81,7 @@ public class ClsObject implements Parcelable {
     }
 
     //Parceable
-    @Ignore
+    /*@Ignore
     protected ClsObject(Parcel in) {
         _type = in.readString();
         _name = in.readString();
@@ -113,5 +115,5 @@ public class ClsObject implements Parcelable {
         public ClsObject[] newArray(int size) {
             return new ClsObject[size];
         }
-    };
+    };*/
 }

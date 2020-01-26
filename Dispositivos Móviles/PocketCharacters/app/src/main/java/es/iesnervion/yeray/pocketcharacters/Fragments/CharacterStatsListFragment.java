@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import java.io.Serializable;
 
 import es.iesnervion.yeray.pocketcharacters.Activities.CharacterStatsListActivity;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
@@ -20,9 +23,10 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 
-public class CharacterStatsListFragment extends Fragment {
+public class CharacterStatsListFragment extends Fragment implements Serializable {
 
-    EditText statName, value;
+    EditText value;
+    TextView statName;
     CharacterStatsListActivityVM viewModel;
     Button btnUpdate;
 
@@ -37,7 +41,7 @@ public class CharacterStatsListFragment extends Fragment {
 
         statName = view.findViewById(R.id.TextViewStatNameFrag);
         value = view.findViewById(R.id.EditTextStatValueFrag);
-        btnUpdate = view.findViewById(R.id.btnModHen);
+        btnUpdate = view.findViewById(R.id.btnModStat);
 
         if(viewModel.get_statSelected().getValue() != null){
             statName.setText(viewModel.get_statSelected().getValue().get_name());
@@ -49,7 +53,7 @@ public class CharacterStatsListFragment extends Fragment {
             @Override
             public void onChanged(ClsStatModel clsStatModel) {
                 if(viewModel.get_statSelected().getValue() != null){
-                    statName.setText(viewModel.get_statSelected().getValue().get_value());
+                    statName.setText(viewModel.get_statSelected().getValue().get_name());
                     value.setText(viewModel.get_statSelected().getValue().get_value());
                 }
             }

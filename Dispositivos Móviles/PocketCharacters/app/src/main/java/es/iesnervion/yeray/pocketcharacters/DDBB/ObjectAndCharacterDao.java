@@ -27,6 +27,6 @@ public interface ObjectAndCharacterDao {
     @Query("SELECT * FROM ClsObjectAndCharacter")
     List<ClsObjectAndCharacter> getAllObjectsAndCharacters();
 
-    @Query("SELECT * FROM ClsObjectAndCharacter WHERE idCharacter = :idCharacter")
-    ClsObjectAndCharacter getObjectAndCharacter(String idCharacter);
+    @Query("SELECT * FROM ClsObjectAndCharacter WHERE idCharacter = :idCharacter AND idObject = :idObject")
+    ClsObjectAndCharacter getObjectAndCharacter(int idCharacter, int idObject);
 }

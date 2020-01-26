@@ -8,4 +8,9 @@
     tools:context=".Activities.CharacterObjectListActivity"
     tools:showIn="@layout/activity_character_object_list">
 
+    <ListView
+        android:id="@+id/ListViewObjectsCharacter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

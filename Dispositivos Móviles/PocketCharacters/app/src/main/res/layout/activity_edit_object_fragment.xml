@@ -8,13 +8,26 @@
         android:layout_height="wrap_content">
 
         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="10sp"
+        android:text="Type: "></TextView>
+
+        <TextView
+            android:id="@+id/TextViewObjectTypeFrag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5sp"
+            android:minWidth="80sp"></TextView>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10sp"
-            android:text="Stat: "></TextView>
+            android:text="Name: "></TextView>
 
         <TextView
-            android:id="@+id/TextViewStatNameFrag"
+            android:id="@+id/TextViewObjectNameFrag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5sp"
@@ -30,10 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10sp"
-            android:text="Value: "></TextView>
+            android:text="Quantity: "></TextView>
 
         <EditText
-            android:id="@+id/EditTextStatValueFrag"
+            android:id="@+id/EditTextObjectQuantityFrag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5sp"
@@ -41,7 +54,7 @@
             android:minWidth="100sp"></EditText>
 
         <Button
-            android:id="@+id/btnModStat"
+            android:id="@+id/btnModObject"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Update Hen"
