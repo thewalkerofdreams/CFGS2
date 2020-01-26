@@ -3,6 +3,7 @@ package es.iesnervion.yeray.pocketcharacters.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -85,6 +86,22 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     * */
     public void throwCharacterStatsListActivity(View v){
         Intent intent = new Intent(this, CharacterStatsListActivity.class);
+        //intent.putExtra("Character01", viewModel.get_inCharacter());
+        intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
+        startActivity(intent);
+    }
+
+    /*
+     * Interfaz
+     * Nombre: throwCharacterObjectListActivity
+     * Comentario: Este método nos permite lanzar la actividad CharacterObjectListActivity.
+     * Cabecera: public void throwCharacterObjectListActivity(View v)
+     * Entrada:
+     *   -View v
+     * Postcondiciones: El método lanza la actividad CharacterObjectListActivity.
+     * */
+    public void throwCharacterObjectListActivity(View v){
+        Intent intent = new Intent(this, CharacterObjectListActivity.class);
         //intent.putExtra("Character01", viewModel.get_inCharacter());
         intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
         startActivity(intent);

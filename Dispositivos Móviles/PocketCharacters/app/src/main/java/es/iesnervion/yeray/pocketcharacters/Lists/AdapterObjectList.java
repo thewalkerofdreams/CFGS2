@@ -61,7 +61,7 @@ public class AdapterObjectList extends BaseAdapter {
 
         holder.get_objectType().setText(_item.get_object().get_type());
         holder.get_objectName().setText(_item.get_object().get_name());
-        holder.get_quantity().setText(_item.get_quantity());
+        holder.get_quantity().setText(String.valueOf(_item.get_quantity()));
         return v;
     }
 

@@ -101,6 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/inventory"
+        android:onClick="throwCharacterObjectListActivity"
         android:layout_margin="5sp"/>
 
     <Button
@@ -108,5 +109,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/send_Character"
+        android:onClick="throwCharacterObjectListActivity"
         android:layout_margin="5sp"></Button>
 </LinearLayout>

@@ -36,7 +36,7 @@ public class CharacterObjectListActivityVM extends AndroidViewModel {
 
     public void set_character(ClsCharacter _character) {
         this._character = _character;
-        loadStatList();
+        loadObjectList();
     }
 
     public LiveData<ArrayList<ClsObjectAndQuantity>> get_objectList() {
@@ -57,13 +57,13 @@ public class CharacterObjectListActivityVM extends AndroidViewModel {
 
     /*
      * Interfaz
-     * Nombre: loadStatList
-     * Comentario: Este método nos permite cargar el listado de stats
+     * Nombre: loadObjectList
+     * Comentario: Este método nos permite cargar el listado de objetos
      * de la base de datos, según el id de personaje de este viewmodel.
-     * Cabecera: private void loadStatList()
-     * Postcondiciones: El método carga la lista de stats.
+     * Cabecera: private void loadObjectList()
+     * Postcondiciones: El método carga la lista de objetos.
      * */
-    public void loadStatList(){
+    public void loadObjectList(){
         //TODO Necesito saber como hacer los innner join con room para quitar esta burrada
         _objectList.setValue(new ArrayList<ClsObjectAndQuantity>());
         ArrayList<ClsObject> objects = new ArrayList<>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(_character.get_gameMode()));

@@ -1,19 +1,49 @@
 package es.iesnervion.yeray.pocketcharacters.Activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
+import es.iesnervion.yeray.pocketcharacters.Fragments.CharacterObjectsListFragment;
+import es.iesnervion.yeray.pocketcharacters.Fragments.CharacterStatsListFragment;
+import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterStats;
+import es.iesnervion.yeray.pocketcharacters.Lists.AdapterObjectList;
 import es.iesnervion.yeray.pocketcharacters.R;
+import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterObjectListActivityVM;
+import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 
-public class CharacterObjectListActivity extends AppCompatActivity {
+public class CharacterObjectListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
+    ListView listView;
+    ArrayList<ClsObjectAndQuantity> objectList = new ArrayList<ClsObjectAndQuantity>();
+    AdapterObjectList adapter;
+    CharacterObjectListActivityVM viewModel;
+    CharacterObjectsListFragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,14 +51,139 @@ public class CharacterObjectListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        viewModel = ViewModelProviders.of(this).get(CharacterObjectListActivityVM.class);
+        viewModel.set_character((ClsCharacter) getIntent().getExtras().getSerializable("Character01"));
+
+        objectList = viewModel.get_objectList().getValue();//Obtenemos el listado de stats
+        listView = findViewById(R.id.ListViewObjectsCharacter);
+
+        adapter = new AdapterObjectList(this, R.layout.item_object_list, objectList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                throwNewCharacterObjectActivity();
             }
         });
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(viewModel.get_objectSelected() == null || fragment == null){//Si no hay ningún objeto seleccionado o el fragmento aún no ha sido instanciado
+            replaceFragment();
+        }
+        viewModel.set_objectSelected((ClsObjectAndQuantity) listView.getAdapter().getItem(position));
+    }
+
+    @Override
+    public boolean onItemLongClick (AdapterView<?> adapterView, View view,int i, long l){
+        final ClsObjectAndQuantity item = (ClsObjectAndQuantity) adapterView.getItemAtPosition(i);//Obtenemos el item de la posición clicada
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Confirm Delete");// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage("Do you really want delete this Object?");// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getBaseContext(), "Object deleted!", Toast.LENGTH_SHORT).show();
+
+                //Aquí obtenemos el id del stat a modificar
+                ClsObject object = AppDataBase.getDataBase(getApplication()).objectDao().getObjectByGameModeObjectNameAndType(viewModel.get_character().get_gameMode(), item.get_object().get_type(),
+                viewModel.get_objectSelected().getValue().get_object().get_name());
+                ClsObjectAndCharacter objectAndCharacter = new ClsObjectAndCharacter(viewModel.get_character().get_id(),
+                        object.get_id(), item.get_quantity());
+                //Insertamos los datos en la tabla CharacterAndStat
+                AppDataBase.getDataBase(getApplication()).objectAndCharacterDao().deleteObjectAndCharacter(objectAndCharacter);
+
+                removeYourFragment();
+                reloadList();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
+    }
+
+    /*
+     * Interfaz
+     * Nombre: replaceFragment
+     * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
+     * FrameLayout por ese mismo fragmento.
+     * Cabecera: public void replaceFragment()
+     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
+     * */
+    public void replaceFragment(){
+        fragment = new CharacterObjectsListFragment();
+        FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
+        transation.replace(R.id.FrameLayout02, fragment);
+        transation.commit();
+    }
+
+    /*
+     * Interfaz
+     * Nombre: removeYourFragment
+     * Comentario: Este método nos permite eliminar el fragmento de la actividad actual.
+     * Cabecera: public void removeYourFragment()
+     * Postcondiciones: El método elimina el fragmento de la actividad actual.
+     * */
+    public void removeYourFragment(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (fragment != null) {
+            transaction.remove(fragment);
+            transaction.commit();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            fragment = null;
+        }
+    }
+
+    /*
+     * Intefaz
+     * Nombre: throwNewCharacterObjectActivity
+     * Comentario: Este método nos permite lanzar la actividad NewCharacterObjectActivity.
+     * Cabecera: public void throwNewCharacterObjectActivity()
+     * Postcondiciones: El método lanza la actividad NewCharacterObjectActivity.
+     * */
+    public void throwNewCharacterObjectActivity(){
+        //TODO Cuando estemos en la actividad de creación solo deben aparecer en el spinner los stats que aún no tiene el personaje
+        Intent i = new Intent(this, NewCharacterObjectActivity.class);
+        i.putExtra("Character", viewModel.get_character());
+        startActivityForResult(i, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            reloadList();
+        }
+    }
+
+    /*
+     * Interfaz
+     * Nombre: reloadList
+     * Comentario: Este método nos permite recargar la lista de objetos.
+     * Cabecera: public void reloadList()
+     * Postcondiciones: El método recarga la lista de objetos.
+     * */
+    public void reloadList(){
+        viewModel.loadObjectList();
+        objectList = viewModel.get_objectList().getValue();//Obtenemos el listado de stats
+        adapter = new AdapterObjectList(this, R.layout.item_object_list, objectList);
+        listView.setAdapter(adapter);
+    }
 }

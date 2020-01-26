@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import es.iesnervion.yeray.pocketcharacters.Activities.CharacterObjectListActivity;
 import es.iesnervion.yeray.pocketcharacters.Activities.CharacterStatsListActivity;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
@@ -48,7 +49,7 @@ public class CharacterObjectsListFragment extends Fragment {
         if(viewModel.get_objectSelected().getValue() != null){
             objectName.setText(viewModel.get_objectSelected().getValue().get_object().get_name());
             objectType.setText(viewModel.get_objectSelected().getValue().get_object().get_type());
-            quantity.setText(viewModel.get_objectSelected().getValue().get_quantity());
+            quantity.setText(String.valueOf(viewModel.get_objectSelected().getValue().get_quantity()));
         }
 
         //Los observers
@@ -58,7 +59,7 @@ public class CharacterObjectsListFragment extends Fragment {
                 if(viewModel.get_objectSelected().getValue() != null){
                     objectName.setText(viewModel.get_objectSelected().getValue().get_object().get_name());
                     objectType.setText(viewModel.get_objectSelected().getValue().get_object().get_type());
-                    quantity.setText(viewModel.get_objectSelected().getValue().get_quantity());
+                    quantity.setText(String.valueOf(viewModel.get_objectSelected().getValue().get_quantity()));
                 }
             }
         };
@@ -84,6 +85,7 @@ public class CharacterObjectsListFragment extends Fragment {
                     //Insertamos los datos en la tabla CharacterAndStat
                     AppDataBase.getDataBase(getContext()).objectAndCharacterDao().insertObjectAndCharacter(clsObjectAndCharacter);
 
+                    ((CharacterObjectListActivity) getActivity()).reloadList();//Recargamos la lista del mainActivity.
                     Toast.makeText(getContext(), "Object modified!", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "La cantidad debe ser mayor o igual que 0!", Toast.LENGTH_SHORT).show();

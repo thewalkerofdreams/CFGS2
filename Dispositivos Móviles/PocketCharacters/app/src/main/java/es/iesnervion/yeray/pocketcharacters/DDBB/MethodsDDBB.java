@@ -10,6 +10,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
@@ -213,6 +214,33 @@ public class MethodsDDBB {
                 stat.get_id());
 
         if(clsCharacterAndStat != null){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /*
+     * Interfaz
+     * Nombre: existObjectWithCharacterAndObject
+     * Comentario: Este método nos permite verificar si personaje ya tiene un objeto específico.
+     * Cabecera: public boolean existObjectWithCharacterAndObject(Context context, ClsCharacter character, ClsObject object)
+     * Entrada:
+     *   -Context context
+     *   -ClsCharacter character
+     *   -ClsObject object
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si ya esxiste ese objeto
+     * para ese personaje específico.
+     * */
+    public boolean existObjectWithCharacterAndObject(Context context, ClsCharacter character, ClsObject object){
+        boolean exist = false;
+
+        ClsObjectAndCharacter clsObjectAndCharacter = AppDataBase.getDataBase(context).objectAndCharacterDao().getObjectAndCharacter(character.get_id(),
+                object.get_id());
+
+        if(clsObjectAndCharacter != null){
             exist = true;
         }
 
