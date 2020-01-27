@@ -27,6 +27,7 @@
     <string name="dialog_toast1">The name is empty!</string>
     <string name="dialog_toast2">Already exist a GameMode with this name!</string>
     <string name="dialog_toast3">GameMode saved</string>
+    <string name="stat_saved">Stat saved!</string>
     <string name="object_list">Object List</string>
     <string name="title_activity_object_list">ObjectListActivity</string>
     <string name="object_type_list">Object Type List</string>
@@ -61,11 +62,16 @@
     <string name="game_mode_deleted">GameMode deleted!</string>
     <string name="type_deleted">Type deleted!</string>
     <string name="already_exist_name_character">Already exist a character with that name in this GameMode!</string>
+    <string name="already_exist_stat_game_mode">Already exist a stat in the GameMode with this name!</string>
     <string name="already_exist_stat_character">Already the character have this Stat!</string>
     <string name="already_exist_type_name">Already exist a type with this name!</string>
     <string name="quantity_greater_than_0">The quantity must be greater than 0!</string>
+    <string name="name_stat_empty">The name of the stat is empty!</string>
     <string name="value_empty">The value is empty!</string>
     <string name="type_name_empty">The type name is empty!</string>
     <string name="new_type">New type</string>
     <string name="create_a_new_type">Create a new Type</string>
+    <string name="stat_name">Stat name</string>
+    <string name="new_stat">New Stat</string>
+    <string name="create_a_new_stat">Create a new Stat</string>
 </resources>

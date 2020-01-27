@@ -41,13 +41,11 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         setContentView(R.layout.activity_object_type_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        listView = findViewById(R.id.ListViewObjectType);
         viewModel = ViewModelProviders.of(this).get(ObjectTypeListActivityVM.class);//Instanciamos el ViewModel
 
+        listView = findViewById(R.id.ListViewObjectType);
         adapter = new AdapterObjectTypeList(this, R.layout.item_object_type_list, viewModel.get_typeList());
         listView.setAdapter(adapter);
-
         listView.setOnItemLongClickListener(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -62,14 +60,12 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsObjectType item = (ClsObjectType) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_type);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.type_deleted, Toast.LENGTH_SHORT).show();
@@ -86,10 +82,10 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
 
         androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
+        return true;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: dialogNewObjectType
      * Comentario: Este método muestra por pantalla un dialogo para crear un nuevo tipo de objeto,
@@ -114,7 +110,7 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                         if (typeName.length() == 0) {
                             Toast.makeText(getApplication(), R.string.type_name_empty, Toast.LENGTH_SHORT).show();
                         } else {
-                            if(new MethodsDDBB().existTypeObject(getApplication(), typeName)){//Si ya existe un GameMode con ese nombre
+                            if(new MethodsDDBB().existTypeObject(getApplication(), typeName)){//Si ya existe un tipo con ese nombre
                                 Toast.makeText(getApplication(), R.string.already_exist_type_name, Toast.LENGTH_SHORT).show();
                             }else{
                                 AppDataBase.getDataBase(getApplication()).objectTypeDao().insertObjectType(new ClsObjectType(typeName));
@@ -134,10 +130,10 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         builder.show();//Lanzamos el dialogo
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: reloadList
-     * Comentario: Este método nos permite recargar la lista de modos de juego.
+     * Comentario: Este método nos permite recargar la lista de tipos de objeto.
      * Cabecera: public void reloadList()
      * Postcondiciones: El método recarga la lista.
      * */

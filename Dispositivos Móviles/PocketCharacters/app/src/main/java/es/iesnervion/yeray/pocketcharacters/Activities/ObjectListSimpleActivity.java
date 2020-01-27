@@ -46,15 +46,12 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
         setContentView(R.layout.activity_object_list_simple);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        viewModel = ViewModelProviders.of(this).get(ObjectListSimpleActivityVM.class);//Instanciamos el ViewModel
+        viewModel.set_actualGameMode(getIntent().getStringExtra("GameMode"));//Con esto también cargamos la lista
 
         listView = findViewById(R.id.ListViewSimpleObjects);
-        viewModel = ViewModelProviders.of(this).get(ObjectListSimpleActivityVM.class);//Instanciamos el ViewModel
-        viewModel.loadList(getIntent().getStringExtra("GameMode"));//Cargamos la lista
-
-        //ArrayList<ClsCharacter> items = new ArrayList<>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
         adapter = new AdapterObjectListSimple(this, R.layout.item_object_list_simple, viewModel.get_objectList());
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
@@ -71,7 +68,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClsObject item = (ClsObject) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
         Intent intent = new Intent(this, EditObjectActivity.class);
-        intent.putExtra("GameMode", getIntent().getStringExtra("GameMode"));
+        intent.putExtra("GameMode", viewModel.get_actualGameMode());
         intent.putExtra("Object", item);
         startActivityForResult(intent, 2);
     }
@@ -79,14 +76,12 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsObject item = (ClsObject) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_object);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.object_deleted, Toast.LENGTH_SHORT).show();
@@ -103,10 +98,10 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
 
         androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
+        return true;
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: throwObjectTypeListActivity
     * Comentario: Este método nos permite lanzar la actividad ObjectTypeListActivity.
@@ -116,10 +111,10 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     * Postcondiciones: El método lanza la actividad ObjectTypeListActivity.
     * */
     public void throwObjectTypeListActivity(View v){
-        startActivity(new Intent(this, ObjectTypeListActivity.class).putExtra("GameMode", getIntent().getStringExtra("GameMode")));
+        startActivity(new Intent(this, ObjectTypeListActivity.class).putExtra("GameMode", viewModel.get_actualGameMode()));
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: throwNewObjectActivity
     * Comentario: Este método nos mostrará un mensaje por pantalla si aún no existe como mínimo
@@ -131,7 +126,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     public void throwNewObjectActivity(){
         if(new MethodsDDBB().existAnyObjectType(this)){
             Intent intent = new Intent(this, NewObjectActivity.class);
-            intent.putExtra("GameMode", getIntent().getStringExtra("GameMode"));
+            intent.putExtra("GameMode", viewModel.get_actualGameMode());
             startActivityForResult(intent, 1);
         }else{
             Toast.makeText(getApplication(), getApplication().getString(R.string.no_exist_object_type), Toast.LENGTH_SHORT).show();
@@ -147,7 +142,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
         }
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: reloadList
     * Comentario: Este método nos permite recargar la lista de objetos.
@@ -155,7 +150,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     * Postcondiciones: El método recarga la lista de objetos.
     * */
     public void reloadList(){
-        viewModel.loadList(getIntent().getStringExtra("GameMode"));
+        viewModel.loadList();
         adapter = new AdapterObjectListSimple(this, R.layout.item_object_list_simple, viewModel.get_objectList());
         listView.setAdapter(adapter);
     }

@@ -83,7 +83,6 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     * */
     public void throwCharacterStatsListActivity(View v){
         Intent intent = new Intent(this, CharacterStatsListActivity.class);
-        //intent.putExtra("Character01", viewModel.get_inCharacter());
         intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
         startActivity(intent);
     }

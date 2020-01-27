@@ -15,6 +15,7 @@ public class NewObjectActivityVM extends AndroidViewModel {
     private String _objectName;
     private String _objectDescription;
     private ArrayList<ClsObjectType> _objectTypes;
+    private String _actualGameMode;
 
     public NewObjectActivityVM(Application application){
         super(application);
@@ -55,14 +56,22 @@ public class NewObjectActivityVM extends AndroidViewModel {
         this._objectTypes = _objectTypes;
     }
 
+    public String get_actualGameMode() {
+        return _actualGameMode;
+    }
+
+    public void set_actualGameMode(String _actualGameMode) {
+        this._actualGameMode = _actualGameMode;
+    }
+
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
-     * Comentario: Este método nos permite cargar la lista de tipos de objeto de la base de datos,
-     * en el atributo "_typeList".
+     * Comentario: Este método nos permite cargar la lista tipos de objetos de la base de datos,
+     * en el atributo "_objectTypes".
      * Cabecera: public void loadList()
-     * Postcondiciones: El método carga la lista de tipos de objeto en el atributo "_typeList" del
+     * Postcondiciones: El método carga la lista de tipos de objeto en el atributo "_objectTypes" del
      * ViewModel.
      * */
     public void loadList() {

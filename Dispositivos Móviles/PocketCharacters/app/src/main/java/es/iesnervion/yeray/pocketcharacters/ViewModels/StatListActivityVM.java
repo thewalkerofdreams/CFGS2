@@ -12,10 +12,12 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 public class StatListActivityVM extends AndroidViewModel {
     private ArrayList<ClsStat> _statList;
+    private String _gameMode;
 
     public StatListActivityVM(Application application){
         super(application);
         _statList = new ArrayList<ClsStat>();
+        _gameMode = "";
     }
 
     //Get Y Set
@@ -27,19 +29,26 @@ public class StatListActivityVM extends AndroidViewModel {
         this._statList = _statList;
     }
 
+    public String get_gameMode() {
+        return _gameMode;
+    }
+
+    public void set_gameMode(String _gameMode) {
+        this._gameMode = _gameMode;
+        loadList();//Cargamos la lista de stats a partir del nuevo gameMode
+    }
+
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
-     * Comentario: Este método nos permite cargar la lista de stats de un GameMode de la base de datos,
-     * en el atributo "_statList".
-     * Cabecera: public void loadList(String gameMode)
-     * Entrada:
-     *  -String gameMode
+     * Comentario: Este método nos permite cargar la lista de stats de un GameMode especificado por la
+     * propiedad _gameMode del viewModel, en el atributo "_statList".
+     * Cabecera: public void loadList()
      * Postcondiciones: El método carga la lista de stats en el atributo "_statList" del
      * ViewModel.
      * */
-    public void loadList(String gameMode) {
-        _statList = new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(gameMode));
+    public void loadList() {
+        _statList = new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_gameMode));
     }
 }

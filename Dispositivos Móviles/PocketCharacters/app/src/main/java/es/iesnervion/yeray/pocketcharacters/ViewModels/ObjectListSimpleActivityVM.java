@@ -13,10 +13,12 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
 
     private ArrayList<ClsObject> _objectList;
     private int _regionSelected;
+    private String _actualGameMode;
 
     public ObjectListSimpleActivityVM(Application application){
         super(application);
         _objectList = new ArrayList<ClsObject>();
+        _actualGameMode = "";
     }
 
     //Get Y Set
@@ -36,8 +38,17 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
         this._regionSelected = _regionSelected;
     }
 
+    public String get_actualGameMode() {
+        return _actualGameMode;
+    }
+
+    public void set_actualGameMode(String _actualGameMode) {
+        this._actualGameMode = _actualGameMode;
+        loadList();
+    }
+
     //Funciones sobre la BBDD
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de objetos de la base de datos,
@@ -46,7 +57,7 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
      * Postcondiciones: El método carga la lista de objetos en el atributo "_objectList" del
      * ViewModel.
      * */
-    public void loadList(String gameMode) {
-        _objectList = new ArrayList<ClsObject>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(gameMode));
+    public void loadList() {
+        _objectList = new ArrayList<ClsObject>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(_actualGameMode));
     }
 }

@@ -57,11 +57,11 @@ public class NewCharacterStatActivityVM extends AndroidViewModel {
 
 
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
-     * Comentario: Este método nos permite cargar la lista de stats de la base de datos,
-     * en el atributo "_stats".
+     * Comentario: Este método nos permite cargar la lista de stats con un gameMode específio
+     * de la base de datos en el atributo "_stats".
      * Cabecera: public void loadList()
      * Precondiciones:
      *  -La propiedad _actualCharacter del viewModel debe ser diferente de null
