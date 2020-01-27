@@ -110,40 +110,4 @@ public class ClsCharacter implements Serializable {
     }
 */
 
-    //Parceable
-    /*@Ignore
-    protected ClsCharacter(Parcel in) {
-        _characterName = in.readString();
-        _chapterName = in.readString();
-        _id = in.readInt();
-        _story = in.readString();
-        _gameMode = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_characterName);
-        dest.writeString(_chapterName);
-        dest.writeInt(_id);
-        dest.writeString(_story);
-        dest.writeString(_gameMode);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<ClsCharacter> CREATOR = new Parcelable.Creator<ClsCharacter>() {
-        @Override
-        public ClsCharacter createFromParcel(Parcel in) {
-            return new ClsCharacter(in);
-        }
-
-        @Override
-        public ClsCharacter[] newArray(int size) {
-            return new ClsCharacter[size];
-        }
-    };*/
 }

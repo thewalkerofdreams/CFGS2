@@ -79,21 +79,21 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
         final ClsCharacter item = (ClsCharacter) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
 
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Confirm Delete");// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage("Do you really want delete this Character?");// Setting Alert Dialog Message
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_character);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
-        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), "Character deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.character_deleted, Toast.LENGTH_SHORT).show();
                 AppDataBase.getDataBase(getApplication()).characterDao().deleteCharacter(item);
                 reloadList();
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

@@ -33,7 +33,6 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_character);
-
         viewModel = ViewModelProviders.of(this).get(NewCharacterActivityVM.class);//Instanciamos el ViewModel
 
         characterName = findViewById(R.id.EditTextCharacterNameCreate);
@@ -44,20 +43,16 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
 
         items = new ArrayList<>();
         ArrayList<ClsGameMode> gameModes = viewModel.get_gameModes();
-        for(int i = 0; i < gameModes.size(); i++){
+        for(int i = 0; i < gameModes.size(); i++){//Cargamos los datos para el spinner
             items.add(gameModes.get(i).get_name());
         }
 
-        viewModel.set_gameMode(items.get(0));//Asignamos el tipo de objeto por defecto al nuevo objeto
+        if(items.size() > 0)
+            viewModel.set_gameMode(items.get(0));//Asignamos el tipo de objeto por defecto al nuevo objeto
 
-        //Creamos un adaptador ArrayAdapter
-        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
-
-        //Especificamos el layout que aparecerá al desplegarse la lista
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        //Agregamos el adaptador al tipo spinner
-        spinner.setAdapter(aa);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
 
@@ -70,10 +65,10 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: saveCharacter
-     * Comentario: Este método guardará un personaje en la base de datos si todos los datos introducidos
+     * Comentario: Este método almacenará un personaje en la base de datos si todos los datos introducidos
      * son válidos, en caso contrario el método muestra un mensaje de error por pantalla.
      * Cabecera: public void saveCharacter(View v)
      * Entrada:
@@ -84,17 +79,16 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
     public void saveCharacter(View v){
         if(characterName.getText().length() > 0 && chapterName.getText().length() > 0){
                 if(new MethodsDDBB().existCharacter(this, viewModel.get_gameMode(), chapterName.getText().toString())){
-                    Toast.makeText(getApplication(), "Already exist a character with that name in this GameMode!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), R.string.already_exist_name_character, Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getApplication(), "Character saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), R.string.character_saved, Toast.LENGTH_SHORT).show();
                     AppDataBase.getDataBase(getApplication()).characterDao().insertCharacter(new ClsCharacter(viewModel.get_gameMode(), characterName.getText().toString(),
                             chapterName.getText().toString(), story.getText().toString()));
-
                     setResult(2);
                     finish();
                 }
         }else{
-            Toast.makeText(getApplication(), "The character name and the chapter are required!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), R.string.character_required_values, Toast.LENGTH_SHORT).show();
         }
     }
 }

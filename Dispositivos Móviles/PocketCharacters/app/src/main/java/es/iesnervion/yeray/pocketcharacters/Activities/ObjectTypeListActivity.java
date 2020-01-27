@@ -64,21 +64,21 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         final ClsObjectType item = (ClsObjectType) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
 
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Confirm Delete");// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage("Do you really want delete this Type?");// Setting Alert Dialog Message
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_type);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
-        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), "Type deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.type_deleted, Toast.LENGTH_SHORT).show();
                 AppDataBase.getDataBase(getApplication()).objectTypeDao().deleteObjectType(item);
                 reloadList();
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -102,24 +102,24 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         AlertDialog.Builder builder = new AlertDialog.Builder(ObjectTypeListActivity.this);
         //Declaramos un editText temporal
         final EditText nameEdit = new EditText(ObjectTypeListActivity.this);
-        nameEdit.setHint("New type");//Le insertamos una pista
+        nameEdit.setHint(R.string.new_type);//Le insertamos una pista
         // Build the dialog box
-        builder.setTitle("New type")
+        builder.setTitle(R.string.new_type)
                 .setView(nameEdit)
-                .setMessage("Create a new Type")
+                .setMessage(R.string.create_a_new_type)
                 .setPositiveButton(getString(R.string.dialog_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String typeName = nameEdit.getText().toString();
                         if (typeName.length() == 0) {
-                            Toast.makeText(getApplication(), "The type name is empty!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplication(), R.string.type_name_empty, Toast.LENGTH_SHORT).show();
                         } else {
                             if(new MethodsDDBB().existTypeObject(getApplication(), typeName)){//Si ya existe un GameMode con ese nombre
-                                Toast.makeText(getApplication(), "Already exist a type with this name!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplication(), R.string.already_exist_type_name, Toast.LENGTH_SHORT).show();
                             }else{
                                 AppDataBase.getDataBase(getApplication()).objectTypeDao().insertObjectType(new ClsObjectType(typeName));
                                 reloadList();
-                                Toast.makeText(getApplication(), "Type saved!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplication(), R.string.type_saved, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

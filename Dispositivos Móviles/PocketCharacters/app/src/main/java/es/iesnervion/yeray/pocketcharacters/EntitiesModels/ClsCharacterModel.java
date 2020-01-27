@@ -83,47 +83,4 @@ public class ClsCharacterModel  implements Serializable {
             }
         }
     }
-
-    //Parcelable
-    /*@Ignore
-    public ClsCharacterModel(Parcel in) {
-
-        if (in.readByte() == 0x01) {
-            _stats = new ArrayList<ClsStatModel>();
-            in.readList(_stats, ClsStatModel.class.getClassLoader());
-        } else {
-            _stats = null;
-        }
-
-        if (in.readByte() == 0x01) {
-            _objects = new ArrayList<ClsObjectAndQuantity>();
-            in.readList(_objects, ClsObjectAndQuantity.class.getClassLoader());
-        } else {
-            _objects = null;
-        }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        if (_stats == null) {
-            dest.writeByte((byte) (0x00));
-        }
-        else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(_stats);
-        }
-
-        if (_objects == null) {
-            dest.writeByte((byte) (0x00));
-        }
-        else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(_objects);
-        }
-    }*/
 }

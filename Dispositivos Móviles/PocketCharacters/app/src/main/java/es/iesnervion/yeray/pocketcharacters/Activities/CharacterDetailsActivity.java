@@ -30,12 +30,9 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_datas);
         viewModel = ViewModelProviders.of(this).get(CharacterDetailsActivityVM.class);//Instanciamos el ViewModel
-        //viewModel.set_inCharacter(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
         viewModel.set_inCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));//Obtenemos el personaje
-        //viewModel.get_inCharacter().loadStats();
-        //viewModel.set_outCharacter(getIntent().getExtras().getParcelable("Character"));
         viewModel.set_outCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));
-        //viewModel.get_outCharacter().loadStats();
+
         listView = findViewById(R.id.ListViewStats);
         characterName = findViewById(R.id.CharacterName);
         characterName.setText(viewModel.get_inCharacter().get_character().get_characterName());
@@ -64,14 +61,14 @@ public class CharacterDetailsActivity extends AppCompatActivity {
 
         if(viewModel.get_outCharacter().get_character().get_characterName().length() > 0 && viewModel.get_outCharacter().get_character().get_chapterName().length() > 0){
             if(viewModel.get_inCharacter().get_character().get_characterName().equals(viewModel.get_outCharacter().get_character().get_characterName())){
-                Toast.makeText(getApplication(), "Already exist a character with this name!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), R.string.already_exist_character_name, Toast.LENGTH_SHORT).show();
             }else{
                 AppDataBase.getDataBase(getApplication()).characterDao().updateCharacter(viewModel.get_outCharacter().get_character());
-                Toast.makeText(getApplication(), "Character saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), R.string.character_saved, Toast.LENGTH_SHORT).show();
                 viewModel.set_inCharacter(viewModel.get_outCharacter().get_character());
             }
         }else{
-            Toast.makeText(getApplication(), "The character name and the chapter are required!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), R.string.character_required_values, Toast.LENGTH_SHORT).show();
         }
     }
 

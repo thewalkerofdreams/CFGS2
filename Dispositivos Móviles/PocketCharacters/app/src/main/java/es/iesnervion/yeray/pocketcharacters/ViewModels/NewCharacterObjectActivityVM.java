@@ -7,10 +7,12 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 
 public class NewCharacterObjectActivityVM extends AndroidViewModel {
 
+    private ClsCharacter _actualCharacter;
     private String _objectName;
     private String _quantity;
     private ArrayList<ClsObject> _objects;
@@ -21,6 +23,14 @@ public class NewCharacterObjectActivityVM extends AndroidViewModel {
     }
 
     //Get Y Set
+    public ClsCharacter get_actualCharacter() {
+        return _actualCharacter;
+    }
+
+    public void set_actualCharacter(ClsCharacter _actualCharacter) {
+        this._actualCharacter = _actualCharacter;
+    }
+
     public String get_objectName() {
         return _objectName;
     }
@@ -46,16 +56,18 @@ public class NewCharacterObjectActivityVM extends AndroidViewModel {
     }
 
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de objetos de la base de datos,
      * en el atributo "_objects".
      * Cabecera: public void loadList()
+     * Precondiciones:
+     *  -La propiedad _actualCharacter debe ser diferente de null
      * Postcondiciones: El método carga la lista de objetos en el atributo "_objects" del
      * ViewModel.
      * */
-    public void loadList(String gameMode) {
-        _objects = new ArrayList<ClsObject>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(gameMode));
+    public void loadList() {
+        _objects = new ArrayList<ClsObject>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(_actualCharacter.get_gameMode()));
     }
 }

@@ -83,15 +83,15 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         final ClsStatModel item = (ClsStatModel) adapterView.getItemAtPosition(i);//Obtenemos el item de la posición clicada
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Confirm Delete");// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage("Do you really want delete this Stat?");// Setting Alert Dialog Message
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_stat);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
-        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), "Stat deleted!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.stat_deleted, Toast.LENGTH_SHORT).show();
 
                 //Aquí obtenemos el id del stat a modificar
                 ClsStat stat = AppDataBase.getDataBase(getApplication()).statDao().getStatByGameModeAndName(viewModel.get_character().get_gameMode(), item.get_name());
@@ -105,7 +105,7 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

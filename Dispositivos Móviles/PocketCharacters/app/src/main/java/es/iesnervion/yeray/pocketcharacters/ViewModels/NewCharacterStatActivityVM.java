@@ -7,11 +7,12 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
+import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 public class NewCharacterStatActivityVM extends AndroidViewModel {
 
+    private ClsCharacter _actualCharacter;
     private String _statName;
     private String _statValue;
     private ArrayList<ClsStat> _stats;
@@ -22,6 +23,14 @@ public class NewCharacterStatActivityVM extends AndroidViewModel {
     }
 
     //Get Y Set
+    public ClsCharacter get_actualCharacter() {
+        return _actualCharacter;
+    }
+
+    public void set_actualCharacter(ClsCharacter _actualCharacter) {
+        this._actualCharacter = _actualCharacter;
+    }
+
     public String get_statName() {
         return _statName;
     }
@@ -51,13 +60,15 @@ public class NewCharacterStatActivityVM extends AndroidViewModel {
     /*
      * Interfaz
      * Nombre: loadList
-     * Comentario: Este método nos permite cargar la lista de tipos de objeto de la base de datos,
-     * en el atributo "_typeList".
+     * Comentario: Este método nos permite cargar la lista de stats de la base de datos,
+     * en el atributo "_stats".
      * Cabecera: public void loadList()
-     * Postcondiciones: El método carga la lista de tipos de objeto en el atributo "_typeList" del
+     * Precondiciones:
+     *  -La propiedad _actualCharacter del viewModel debe ser diferente de null
+     * Postcondiciones: El método carga la lista de stats en el atributo "_stats" del
      * ViewModel.
      * */
-    public void loadList(String gameMode) {
-        _stats = new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(gameMode));
+    public void loadList() {
+        _stats = new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_actualCharacter.get_gameMode()));
     }
 }

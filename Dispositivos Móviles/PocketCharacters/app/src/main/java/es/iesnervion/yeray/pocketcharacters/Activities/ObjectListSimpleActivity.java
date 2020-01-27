@@ -81,21 +81,21 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
         final ClsObject item = (ClsObject) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
 
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Confirm Delete");// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage("Do you really want delete this Object?");// Setting Alert Dialog Message
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_object);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
-        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), "Object deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.object_deleted, Toast.LENGTH_SHORT).show();
                 AppDataBase.getDataBase(getApplication()).objectDao().deleteObject(item);
                 reloadList();
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

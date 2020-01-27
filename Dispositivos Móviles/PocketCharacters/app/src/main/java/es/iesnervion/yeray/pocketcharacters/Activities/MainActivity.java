@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: throwCharacterListActivity
     * Comentario: Este método nos permite lanzar la actividad CharacterListActivity.
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, CharacterListActivity.class));
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: throwGameModeListActivity
      * Comentario: Este método nos permite lanzar la actividad GameModeListActivity.
