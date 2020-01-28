@@ -47,14 +47,11 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         setContentView(R.layout.activity_character_stats_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         viewModel = ViewModelProviders.of(this).get(CharacterStatsListActivityVM.class);
-        //viewModel.set_character(getIntent().getExtras().getParcelable("Character"));//Obtenemos el personaje
-        viewModel.set_character((ClsCharacter) getIntent().getExtras().getSerializable("Character01"));
-        //viewModel.loadStatList();
+        viewModel.set_character((ClsCharacter) getIntent().getExtras().getSerializable("Character01"));//Obtenemos el personaje
+
         statList = viewModel.get_statList().getValue();//Obtenemos el listado de stats
         listView = findViewById(R.id.ListViewHens);
-
         adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, statList);
         listView.setAdapter(adapter);
 
@@ -75,32 +72,28 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         if(viewModel.get_statSelected() == null || fragment == null){//Si no hay ningún stat seleccionado o el fragmento aún no ha sido instanciado
             replaceFragment();
         }
-        viewModel.set_statSelected((ClsStatModel) listView.getAdapter().getItem(position));//Obtenemos la gallina seleccionada
+        viewModel.set_statSelected((ClsStatModel) listView.getAdapter().getItem(position));//Obtenemos el stat seleccionado
     }
 
     @Override
     public boolean onItemLongClick (AdapterView<?> adapterView, View view,int i, long l){
         final ClsStatModel item = (ClsStatModel) adapterView.getItemAtPosition(i);//Obtenemos el item de la posición clicada
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_stat);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.stat_deleted, Toast.LENGTH_SHORT).show();
-
                 //Aquí obtenemos el id del stat a modificar
                 ClsStat stat = AppDataBase.getDataBase(getApplication()).statDao().getStatByGameModeAndName(viewModel.get_character().get_gameMode(), item.get_name());
                 ClsCharacterAndStat clsCharacterAndStat = new ClsCharacterAndStat(viewModel.get_character().get_id(),
                         stat.get_id(), item.get_value());
                 //Insertamos los datos en la tabla CharacterAndStat
                 AppDataBase.getDataBase(getApplication()).characterAndStatDao().deleteCharacterAndStat(clsCharacterAndStat);
-
-                removeYourFragment();
+                removeYourFragment();//Eliminamos el fragmento
                 reloadList();
             }
         });
@@ -116,11 +109,11 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: replaceFragment
      * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
-     * FrameLayout por ese mismo fragmento.
+     * FrameLayout del layout de la actividad actual por ese mismo fragmento.
      * Cabecera: public void replaceFragment()
      * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
      * */
@@ -131,7 +124,7 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         transation.commit();
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: removeYourFragment
      * Comentario: Este método nos permite eliminar el fragmento de la actividad actual.
@@ -148,7 +141,7 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         }
     }
 
-    /*
+    /**
      * Intefaz
      * Nombre: throwNewCharacterStatActivity
      * Comentario: Este método nos permite lanzar la actividad NewCharacterStatActivity.
@@ -170,7 +163,7 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         }
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: reloadList
     * Comentario: Este método nos permite recargar la lista de stats.

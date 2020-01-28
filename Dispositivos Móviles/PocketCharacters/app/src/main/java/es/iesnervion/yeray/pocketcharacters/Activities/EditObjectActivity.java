@@ -25,9 +25,7 @@ public class EditObjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_object_datas_details);
         viewModel = ViewModelProviders.of(this).get(EditObjectActivityVM.class);//Instanciamos el ViewModel
-        //viewModel.set_inObject(getIntent().getExtras().getParcelable("Object"));
         viewModel.set_inObject((ClsObject) getIntent().getExtras().getSerializable("Object"));
-        //viewModel.set_outObject(getIntent().getExtras().getParcelable("Object"));
         viewModel.set_outObject((ClsObject) getIntent().getExtras().getSerializable("Object"));
 
         objectType = findViewById(R.id.TextViewModObjectType);
@@ -39,15 +37,15 @@ public class EditObjectActivity extends AppCompatActivity {
         objectDescription.setText(viewModel.get_inObject().get_description());
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: updateObject
-     * Comentario: Este método guardará los cambios un objeto en la base de datos si todos los datos introducidos
+     * Comentario: Este método almacenará los cambios de un objeto en la base de datos si todos los datos modificados
      * son válidos, en caso contrario el método muestra un mensaje de error por pantalla.
-     * Cabecera: public void saveObject(View v)
+     * Cabecera: public void updateObject(View v)
      * Entrada:
      *   -View v
-     * Postcondiciones: Si los datos son válidos el método almacena el nuevo objeto en la base de datos y
+     * Postcondiciones: Si los datos son válidos el método modifica el estado del objeto en la base de datos y
      * finaliza al actividad actual.
      * */
     public void updateObject(View v){
@@ -57,10 +55,10 @@ public class EditObjectActivity extends AppCompatActivity {
         if(viewModel.get_outObject().get_name().length() > 0){
             if(viewModel.get_outObject().get_description().length() > 0){
                 if(!viewModel.get_outObject().get_name().equals(viewModel.get_inObject().get_name()) &&
-                        new MethodsDDBB().existObject(this, getIntent().getStringExtra("GameMode"), viewModel.get_outObject().get_name())){
+                        new MethodsDDBB().existObject(this, viewModel.get_outObject().get_gameMode(), viewModel.get_outObject().get_name())){
                     Toast.makeText(getApplication(), getApplication().getString(R.string.already_exist_object), Toast.LENGTH_SHORT).show();
                 }else{
-                    AppDataBase.getDataBase(getApplication()).objectDao().updateObject(viewModel.get_outObject());
+                    AppDataBase.getDataBase(getApplication()).objectDao().updateObject(viewModel.get_outObject());//Modificamos el objeto en la base de datos
                     setResult(2);
                     finish();
                 }

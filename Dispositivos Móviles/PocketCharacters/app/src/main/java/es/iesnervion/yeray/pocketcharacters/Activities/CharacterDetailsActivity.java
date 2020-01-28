@@ -3,15 +3,12 @@ package es.iesnervion.yeray.pocketcharacters.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
-
-import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
@@ -33,22 +30,23 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         viewModel.set_inCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));//Obtenemos el personaje
         viewModel.set_outCharacter((ClsCharacter) getIntent().getExtras().getSerializable("Character"));
 
-        listView = findViewById(R.id.ListViewStats);
         characterName = findViewById(R.id.CharacterName);
         characterName.setText(viewModel.get_inCharacter().get_character().get_characterName());
         chapterName = findViewById(R.id.PhaseName);
         chapterName.setText(viewModel.get_inCharacter().get_character().get_chapterName());
 
+        listView = findViewById(R.id.ListViewStats);
         adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, viewModel.get_inCharacter().get_stats());
         listView.setAdapter(adapter);
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: updateNameAndChapter
-    * Comentario: Este método nos permite actualizar el nombre y el capitulod el personaje en
+    * Comentario: Este método nos permite actualizar el nombre y el capitulo del personaje en
     * la base de datos. Si se intenta cambiar el nombre por otro igual al de otro personaje
-    * en el mismo GameMode, el método mostrará un error por pantalla.
+    * en el mismo GameMode, el método mostrará un error por pantalla. Lo mismo ocurre si se
+    * deja alguno de los dos valores en blanco.
     * Cabecera: public void updateNameAndChapter(View v)
     * Entrada:
     *   -View v
@@ -72,7 +70,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: throwCharacterStatsListActivity
     * Comentario: Este método nos permite lanzar la actividad CharacterStatsListActivity.
@@ -87,7 +85,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: throwCharacterObjectListActivity
      * Comentario: Este método nos permite lanzar la actividad CharacterObjectListActivity.
@@ -98,12 +96,11 @@ public class CharacterDetailsActivity extends AppCompatActivity {
      * */
     public void throwCharacterObjectListActivity(View v){
         Intent intent = new Intent(this, CharacterObjectListActivity.class);
-        //intent.putExtra("Character01", viewModel.get_inCharacter());
         intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
         startActivity(intent);
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: reloadList
     * Comentario: Este método nos permite recargar la lista de stats del personaje.

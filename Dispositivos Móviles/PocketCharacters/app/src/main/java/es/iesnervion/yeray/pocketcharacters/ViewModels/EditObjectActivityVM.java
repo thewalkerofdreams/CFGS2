@@ -8,9 +8,9 @@ import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 
 public class EditObjectActivityVM extends AndroidViewModel {
-
     private ClsObject _inObject;//Contiene el objeto con los datos iniciales
     private ClsObject _outObject;//Contiene el objeto con los cambios
+
     public EditObjectActivityVM(Application application){
         super(application);
         _inObject = new ClsObject();
@@ -31,20 +31,5 @@ public class EditObjectActivityVM extends AndroidViewModel {
 
     public void set_outObject(ClsObject _outObject) {
         this._outObject = _outObject;
-    }
-
-    //Funciones sobre la base de datos
-    /*
-    * Interfaz
-    * Nombre: updateObject
-    * Comentario: Este método nos permite modificar el objeto que contiene
-    * el atributo "_object" del ViewModel en la base de datos.
-    * Cabecera: public void updateObject()
-    * Precondiciones:
-    *   -El objeto debe existir ya en la base de datos (Su id).
-    * Postcondiciones: El método modifica un objeto de la base de datos.
-    * */
-    public void updateObject(){
-        AppDataBase.getDataBase(getApplication()).objectDao().updateObject(_outObject);
     }
 }

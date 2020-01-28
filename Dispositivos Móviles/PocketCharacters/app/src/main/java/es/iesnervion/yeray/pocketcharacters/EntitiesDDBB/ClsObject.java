@@ -1,8 +1,5 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -79,5 +76,4 @@ public class ClsObject implements Serializable {
     public void set_gameMode(String _gameMode) {
         this._gameMode = _gameMode;
     }
-
 }

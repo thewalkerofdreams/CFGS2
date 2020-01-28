@@ -3,8 +3,6 @@ package es.iesnervion.yeray.pocketcharacters.DDBB;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
@@ -15,12 +13,10 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
 public class MethodsDDBB {
-    private boolean exist = false;
-
-    /*
+    /**
     * Interfaz
     * Nombre: existGameMode
-    * Comentario: Este método nos permite si existe un GameMode en la base
+    * Comentario: Este método nos permite verificar si existe un GameMode en la base
     * de datos con un nombre en específico.
     * Cabecera: public boolean existGameMode(Context context, String gameModeName)
     * Entrada:
@@ -34,7 +30,6 @@ public class MethodsDDBB {
     public boolean existGameMode(Context context, String gameModeName){
         boolean exist = false;
         ClsGameMode gameMode = AppDataBase.getDataBase(context).gameModeDao().getGameMode(gameModeName);
-
         if (gameMode != null){
             exist = true;
         }
@@ -42,10 +37,10 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existTypeObject
-     * Comentario: Este método nos permite si existe un tipo de objeto en la base
+     * Comentario: Este método nos permite verificar si existe un tipo de objeto en la base
      * de datos con un nombre en específico.
      * Cabecera: public boolean existTypeObject(Context context, String typeObjectname)
      * Entrada:
@@ -59,7 +54,6 @@ public class MethodsDDBB {
     public boolean existTypeObject(Context context, String typeObjectname){
         boolean exist = false;
         ClsObjectType objectType = AppDataBase.getDataBase(context).objectTypeDao().getObjectType(typeObjectname);
-
         if (objectType != null){
             exist = true;
         }
@@ -67,7 +61,7 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existAnyObjectType
      * Comentario: Este método nos permite verificar si existe algun tipo de objeto en la base de
@@ -78,12 +72,11 @@ public class MethodsDDBB {
      * Salida:
      *   -boolean exist
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
-     * si existen tipos de objeto en la base de datos o false en caso contrario.
+     * si ya existen tipos de objeto en la base de datos o false en caso contrario.
      * */
     public boolean existAnyObjectType(Context context){
         boolean exist = false;
         ArrayList<ClsObjectType> types = new ArrayList<ClsObjectType>(AppDataBase.getDataBase(context).objectTypeDao().getAllObjectTypes());
-
         if (types.size() > 0){
             exist = true;
         }
@@ -91,7 +84,7 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existAnyGameMode
      * Comentario: Este método nos permite verificar si existe algun tipo GameMode en la base de
@@ -102,12 +95,11 @@ public class MethodsDDBB {
      * Salida:
      *   -boolean exist
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
-     * si existe algún GameMode en la base de datos o false en caso contrario.
+     * si ya existe algún GameMode en la base de datos o false en caso contrario.
      * */
     public boolean existAnyGameMode(Context context){
         boolean exist = false;
         ArrayList<ClsGameMode> gameModes = new ArrayList<ClsGameMode>(AppDataBase.getDataBase(context).gameModeDao().getAllGameModes());
-
         if (gameModes.size() > 0){
             exist = true;
         }
@@ -115,11 +107,11 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existObject
-     * Comentario: Este método nos permite si existe un objeto en la base
-     * de datos con un nombre y gamemode en específico.
+     * Comentario: Este método nos permite verificar si existe un objeto en la base
+     * de datos con un nombre y gamemode específico.
      * Cabecera: public boolean existObject(Context context, String gameModeName, String objectName)
      * Entrada:
      *   -Context context
@@ -133,7 +125,6 @@ public class MethodsDDBB {
     public boolean existObject(Context context, String gameModeName, String objectName){
         boolean exist = false;
         ClsObject object = AppDataBase.getDataBase(context).objectDao().getObjectByGameModeAndName(gameModeName, objectName);
-
         if (object != null){
             exist = true;
         }
@@ -141,11 +132,11 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existStat
      * Comentario: Este método nos permite verificar si existe un stat en la base
-     * de datos con un nombre y gamemode en específico.
+     * de datos con un nombre y gamemode específico.
      * Cabecera: public boolean existStat(Context context, String gameModeName, String statName)
      * Entrada:
      *   -Context context
@@ -159,7 +150,6 @@ public class MethodsDDBB {
     public boolean existStat(Context context, String gameModeName, String statName){
         boolean exist = false;
         ClsStat stat = AppDataBase.getDataBase(context).statDao().getStatByGameModeAndName(gameModeName, statName);
-
         if (stat != null){
             exist = true;
         }
@@ -167,11 +157,11 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existCharacter
      * Comentario: Este método nos permite verificar si existe un personaje en la base
-     * de datos con un nombre y gamemode en específico.
+     * de datos con un nombre y gamemode específico.
      * Cabecera: public boolean existCharacter(Context context, String gameModeName, String characterName)
      * Entrada:
      *   -Context context
@@ -185,7 +175,6 @@ public class MethodsDDBB {
     public boolean existCharacter(Context context, String gameModeName, String characterName){
         boolean exist = false;
         ClsCharacter character = AppDataBase.getDataBase(context).characterDao().getCharacter(gameModeName, characterName);
-
         if (character != null){
             exist = true;
         }
@@ -193,15 +182,15 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: existStatWithValueByCharacter
-    * Comentario: Este método nos permite verificar si personaje ya tiene un stat específico.
-    * Cabecera: public boolean existStatWithValueByCharacter(Context context, ClsCharacter character, String statName)
+    * Comentario: Este método nos permite verificar si un personaje ya tiene un stat específico.
+    * Cabecera: public boolean existStatWithValueByCharacter(Context context, ClsCharacter character, ClsStat stat)
     * Entrada:
     *   -Context context
     *   -ClsCharacter character
-    *   -String statName
+    *   -ClsStat stat
     * Salida:
     *   -boolean exist
     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si ya esxiste ese stat
@@ -209,10 +198,8 @@ public class MethodsDDBB {
     * */
     public boolean existStatWithValueByCharacter(Context context, ClsCharacter character, ClsStat stat){
         boolean exist = false;
-
         ClsCharacterAndStat clsCharacterAndStat = AppDataBase.getDataBase(context).characterAndStatDao().getCharacterAndStat(character.get_id(),
                 stat.get_id());
-
         if(clsCharacterAndStat != null){
             exist = true;
         }
@@ -220,10 +207,10 @@ public class MethodsDDBB {
         return exist;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: existObjectWithCharacterAndObject
-     * Comentario: Este método nos permite verificar si personaje ya tiene un objeto específico.
+     * Comentario: Este método nos permite verificar si un personaje ya tiene un objeto específico.
      * Cabecera: public boolean existObjectWithCharacterAndObject(Context context, ClsCharacter character, ClsObject object)
      * Entrada:
      *   -Context context
@@ -236,10 +223,8 @@ public class MethodsDDBB {
      * */
     public boolean existObjectWithCharacterAndObject(Context context, ClsCharacter character, ClsObject object){
         boolean exist = false;
-
         ClsObjectAndCharacter clsObjectAndCharacter = AppDataBase.getDataBase(context).objectAndCharacterDao().getObjectAndCharacter(character.get_id(),
                 object.get_id());
-
         if(clsObjectAndCharacter != null){
             exist = true;
         }

@@ -39,7 +39,7 @@ public class GameModeListActivityVM extends AndroidViewModel {
     }
 
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de modos de juego de la base de datos,

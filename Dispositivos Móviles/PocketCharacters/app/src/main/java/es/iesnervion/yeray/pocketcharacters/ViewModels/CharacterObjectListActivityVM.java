@@ -10,12 +10,9 @@ import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 public class CharacterObjectListActivityVM extends AndroidViewModel {
     private ClsCharacter _character;
@@ -55,11 +52,12 @@ public class CharacterObjectListActivityVM extends AndroidViewModel {
         this._objectSelected.setValue(objectSelected);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: loadObjectList
      * Comentario: Este método nos permite cargar el listado de objetos
-     * de la base de datos, según el id de personaje de este viewmodel.
+     * de la base de datos, según el id de personaje del atributo "_character"
+     * de este viewmodel.
      * Cabecera: private void loadObjectList()
      * Postcondiciones: El método carga la lista de objetos.
      * */

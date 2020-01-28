@@ -50,13 +50,11 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         setContentView(R.layout.activity_character_object_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         viewModel = ViewModelProviders.of(this).get(CharacterObjectListActivityVM.class);
         viewModel.set_character((ClsCharacter) getIntent().getExtras().getSerializable("Character01"));
 
         objectList = viewModel.get_objectList().getValue();//Obtenemos el listado de stats
         listView = findViewById(R.id.ListViewObjectsCharacter);
-
         adapter = new AdapterObjectList(this, R.layout.item_object_list, objectList);
         listView.setAdapter(adapter);
 
@@ -82,28 +80,24 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
 
     @Override
     public boolean onItemLongClick (AdapterView<?> adapterView, View view,int i, long l){
-        final ClsObjectAndQuantity item = (ClsObjectAndQuantity) adapterView.getItemAtPosition(i);//Obtenemos el item de la posición clicada
-
+        final ClsObjectAndQuantity item = (ClsObjectAndQuantity) adapterView.getItemAtPosition(i);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_object);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.object_deleted, Toast.LENGTH_SHORT).show();
-
-                //Aquí obtenemos el id del stat a modificar
-                ClsObject object = AppDataBase.getDataBase(getApplication()).objectDao().getObjectByGameModeObjectNameAndType(viewModel.get_character().get_gameMode(), item.get_object().get_type(),
-                viewModel.get_objectSelected().getValue().get_object().get_name());
+                //Aquí obtenemos el id del objeto a modificar
+                //ClsObject object = AppDataBase.getDataBase(getApplication()).objectDao().getObjectByGameModeObjectNameAndType(viewModel.get_character().get_gameMode(), item.get_object().get_type(),
+                //viewModel.get_objectSelected().getValue().get_object().get_name());
                 ClsObjectAndCharacter objectAndCharacter = new ClsObjectAndCharacter(viewModel.get_character().get_id(),
-                        object.get_id(), item.get_quantity());
+                        item.get_object().get_id(), item.get_quantity());
                 //Insertamos los datos en la tabla CharacterAndStat
                 AppDataBase.getDataBase(getApplication()).objectAndCharacterDao().deleteObjectAndCharacter(objectAndCharacter);
-
-                removeYourFragment();
+                removeYourFragment();//Eliminamos el fragmento
                 reloadList();
             }
         });
@@ -119,7 +113,7 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: replaceFragment
      * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
@@ -134,7 +128,7 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         transation.commit();
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: removeYourFragment
      * Comentario: Este método nos permite eliminar el fragmento de la actividad actual.
@@ -151,7 +145,7 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         }
     }
 
-    /*
+    /**
      * Intefaz
      * Nombre: throwNewCharacterObjectActivity
      * Comentario: Este método nos permite lanzar la actividad NewCharacterObjectActivity.
@@ -173,7 +167,7 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         }
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: reloadList
      * Comentario: Este método nos permite recargar la lista de objetos.
@@ -182,7 +176,7 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
      * */
     public void reloadList(){
         viewModel.loadObjectList();
-        objectList = viewModel.get_objectList().getValue();//Obtenemos el listado de stats
+        objectList = viewModel.get_objectList().getValue();//Obtenemos el listado de objetos
         adapter = new AdapterObjectList(this, R.layout.item_object_list, objectList);
         listView.setAdapter(adapter);
     }

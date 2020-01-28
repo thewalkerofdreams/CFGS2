@@ -52,5 +52,4 @@ public class ClsObjectAndCharacter {
     public void set_quantity(int _quantity) {
         this._quantity = _quantity;
     }
-
 }

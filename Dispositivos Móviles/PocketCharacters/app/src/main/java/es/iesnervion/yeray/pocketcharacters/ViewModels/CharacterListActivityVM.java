@@ -33,14 +33,12 @@ public class CharacterListActivityVM extends AndroidViewModel implements Seriali
     }
 
     //Funciones sobre la base de datos
-    /*
+    /**
     * Interfaz
     * Nombre: loadList
     * Comentario: Este método nos permite cargar la lista de personajes de la base de datos,
     * en el atributo "_characterList".
-    * Cabecera: public void loadList(String gameMode)
-    * Entrada:
-    *   -String gameMode
+    * Cabecera: public void loadList()
     * Postcondiciones: El método carga la lista de personajes en el atributo "_characterList" del
     * ViewModel.
     * */

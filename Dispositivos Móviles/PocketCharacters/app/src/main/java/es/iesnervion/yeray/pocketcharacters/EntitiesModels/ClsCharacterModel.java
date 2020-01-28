@@ -1,10 +1,6 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesModels;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.room.Ignore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,10 +8,9 @@ import java.util.ArrayList;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 
-public class ClsCharacterModel  implements Serializable {
+public class ClsCharacterModel implements Serializable {
     private ClsCharacter _character;
     private ArrayList<ClsStatModel> _stats;
     private ArrayList<ClsObjectAndQuantity> _objects;
@@ -62,7 +57,7 @@ public class ClsCharacterModel  implements Serializable {
         this._context = _context;
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: loadStats
     * Comentario: Este método nos permite cargar los stats del personaje.
@@ -70,9 +65,7 @@ public class ClsCharacterModel  implements Serializable {
     * Postcondiciones: El método carga los stats del personaje en el atributo "-stats".
     * */
     public void loadStats(){
-        //TODO modificar esto cuando sepa hacer los inner joins en room
-        //_stats = new ArrayList<ClsStatModel>(AppDataBase.getDataBase(_context).characterAndStatDao().getStatsAndValueByCharacter(get_id()));
-        ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(_context).statDao().getStatsByGameMode(_character.get_gameMode()));
+        /*ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(_context).statDao().getStatsByGameMode(_character.get_gameMode()));
 
         for(int i = 0; i < stats.size(); i++){
             ClsCharacterAndStat characterAndStats = AppDataBase.getDataBase(_context).characterAndStatDao().getCharacterAndStat(
@@ -81,6 +74,7 @@ public class ClsCharacterModel  implements Serializable {
                 ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
                 _stats.add(statModel);
             }
-        }
+        }*/
+        _stats = new ArrayList<>(AppDataBase.getDataBase(_context).characterAndStatDao().getStatsAndValueByCharacter(_character.get_id()));
     }
 }

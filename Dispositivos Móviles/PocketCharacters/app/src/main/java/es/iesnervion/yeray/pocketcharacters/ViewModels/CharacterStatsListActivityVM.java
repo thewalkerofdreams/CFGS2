@@ -17,8 +17,8 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 public class CharacterStatsListActivityVM extends AndroidViewModel implements Serializable {
     private ClsCharacter _character;
-    MutableLiveData<ArrayList<ClsStatModel>> _statList;
-    MutableLiveData<ClsStatModel> _statSelected;
+    private MutableLiveData<ArrayList<ClsStatModel>> _statList;
+    private MutableLiveData<ClsStatModel> _statSelected;
 
     public CharacterStatsListActivityVM(Application application) {
         super(application);
@@ -53,16 +53,17 @@ public class CharacterStatsListActivityVM extends AndroidViewModel implements Se
         this._statSelected.setValue(statSelected);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: loadStatList
      * Comentario: Este método nos permite cargar el listado de stats
-     * de la base de datos, según el id de personaje de este viewmodel.
+     * de la base de datos, según el id de personaje del atributo "_character"
+     * de este viewmodel.
      * Cabecera: private void loadStatList()
      * Postcondiciones: El método carga la lista de stats.
      * */
     public void loadStatList(){
-        //TODO Necesito saber como hacer los innner join con room para quitar esta burrada
+        /*
         _statList.setValue(new ArrayList<ClsStatModel>());
         ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_character.get_gameMode()));
 
@@ -73,6 +74,7 @@ public class CharacterStatsListActivityVM extends AndroidViewModel implements Se
                 ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
                 _statList.getValue().add(statModel);
             }
-        }
+        }*/
+        _statList.setValue(new ArrayList<>(AppDataBase.getDataBase(getApplication()).characterAndStatDao().getStatsAndValueByCharacter(_character.get_id())));
     }
 }

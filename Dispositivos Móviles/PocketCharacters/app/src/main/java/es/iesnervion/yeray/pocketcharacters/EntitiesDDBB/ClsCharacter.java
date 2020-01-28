@@ -1,8 +1,5 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesDDBB;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -11,10 +8,6 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
 
 @Entity(indices = {@Index("gameMode")},foreignKeys = @ForeignKey(entity = ClsGameMode.class, parentColumns = "name", childColumns = "gameMode"))
 public class ClsCharacter implements Serializable {

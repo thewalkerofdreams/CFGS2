@@ -1,9 +1,8 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesModels;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import androidx.room.Ignore;
 
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
+import java.io.Serializable;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 
 public class ClsObjectAndQuantity implements Serializable {

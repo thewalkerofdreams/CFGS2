@@ -14,24 +14,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import es.iesnervion.yeray.pocketcharacters.Activities.CharacterObjectListActivity;
-import es.iesnervion.yeray.pocketcharacters.Activities.CharacterStatsListActivity;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterObjectListActivityVM;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 
 public class CharacterObjectsListFragment extends Fragment {
+
     EditText quantity;
     TextView objectName, objectType;
     CharacterObjectListActivityVM viewModel;
     Button btnUpdate;
-
     //Constructor por defecto.
     public CharacterObjectsListFragment(){
     }
@@ -52,7 +47,7 @@ public class CharacterObjectsListFragment extends Fragment {
             quantity.setText(String.valueOf(viewModel.get_objectSelected().getValue().get_quantity()));
         }
 
-        //Los observers
+        //El observer
         final Observer<ClsObjectAndQuantity> contactObserver = new Observer<ClsObjectAndQuantity>() {
             @Override
             public void onChanged(ClsObjectAndQuantity objectAndQuantity) {
@@ -63,8 +58,7 @@ public class CharacterObjectsListFragment extends Fragment {
                 }
             }
         };
-
-        //Observamos los LiveData
+        //Observamos el LiveData
         viewModel.get_objectSelected().observe(this, contactObserver);
 
         btnUpdate.setOnClickListener(new View.OnClickListener()
@@ -72,11 +66,10 @@ public class CharacterObjectsListFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                if(Integer.valueOf(quantity.getText().toString()) >= 0){
-                    viewModel.get_objectSelected().getValue().get_object().set_type(objectType.getText().toString());
-                    viewModel.get_objectSelected().getValue().get_object().set_name(objectName.getText().toString());
-                    viewModel.get_objectSelected().getValue().set_quantity(Integer.valueOf(quantity.getText().toString()));
-
+                viewModel.get_objectSelected().getValue().get_object().set_type(objectType.getText().toString());
+                viewModel.get_objectSelected().getValue().get_object().set_name(objectName.getText().toString());
+                viewModel.get_objectSelected().getValue().set_quantity(Integer.valueOf(quantity.getText().toString()));
+                if(viewModel.get_objectSelected().getValue().get_quantity() >= 0){
                     //Aquí obtenemos el id del objeto a modificar
                     ClsObject object = AppDataBase.getDataBase(getContext()).objectDao().getObjectByGameModeObjectNameAndType(viewModel.get_character().get_gameMode(), viewModel.get_objectSelected().getValue().get_object().get_type(),
                             viewModel.get_objectSelected().getValue().get_object().get_name());
@@ -84,7 +77,6 @@ public class CharacterObjectsListFragment extends Fragment {
                             object.get_id(), viewModel.get_objectSelected().getValue().get_quantity());
                     //Insertamos los datos en la tabla CharacterAndStat
                     AppDataBase.getDataBase(getContext()).objectAndCharacterDao().insertObjectAndCharacter(clsObjectAndCharacter);
-
                     ((CharacterObjectListActivity) getActivity()).reloadList();//Recargamos la lista del mainActivity.
                     Toast.makeText(getContext(), "Object modified!", Toast.LENGTH_SHORT).show();
                 }else{
@@ -92,7 +84,6 @@ public class CharacterObjectsListFragment extends Fragment {
                 }
             }
         });
-
         return view;
     }
 }

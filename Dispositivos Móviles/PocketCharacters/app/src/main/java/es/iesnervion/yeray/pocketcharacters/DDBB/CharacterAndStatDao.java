@@ -7,12 +7,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 @Dao
@@ -32,10 +28,15 @@ public interface CharacterAndStatDao {
     @Query("SELECT * FROM ClsCharacterAndStat WHERE idCharacter = :idCharacter AND idStat = :idStat")
     ClsCharacterAndStat getCharacterAndStat(int idCharacter, int idStat);
 
-    /*@Query("SELECT S.name, CS.value FROM ClsStat AS S " +
-            "INNER JOIN ClsCharacterAndStat AS CS ON S.id = CS.idStat " +
-            "INNER JOIN ClsCharacter AS C ON CS.idCharacter = C.id " +
-            "WHERE C.id = :idCharacter")
-    ArrayList<ClsStatModel> getStatsAndValueByCharacter(int idCharacter);*/
+    @Query("SELECT ClsCharacterAndStat.idCharacter, ClsCharacterAndStat.idStat, ClsCharacterAndStat.value FROM ClsStat " +
+            "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
+            "WHERE ClsStat.name = :statName AND ClsCharacterAndStat.idCharacter = :idCharacter")
+    ClsCharacterAndStat getCharacterAndStat(int idCharacter, String statName);
+
+    @Query("SELECT ClsStat.name, ClsCharacterAndStat.value FROM ClsStat " +
+            "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
+            "INNER JOIN ClsCharacter ON ClsCharacterAndStat.idCharacter = ClsCharacter.id " +
+            "WHERE ClsCharacter.id = :idCharacter")
+    List<ClsStatModel> getStatsAndValueByCharacter(int idCharacter);
 
 }

@@ -35,7 +35,6 @@ import es.iesnervion.yeray.pocketcharacters.ViewModels.GameModeListActivityVM;
 public class GameModeListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     AdapterGameModeList adapter;
-    ArrayList<ClsGameMode> items = new ArrayList<>();
     GameModeListActivityVM viewModel;
     ListView listView;
     @Override
@@ -44,12 +43,11 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
         setContentView(R.layout.activity_game_mode_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        listView = findViewById(R.id.ListViewGameModes);
         viewModel = ViewModelProviders.of(this).get(GameModeListActivityVM.class);//Instanciamos el ViewModel
 
+        listView = findViewById(R.id.ListViewGameModes);
         adapter = new AdapterGameModeList(this, R.layout.item_game_mode_list, viewModel.get_gameModeList());
         listView.setAdapter(adapter);
-
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
 
@@ -62,21 +60,19 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: dialogNewGameMode
      * Comentario: Este método muestra por pantalla un dialogo para crear un nuevo modo de juego,
-     * si el usuario inderta todos los datos necesarios y son válidos, una vez pulse el botón de crear
+     * si el usuario inserta todos los datos necesarios y son válidos, una vez pulse el botón de crear
      * se almacenará ese nuevo GameMode en la base de datos de la aplicación.
      * Cabecera: public void dialogNewGameMode()
      * Postcondiciones: El método inserta un nuevo GameMode en la base de datos o se cancela el dialogo.
      * */
     public void dialogNewGameMode(){
         AlertDialog.Builder builder = new AlertDialog.Builder(GameModeListActivity.this);
-        //Declaramos un editText temporal
         final EditText nameEdit = new EditText(GameModeListActivity.this);
         nameEdit.setHint(getString(R.string.set_game_mode_name_hint));//Le insertamos una pista
-        // Build the dialog box
         builder.setTitle(getString(R.string.dialog_title))
                 .setView(nameEdit)
                 .setMessage(getString(R.string.dialog_message))
@@ -116,14 +112,12 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_game_mode);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.game_mode_deleted, Toast.LENGTH_SHORT).show();
@@ -140,10 +134,10 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
 
         androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return true;//Nos permite no realizar la acción de clicado rápido cuando dejamos pulsado un item.
+        return true;
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: reloadList
     * Comentario: Este método nos permite recargar la lista de modos de juego.

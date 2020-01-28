@@ -15,7 +15,7 @@ public class GameModeDatasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_mode_datas);
     }
 
-    /*
+    /**
     * Interfaz
     * Nombre: throwObjectListSimpleActivity
     * Comentario: Este método nos permite lanzar la actividad ObjectListSimpleActivity.
@@ -28,7 +28,7 @@ public class GameModeDatasActivity extends AppCompatActivity {
         startActivity(new Intent(this, ObjectListSimpleActivity.class).putExtra("GameMode", getIntent().getStringExtra("GameMode")));
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: throwStatListActivity
      * Comentario: Este método nos permite lanzar la actividad StatListActivity.
