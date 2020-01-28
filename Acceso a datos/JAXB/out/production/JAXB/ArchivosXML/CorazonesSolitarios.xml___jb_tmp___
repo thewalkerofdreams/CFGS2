@@ -1,0 +1,118 @@
+<Corazoncitos>
+    <Persona>
+        <ID>28141</ID>
+        <nombre>José Luis Lamata Feliz</nombre>
+        <sexo>M</sexo>
+        <sexoBuscado>F</sexoBuscado>
+        <fechaNacimiento>1983-01-05</fechaNacimiento>
+        <ingresos>15588.76</ingresos>
+        <Preferencias>
+            <Gusto>
+                <Descripcion>Bases de datos</Descripcion>
+                <Valor>10</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Comer</Descripcion>
+                <Valor>4</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Playa</Descripcion>
+                <Valor>7</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Senderismo</Descripcion>
+                <Valor>8</Valor>
+            </Gusto>
+        </Preferencias>
+    </Persona>
+    <Persona>
+        <ID>28242</ID>
+        <nombre>José de la Mata</nombre>
+        <sexo>M</sexo>
+        <sexoBuscado>M</sexoBuscado>
+        <fechaNacimiento>1983-07-03</fechaNacimiento>
+        <ingresos>25861.23</ingresos>
+        <Preferencias>
+            <Gusto>
+                <Descripcion>Pasear peces</Descripcion>
+                <Valor>2</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Cine</Descripcion>
+                <Valor>5</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Bailar</Descripcion>
+                <Valor>9</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Museos</Descripcion>
+                <Valor>6</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Senderismo</Descripcion>
+                <Valor>7</Valor>
+            </Gusto>
+        </Preferencias>
+    </Persona>
+    <Persona>
+        <ID>28250</ID>
+        <nombre>José Lito Cantor</nombre>
+        <sexo>M</sexo>
+        <sexoBuscado>F</sexoBuscado>
+        <fechaNacimiento>1982-10-26</fechaNacimiento>
+        <ingresos>23636.28</ingresos>
+        <Preferencias>
+            <Gusto>
+                <Descripcion>Gatos</Descripcion>
+                <Valor>1</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Libros</Descripcion>
+                <Valor>6</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Museos</Descripcion>
+                <Valor>5</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Literatura victoriana</Descripcion>
+                <Valor>2</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Star Wars</Descripcion>
+                <Valor>7</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>.NET</Descripcion>
+                <Valor>8</Valor>
+            </Gusto>
+        </Preferencias>
+    </Persona>
+    <Persona>
+        <ID>28301</ID>
+        <nombre>Román Tequilla Salada</nombre>
+        <sexo>M</sexo>
+        <sexoBuscado>F</sexoBuscado>
+        <fechaNacimiento>1968-02-28</fechaNacimiento>
+        <ingresos>35504.23</ingresos>
+        <Preferencias>
+            <Gusto>
+                <Descripcion>Política</Descripcion>
+                <Valor>7</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Bailar</Descripcion>
+                <Valor>10</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Pelis romanticonas</Descripcion>
+                <Valor>4</Valor>
+            </Gusto>
+            <Gusto>
+                <Descripcion>Cerveza</Descripcion>
+                <Valor>9</Valor>
+            </Gusto>
+        </Preferencias>
+    </Persona>
+</Corazoncitos>
