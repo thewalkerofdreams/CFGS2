@@ -255,4 +255,53 @@ public class MethodsDDBB {
 
         return exist;
     }
+
+    /**
+    * Interfaz
+    * Nombre: gameModeDependency
+    * Comentario: Este método nos permite verificar si en la base de datos de la aplicación existe algún objeto
+    * que dependa de un GameMode específico.
+    * Cabecera: public boolean gameModeDependency(Context context, String gameMode)
+    * Entrada:
+    *   -Context context
+    *   -String gameMode
+    * Salida:
+    *   -boolean exist
+    * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si existe alguna
+    * dependencia para ese GameMode o false en caso contrario.
+    * */
+    public boolean gameModeDependency(Context context, String gameMode){
+        boolean exist = true;
+        if((AppDataBase.getDataBase(context).objectDao().getObjectsByGameMode(gameMode)).size() == 0 &&
+                (AppDataBase.getDataBase(context).statDao().getStatsByGameMode(gameMode)).size() == 0 &&
+                (AppDataBase.getDataBase(context).characterDao().getCharactersByGameMode(gameMode)).size() == 0){
+            exist = false;
+        }
+
+        return exist;
+    }
+
+    /*
+     * Interfaz
+     * Nombre: characterDependency
+     * Comentario: Este método nos permite verificar si en la base de datos de la aplicación existe algún objeto
+     * que dependa de un personaje específico.
+     * Cabecera: public boolean characterDependency(Context context, int characterId)
+     * Entrada:
+     *   -Context context
+     *   -int characterId
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si existe alguna
+     * dependencia para ese personaje o false en caso contrario.
+     * */
+    public boolean characterDependency(Context context, int characterId){
+        boolean exist = true;
+        if((AppDataBase.getDataBase(context).characterAndStatDao().getStatsAndValueByCharacter(characterId)).size() == 0 &&
+                (AppDataBase.getDataBase(context).objectAndCharacterDao().getObjectAndQuantityByCharacter(characterId)).size() == 0){
+            exist = false;
+        }
+
+        return exist;
+    }
 }

@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10sp"
-            android:text="Stat: "></TextView>
+            android:text="@string/form_stat"></TextView>
 
         <TextView
             android:id="@+id/TextViewStatNameFrag"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10sp"
-            android:text="Value: "></TextView>
+            android:text="@string/form_value"></TextView>
 
         <EditText
             android:id="@+id/EditTextStatValueFrag"
@@ -44,7 +44,7 @@
             android:id="@+id/btnModStat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Update Hen"
+            android:text="@string/update"
             android:layout_margin="5sp"></Button>
     </LinearLayout>
 
