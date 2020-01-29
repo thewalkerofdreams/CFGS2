@@ -69,6 +69,6 @@ public class NewCharacterStatActivityVM extends AndroidViewModel {
      * ViewModel.
      * */
     public void loadList() {
-        _stats = new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_actualCharacter.get_gameMode()));
+        _stats = new ArrayList<>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameModeAndWithoutCharacterId(_actualCharacter.get_gameMode(), _actualCharacter.get_id()));
     }
 }

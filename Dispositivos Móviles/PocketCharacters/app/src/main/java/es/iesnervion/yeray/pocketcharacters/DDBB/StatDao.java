@@ -33,4 +33,12 @@ public interface StatDao {
 
     @Query("SELECT * FROM ClsStat WHERE gameMode = :gameMode AND name = :name")
     ClsStat getStatByGameModeAndName(String gameMode, String name);
+
+    @Query("SELECT * FROM (" +
+            "SELECT ClsStat.id, ClsStat.name, ClsStat.gameMode FROM ClsStat " +
+            "EXCEPT " +
+            "SELECT ClsStat.id, ClsStat.name, ClsStat.gameMode FROM ClsStat " +
+            "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
+            "WHERE ClsCharacterAndStat.idCharacter = :characterId) WHERE gameMode = :gameMode")
+    List<ClsStat> getStatsByGameModeAndWithoutCharacterId(String gameMode, int characterId);
 }

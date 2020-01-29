@@ -75,7 +75,7 @@ public class NewCharacterObjectActivity extends AppCompatActivity implements Ada
      * */
     public void saveObject(View v){
         if(quantity.getText().length() > 0){
-            //Obtenemos el stat (su id)
+            //Obtenemos el objeto (su id)
             ClsObject clsObject = AppDataBase.getDataBase(this).objectDao().getObjectByGameModeAndName(viewModel.get_actualCharacter().get_gameMode(), viewModel.get_objectName());
             if(new MethodsDDBB().existObjectWithCharacterAndObject(this, viewModel.get_actualCharacter()
                     , clsObject)){
@@ -84,7 +84,6 @@ public class NewCharacterObjectActivity extends AppCompatActivity implements Ada
                 ClsObjectAndCharacter objectAndCharacter = new ClsObjectAndCharacter(viewModel.get_actualCharacter().get_id(),
                         clsObject.get_id(), Integer.valueOf(quantity.getText().toString()));
                 AppDataBase.getDataBase(getApplication()).objectAndCharacterDao().insertObjectAndCharacter(objectAndCharacter);
-
                 setResult(1);
                 finish();
             }

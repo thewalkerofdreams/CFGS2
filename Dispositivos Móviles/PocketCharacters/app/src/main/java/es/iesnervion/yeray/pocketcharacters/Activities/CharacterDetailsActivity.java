@@ -36,8 +36,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         chapterName.setText(viewModel.get_inCharacter().get_character().get_chapterName());
 
         listView = findViewById(R.id.ListViewStats);
-        adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, viewModel.get_inCharacter().get_stats());
-        listView.setAdapter(adapter);
+        reloadList();//Cargamos la lista de stats del personaje
     }
 
     /**
@@ -108,8 +107,14 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     * Postcondiciones: El método recarga la lista de stats del personaje.
     * */
     public void reloadList(){
-        viewModel.get_outCharacter().loadStats();
+        viewModel.get_inCharacter().loadStats();
         adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, viewModel.get_inCharacter().get_stats());
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadList();
     }
 }

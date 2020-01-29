@@ -74,4 +74,5 @@
     <string name="stat_name">Stat name</string>
     <string name="new_stat">New Stat</string>
     <string name="create_a_new_stat">Create a new Stat</string>
+    <string name="all_stats_are_assigned">All stats are assigned!</string>
 </resources>

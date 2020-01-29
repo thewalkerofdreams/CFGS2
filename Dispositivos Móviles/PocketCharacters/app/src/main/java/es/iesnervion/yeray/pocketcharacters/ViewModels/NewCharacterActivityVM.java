@@ -6,10 +6,8 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.ArrayList;
 
-import es.iesnervion.yeray.pocketcharacters.Activities.NewCharacterActivity;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 
 public class NewCharacterActivityVM extends AndroidViewModel {
 

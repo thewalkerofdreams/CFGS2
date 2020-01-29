@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 
 public class CharacterStatsListActivityVM extends AndroidViewModel implements Serializable {
@@ -63,18 +61,6 @@ public class CharacterStatsListActivityVM extends AndroidViewModel implements Se
      * Postcondiciones: El método carga la lista de stats.
      * */
     public void loadStatList(){
-        /*
-        _statList.setValue(new ArrayList<ClsStatModel>());
-        ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(_character.get_gameMode()));
-
-        for(int i = 0; i < stats.size(); i++){
-            ClsCharacterAndStat characterAndStats = AppDataBase.getDataBase(getApplication()).characterAndStatDao().getCharacterAndStat(
-                    _character.get_id(), stats.get(i).get_id());
-            if(characterAndStats != null){
-                ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
-                _statList.getValue().add(statModel);
-            }
-        }*/
         _statList.setValue(new ArrayList<>(AppDataBase.getDataBase(getApplication()).characterAndStatDao().getStatsAndValueByCharacter(_character.get_id())));
     }
 }

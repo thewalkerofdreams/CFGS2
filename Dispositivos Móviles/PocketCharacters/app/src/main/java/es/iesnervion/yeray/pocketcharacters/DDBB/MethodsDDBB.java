@@ -231,4 +231,28 @@ public class MethodsDDBB {
 
         return exist;
     }
+
+    /**
+    * Interfaz
+    * Nombre: existStatsWithoutAsignToCharacter
+    * Comentario: Este método nos permite verificar si existen stats de un GameMode sin asignar a un
+    * personaje específico de ese GameMode.
+    * Cabecera: public boolean existStatsWithoutAsignToCharacter(ClsCharacter character)
+    * Entrada:
+    *   -ClsCharacter character
+    *   -Context context
+    * Salida:
+    *   -boolean exist
+    * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el personaje
+    * aún le quedan stats sin asignar de ese GameMode o false en caso contrario.
+    * */
+    public boolean existStatsWithoutAsignToCharacter(Context context, ClsCharacter character){
+        boolean exist = false;
+        ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(context).statDao().getStatsByGameModeAndWithoutCharacterId(character.get_gameMode(), character.get_id()));
+        if(stats.size() > 0){
+            exist = true;
+        }
+
+        return exist;
+    }
 }

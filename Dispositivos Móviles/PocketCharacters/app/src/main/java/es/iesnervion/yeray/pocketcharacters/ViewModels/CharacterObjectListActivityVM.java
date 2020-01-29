@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectTuple;
 
 public class CharacterObjectListActivityVM extends AndroidViewModel {
     private ClsCharacter _character;
-    MutableLiveData<ArrayList<ClsObjectAndQuantity>> _objectList;
-    MutableLiveData<ClsObjectAndQuantity> _objectSelected;
+    private MutableLiveData<ArrayList<ClsObjectAndQuantity>> _objectList;
+    private MutableLiveData<ClsObjectAndQuantity> _objectSelected;
 
     public CharacterObjectListActivityVM(Application application) {
         super(application);
@@ -62,17 +62,10 @@ public class CharacterObjectListActivityVM extends AndroidViewModel {
      * Postcondiciones: El método carga la lista de objetos.
      * */
     public void loadObjectList(){
-        //TODO Necesito saber como hacer los innner join con room para quitar esta burrada
+        ArrayList<ClsObjectTuple> tuples = new ArrayList<>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectListFromCharacter(_character.get_id()));
         _objectList.setValue(new ArrayList<ClsObjectAndQuantity>());
-        ArrayList<ClsObject> objects = new ArrayList<>(AppDataBase.getDataBase(getApplication()).objectDao().getObjectsByGameMode(_character.get_gameMode()));
-
-        for(int i = 0; i < objects.size(); i++){
-            ClsObjectAndCharacter objectAndCharacter = AppDataBase.getDataBase(getApplication()).objectAndCharacterDao().getObjectAndCharacter(
-                    _character.get_id(), objects.get(i).get_id());
-            if(objectAndCharacter != null){
-                ClsObjectAndQuantity objectAndQuantity = new ClsObjectAndQuantity(objects.get(i), objectAndCharacter.get_quantity());
-                _objectList.getValue().add(objectAndQuantity);
-            }
+        for (ClsObjectTuple object: tuples) {
+            _objectList.getValue().add(new ClsObjectAndQuantity(new ClsObject(object.getId(), object.getType(), object.getName(), object.getDescription(), object.getGameMode()), object.getQuantity()));
         }
     }
 }

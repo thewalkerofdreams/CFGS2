@@ -90,9 +90,6 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.object_deleted, Toast.LENGTH_SHORT).show();
-                //Aquí obtenemos el id del objeto a modificar
-                //ClsObject object = AppDataBase.getDataBase(getApplication()).objectDao().getObjectByGameModeObjectNameAndType(viewModel.get_character().get_gameMode(), item.get_object().get_type(),
-                //viewModel.get_objectSelected().getValue().get_object().get_name());
                 ClsObjectAndCharacter objectAndCharacter = new ClsObjectAndCharacter(viewModel.get_character().get_id(),
                         item.get_object().get_id(), item.get_quantity());
                 //Insertamos los datos en la tabla CharacterAndStat
@@ -153,7 +150,6 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
      * Postcondiciones: El método lanza la actividad NewCharacterObjectActivity.
      * */
     public void throwNewCharacterObjectActivity(){
-        //TODO Cuando estemos en la actividad de creación solo deben aparecer en el spinner los stats que aún no tiene el personaje
         Intent i = new Intent(this, NewCharacterObjectActivity.class);
         i.putExtra("Character", viewModel.get_character());
         startActivityForResult(i, 1);

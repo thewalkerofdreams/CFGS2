@@ -11,6 +11,7 @@ import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
+import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectTuple;
 
 @Dao
 public interface ObjectDao {
@@ -37,4 +38,10 @@ public interface ObjectDao {
 
     @Query("SELECT * FROM ClsObject WHERE gameMode = :gameMode AND type = :type AND name = :name")
     ClsObject getObjectByGameModeObjectNameAndType(String gameMode, String type, String name);
+
+    @Query("SELECT ClsObject.id, ClsObject.type, ClsObject.name, ClsObject.description, ClsObject.gameMode, ClsObjectAndCharacter.quantity FROM ClsObject " +
+            "INNER JOIN ClsObjectAndCharacter ON ClsObject.id = ClsObjectAndCharacter.idObject " +
+            "INNER JOIN ClsCharacter ON ClsObjectAndCharacter.idCharacter = ClsCharacter.id " +
+            "WHERE ClsCharacter.id = :characterId")
+    List<ClsObjectTuple> getObjectListFromCharacter(int characterId);
 }

@@ -37,7 +37,7 @@ public class ObjectTypeListActivityVM extends AndroidViewModel {
     }
 
     //Funciones sobre la BBDD
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de tipos de objeto de la base de datos,

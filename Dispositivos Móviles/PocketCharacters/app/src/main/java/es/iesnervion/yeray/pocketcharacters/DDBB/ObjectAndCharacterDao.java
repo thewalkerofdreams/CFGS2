@@ -10,7 +10,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
 
 @Dao
 public interface ObjectAndCharacterDao {

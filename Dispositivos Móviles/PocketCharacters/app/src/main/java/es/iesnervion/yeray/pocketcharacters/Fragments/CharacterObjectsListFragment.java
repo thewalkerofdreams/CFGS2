@@ -23,10 +23,10 @@ import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterObjectListActivi
 
 public class CharacterObjectsListFragment extends Fragment {
 
-    EditText quantity;
-    TextView objectName, objectType;
-    CharacterObjectListActivityVM viewModel;
-    Button btnUpdate;
+    private EditText quantity;
+    private TextView objectName, objectType;
+    private CharacterObjectListActivityVM viewModel;
+    private Button btnUpdate;
     //Constructor por defecto.
     public CharacterObjectsListFragment(){
     }

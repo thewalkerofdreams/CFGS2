@@ -36,6 +36,15 @@ public class ClsObject implements Serializable {
         _gameMode = gameMode;
     }
 
+    @Ignore
+    public ClsObject(int id, String type, String name, String description, String gameMode){
+        _id = id;
+        _type = type;
+        _name = name;
+        _description = description;
+        _gameMode = gameMode;
+    }
+
     //Get Y Set
     public int get_id() {
         return _id;

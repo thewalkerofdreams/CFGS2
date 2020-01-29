@@ -1,13 +1,10 @@
 package es.iesnervion.yeray.pocketcharacters.Activities;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,13 +21,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.Fragments.CharacterStatsListFragment;
 import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterStats;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterStatList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 
@@ -62,7 +59,11 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                throwNewCharacterStatActivity();
+                if(new MethodsDDBB().existStatsWithoutAsignToCharacter(getApplication(), viewModel.get_character())){
+                    throwNewCharacterStatActivity();
+                }else{
+                    Toast.makeText(getApplication(), R.string.all_stats_are_assigned, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -149,7 +150,6 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
      * Postcondiciones: El método lanza la actividad NewCharacterStatActivity.
      * */
     public void throwNewCharacterStatActivity(){
-        //TODO Cuando estemos en la actividad de creación solo deben aparecer en el spinner los stats que aún no tiene el personaje
         Intent i = new Intent(this, NewCharacterStatActivity.class);
         i.putExtra("Character", viewModel.get_character());
         startActivityForResult(i, 1);
@@ -175,7 +175,5 @@ public class CharacterStatsListActivity extends AppCompatActivity implements Ada
         statList = viewModel.get_statList().getValue();//Obtenemos el listado de stats
         adapter = new AdapterCharacterStats(this, R.layout.item_character_stats, statList);
         listView.setAdapter(adapter);
-        //TODO Corregir este error para que cada vez que eliminemos un stat no vuelva a la pantalla anterior
-        ((CharacterDetailsActivity) getApplicationContext()).reloadList();//Recargamos la lista del mainActivity.
     }
 }

@@ -25,10 +25,10 @@ import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivit
 
 public class CharacterStatsListFragment extends Fragment implements Serializable {
 
-    EditText value;
-    TextView statName;
-    CharacterStatsListActivityVM viewModel;
-    Button btnUpdate;
+    private EditText value;
+    private TextView statName;
+    private CharacterStatsListActivityVM viewModel;
+    private Button btnUpdate;
     //Constructor por defecto.
     public CharacterStatsListFragment(){
     }
