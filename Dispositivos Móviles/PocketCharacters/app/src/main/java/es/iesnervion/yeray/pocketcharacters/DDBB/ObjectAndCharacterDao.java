@@ -23,6 +23,9 @@ public interface ObjectAndCharacterDao {
     @Delete
     void deleteObjectAndCharacter(ClsObjectAndCharacter objectAndCharacter);
 
+    @Query("DELETE FROM ClsObjectAndCharacter WHERE ClsObjectAndCharacter.idCharacter = :characterId")
+    void deleteObjectAndCharacter(int characterId);
+
     @Query("SELECT * FROM ClsObjectAndCharacter")
     List<ClsObjectAndCharacter> getAllObjectsAndCharacters();
 

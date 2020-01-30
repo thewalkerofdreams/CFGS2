@@ -22,7 +22,7 @@ public interface CharacterDao {
     @Delete
     void deleteCharacter(ClsCharacter character);
 
-    @Query("SELECT * FROM ClsCharacter")
+    @Query("SELECT * FROM ClsCharacter ORDER BY ClsCharacter.gameMode, ClsCharacter.characterName")
     List<ClsCharacter> getAllCharacters();
 
     @Query("SELECT * FROM ClsCharacter WHERE characterName = :characterName")

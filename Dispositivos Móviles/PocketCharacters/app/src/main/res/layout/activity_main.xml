@@ -15,7 +15,6 @@
         android:layout_marginEnd="50dp"
         android:text="@string/tutorial"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGameElements" />
 
@@ -29,7 +28,6 @@
         android:onClick="throwGameModeListActivity"
         android:text="@string/gameMode_List"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCharacterList" />
 

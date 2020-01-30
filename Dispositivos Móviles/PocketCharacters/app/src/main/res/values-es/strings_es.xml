@@ -84,4 +84,10 @@
     <string name="objects">Objetos</string>
     <string name="type">Tipo</string>
     <string name="quantity">Cantidad</string>
+    <string name="characters">Personajes</string>
+    <string name="game_mode">Modo</string>
+    <string name="chapter">Capítulo</string>
+    <string name="character_dependency"></string>
+    <string name="you_cant_delete_this_game_mode">"¡No puedes eliminar este modo de juego! ¡Antes debes eliminar todos sus elementos!"</string>
+    <string name="character_description">Descripción del personaje...</string>
 </resources>

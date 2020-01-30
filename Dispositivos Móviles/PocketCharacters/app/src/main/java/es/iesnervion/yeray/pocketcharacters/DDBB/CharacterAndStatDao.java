@@ -22,6 +22,9 @@ public interface CharacterAndStatDao {
     @Delete
     void deleteCharacterAndStat(ClsCharacterAndStat characterAndStat);
 
+    @Query("DELETE FROM ClsCharacterAndStat WHERE idCharacter = :characterId")
+    void deleteCharacterAndStat(int characterId);
+
     @Query("SELECT * FROM ClsCharacterAndStat")
     List<ClsCharacterAndStat> getAllCharactersAndStats();
 
@@ -36,7 +39,6 @@ public interface CharacterAndStatDao {
     @Query("SELECT ClsStat.name, ClsCharacterAndStat.value FROM ClsStat " +
             "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
             "INNER JOIN ClsCharacter ON ClsCharacterAndStat.idCharacter = ClsCharacter.id " +
-            "WHERE ClsCharacter.id = :idCharacter")
+            "WHERE ClsCharacter.id = :idCharacter ORDER BY ClsStat.name")
     List<ClsStatModel> getStatsAndValueByCharacter(int idCharacter);
-
 }

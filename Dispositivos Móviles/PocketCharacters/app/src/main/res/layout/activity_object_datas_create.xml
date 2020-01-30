@@ -18,7 +18,7 @@
             android:id="@+id/SpinnerObjectTypeCreate"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:minWidth="250sp"
+            android:minWidth="200sp"
             android:background="#FFF"
             android:textSize="16sp"
             android:layout_margin="5sp"></Spinner>

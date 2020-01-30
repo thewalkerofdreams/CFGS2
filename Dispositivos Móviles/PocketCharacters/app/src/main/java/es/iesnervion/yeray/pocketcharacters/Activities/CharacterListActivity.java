@@ -71,7 +71,7 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.character_deleted, Toast.LENGTH_SHORT).show();
-                AppDataBase.getDataBase(getApplication()).characterDao().deleteCharacter(item);
+                viewModel.deleteCharacter(item);
                 reloadList();
             }
         });

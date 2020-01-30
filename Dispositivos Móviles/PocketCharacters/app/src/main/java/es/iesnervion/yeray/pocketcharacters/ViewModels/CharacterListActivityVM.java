@@ -45,4 +45,20 @@ public class CharacterListActivityVM extends AndroidViewModel implements Seriali
     public void loadList(){
         _characterList = new ArrayList<ClsCharacter>(AppDataBase.getDataBase(getApplication()).characterDao().getAllCharacters());
     }
+
+    /**
+    * Interfaz
+    * Nombre: deleteCharacter
+    * Comentario: Este método nos permite eliminar a un personaje de la base de datos de la aplicación
+    * junto con todas sus dependencias (Stats y objetos).
+    * Cabecera: public void deleteCharacter(ClsCharacter character)
+    * Entrada:
+    *   -Character character
+    * Postcondiciones: El método elimina a un personaje de la base de datos.
+    * */
+    public void deleteCharacter(ClsCharacter character){
+        AppDataBase.getDataBase(getApplication()).characterAndStatDao().deleteCharacterAndStat(character.get_id());
+        AppDataBase.getDataBase(getApplication()).objectAndCharacterDao().deleteObjectAndCharacter(character.get_id());
+        AppDataBase.getDataBase(getApplication()).characterDao().deleteCharacter(character);
+    }
 }

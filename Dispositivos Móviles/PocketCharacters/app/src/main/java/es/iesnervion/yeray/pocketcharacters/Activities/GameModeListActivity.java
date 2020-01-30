@@ -112,28 +112,32 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage(R.string.question_delete_game_mode);// Setting Alert Dialog Message
-        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+        if(!new MethodsDDBB().gameModeDependency(getApplication(), item.get_name())){
+            androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+            alertDialogBuilder.setMessage(R.string.question_delete_game_mode);// Setting Alert Dialog Message
+            alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), R.string.game_mode_deleted, Toast.LENGTH_SHORT).show();
-                AppDataBase.getDataBase(getApplication()).gameModeDao().deleteGameMode(item);
-                reloadList();
-            }
-        });
+            alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Toast.makeText(getBaseContext(), R.string.game_mode_deleted, Toast.LENGTH_SHORT).show();
+                    AppDataBase.getDataBase(getApplication()).gameModeDao().deleteGameMode(item);
+                    reloadList();
+                }
+            });
 
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+            alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
 
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+            androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }else{
+            Toast.makeText(getApplication(), getApplication().getString(R.string.you_cant_delete_this_game_mode), Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 

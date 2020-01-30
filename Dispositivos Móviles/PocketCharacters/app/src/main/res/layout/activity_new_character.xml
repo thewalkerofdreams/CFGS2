@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/design_default_color_primary">
+    android:background="@drawable/raccoons_why_not">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/form_character_name"
+            android:textStyle="bold"
             android:textSize="16sp"
+            android:background="#FFF"
             android:layout_margin="5sp"></TextView>
 
         <EditText
@@ -34,7 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/form_chapter"
+            android:textStyle="bold"
             android:textSize="16sp"
+            android:background="#FFF"
             android:layout_margin="5sp"></TextView>
 
         <EditText
@@ -56,13 +60,16 @@
         android:layout_margin="5sp"
         android:minHeight="250sp"
         android:background="#FFF"
-        android:hint="@string/object_description"
+        android:hint="@string/character_description"
         android:inputType="textMultiLine" />
 
     <Spinner
         android:id="@+id/SpinnerGameModes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="#FFF"
+        android:dropDownSelector="#000"
         ></Spinner>
 
     <Button

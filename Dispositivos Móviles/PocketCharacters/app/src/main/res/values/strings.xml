@@ -83,5 +83,10 @@
     <string name="objects">Objects</string>
     <string name="type">Type</string>
     <string name="quantity">Quantity</string>
+    <string name="characters">Characters</string>
+    <string name="game_mode">GameMode</string>
+    <string name="chapter">Chapter</string>
     <string name="character_dependency"></string>
+    <string name="you_cant_delete_this_game_mode">"You can't delete this GameMode! Before you must remove all its elements!"</string>
+    <string name="character_description">Character description...</string>
 </resources>
