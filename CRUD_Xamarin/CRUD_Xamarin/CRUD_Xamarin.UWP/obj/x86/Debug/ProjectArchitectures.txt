@@ -1,1 +1,0 @@
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin\CRUD_Xamarin.UWP\CRUD_Xamarin.UWP.csproj;x86

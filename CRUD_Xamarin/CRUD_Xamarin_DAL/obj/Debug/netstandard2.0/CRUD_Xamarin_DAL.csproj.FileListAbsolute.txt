@@ -1,5 +1,0 @@
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin_DAL\bin\Debug\netstandard2.0\CRUD_Xamarin_DAL.deps.json
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin_DAL\bin\Debug\netstandard2.0\CRUD_Xamarin_DAL.dll
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin_DAL\obj\Debug\netstandard2.0\CRUD_Xamarin_DAL.csprojAssemblyReference.cache
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin_DAL\obj\Debug\netstandard2.0\CRUD_Xamarin_DAL.AssemblyInfoInputs.cache
-C:\Users\Joker\Desktop\CRUD - XAMARIN\CRUD_Xamarin\CRUD_Xamarin_DAL\obj\Debug\netstandard2.0\CRUD_Xamarin_DAL.AssemblyInfo.cs
