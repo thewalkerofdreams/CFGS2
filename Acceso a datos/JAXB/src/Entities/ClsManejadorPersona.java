@@ -46,15 +46,13 @@ public class ClsManejadorPersona {
     }
 
     public void ordenarLista() {
-
-        TipoPersona[] corazonesArray = new TipoPersona[listaPersonas.getPersona().size()];
-        corazonesArray = listaPersonas.getPersona().toArray(corazonesArray);
-        Arrays.sort(corazonesArray);
+        TipoPersona[] personas = new TipoPersona[listaPersonas.getPersona().size()];
+        personas = listaPersonas.getPersona().toArray(personas);
+        Arrays.sort(personas);
 
         listaPersonas.getPersona().clear();
-
-        for(TipoPersona p:corazonesArray){
-            listaPersonas.getPersona().add(p);
+        for(TipoPersona persona:personas){
+            listaPersonas.getPersona().add(persona);
         }
     }
 
