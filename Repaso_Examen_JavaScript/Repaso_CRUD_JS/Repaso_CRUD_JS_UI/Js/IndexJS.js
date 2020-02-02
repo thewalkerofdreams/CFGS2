@@ -15,11 +15,13 @@ function inicializa() {
 //Este método nos permite mostrar por pantalla los empleados con su departamento específico.
 function cargarListadoPersonasConDepartamento() {
     var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/DepartamentosApi");
+    //miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/DepartamentosApi");
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
 
     //Definición del estado
     miLlamada.onreadystatechange = function () {//Cada vez que se actualice el estado se llamará a esta función
-        if (miLlamada.readyState == 4) {//Si la llamada del tipo GET ha sido correcta
+        if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada del tipo GET ha sido correcta
+        //if (miLlamada.readyState == 4) {
             var arrayDepartamentos = JSON.parse(miLlamada.responseText);//Obtenemos la lista de departamentos
             cargarListadoPersonas(arrayDepartamentos);//Ahora cargaremos la lista de personas con su departamento
         }
@@ -32,17 +34,19 @@ function cargarListadoPersonasConDepartamento() {
 //empleados con su departamento en específico (Los departamentos se obtienen en la función cargarListadoPersonasConDepartamento)
 function cargarListadoPersonas(arrayDepartamentos) {
     var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi");
+    //miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi");
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
 
     //Definición del estado
     miLlamada.onreadystatechange = function () {
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada por GET es correcta
+        //if (miLlamada.readyState == 4) {//Si la llamada por GET es correcta
             var table = document.getElementById("tBodyEmployee");//Instanciamos el elemento table de la página html
             var arrayPersonas = JSON.parse(miLlamada.responseText);//Obtenemos el array de personas (empleados)
 
             for (i = 0; i < arrayPersonas.length; i++) {//Por cada empleado
                 var tr = document.createElement('tr');//Generemos un tag <tr>
-                document.getElementById("tBodyEmployee").appendChild(tr);//Le agregamos ese tag a la tabla de la página
+                //document.getElementById("tBodyEmployee").appendChild(tr);//Le agregamos ese tag a la tabla de la página
 
                 var td = document.createElement('td');//Creamos un tag <td> para el nombre del empleado
                 td.innerHTML = "" + arrayPersonas[i].nombre + "";
@@ -115,7 +119,8 @@ function reloadTable() {
 function getEmployee(id) {
     var empleado;
     var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id, false);
+    //miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id, false);
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id, false);
 
     miLlamada.onreadystatechange = function () {
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {
@@ -155,7 +160,8 @@ function editClick() {
         empleado.idDepartamento = document.getElementById("departamentoEdit").value;
 
         var miLlamada = new XMLHttpRequest();
-        miLlamada.open("PUT", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id);
+        //miLlamada.open("PUT", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id, false);
+        miLlamada.open("PUT", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id, false);
         miLlamada.setRequestHeader('Content-type', 'application/json');
 
         if (miLlamada.readyState == 4 && miLlamada.status == 204) {//Si el PUT a sido correcto
@@ -184,7 +190,8 @@ function removeClick() {
         modal.style.display = "none";
 
         var llamadaEliminar = new XMLHttpRequest();
-        llamadaEliminar.open("DELETE", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id);
+        //llamadaEliminar.open("DELETE", "https://repasoapi.azurewebsites.net/api/PersonasApi/" + id);
+        llamadaEliminar.open("DELETE", "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/" + id);
         llamadaEliminar.onreadystatechange = function () {
 
             if (llamadaEliminar.readyState == 4 && llamadaEliminar.status == 204) {
@@ -224,7 +231,8 @@ function insertarEmpleado() {
 
     function insertarEmpleadoPost(empleado) {//Insertamos el empleado por post
         var llamadaInsertar = new XMLHttpRequest();
-        llamadaInsertar.open('POST', "https://repasoapi.azurewebsites.net/api/PersonasApi/", false);
+        //llamadaInsertar.open('POST', "https://repasoapi.azurewebsites.net/api/PersonasApi/", false);
+        llamadaInsertar.open('POST', "https://crudpersonasui-victor.azurewebsites.net/api/PersonasAPI/", false);
         llamadaInsertar.setRequestHeader('Content-type', 'application/json');
 
         llamadaInsertar.onreadystatechange = function () {
@@ -247,7 +255,8 @@ function filtrarLista() {
     }
 
     var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/DepartamentosApi");
+    //miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/DepartamentosApi");
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/departamentosapi");
 
     miLlamada.onreadystatechange = function () {
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {
@@ -262,7 +271,8 @@ function filtrarLista() {
 //Esta función es llamada por el método filtrarLista, nos permite mostrar por pantalla el filtro de empleados
 function mostrarListafiltrada(arrayDepartamentos) {
     var miLlamada = new XMLHttpRequest();
-    miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi");
+    //miLlamada.open("GET", "https://repasoapi.azurewebsites.net/api/PersonasApi");
+    miLlamada.open("GET", "https://crudpersonasui-victor.azurewebsites.net/api/personasapi");
 
     miLlamada.onreadystatechange = function () {
         if (miLlamada.readyState == 4 && miLlamada.status == 200) {//Si la llamada por GET ha sido correcta
@@ -353,14 +363,14 @@ function filtroCadena(cadena1, cadena2) {
     var sizeCadena1 = cadena1.length;
     var sizeCadena2 = cadena2.length;
     if (sizeCadena1 <= sizeCadena2) {
-        for (var k = 0; k < sizeCadena1 && filtroCadena; k++) {
+        for (var k = 0; k < sizeCadena1 && filtro; k++) {
             if (cadena1[k] != cadena2[k]) {
                 filtro = false;
             }
         }
     }
     else {
-        filtroCadena = false;
+        filtro = false;
     }
     return filtro;
 }

@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../Recursos/StyleSheet.css" rel="stylesheet" />
+    <script src="../JavaScript/ScriptsJS.js"></script>
+</head>
+<body>
+
+    <h1>Gestion de personas</h1>
+    <br />
+
+    <input id="btnInsertar" type="image" src="../Recursos/Imagenes/botonInsertar.PNG" width="50" height="50" /> Insertar
+    <br />
+
+    <table id="tablaPersonas" class="table">
+        <tr>
+            <th hidden>id</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Fecha nacimiento</th>
+            <th>Telefono</th>
+            <th>Departamento</th>
+        </tr>
+    </table>
+
+    <!--Modal para eliminar-->
+    <div id="modalEliminar" class="modal">
+        <div class="modal-content">
+            <p>¿Quieres eliminar?</p>
+            <button id="AceptarEliminar">Si</button>
+            <button id="CancelarEliminar">No</button>
+        </div>
+    </div>
+
+    <!--Modal para crear-->
+    <div id="modalCrear" class="modal" data-effect="mfp-zoom-out">
+        <form id="form" class="modal-content">
+            <label>Nombre</label>
+            <input id="nombre" type="text" required />
+            <label>Apellidos</label>
+            <input id="apellidos" type="text" required /><br /><br />
+            <label>Telefono</label>
+            <input id="telefono" type="text" required />
+            <label>Fecha de nacimiento</label>
+            <input id="fechaNacimiento" type="date" required /><br /><br />
+            <label>Departamento</label>
+            <select id="idDepart">
+                <option value="1">Finanza</option>
+                <option value="2">Comercio</option>
+                <option value="3">Marketing</option>
+            </select>
+            <br /><br /><br />
+
+            <button id="botonCrear">Crear</button>
+            <button id="botonCancelar">Cancelar</button>
+        </form>
+    </div>
+
+    <!--Modal para editar-->
+    <div id="modalEditar" class="modal">
+        <form id="formE" class="modal-content">
+            <input id="idPersona" hidden type="text" required readonly />
+            <label>Nombre</label>
+            <input id="nombreE" type="text" required /><br /><br />
+            <label>Apellidos</label>
+            <input id="apellidosE" type="text" required /><br /><br />
+            <label>Telefono</label>
+            <input id="telefonoE" type="text" required /><br /><br />
+            <label>Fecha de nacimiento</label>
+            <input id="fechaNacimientoE" type="date" required /><br /><br />
+            <label>Departamento</label>
+            <select id="idDepartE">
+                <option value="1">Finanza</option>
+                <option value="2">Comercio</option>
+                <option value="3">Marketing</option>
+            </select>
+            <br /><br /><br />
+
+            <button id="botonConfirmar">Confirmar</button>
+            <button id="botonCancelarEditar">Cancelar</button>
+        </form>
+    </div>
+</body>
+</html>
