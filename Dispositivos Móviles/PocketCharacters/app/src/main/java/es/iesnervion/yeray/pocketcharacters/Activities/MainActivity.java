@@ -41,4 +41,17 @@ public class MainActivity extends AppCompatActivity {
     public void throwGameModeListActivity(View v){
         startActivity(new Intent(this, GameModeListActivity.class));
     }
+
+    /**
+     * Interfaz
+     * Nombre: throwTutorialActivity
+     * Comentario: Este método nos permite lanzar la actividad TutorialActivity(.
+     * Cabecera: public void throwTutorialActivity(View v)
+     * Entrada:
+     *   -View v
+     * Postcondiciones: El método lanza la actividad TutorialActivity(.
+     * */
+    public void throwTutorialActivity(View v){
+        startActivity(new Intent(this, TutorialActivity.class));
+    }
 }

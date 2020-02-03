@@ -89,4 +89,12 @@
     <string name="character_dependency"></string>
     <string name="you_cant_delete_this_game_mode">"You can't delete this GameMode! Before you must remove all its elements!"</string>
     <string name="character_description">Character description...</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+    <string name="tab_text_1">Introduction</string>
+    <string name="tab_text_2">GameModes</string>
+    <string name="tab_text_3">Objects And Stats</string>
+    <string name="tab_text_4">Character</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
