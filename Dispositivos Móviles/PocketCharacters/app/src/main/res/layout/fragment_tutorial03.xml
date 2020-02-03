@@ -9,6 +9,6 @@
         android:id="@+id/TextTutorial03"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Este es el fragment03" />
+        android:text="@string/objects_and_stats" />
 
 </FrameLayout>
