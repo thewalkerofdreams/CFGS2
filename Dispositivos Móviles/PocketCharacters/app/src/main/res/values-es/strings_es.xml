@@ -96,12 +96,12 @@
     <string name="tab_text_2">Modos de Juego</string>
     <string name="tab_text_3">Objetos And Estadísticas</string>
     <string name="tab_text_4">Personaje</string>
-    <string name="intro_tutorial">PocketCharacter is an app that will allow you to store Role characters for different existing game systems (DAD, Pathfinder, Masquerade ...) or your own.</string>
-    <string name="game_modes_tutorial">The game mode refers to the game system to be used to store a character.
-    The gameplay is necessary to create both characters, objects and statistics.</string>
-    <string name="objects_and_stats">Statistics are the attributes that a character will have in a game mode. You only need to create once
-    the statistics for a game mode, then you just have to select them at the time of editing the charact</string>
-    <string name="character_tutorial">The character is essential to be able to play most of the current role-playing systems. For it
-    The existence of this application. The characters must have a unique name in the App (If you are the type of player who always uses the
-        same name to give life to your characters, you just have to add at the end of each name a termination of the game mode that is going to be played for example.)</string>
+    <string name="intro_tutorial">PocketCharacter es un app que te permitirá almacenar personajes de Rol para diferentes sistemas de juego existentes(DAD, Pathfinder, Mascarada...) o propios.</string>
+    <string name="game_modes_tutorial">El modo de juego hace referencia al sistema de juego que se va a emplear para almacenar un personaje.
+    El modo de juego es necesario para crear tanto personajes, como objetos y Estadísticas.</string>
+    <string name="objects_and_stats">Las estadísticas son los atributos que tendrá un personaje de un modo de juego. Solo necesitas crear una vez
+    las estadísticas para un modo de juego, luego solo habrá que seleccionarlas a la hora de edición del personaje.</string>
+    <string name="character_tutorial">El personaje es esencial para poder jugar la mayoría de los sistemas de Rol actuales. Por ello mismo
+    la existencia de esta aplicación. Los personajes deben tener un nombre único en la App (Si eres del tipo de jugador que siempre utiliza el
+        mismo nombre para dar vida a tus personajes, solo deberás agregar al final de cada nombre una terminación del modo de juego que se va a jugar por ejemplo.)</string>
 </resources>
