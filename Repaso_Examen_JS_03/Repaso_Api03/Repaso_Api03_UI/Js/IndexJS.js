@@ -69,8 +69,8 @@ function cargarListadoPersonas(arrayDepartamentos) {
                 var td4 = document.createElement('td');//Creamos un tag <td> para el departamento del empleado
                 var nombreEncontrado = false;
                 for (j = 0; j < arrayDepartamentos.length && !nombreEncontrado; j++) {//Obtenemos el nombre del departamento
-                    if (arrayDepartamentos[j].id == arrayPersonas[i].idDepartamento) {
-                        td4.innerHTML = "" + arrayDepartamentos[j].nombre + "";//Le asignamos el nombre del departamento a la variable tag
+                    if (arrayDepartamentos[j].Id == arrayPersonas[i].idDepartamento) {
+                        td4.innerHTML = "" + arrayDepartamentos[j].Nombre + "";//Le asignamos el nombre del departamento a la variable tag
                         nombreEncontrado = true;
                     }
                 }

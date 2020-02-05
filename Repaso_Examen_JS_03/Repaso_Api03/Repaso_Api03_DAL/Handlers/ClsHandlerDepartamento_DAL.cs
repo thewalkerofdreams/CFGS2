@@ -20,7 +20,7 @@ namespace Repaso_Api03_DAL.Handlers
         public ClsDepartamento obtenerDepartamento(int id)
         {
             ClsDepartamento departamento = null;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlDataReader miLector = null;
             SqlConnection connection = null;
             try

@@ -20,7 +20,7 @@ namespace Repaso_Api03_DAL.Handlers
         public bool insertarPersona(ClsPersona persona)
         {
             bool personaInsertada = true;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlConnection connection = null;
 
             try
@@ -71,7 +71,7 @@ namespace Repaso_Api03_DAL.Handlers
         public bool eliminarPersona(int id)
         {
             bool personaEliminada = true;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlConnection connection = null;
 
             try
@@ -113,7 +113,7 @@ namespace Repaso_Api03_DAL.Handlers
         public bool editarPersona(int id, ClsPersona persona)
         {
             bool personaEditada = true;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlConnection connection = null;
 
             try
@@ -175,7 +175,7 @@ namespace Repaso_Api03_DAL.Handlers
         public ClsPersona obtenerPersona(int id)
         {
             ClsPersona persona = null;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlConnection connection = null;
 
             try

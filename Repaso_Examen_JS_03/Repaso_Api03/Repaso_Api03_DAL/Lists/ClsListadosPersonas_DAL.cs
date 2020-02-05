@@ -21,7 +21,7 @@ namespace Repaso_Api03_DAL.Lists
         {
             List<ClsPersona> listadoPersonas = new List<ClsPersona>();
             SqlDataReader miLector = null;
-            ClsMyConnection clsMyConnection = new ClsMyConnection("yeray.database.windows.net", "PersonasDB", "yeray", "Mi_tesoro");
+            ClsMyConnection clsMyConnection = new ClsMyConnection();
             SqlConnection connection = null;
             try
             {

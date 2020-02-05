@@ -19,10 +19,14 @@ namespace Repaso_Api03_DAL.Connections
 
         public ClsMyConnection()
         {
-            this.server = "yeray.database.windows.net";
+            /*this.server = "yeray.database.windows.net";
             this.dataBase = "PersonasDB";
             this.user = "yeray";
-            this.pass = "Mi_tesoro";
+            this.pass = "Mi_tesoro";*/
+            this.server = "107-12";
+            this.dataBase = "PersonasDB";
+            this.user = "pruebaApi";
+            this.pass = "123";
         }
 
         //Con parámetros por si quisiera cambiar las conexiones
