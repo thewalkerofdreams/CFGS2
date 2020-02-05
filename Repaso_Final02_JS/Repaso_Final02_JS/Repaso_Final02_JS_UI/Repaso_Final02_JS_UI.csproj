@@ -101,12 +101,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Css\myStyle.css" />
     <Content Include="Global.asax" />
+    <Content Include="Js\IndexJS.js" />
+    <Content Include="Pages\Index.html" />
+    <Content Include="Resources\Images\botonInsertar.png" />
+    <Content Include="Resources\Images\icon_delete.png" />
+    <Content Include="Resources\Images\icon_edit.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DepartamentosApiController.cs" />
+    <Compile Include="Controllers\PersonasApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -124,12 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Css\" />
-    <Folder Include="Js\" />
     <Folder Include="Models\" />
-    <Folder Include="Pages\" />
-    <Folder Include="Resources\Images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Repaso_Final02_JS_BL\Repaso_Final02_JS_BL.csproj">

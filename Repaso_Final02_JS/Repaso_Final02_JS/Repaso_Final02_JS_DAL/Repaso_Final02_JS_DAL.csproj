@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\ClsMyConnection.cs" />
+    <Compile Include="Handlers\ClsHandlerDepartamento_DAL.cs" />
+    <Compile Include="Handlers\ClsHandlerPersona_DAL.cs" />
+    <Compile Include="Lists\ClsListadosDepartamentos_DAL.cs" />
+    <Compile Include="Lists\ClsListadosPersonas_DAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -49,10 +54,6 @@
       <Name>Repaso_Final02_JS_Entities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Connections\" />
-    <Folder Include="Handlers\" />
-    <Folder Include="Lists\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
