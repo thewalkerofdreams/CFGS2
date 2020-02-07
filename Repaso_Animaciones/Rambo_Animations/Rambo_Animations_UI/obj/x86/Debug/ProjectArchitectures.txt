@@ -1,0 +1,2 @@
+C:\Users\thewa\Desktop\Repaso_Animaciones\Rambo_Animations\Rambo_Animations_Entities\Rambo_Animations_Entities.csproj;x86
+C:\Users\thewa\Desktop\Repaso_Animaciones\Rambo_Animations\Rambo_Animations_UI\Rambo_Animations_UI.csproj;x86
