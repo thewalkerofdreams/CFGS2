@@ -52,7 +52,7 @@
         <activity android:name=".Activities.NewObjectActivity" />
         <activity android:name=".Activities.EditObjectActivity" />
         <activity android:name=".Activities.NewCharacterActivity" />
-        <activity android:name=".Activities.CharacterDetailsActivity" />
+        <activity android:name=".Activities.CharacterDetailsActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Activities.NewCharacterStatActivity" />
         <activity
             android:name=".Activities.NewCharacterObjectActivity"

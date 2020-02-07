@@ -9,6 +9,7 @@
         android:id="@+id/TextTutorial01"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/intro_tutorial" />
+        android:text="@string/intro_tutorial"
+        android:textSize="18sp"/>
 
 </FrameLayout>
