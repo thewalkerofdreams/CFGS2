@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -22,15 +23,19 @@ public interface CharacterDao {
     @Delete
     void deleteCharacter(ClsCharacter character);
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacter ORDER BY ClsCharacter.gameMode, ClsCharacter.characterName")
     List<ClsCharacter> getAllCharacters();
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacter WHERE characterName = :characterName")
     ClsCharacter getCharacter(String characterName);
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacter WHERE gameMode = :gameMode AND characterName = :characterName")
     ClsCharacter getCharacter(String gameMode, String characterName);
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacter WHERE gameMode = :gameMode")
     List<ClsCharacter> getCharactersByGameMode(String gameMode);
 }

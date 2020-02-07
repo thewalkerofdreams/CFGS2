@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -22,9 +23,11 @@ public interface GameModeDao {
     @Delete
     void deleteGameMode(ClsGameMode gameMode);
 
+    @Transaction
     @Query("SELECT * FROM ClsGameMode")
     List<ClsGameMode> getAllGameModes();
 
+    @Transaction
     @Query("SELECT * FROM ClsGameMode WHERE name = :name")
     ClsGameMode getGameMode(String name);
 }

@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -22,18 +23,23 @@ public interface StatDao {
     @Delete
     void deleteStat(ClsStat stat);
 
+    @Transaction
     @Query("SELECT * FROM ClsStat")
     List<ClsStat> getAllStats();
 
+    @Transaction
     @Query("SELECT * FROM ClsStat WHERE name = :name")
     ClsStat getStat(String name);
 
+    @Transaction
     @Query("SELECT * FROM ClsStat WHERE gameMode = :gameMode")
     List<ClsStat> getStatsByGameMode(String gameMode);
 
+    @Transaction
     @Query("SELECT * FROM ClsStat WHERE gameMode = :gameMode AND name = :name")
     ClsStat getStatByGameModeAndName(String gameMode, String name);
 
+    @Transaction
     @Query("SELECT * FROM (" +
             "SELECT ClsStat.id, ClsStat.name, ClsStat.gameMode FROM ClsStat " +
             "EXCEPT " +

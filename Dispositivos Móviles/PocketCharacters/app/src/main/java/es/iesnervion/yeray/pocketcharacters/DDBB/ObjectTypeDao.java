@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -22,9 +23,11 @@ public interface ObjectTypeDao {
     @Delete
     void deleteObjectType(ClsObjectType object);
 
+    @Transaction
     @Query("SELECT * FROM ClsObjectType")
     List<ClsObjectType> getAllObjectTypes();
 
+    @Transaction
     @Query("SELECT * FROM ClsObjectType WHERE name = :name")
     ClsObjectType getObjectType(String name);
 }

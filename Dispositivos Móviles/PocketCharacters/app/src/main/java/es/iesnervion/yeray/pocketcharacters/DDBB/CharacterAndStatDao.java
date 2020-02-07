@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -22,20 +23,25 @@ public interface CharacterAndStatDao {
     @Delete
     void deleteCharacterAndStat(ClsCharacterAndStat characterAndStat);
 
+    @Transaction
     @Query("DELETE FROM ClsCharacterAndStat WHERE idCharacter = :characterId")
     void deleteCharacterAndStat(int characterId);
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacterAndStat")
     List<ClsCharacterAndStat> getAllCharactersAndStats();
 
+    @Transaction
     @Query("SELECT * FROM ClsCharacterAndStat WHERE idCharacter = :idCharacter AND idStat = :idStat")
     ClsCharacterAndStat getCharacterAndStat(int idCharacter, int idStat);
 
+    @Transaction
     @Query("SELECT ClsCharacterAndStat.idCharacter, ClsCharacterAndStat.idStat, ClsCharacterAndStat.value FROM ClsStat " +
             "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
             "WHERE ClsStat.name = :statName AND ClsCharacterAndStat.idCharacter = :idCharacter")
     ClsCharacterAndStat getCharacterAndStat(int idCharacter, String statName);
 
+    @Transaction
     @Query("SELECT ClsStat.name, ClsCharacterAndStat.value FROM ClsStat " +
             "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
             "INNER JOIN ClsCharacter ON ClsCharacterAndStat.idCharacter = ClsCharacter.id " +
