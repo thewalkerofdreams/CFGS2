@@ -1,0 +1,87 @@
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\App.xbf
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\MainPage.xbf
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.xr.xml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.exe
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.pdb
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\resources.pri
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\AppxManifest.xml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\Core\AppxManifest.xml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\Core\BotonAnimado.exe
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.build.appxrecipe
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\System.Runtime.dll
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\bin\x64\Debug\Microsoft.UI.Xaml.Markup.winmd
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.csprojAssemblyReference.cache
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\App.g.i.cs
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\App.g.cs
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.g.i.cs
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.g.cs
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\XamlTypeInfo.g.cs
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\App.xaml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.xaml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\App.xbf
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.xbf
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\XamlSaveStateFile.xml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.csproj.CopyComplete
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.exe
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.pdb
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\ResourceHandlingTask.state
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\priconfig.xml
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\priconfig.xml.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\unfiltered.layout.resfiles
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\unfiltered.layout.resfiles.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\filtered.layout.resfiles
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\filtered.layout.resfiles.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\excluded.layout.resfiles
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\excluded.layout.resfiles.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\resources.resfiles
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\resources.resfiles.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\pri.resfiles
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\pri.resfiles.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\qualifiers.txt
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\qualifiers.txt.intermediate
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\ProjectArchitectures.txt
+C:\Users\Pablo\Desktop\Repaso UWP\BotonAnimado\BotonAnimado\obj\x64\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885274160000000.json
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\App.g.i.cs
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\App.g.cs
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.g.i.cs
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.g.cs
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\XamlTypeInfo.g.cs
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\App.xaml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.xaml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\App.xbf
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\MainPage.xbf
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\XamlSaveStateFile.xml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\App.xbf
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\MainPage.xbf
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.xr.xml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.exe
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.pdb
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\resources.pri
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\AppxManifest.xml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\Core\AppxManifest.xml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\Core\BotonAnimado.exe
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\BotonAnimado.build.appxrecipe
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\System.Runtime.dll
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\bin\x64\Debug\Microsoft.UI.Xaml.Markup.winmd
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.csproj.CopyComplete
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.exe
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\BotonAnimado.pdb
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\ResourceHandlingTask.state
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\priconfig.xml
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\priconfig.xml.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\unfiltered.layout.resfiles
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\unfiltered.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\filtered.layout.resfiles
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\filtered.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\excluded.layout.resfiles
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\excluded.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\resources.resfiles
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\resources.resfiles.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\pri.resfiles
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\pri.resfiles.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\qualifiers.txt
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\qualifiers.txt.intermediate
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\ProjectArchitectures.txt
+C:\Users\thewa\Desktop\BotonesAnimados\BotonAnimado\BotonAnimado\obj\x64\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885274160000000.json
