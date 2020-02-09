@@ -1,0 +1,154 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-DAL\\31-PracticaListasAnimadas-DAL.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-DAL\\31-PracticaListasAnimadas-DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-DAL\\31-PracticaListasAnimadas-DAL.csproj",
+        "projectName": "31-PracticaListasAnimadas-DAL",
+        "projectPath": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-DAL\\31-PracticaListasAnimadas-DAL.csproj",
+        "packagesPath": "C:\\Users\\thewa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft SDKs\\UWPNuGetPackages\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\thewa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "uap10.0.16299"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "uap10.0.16299": {
+            "projectReferences": {
+              "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\31-PracticaListasAnimadas-ENTITIES.csproj": {
+                "projectPath": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\31-PracticaListasAnimadas-ENTITIES.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "uap10.0.16299": {
+          "dependencies": {
+            "Microsoft.NETCore.UniversalWindowsPlatform": {
+              "target": "Package",
+              "version": "[6.2.9, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      },
+      "runtimes": {
+        "win10-arm": {
+          "#import": []
+        },
+        "win10-arm-aot": {
+          "#import": []
+        },
+        "win10-arm64-aot": {
+          "#import": []
+        },
+        "win10-x64": {
+          "#import": []
+        },
+        "win10-x64-aot": {
+          "#import": []
+        },
+        "win10-x86": {
+          "#import": []
+        },
+        "win10-x86-aot": {
+          "#import": []
+        }
+      }
+    },
+    "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\31-PracticaListasAnimadas-ENTITIES.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\31-PracticaListasAnimadas-ENTITIES.csproj",
+        "projectName": "31-PracticaListasAnimadas-ENTITIES",
+        "projectPath": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\31-PracticaListasAnimadas-ENTITIES.csproj",
+        "packagesPath": "C:\\Users\\thewa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\thewa\\Desktop\\31-PracticaListasAnimadas\\31-PracticaListasAnimadas-ENTITIES\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft SDKs\\UWPNuGetPackages\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\thewa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "uap10.0.16299"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "uap10.0.16299": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "uap10.0.16299": {
+          "dependencies": {
+            "Microsoft.NETCore.UniversalWindowsPlatform": {
+              "target": "Package",
+              "version": "[6.2.9, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      },
+      "runtimes": {
+        "win10-arm": {
+          "#import": []
+        },
+        "win10-arm-aot": {
+          "#import": []
+        },
+        "win10-arm64-aot": {
+          "#import": []
+        },
+        "win10-x64": {
+          "#import": []
+        },
+        "win10-x64-aot": {
+          "#import": []
+        },
+        "win10-x86": {
+          "#import": []
+        },
+        "win10-x86-aot": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@
 using SpaceInvaders_UI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -53,6 +54,7 @@ namespace SpaceInvaders_UI
             Image image = new Image();
             BitmapImage imgArt = new BitmapImage(new Uri(asteroide.Image, UriKind.Absolute));
             image.Source = imgArt;
+            image.Tag = "enemy";
             image.Height = asteroide.Size * 10;
             image.Width = asteroide.Size * 10;
 
@@ -91,6 +93,47 @@ namespace SpaceInvaders_UI
             };
 
             justintimeStoryboard.Begin();
+        }
+
+        public void gameEngine(object sender, EventArgs e)
+        {
+            foreach (var y in Canvas01.Children.OfType<Image>())
+            {
+                foreach (var x in Canvas01.Children.OfType<Image>())
+                {
+
+
+                    // we are back in the main loop again, this timer we need to animate the enemies
+                    // check again if the any rectangle has the tag enemy inside it
+                    if (x is Image && (string)x.Tag == "enemy")
+                    {
+                        // move it towards right side of the screen with the enemy speed integer
+                        Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
+
+                        // if the enemeies have left the screen from the right
+                        if (Canvas.GetLeft(x) > 820)
+                        {
+                            // position it back in the left
+                            Canvas.SetLeft(x, -80);
+                            // move it down the screen by 20 pixels
+                            Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
+                        }
+
+                        // make another local rect called enemy and put the new enemy properites into it
+                        Rect enemy = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+
+                        // check if the player character and the enemy are colliding
+                        if (nave. IntersectsWith(enemy))
+                        {
+                            // stop the timer and show a message that says you lose end game here
+                            dispatcherTimer.Stop();
+                            MessageBox.Show("you lose");
+                        }
+                    }
+
+                }
+
+            }
         }
     }
 }

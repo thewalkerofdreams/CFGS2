@@ -1,0 +1,54 @@
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.dll
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.pdb
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.pri
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.dll
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pdb
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pri
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.csprojAssemblyReference.cache
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.csproj.CopyComplete
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pri.xml
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.dll
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.pdb
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\priconfig.xml
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\priconfig.xml.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\unfiltered.layout.resfiles
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\unfiltered.layout.resfiles.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\filtered.layout.resfiles
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\filtered.layout.resfiles.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\excluded.layout.resfiles
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\excluded.layout.resfiles.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\resources.resfiles
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\resources.resfiles.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\pri.resfiles
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\pri.resfiles.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\qualifiers.txt
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\qualifiers.txt.intermediate
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.dll
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.pdb
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-DAL.pri
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.dll
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pdb
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\bin\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pri
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.csprojAssemblyReference.cache
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.csproj.CopyComplete
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-ENTITIES.pri.xml
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.dll
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\31-PracticaListasAnimadas-DAL.pdb
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\priconfig.xml
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\priconfig.xml.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\unfiltered.layout.resfiles
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\unfiltered.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\filtered.layout.resfiles
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\filtered.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\excluded.layout.resfiles
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\excluded.layout.resfiles.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\resources.resfiles
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\resources.resfiles.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\pri.resfiles
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\pri.resfiles.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\qualifiers.txt
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\qualifiers.txt.intermediate
+C:\Users\thewa\Desktop\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
