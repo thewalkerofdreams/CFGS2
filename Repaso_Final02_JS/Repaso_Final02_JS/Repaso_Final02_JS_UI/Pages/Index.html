@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../Css/myStyle.css" rel="stylesheet" />
+    <script src="../Js/IndexJS.js"></script>
+</head>
+<body>
+    <h1>Gestion de empleados</h1>
+    <br />
+
+    <input id="btnAddPerson" type="image" src="../Resources/Images/botonInsertar.png" width="50" height="50" />Insertar
+    <br />
+
+    <table id="tableEmployee" class="table">
+        <tr>
+            <th hidden>id</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Fecha nacimiento</th>
+            <th>Telefono</th>
+            <th>Departamento</th>
+        </tr>
+    </table>
+
+    <!--Modal para eliminar-->
+    <div id="deleteEmployeeModal" class="modal">
+        <div class="modal-content">
+            <p>¿Quieres eliminar?</p>
+            <button id="inputAceptDelete">Si</button>
+            <button id="inputCancelDelete">No</button>
+        </div>
+    </div>
+
+    <!--Modal para crear-->
+    <div id="addEmployeeModal" class="modal" data-effect="mfp-zoom-out">
+        <form id="form" class="modal-content">
+            <label>Nombre</label>
+            <input id="nombre" type="text" required />
+            <label>Apellidos</label>
+            <input id="apellidos" type="text" required /><br /><br />
+            <label>Telefono</label>
+            <input id="telefono" type="text" required />
+            <label>Fecha de nacimiento</label>
+            <input id="fechaNacimiento" type="date" required /><br /><br />
+            <label>Departamento</label>
+            <select id="departamento">
+                <option value="1">Finanza</option>
+                <option value="2">Comercio</option>
+                <option value="3">Marketing</option>
+            </select>
+            <br /><br /><br />
+
+            <button id="btnAceptAddPerson">Crear</button>
+            <button id="btnCancelAddPerson">Cancelar</button>
+        </form>
+    </div>
+
+    <!--Modal para editar-->
+    <div id="editEmployeeModal" class="modal">
+        <form id="formE" class="modal-content">
+            <input id="idPersonaEdit" hidden type="text" required readonly />
+            <label>Nombre</label>
+            <input id="nombreEdit" type="text" required /><br /><br />
+            <label>Apellidos</label>
+            <input id="apellidosEdit" type="text" required /><br /><br />
+            <label>Telefono</label>
+            <input id="telefonoEdit" type="text" required /><br /><br />
+            <label>Fecha de nacimiento</label>
+            <input id="fechaNacimientoEdit" type="date" required /><br /><br />
+            <label>Departamento</label>
+            <select id="departamentoEdit">
+                <option value="1">Finanza</option>
+                <option value="2">Comercio</option>
+                <option value="3">Marketing</option>
+            </select>
+            <br /><br /><br />
+
+            <button id="inputSaveEmployee">Confirmar</button>
+            <button id="inputCancelSaveEmployee">Cancelar</button>
+        </form>
+    </div>
+</body>
+</html>
