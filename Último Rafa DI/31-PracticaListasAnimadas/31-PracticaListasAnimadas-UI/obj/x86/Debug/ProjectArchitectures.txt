@@ -1,0 +1,5 @@
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-BL\31-PracticaListasAnimadas-BL.csproj;x86
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-DAL\31-PracticaListasAnimadas-DAL.csproj;x86
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-ENTITIES\31-PracticaListasAnimadas-ENTITIES.csproj;x86
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-ENTITIES\31-PracticaListasAnimadas-ENTITIES.csproj;x86
+C:\Users\Rafael Manzano\Documents\GitHub\EjerciciosDesarrolloInterfaces\31-PracticaListasAnimadas\31-PracticaListasAnimadas-UI\31-PracticaListasAnimadas-UI.csproj;x86
