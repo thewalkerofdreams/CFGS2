@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10sp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/person_first_name_form"></TextView>
+
+        <EditText
+            android:id="@+id/EditPersonFirstNameAddFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="100sp"></EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/person_last_name_form"></TextView>
+
+        <EditText
+            android:id="@+id/EditPersonLastNameAddFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="100sp"></EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/person_phone_form"></TextView>
+
+        <EditText
+            android:id="@+id/EditPersonPhoneAddFragment"
+            android:layout_width="wrap_content"
+            android:inputType="phone"
+            android:layout_height="match_parent"
+            android:minWidth="100sp"></EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/departament_name_form"></TextView>
+
+        <Spinner
+            android:id="@+id/SpinnerDepartamentNameAddFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></Spinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnCancelPersonAddFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/cancel"
+            android:minWidth="100sp"></Button>
+
+        <Button
+            android:id="@+id/btnSavePersonAddFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/save_person"
+            android:minWidth="100sp"></Button>
+    </LinearLayout>
+
+</LinearLayout>
