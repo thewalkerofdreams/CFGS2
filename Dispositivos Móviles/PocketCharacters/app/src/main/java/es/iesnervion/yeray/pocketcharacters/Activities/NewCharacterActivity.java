@@ -17,11 +17,8 @@ import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.NewCharacterActivityVM;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.NewObjectActivityVM;
 
 public class NewCharacterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 

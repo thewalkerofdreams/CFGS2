@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,12 +20,9 @@ import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterGameModeList;
 import es.iesnervion.yeray.pocketcharacters.Lists.AdapterStatList;
 import es.iesnervion.yeray.pocketcharacters.R;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.GameModeListActivityVM;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.StatListActivityVM;
 
 public class StatListActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
