@@ -1,2 +1,0 @@
-C:\Users\thewa\Desktop\SpaceInvaders\SpaceInvaders\SpaceInvaders_Entities\SpaceInvaders_Entities.csproj;x86
-C:\Users\thewa\Desktop\SpaceInvaders\SpaceInvaders\SpaceInvaders_UI\SpaceInvaders_UI.csproj;x86
