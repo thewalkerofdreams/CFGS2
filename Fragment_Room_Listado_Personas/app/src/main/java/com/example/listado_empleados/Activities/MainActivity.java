@@ -1,6 +1,7 @@
 package com.example.listado_empleados.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.listado_empleados.Adapters.AdapterEmployeeList;
@@ -8,6 +9,7 @@ import com.example.listado_empleados.DDBB.DDBBMethods;
 import com.example.listado_empleados.DDBB_Entities.ClsDepartamento;
 import com.example.listado_empleados.Fragments.AddDepartamentFragment;
 import com.example.listado_empleados.Fragments.AddPersonFragment;
+import com.example.listado_empleados.Fragments.EditPersonFragment;
 import com.example.listado_empleados.R;
 import com.example.listado_empleados.Tuple.ClsPersonaConDepartamentoTuple;
 import com.example.listado_empleados.ViewModels.MainActivityVM;
@@ -31,14 +33,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     ListView listView;
     AdapterEmployeeList adapter;
     MainActivityVM viewModel;
     AddDepartamentFragment addDepartamentFragment = null;
     AddPersonFragment addPersonFragment = null;
-    ArrayList<String> items = new ArrayList<>();
+    EditPersonFragment editPersonFragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +52,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         listView = findViewById(R.id.ListViewMainActivity);
         reloadList();
-        //listView.setOnItemClickListener(this);
+
         listView.setOnItemLongClickListener(this);
+        listView.setOnItemClickListener(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +91,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ClsPersonaConDepartamentoTuple item = (ClsPersonaConDepartamentoTuple) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+        viewModel.set_selectedEmployee(item);
+        editPersonFragment = new EditPersonFragment();
+        replaceFragment(editPersonFragment);
+    }
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsPersonaConDepartamentoTuple item = (ClsPersonaConDepartamentoTuple) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
         androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
@@ -112,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return true;
+        return true;//De esta forma evitamos que se lance el evento onClickItem después de este
     }
 
     /**
@@ -124,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
      * */
     public void replaceFragment(Fragment fragment){
+        removeList();//Limpiamos la lista para dejar espacio a los fragments
         FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
         transation.replace(R.id.FrameLayoutMainActivity, fragment);
         transation.commit();
@@ -151,6 +163,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             addPersonFragment = null;
         }
+
+        if(editPersonFragment != null){
+            transaction.remove(editPersonFragment);
+            transaction.commit();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            editPersonFragment = null;
+        }
+
+        reloadList();//Recargamos la lista de empleados
     }
 
     /*
@@ -182,6 +203,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }else{
             adapter = new AdapterEmployeeList(this, R.layout.item_person_list, new ArrayList<ClsPersonaConDepartamentoTuple>());
         }
+        listView.setAdapter(adapter);
+    }
+
+    /*
+     * Interfaz
+     * Nombre: removeList
+     * Comentario: Este método nos permite limpiar la lista de empleados. Lo utilizaremos
+     * daca vez que llamemos a algún fragmento en la actividad MainActivity.
+     * Cabecera: public void removeList()
+     * Postcondiciones: El método limpia la lista de empleados.
+     */
+    public void removeList(){
+        adapter = new AdapterEmployeeList(this, R.layout.item_person_list, new ArrayList<ClsPersonaConDepartamentoTuple>());
         listView.setAdapter(adapter);
     }
 }

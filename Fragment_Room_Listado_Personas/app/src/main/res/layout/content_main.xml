@@ -9,34 +9,23 @@
     tools:context=".Activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-        android:orientation="horizontal"
+
+    <Button
+        android:id="@+id/btnAddDepartament"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="@string/add_departament"
+        android:onClick="addDepartament"></Button>
 
-        <Spinner
-            android:id="@+id/SpinnerMainActivity"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:minWidth="100sp"></Spinner>
-
-        <Button
-            android:id="@+id/btnAddDepartament"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/add_departament"
-            android:onClick="addDepartament"></Button>
-    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/FrameLayoutMainActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></FrameLayout>
 
     <ListView
         android:id="@+id/ListViewMainActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5sp"></ListView>
-
-    <FrameLayout
-        android:id="@+id/FrameLayoutMainActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></FrameLayout>
 
 </LinearLayout>

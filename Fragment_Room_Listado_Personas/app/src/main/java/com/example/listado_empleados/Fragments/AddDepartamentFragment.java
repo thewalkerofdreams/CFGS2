@@ -44,6 +44,7 @@ public class AddDepartamentFragment extends Fragment {
                 if(!viewModel.getNewDepartamentName().isEmpty()){
                     AppDataBase.getDataBase(getContext()).clsDepartamentoDao().insertDepartament(new ClsDepartamento(viewModel.getNewDepartamentName()));
                     Toast.makeText(getContext(), R.string.departament_inserted, Toast.LENGTH_SHORT).show();
+                    viewModel.loadDepartamentList();//Cargamos la nueva lista de departamentos en el viewModel
                     ((MainActivity)getActivity()).removeYourFragments();//Cerramos el fragmento
                 }else{
                     Toast.makeText(getContext(), R.string.all_fields_are_required, Toast.LENGTH_SHORT).show();

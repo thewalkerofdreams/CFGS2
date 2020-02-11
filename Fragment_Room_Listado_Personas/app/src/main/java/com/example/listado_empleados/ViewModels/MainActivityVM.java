@@ -16,12 +16,16 @@ import java.util.ArrayList;
 
 public class MainActivityVM extends AndroidViewModel {
 
+    //Propiedades MainActivity
     private MutableLiveData<ArrayList<ClsPersonaConDepartamentoTuple>> _employeeList;
     private MutableLiveData<ArrayList<ClsDepartamento>> _departamentList;
+    private ClsPersonaConDepartamentoTuple _selectedEmployee;
+    //Propiedades AddPersonFragment (Las reutilizaremos para EditPersonFragment)
     private String newPersonFirstName;
     private String newPersonLastName;
     private String newPersonPhone;
     private int newPersonDepartament;
+    //Propiedades AddDepartmentFragment
     private String newDepartamentName;
 
     public MainActivityVM(Application application){
@@ -87,6 +91,14 @@ public class MainActivityVM extends AndroidViewModel {
 
     public void setNewDepartamentName(String newDepartamentName) {
         this.newDepartamentName = newDepartamentName;
+    }
+
+    public ClsPersonaConDepartamentoTuple get_selectedEmployee() {
+        return _selectedEmployee;
+    }
+
+    public void set_selectedEmployee(ClsPersonaConDepartamentoTuple _selectedEmployee) {
+        this._selectedEmployee = _selectedEmployee;
     }
 
     //Funciones sobre la base de datos
