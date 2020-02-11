@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.listado_empleados.DDBB_Entities.ClsPersona;
-import com.example.listado_empleados.Tuple.ClsPersonaConDepartamentoTuple;
 
 import java.util.List;
 
@@ -32,8 +31,4 @@ public interface ClsPersonaDao {
     @Query("SELECT * FROM ClsPersona WHERE ClsPersona.id = :id")
     ClsPersona getPersonById(int id);
 
-    /*@Transaction
-    @Query("SELECT ClsPersona.id,  ClsPersona.nombre, ClsPersona.apellidos, ClsPersona.telefono, ClsPersona.idDepartamento, ClsDepartamento.nombre FROM ClsPersona " +
-            "INNER JOIN ClsDepartamento ON ClsPersona.idDepartamento = ClsDepartamento.id")
-    List<ClsPersonaConDepartamentoTuple> getPersonsWithDepartament();*/
 }

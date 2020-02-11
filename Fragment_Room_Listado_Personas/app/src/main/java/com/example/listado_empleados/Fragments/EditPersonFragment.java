@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.listado_empleados.Activities.MainActivity;
@@ -19,6 +20,7 @@ import com.example.listado_empleados.DDBB.AppDataBase;
 import com.example.listado_empleados.DDBB_Entities.ClsDepartamento;
 import com.example.listado_empleados.DDBB_Entities.ClsPersona;
 import com.example.listado_empleados.R;
+import com.example.listado_empleados.Tuple.ClsPersonaConDepartamentoTuple;
 import com.example.listado_empleados.ViewModels.MainActivityVM;
 
 import java.util.ArrayList;
@@ -48,13 +50,27 @@ public class EditPersonFragment extends Fragment {
         btnCreate = view.findViewById(R.id.btnSavePersonAddFragment);
         btnCancel = view.findViewById(R.id.btnCancelPersonAddFragment);
 
+        //El observer   //En este caso no tiene utilidad ya que eliminamos la lista de empleqados cada vez que instanciamos el fragmento
+        final Observer<ClsPersonaConDepartamentoTuple> contactObserver = new Observer<ClsPersonaConDepartamentoTuple>() {
+            @Override
+            public void onChanged(ClsPersonaConDepartamentoTuple personaConDepartamentoTuple) {
+                if(viewModel.get_selectedEmployee() != null){
+                    editFirstName.setText(viewModel.get_selectedEmployee().getValue().get_nombre());
+                    editLastName.setText(viewModel.get_selectedEmployee().getValue().get_apellidos());
+                    editPhone.setText(viewModel.get_selectedEmployee().getValue().get_telefono());
+                }
+            }
+        };
+        //Observamos el LiveData
+        viewModel.get_selectedEmployee().observe(this, contactObserver);
+
         //Insertamos los valores por defecto de la persona seleccionada para la modificación en los textBoxs
-        editFirstName.setText(viewModel.get_selectedEmployee().get_nombre());
-        editLastName.setText(viewModel.get_selectedEmployee().get_apellidos());
-        editPhone.setText(viewModel.get_selectedEmployee().get_telefono());
+        editFirstName.setText(viewModel.get_selectedEmployee().getValue().get_nombre());
+        editLastName.setText(viewModel.get_selectedEmployee().getValue().get_apellidos());
+        editPhone.setText(viewModel.get_selectedEmployee().getValue().get_telefono());
 
         loadSpinner();//Cargamos el spinner
-        viewModel.setNewPersonDepartament(viewModel.get_selectedEmployee().get_idDepartamento());
+        viewModel.setNewPersonDepartament(viewModel.get_selectedEmployee().getValue().get_idDepartamento());
 
         btnCreate.setOnClickListener(new View.OnClickListener()
         {
@@ -65,7 +81,7 @@ public class EditPersonFragment extends Fragment {
                 viewModel.setNewPersonLastName(editLastName.getText().toString());
                 viewModel.setNewPersonPhone(editPhone.getText().toString());
                 if(!viewModel.getNewPersonFirstName().isEmpty() && !viewModel.getNewPersonLastName().isEmpty() && !viewModel.getNewPersonPhone().isEmpty()){
-                    AppDataBase.getDataBase(getContext()).clsPersonaDao().updatePerson(new ClsPersona(viewModel.get_selectedEmployee().get_id(), viewModel.getNewPersonFirstName(),
+                    AppDataBase.getDataBase(getContext()).clsPersonaDao().updatePerson(new ClsPersona(viewModel.get_selectedEmployee().getValue().get_id(), viewModel.getNewPersonFirstName(),
                             viewModel.getNewPersonLastName(), viewModel.getNewPersonPhone(), viewModel.getNewPersonDepartament()));
                     Toast.makeText(getContext(), R.string.person_inserted, Toast.LENGTH_SHORT).show();
                     ((MainActivity)getActivity()).removeYourFragments();//Cerramos el fragment

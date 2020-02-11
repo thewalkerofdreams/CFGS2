@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ListView listView;
     AdapterEmployeeList adapter;
     MainActivityVM viewModel;
-    AddDepartamentFragment addDepartamentFragment = null;
+    AddDepartamentFragment addDepartamentFragment = null;//Los fragmentos
     AddPersonFragment addPersonFragment = null;
     EditPersonFragment editPersonFragment = null;
     @Override
@@ -174,10 +174,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         reloadList();//Recargamos la lista de empleados
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: addDepartament
-     * Comentario: Este método nos permite abrir el formulario para insertar un departamento a la base de datos.
+     * Comentario: Este método nos permite abrir el formulario para añadir un departamento a la base de datos.
      * Cabecera: public void addDepartament(View v)
      * Entrada:
      *  -View v
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         replaceFragment(addDepartamentFragment);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: reloadList
      * Comentario: Este método nos permite recargar la lista de empleados.
@@ -206,11 +206,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(adapter);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: removeList
      * Comentario: Este método nos permite limpiar la lista de empleados. Lo utilizaremos
-     * daca vez que llamemos a algún fragmento en la actividad MainActivity.
+     * cada vez que llamemos a algún fragmento en la actividad MainActivity.
      * Cabecera: public void removeList()
      * Postcondiciones: El método limpia la lista de empleados.
      */

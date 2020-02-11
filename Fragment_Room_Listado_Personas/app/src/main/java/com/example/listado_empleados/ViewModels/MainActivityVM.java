@@ -16,10 +16,10 @@ import java.util.ArrayList;
 
 public class MainActivityVM extends AndroidViewModel {
 
-    //Propiedades MainActivity
+    //Propiedades MainActivity  //Como este hecha este ejercicio no es necesario los MutableLiveData porque limpiamos costantemente la lista de empleados
     private MutableLiveData<ArrayList<ClsPersonaConDepartamentoTuple>> _employeeList;
     private MutableLiveData<ArrayList<ClsDepartamento>> _departamentList;
-    private ClsPersonaConDepartamentoTuple _selectedEmployee;
+    private MutableLiveData<ClsPersonaConDepartamentoTuple> _selectedEmployee;
     //Propiedades AddPersonFragment (Las reutilizaremos para EditPersonFragment)
     private String newPersonFirstName;
     private String newPersonLastName;
@@ -32,6 +32,7 @@ public class MainActivityVM extends AndroidViewModel {
         super(application);
         _employeeList = new MutableLiveData<ArrayList<ClsPersonaConDepartamentoTuple>>();
         _departamentList = new MutableLiveData<ArrayList<ClsDepartamento>>();
+        _selectedEmployee = new MutableLiveData<ClsPersonaConDepartamentoTuple>();
         loadEmployeeList();
         loadDepartamentList();
     }
@@ -93,12 +94,12 @@ public class MainActivityVM extends AndroidViewModel {
         this.newDepartamentName = newDepartamentName;
     }
 
-    public ClsPersonaConDepartamentoTuple get_selectedEmployee() {
+    public LiveData<ClsPersonaConDepartamentoTuple> get_selectedEmployee() {
         return _selectedEmployee;
     }
 
-    public void set_selectedEmployee(ClsPersonaConDepartamentoTuple _selectedEmployee) {
-        this._selectedEmployee = _selectedEmployee;
+    public void set_selectedEmployee(ClsPersonaConDepartamentoTuple selectedEmployee) {
+        this._selectedEmployee.setValue(selectedEmployee);
     }
 
     //Funciones sobre la base de datos
@@ -112,9 +113,6 @@ public class MainActivityVM extends AndroidViewModel {
      * Postcondiciones: El método carga la lista de empleados.
      * */
     public void loadEmployeeList(){
-        /*ArrayList<ClsPersonaConDepartamentoTuple> listado = new ArrayList<ClsPersonaConDepartamentoTuple>(AppDataBase.getDataBase(getApplication()).clsPersonaDao().getPersonsWithDepartament());
-        if(listado.size() > 0)
-            _employeeList.setValue(listado);*/
         ArrayList<ClsPersona> listado = new ArrayList<ClsPersona>(AppDataBase.getDataBase(getApplication()).clsPersonaDao().getAllPersons());
         ArrayList<ClsPersonaConDepartamentoTuple> listado2 = new ArrayList<>();
         if(listado.size() > 0){
@@ -144,7 +142,7 @@ public class MainActivityVM extends AndroidViewModel {
         }
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: deleteEmployee
      * Comentario: Este método nos permite eliminar a un empleado de la base de datos.
