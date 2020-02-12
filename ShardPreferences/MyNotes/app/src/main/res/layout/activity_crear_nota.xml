@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".crearNota">
+
+    <LinearLayout
+        android:id="@+id/contenedor"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etTitulo"
+            android:inputType="text"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:hint="@string/etTitulo"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="2"
+            app:layout_constraintTop_toTopOf="parent"></EditText>
+
+        <Button
+            android:onClick="guardarNota"
+            android:id="@+id/btnGuardar"
+            android:text="@string/btnGuardar"
+            android:layout_width="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etContenido"
+        android:inputType="textMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:gravity="start"
+        android:hint="@string/etContenido"></EditText>
+
+</LinearLayout>

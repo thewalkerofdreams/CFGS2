@@ -32,6 +32,10 @@ public interface ClsPlayerDao {
     @Query("SELECT * FROM ClsPlayer WHERE ClsPlayer.id = :id")
     ClsPlayer getPlayerById(int id);
 
+    @Transaction
+    @Query("SELECT * FROM ClsPlayer WHERE ClsPlayer.nombre = :nombre")
+    ClsPlayer getPlayerByFirstName(String nombre);
+
     @Query("SELECT * FROM ClsPlayer")
-    public List<ClsPlayerWithPositions> loadPlayersWithPositions();
+    List<ClsPlayerWithPositions> loadPlayersWithPositions();
 }

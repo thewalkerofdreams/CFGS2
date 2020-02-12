@@ -30,4 +30,8 @@ public interface ClsPositionDao {
     @Transaction
     @Query("SELECT * FROM ClsPosition WHERE ClsPosition.id = :id")
     ClsPosition getPositionById(int id);
+
+    @Transaction
+    @Query("SELECT * FROM ClsPosition WHERE ClsPosition.nombrePosicion = :nombre")
+    ClsPosition getPositionByName(String nombre);
 }

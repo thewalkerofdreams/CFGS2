@@ -29,9 +29,13 @@ public interface ClsPlayerPositionDao {
 
     @Transaction
     @Query("SELECT * FROM ClsPlayerPosition WHERE ClsPlayerPosition.idPlayer = :playerId")
-    ClsPlayerPosition getPlayerPositionByPlayerId(int playerId);
+    List<ClsPlayerPosition> getPlayerPositionByPlayerId(int playerId);
 
     @Transaction
     @Query("SELECT * FROM ClsPlayerPosition WHERE ClsPlayerPosition.idPosition = :positionId")
     ClsPlayerPosition getPlayerPositionByPositionId(int positionId);
+
+    @Transaction
+    @Query("DELETE FROM ClsPlayerPosition WHERE ClsPlayerPosition.idPlayer = :playerId")
+    void deleteRelationPlayer(int playerId);
 }

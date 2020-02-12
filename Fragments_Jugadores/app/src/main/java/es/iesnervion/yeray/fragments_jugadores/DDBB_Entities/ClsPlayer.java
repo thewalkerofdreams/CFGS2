@@ -17,7 +17,8 @@ public class ClsPlayer {
 
     //Constructores
     public ClsPlayer(){
-
+        _nombre = "";
+        _apellidos = "";
     }
 
     @Ignore

@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">MyNotes</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_logout">Cerrar sesion</string>
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_gallery">Papelera</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Herramientas</string>
+    <string name="textViewForgotPassword">¿Olvidaste la contraseña?</string>
+    <string name="password">Contraseña</string>
+    <string name="btnCreateCount">Crear cuenta</string>
+    <string name="btnLogin">Entrar</string>
+    <string name="editTextNickName">Email</string>
+
+    <!--Create Account-->
+    <string name="TextViewCreateCount">Crear cuenta</string>
+    <string name="EditTextMail">Email</string>
+    <string name="EditTextPasswordCreateCount01">Contraseña</string>
+    <string name="EditTextPasswordCreateCount02">Repite la contraseña</string>
+
+    <!--Crear nota -->
+    <string name="etTitulo">Titulo</string>
+    <string name="etContenido">Escribe aquí tu nota.</string>
+    <string name="btnGuardar">Guardar</string>
+    <string name="toastCreado">Se ha insertado correctamente.</string>
+    <string name="toastGuardado">Nota guardada.</string>
+
+    <!-- Activity Login -->
+    <string name="toastWelcome"> Bienvenido!!</string>
+    <string name="toastError">No se ha podido iniciar sesion.</string>
+    <string name="camposVacios">Rellene los campos</string>
+
+    <!-- Activity CreateAccount -->
+    <string name="toastCreateAccount">Éxito al crear.</string>
+    <string name="toastErrorCreate">Fallo al crear cuenta.</string>
+    <string name="toastErrorEmail">El email está vacío.</string>
+    <string name="toastErrorPassword">Las contraseñas son diferentes.</string>
+    <string name="toastErrorPasswordEmpty">La contraseña no puede estar vacía.</string>
+
+    <!-- Home fragment -->
+    <string name="alertaElimTitulo">Eliminar</string>
+    <string name="alertaElimDescripcion">¿Seguro que quieres eliminar esta nota?</string>
+    <string name="alertaElimConfirm">Confirmar.</string>
+    <string name="mainTitle">Titulo</string>
+    <string name="mainDate">Fecha</string>
+    <string name="deleteNote">Movida a la papelera.</string>
+    <string name="deleteNoteFailed">Vaya, algo salió mal.</string>
+    <string name="movedToRecicle">Movida a la papelera.</string>
+
+    <!-- Papelera nota -->
+    <string name="papeleraTitulo">Titulo: </string>
+    <string name="btnRecuperar">Restaurar</string>
+    <string name="btnEliminar">Eliminar</string>
+    <string name="borrada">Eliminada</string>
+    <string name="restaurada">Nota restaurada</string>
+    <string name="alertaElimTitle">Eliminar definitivamente</string>
+    <string name="alertaElimContenido">No se podrá deshacer. ¿Estás seguro?</string>
+
+    <!-- Nombre Actividades -->
+    <string name="activityEdit">Editar Nota</string>
+    <string name="activityCreate">Crear Nota</string>
+
+    <!-- Tools Activity -->
+    <string name="cambiarIdioma"> Reinicia la aplicacion.</string>
+    <string name="txtLanguage">Idiomas disponibles</string>
+</resources>

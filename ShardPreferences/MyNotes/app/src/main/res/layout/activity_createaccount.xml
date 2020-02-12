@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/EditTextMail">
+
+        <EditText
+            android:id="@+id/EditTextMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="mail"
+            android:inputType="textEmailAddress"
+
+            android:layout_margin="5sp"></EditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/EditTextPasswordCreateCount01">
+
+        <EditText
+            android:id="@+id/EditTextPasswordCreateCount01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:layout_margin="5sp"></EditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/EditTextPasswordCreateCount02">
+        <EditText
+            android:id="@+id/EditTextPasswordCreateCount02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:layout_margin="5sp"></EditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnFormCreateCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="40dp"
+        android:onClick="createAccount"
+        android:text="@string/btnCreateCount"></Button>
+
+</LinearLayout>

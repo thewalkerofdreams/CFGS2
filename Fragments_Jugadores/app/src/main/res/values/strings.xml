@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Fragments_Jugadores</string>
+    <string name="no_checkbox_selected">¡No has seleccionado ningún checkbox!</string>
+    <string name="firts_and_last_name_required">¡El nombre y el apellido son obligatorios!</string>
+    <string name="player_inserted">¡El jugador se ha insertado!</string>
+    <string name="confirm_delete">Delete Person</string>
+    <string name="question_delete_person">Do you really want delete this person?</string>
+    <string name="person_deleted">Person deleted!</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
