@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.iesnervion.usuario.examensegundaevaluacionpablojarana.Fragments.AddJugadorFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <EditText
+        android:id="@+id/txtNombreJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del jugador"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+    <EditText
+        android:id="@+id/txtApellidoJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtNombreJugador"
+        android:hint="Apellido jugador"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/btnAceptar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtApellidoJugador"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Aceptar"/>
+    <CheckBox
+        android:id="@+id/checkboxPortero"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/txtNombreJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Portero"
+        android:layout_marginLeft="20dp"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Defensa"
+        android:layout_alignLeft="@id/checkboxPortero"
+        android:id="@+id/checkboxDefensa"
+        android:layout_below="@id/checkboxPortero"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/checkboxPortero"
+        android:id="@+id/checkboxCentrocampista"
+        android:text="Centrocampista"
+        android:layout_below="@id/checkboxDefensa"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/checkboxPortero"
+        android:id="@+id/checkboxDelantero"
+        android:layout_below="@id/checkboxCentrocampista"
+        android:text="Delantero"/>
+
+</RelativeLayout>
