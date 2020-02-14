@@ -96,10 +96,10 @@
     <string name="tab_text_4">Character</string>
     <string name="intro_tutorial">PocketCharacter is an app that will allow you to store Role characters for different existing game systems (DAD, Pathfinder, Masquerade ...) or your own.</string>
     <string name="game_modes_tutorial">The game mode refers to the game system which is going to be used to store a character.
-    The game mode is necessary to create both characters, objects and statistics.</string>
-    <string name="objects_and_stats">The statistics are the attributes that a character will have in a game mode. You only need to create
+    \nThe game mode is necessary to create both characters, objects and statistics.</string>
+    <string name="objects_and_stats">The statistics are the attributes that a character will have in a game mode. \nYou only need to create
     the statistics for a game mode once, then you just have to select them at the time of editing the character</string>
-    <string name="character_tutorial">The character is essential to be able to play most of the current role-playing systems. Therefore
-    The existence of this application. The characters must have a unique name in the App (If you are the type of player who always uses the
-        same name to give life to your characters, you just have to add at the end of each name a suffix of the game mode that is going to be played for example.)</string>
+    <string name="character_tutorial">The character is essential to be able to play most of the current role-playing systems. \nTherefore
+    The existence of this application. \nThe characters must have a unique name in the App (If you are the type of player who always uses the
+        same name to give life to your characters, you just have to add at the end of each name a suffix of the game mode that is going to be played for example).</string>
 </resources>
