@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6E6FA">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Object: "
+            android:textSize="16sp"
+            android:layout_margin="5sp"></TextView>
+
+        <Spinner
+            android:id="@+id/SpinnerObjects"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="250sp"
+            android:background="#FFF"
+            android:textSize="16sp"
+            android:layout_margin="5sp"></Spinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Quantity: "
+            android:textSize="16sp"
+            android:layout_margin="5sp"></TextView>
+
+        <EditText
+            android:id="@+id/EditTextQuantityNewObject"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:layout_margin="5sp"
+            android:background="#FFF"
+            android:minWidth="250sp"
+            android:numeric="integer"
+            android:textSize="16sp"></EditText>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCreateObject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="saveObject"
+        android:text="@string/create"></Button>
+
+</LinearLayout>
