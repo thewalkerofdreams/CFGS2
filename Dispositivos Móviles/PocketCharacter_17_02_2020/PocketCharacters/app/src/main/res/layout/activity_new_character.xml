@@ -6,8 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -31,8 +30,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -56,8 +54,7 @@
     <EditText
         android:id="@+id/EditTextStoryCreate"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="50"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="start|top"
         android:layout_margin="5sp"
@@ -70,7 +67,7 @@
         android:id="@+id/SpinnerGameModes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
+        android:layout_margin="5sp"
         android:background="#FFF"
         android:dropDownSelector="#000"
         ></Spinner>
@@ -78,9 +75,13 @@
     <Button
         android:id="@+id/btnCreateCharacter"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="10"
+        android:layout_height="wrap_content"
         android:onClick="saveCharacter"
         android:text="Create Character"></Button>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Esto es una prueba"></TextView>
 
 </LinearLayout>

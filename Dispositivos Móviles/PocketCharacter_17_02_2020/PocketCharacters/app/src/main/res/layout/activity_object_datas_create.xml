@@ -2,85 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/raccoons_why_not">
-
+    android:background="#E6E6FA">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/form_character_name"
-            android:textStyle="bold"
+            android:text="@string/form_type"
             android:textSize="16sp"
-            android:background="#FFF"
             android:layout_margin="5sp"></TextView>
 
-        <EditText
-            android:id="@+id/EditTextCharacterNameCreate"
+        <Spinner
+            android:id="@+id/SpinnerObjectTypeCreate"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:minWidth="250sp"
+            android:minWidth="200sp"
             android:background="#FFF"
-            android:textSize="14sp"
-            android:layout_margin="5sp"></EditText>
+            android:textSize="16sp"
+            android:layout_margin="5sp"></Spinner>
 
+        <Button
+            android:id="@+id/btnModObjectDatas"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="saveObject"
+            android:text="@string/create"></Button>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/form_chapter"
-            android:textStyle="bold"
+            android:text="@string/form_name"
             android:textSize="16sp"
-            android:background="#FFF"
             android:layout_margin="5sp"></TextView>
 
         <EditText
-            android:id="@+id/EditTextChapterCreate"
+            android:id="@+id/EditTextObjectName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="16sp"
             android:background="#FFF"
-            android:minWidth="310sp"
+            android:minWidth="250sp"
             android:layout_margin="5sp"></EditText>
     </LinearLayout>
 
     <EditText
-        android:id="@+id/EditTextStoryCreate"
+        android:id="@+id/EditTextObjectDescription"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="50"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="start|top"
         android:layout_margin="5sp"
         android:minHeight="250sp"
         android:background="#FFF"
-        android:hint="@string/character_description"
+        android:hint="@string/object_description"
         android:inputType="textMultiLine" />
-
-    <Spinner
-        android:id="@+id/SpinnerGameModes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:background="#FFF"
-        android:dropDownSelector="#000"
-        ></Spinner>
-
-    <Button
-        android:id="@+id/btnCreateCharacter"
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="10"
-        android:onClick="saveCharacter"
-        android:text="Create Character"></Button>
 
 </LinearLayout>
