@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CRUDXamarin"
+        
+             x:Class="CRUDXamarin.MainPage">
+
+
+    <StackLayout>
+        <ListView
+            ItemsSource="{Binding ListadoPersonas ,Mode=TwoWay}"
+            SelectedItem="{Binding PersonaSeleccionada,Mode=TwoWay}"
+            >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout
+                        Orientation="Horizontal"
+                        >
+                            <Label  Margin="0,0,0,0" Text="{Binding nombrePersona}" />
+                            <Label  Text="{Binding apellidosPersona}"/>
+
+                        </StackLayout>
+                    </ViewCell>
+                   
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <StackLayout
+            Orientation="Horizontal"
+            >
+            <Button
+            Text="Add"
+            >
+
+            </Button>
+            <Button
+            Text="Update"
+            >
+
+            </Button>
+            <Button
+                Text="Delete"
+                Command="{Binding DeleteCommand}"
+                >
+                
+            </Button>
+        </StackLayout>
+       
+    </StackLayout>
+
+</ContentPage>

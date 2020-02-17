@@ -923,25 +923,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\thewa\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\ymcampanario\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_BL\\CRUDXamarin_BL.csproj",
+      "projectUniqueName": "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_BL\\CRUDXamarin_BL.csproj",
       "projectName": "CRUDXamarin_BL",
-      "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_BL\\CRUDXamarin_BL.csproj",
-      "packagesPath": "C:\\Users\\thewa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_BL\\obj\\",
+      "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_BL\\CRUDXamarin_BL.csproj",
+      "packagesPath": "C:\\Users\\ymcampanario\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_BL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\thewa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\ymcampanario\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
@@ -953,11 +952,11 @@
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_DAL\\CRUDXamarin_DAL.csproj": {
-              "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_DAL\\CRUDXamarin_DAL.csproj"
+            "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_DAL\\CRUDXamarin_DAL.csproj": {
+              "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_DAL\\CRUDXamarin_DAL.csproj"
             },
-            "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj": {
-              "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj"
+            "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj": {
+              "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CFGSII - Github\\CFGS2\\CRUDXamarin\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj"
             }
           }
         }
@@ -979,16 +978,10 @@
           }
         },
         "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48"
+          "net461"
         ],
         "assetTargetFallback": true,
-        "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        "warn": true
       }
     }
   }
