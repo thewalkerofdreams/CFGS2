@@ -54,6 +54,7 @@
         <activity android:name=".Activities.NewCharacterActivity" />
         <activity android:name=".Activities.CharacterDetailsActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Activities.NewCharacterStatActivity" />
+        <activity android:name=".Activities.DescriptionCharacterActivity" android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".Activities.NewCharacterObjectActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />

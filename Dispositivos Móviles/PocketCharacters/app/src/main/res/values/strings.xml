@@ -74,7 +74,8 @@
     <string name="stat_name">Stat name</string>
     <string name="new_stat">New Stat</string>
     <string name="create_a_new_stat">Create a new Stat</string>
-    <string name="all_stats_are_assigned">All stats are assigned!</string>
+    <string name="all_stats_are_assigned">There are no more unassigned stats!</string>
+    <string name="no_objects_in_game_mode">There are no objects in the gamemode yet!</string>
     <string name="update">Update</string>
     <string name="form_value">Value: </string>
     <string name="form_stat">Stat: </string>
@@ -89,6 +90,10 @@
     <string name="character_dependency"></string>
     <string name="you_cant_delete_this_game_mode">"You can't delete this GameMode! Before you must remove all its elements!"</string>
     <string name="character_description">Character description...</string>
+    <string name="see_description">See description</string>
+    <string name="save_description">Save Description</string>
+    <string name="description_required">The description is required!</string>
+    <string name="description_saved">Description saved!</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="tab_text_1">Intro</string>
     <string name="tab_text_2">GameModes</string>

@@ -109,6 +109,31 @@ public class MethodsDDBB {
 
     /**
      * Interfaz
+     * Nombre: existAnyObject
+     * Comentario: Este método nos permite verificar si existe algún objeto relacionado con un gameMode
+     * en específico.
+     * Cabecera: public boolean existAnyObject(Context context, String gameModeName)
+     * Entrada:
+     *   -Context context
+     *   -String gameModeName
+     * Salida:
+     *   -boolean exist
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
+     * si ya existe por lo menos un objeto para ese gamemode en la base de datos o false
+     * en caso contrario.
+     * */
+    public boolean existAnyObject(Context context, String gameModeName){
+        boolean exist = false;
+        ArrayList<ClsObject> list = new ArrayList<>(AppDataBase.getDataBase(context).objectDao().getObjectsByGameMode(gameModeName));
+        if (list.size() > 0){
+            exist = true;
+        }
+
+        return exist;
+    }
+
+    /**
+     * Interfaz
      * Nombre: existObject
      * Comentario: Este método nos permite verificar si existe un objeto en la base
      * de datos con un nombre y gamemode específico.

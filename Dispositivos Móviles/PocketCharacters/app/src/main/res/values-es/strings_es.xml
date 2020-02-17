@@ -73,10 +73,11 @@
     <string name="new_type">Nuevo tipo</string>
     <string name="create_a_new_type">Crea un nuevo tipo</string>
     <string name="stat_name">Nombre de la estadística</string>
-
+    <string name="see_description">Ver Descripción</string>
     <string name="new_stat">Nueva estadística</string>
     <string name="create_a_new_stat">Crea una nueva estadística</string>
-    <string name="all_stats_are_assigned">¡Todas las estadísticas están asignadas!</string>
+    <string name="all_stats_are_assigned">¡No existen más estadísticas sin asignar!</string>
+    <string name="no_objects_in_game_mode">¡Aún no existen objetos en el modo de juego!</string>
     <string name="update">Actualizar</string>
     <string name="form_value">Valor: </string>
     <string name="form_stat">Estadística: </string>
@@ -89,8 +90,11 @@
     <string name="game_mode">Modo</string>
     <string name="chapter">Capítulo</string>
     <string name="character_dependency"></string>
+    <string name="save_description">Guardar Descripción</string>
     <string name="you_cant_delete_this_game_mode">"¡No puedes eliminar este modo de juego! ¡Antes debes eliminar todos sus elementos!"</string>
     <string name="character_description">Descripción del personaje...</string>
+    <string name="description_required">¡La descripción no puede estar vacía!</string>
+    <string name="description_saved">¡Se ha modificado la descripción del personaje!</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="tab_text_1">Introducción</string>
     <string name="tab_text_2">Modos de Juego</string>

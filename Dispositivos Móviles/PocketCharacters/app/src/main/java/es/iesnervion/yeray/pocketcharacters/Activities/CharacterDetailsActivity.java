@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -97,6 +98,30 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CharacterObjectListActivity.class);
         intent.putExtra("Character01", viewModel.get_inCharacter().get_character());
         startActivity(intent);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwDescriptionCharacterActivity
+     * Comentario: Este método nos permite lanzar la actividad DescriptionCharacterActivity.
+     * Cabecera: public void throwDescriptionCharacterActivity(View v)
+     * Entrada:
+     *   -View v
+     * Postcondiciones: El método lanza la actividad DescriptionCharacterActivity.
+     * */
+    public void throwDescriptionCharacterActivity(View v){
+        Intent intent = new Intent(this, DescriptionCharacterActivity.class);
+        intent.putExtra("Character", viewModel.get_inCharacter().get_character());
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK){
+            viewModel.get_inCharacter().get_character().set_story(data.getStringExtra("Description"));
+            viewModel.get_outCharacter().get_character().set_story(data.getStringExtra("Description"));
+        }
     }
 
     /**

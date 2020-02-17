@@ -105,10 +105,10 @@
         android:layout_margin="5sp"/>
 
     <Button
-        android:id="@+id/btnSendCharacter"
+        android:id="@+id/btnSeeDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/send_Character"
-        android:onClick="throwCharacterObjectListActivity"
+        android:text="@string/see_description"
+        android:onClick="throwDescriptionCharacterActivity"
         android:layout_margin="5sp"></Button>
 </LinearLayout>

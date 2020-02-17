@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
+import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
@@ -57,7 +58,11 @@ public class CharacterObjectListActivity extends AppCompatActivity implements Ad
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                throwNewCharacterObjectActivity();
+                if(new MethodsDDBB().existAnyObject(getApplication(), viewModel.get_character().get_gameMode())){
+                    throwNewCharacterObjectActivity();
+                }else{
+                    Toast.makeText(getApplication(), R.string.no_objects_in_game_mode, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
