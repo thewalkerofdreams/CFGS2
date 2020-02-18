@@ -14,21 +14,21 @@
             android:textSize="16sp"
             android:layout_margin="5sp"></TextView>
 
-        <TextView
-            android:id="@+id/TextViewModObjectType"
+        <Spinner
+            android:id="@+id/SpinnerObjectTypeCreate"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="200sp"
             android:background="#FFF"
             android:textSize="16sp"
-            android:layout_margin="5sp"></TextView>
+            android:layout_margin="5sp"></Spinner>
 
         <Button
             android:id="@+id/btnModObjectDatas"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="updateObject"
-            android:text="@string/mod"></Button>
+            android:onClick="saveObject"
+            android:text="@string/create"></Button>
     </LinearLayout>
 
     <LinearLayout
@@ -43,24 +43,27 @@
             android:layout_margin="5sp"></TextView>
 
         <EditText
-            android:id="@+id/EditTextModObjectName"
+            android:id="@+id/EditTextObjectName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="16sp"
-            android:background="@drawable/share_rounded_corner_with_border"
+            android:background="#FFF"
             android:minWidth="250sp"
             android:layout_margin="5sp"></EditText>
     </LinearLayout>
 
     <EditText
-        android:id="@+id/EditTextModObjectDescription"
+        android:id="@+id/EditTextObjectDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="start|top"
-        android:layout_margin="5sp"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"
         android:minHeight="250sp"
-        android:background="@drawable/share_rounded_corner_with_border"
+        android:background="#FFF"
         android:hint="@string/object_description"
         android:inputType="textMultiLine" />
 

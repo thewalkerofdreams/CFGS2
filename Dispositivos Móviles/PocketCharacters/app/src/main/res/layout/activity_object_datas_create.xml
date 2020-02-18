@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="200sp"
-            android:background="#FFF"
+            android:background="@drawable/share_rounded_corner_with_border"
             android:textSize="16sp"
             android:layout_margin="5sp"></Spinner>
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="16sp"
-            android:background="#FFF"
+            android:background="@drawable/share_rounded_corner_with_border"
             android:minWidth="250sp"
             android:layout_margin="5sp"></EditText>
     </LinearLayout>
@@ -63,7 +63,7 @@
         android:layout_marginTop="5sp"
         android:layout_marginBottom="10sp"
         android:minHeight="250sp"
-        android:background="#FFF"
+        android:background="@drawable/share_rounded_corner_with_border"
         android:hint="@string/object_description"
         android:inputType="textMultiLine" />
 

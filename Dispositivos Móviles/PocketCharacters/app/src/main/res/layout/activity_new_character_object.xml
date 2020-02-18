@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="250sp"
-            android:background="#FFF"
+            android:background="@drawable/share_rounded_corner_with_border"
             android:textSize="16sp"
             android:layout_margin="5sp"></Spinner>
     </LinearLayout>
@@ -40,10 +40,10 @@
             android:layout_width="wrap_content"
             android:layout_height="31dp"
             android:layout_margin="5sp"
-            android:background="#FFF"
             android:minWidth="250sp"
             android:numeric="integer"
-            android:textSize="16sp"></EditText>
+            android:textSize="16sp"
+            android:background="@drawable/share_rounded_corner_with_border"></EditText>
     </LinearLayout>
 
     <Button
