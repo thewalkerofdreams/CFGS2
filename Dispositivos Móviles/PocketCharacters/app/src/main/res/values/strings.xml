@@ -89,6 +89,7 @@
     <string name="chapter">Chapter</string>
     <string name="character_dependency"></string>
     <string name="you_cant_delete_this_game_mode">"You can't delete this GameMode! Before you must remove all its elements!"</string>
+    <string name="you_cant_delete_this_object_type">"You can't delete this object type! Before you must remove all objects with this type!"</string>
     <string name="character_description">Character description...</string>
     <string name="see_description">See description</string>
     <string name="save_description">Save Description</string>

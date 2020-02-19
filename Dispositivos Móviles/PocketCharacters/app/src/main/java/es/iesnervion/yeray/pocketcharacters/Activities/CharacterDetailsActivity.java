@@ -3,6 +3,7 @@ package es.iesnervion.yeray.pocketcharacters.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ public class CharacterDetailsActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.ListViewStats);
         reloadList();//Cargamos la lista de stats del personaje
+
+        //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//Deshabilitamos el foco por defecto
     }
 
     /**

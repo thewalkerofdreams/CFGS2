@@ -92,6 +92,7 @@
     <string name="character_dependency"></string>
     <string name="save_description">Guardar Descripción</string>
     <string name="you_cant_delete_this_game_mode">"¡No puedes eliminar este modo de juego! ¡Antes debes eliminar todos sus elementos!"</string>
+    <string name="you_cant_delete_this_object_type">"¡No puedes eliminar este tipo de objeto! ¡Antes debes eliminar todos los objetos con ese tipo!"</string>
     <string name="character_description">Descripción del personaje...</string>
     <string name="description_required">¡La descripción no puede estar vacía!</string>
     <string name="description_saved">¡Se ha modificado la descripción del personaje!</string>

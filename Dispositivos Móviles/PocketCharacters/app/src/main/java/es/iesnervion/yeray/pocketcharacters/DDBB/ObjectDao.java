@@ -38,6 +38,10 @@ public interface ObjectDao {
     List<ClsObject> getObjectsByGameMode(String gameMode);
 
     @Transaction
+    @Query("SELECT * FROM ClsObject WHERE type = :objectType")
+    List<ClsObject> getObjectsByType(String objectType);
+
+    @Transaction
     @Query("SELECT * FROM ClsObject WHERE gameMode = :gameMode AND name = :name")
     ClsObject getObjectByGameModeAndName(String gameMode, String name);
 
