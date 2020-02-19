@@ -26,14 +26,15 @@
   <component name="ProjectId" id="1X1Q6UOGHb6wNtWHNElYlvMwEC4" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/JWT" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/JWT" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/model" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -63,6 +64,8 @@
       <workItem from="1580461043098" duration="6048000" />
       <workItem from="1581495186831" duration="3285000" />
       <workItem from="1581929535187" duration="2461000" />
+      <workItem from="1582022885876" duration="3280000" />
+      <workItem from="1582096797932" duration="3840000" />
     </task>
     <servers />
   </component>
@@ -74,12 +77,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/controller/UsuarioController.php</url>
-          <line>148</line>
+          <line>155</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/controller/UsuarioController.php</url>
-          <line>135</line>
+          <line>141</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

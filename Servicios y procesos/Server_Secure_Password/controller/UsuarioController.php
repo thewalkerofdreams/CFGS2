@@ -51,6 +51,7 @@ class UsuarioController extends Controller
         $id = null;
         $response = null;
         $code = null;
+        $header = null;
 
         //if the URI refers to a libro entity, instead of the libro collection
         if (isset($request->getUrlElements()[2])) {
@@ -61,6 +62,8 @@ class UsuarioController extends Controller
 
         if ($filasAfectadas > 0) {//Si se ha eliminado algún libro
             $code = '200';
+            $cadena = Autentication::generateToken();
+            $header['Authorization'] = "Bearer " . $cadena;
         } else {
             //We could send 404 in any case, but if we want more precission,
             //we can send 400 if the syntax of the entity was incorrect...
@@ -71,7 +74,7 @@ class UsuarioController extends Controller
             }
         }
 
-        $response = new Response($code, null, null, $request->getAccept());
+        $response = new Response($code, $header, null, $request->getAccept());
         $response->generate();
     }
 
@@ -91,6 +94,7 @@ class UsuarioController extends Controller
         $id = null;
         $response = null;
         $code = null;
+        $header = null;
 
         //if the URI refers to a libro entity
         if (isset($request->getUrlElements()[2])) {
@@ -106,6 +110,8 @@ class UsuarioController extends Controller
 
         if ($usuarioModificado == true) {//Si se ha conseguido modifica algún libro
             $code = '200';
+            $cadena = Autentication::generateToken();
+            $header['Authorization'] = "Bearer " . $cadena;
         } else {
             //We could send 404 in any case, but if we want more precission,
             //we can send 400 if the syntax of the entity was incorrect...
@@ -117,7 +123,7 @@ class UsuarioController extends Controller
 
         }
 
-        $response = new Response($code, null, null, $request->getAccept());
+        $response = new Response($code, $header, null, $request->getAccept());
         $response->generate();
     }
 
@@ -137,6 +143,7 @@ class UsuarioController extends Controller
         $id = null;
         $response = null;
         $code = null;
+        $header = null;
 
         //if the URI refers to a libro entity, instead of the libro collection
         if (isset($request->getUrlElements()[2])) {
@@ -150,6 +157,8 @@ class UsuarioController extends Controller
 
         if ($usuario != null) {//Si se ha encontrado algún libro
             $code = '200';
+            $cadena = Autentication::generateToken();//Generamos el token
+            $header['Authorization'] = "Bearer " . $cadena;
         } else {
             //We could send 404 in any case, but if we want more precission,
             //we can send 400 if the syntax of the entity was incorrect...
@@ -161,7 +170,7 @@ class UsuarioController extends Controller
 
         }
 
-        $response = new Response($code, null, $usuario, $request->getAccept());
+        $response = new Response($code, $header, $usuario, $request->getAccept());
         $response->generate();
     }
 }

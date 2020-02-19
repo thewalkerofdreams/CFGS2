@@ -82,6 +82,7 @@ else {
 
 $req = new Request($verb, $url_elements, $query_string, $body, $content_type, $accept, $usuario, $contrasena);
 
+$token = Autentication::getBearerToken();
 // route the request to the right place
 $controller_name = ucfirst($url_elements[1]) . 'Controller';
 /*if (class_exists($controller_name)) {//Si la clase existe
@@ -94,9 +95,10 @@ else {
     $controller->manage($req); //We don't care about the HTTP verb
 }*/
 
-if(Autentication::checkAuthentication($usuario, $contrasena) || (ucfirst(strtolower($verb)) == "Post" && ucfirst($url_elements[1]) == "Usuario")) {
-    if (!Autentication::checkUser($req) || ucfirst(strtolower($verb)) == "Get") {
-        if (class_exists($controller_name)) {
+//Si la autentificación es correcta o es un post
+if(Autentication::checkAuthentication($usuario, $contrasena, $token) || (ucfirst(strtolower($verb)) == "Post" && ucfirst($url_elements[1]) == "Usuario")) {
+    if (!Autentication::checkUser($req) || ucfirst(strtolower($verb)) == "Get") {//Si no existe el usuario o es un get
+        if (class_exists($controller_name)) {//Si existe la clase controller
             $controller = new $controller_name();
             $action_name = 'manage' . ucfirst(strtolower($verb)) . 'Verb';
             $controller->$action_name($req);
