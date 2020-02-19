@@ -58,13 +58,12 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         viewModel.get_outCharacter().get_character().set_chapterName(chapterName.getText().toString());
 
         if(viewModel.get_outCharacter().get_character().get_characterName().length() > 0 && viewModel.get_outCharacter().get_character().get_chapterName().length() > 0){
-            if(!viewModel.get_inCharacter().get_character().get_characterName().equals(viewModel.get_outCharacter().get_character().get_characterName()) ||
-                    !viewModel.get_inCharacter().get_character().get_chapterName().equals(viewModel.get_outCharacter().get_character().get_chapterName())){
+            if(viewModel.get_inCharacter().get_character().get_characterName().equals(viewModel.get_outCharacter().get_character().get_characterName())){
+                Toast.makeText(getApplication(), R.string.already_exist_character_name, Toast.LENGTH_SHORT).show();
+            }else{
                 AppDataBase.getDataBase(getApplication()).characterDao().updateCharacter(viewModel.get_outCharacter().get_character());
                 Toast.makeText(getApplication(), R.string.character_saved, Toast.LENGTH_SHORT).show();
                 viewModel.set_inCharacter(viewModel.get_outCharacter().get_character());
-            }else{
-                Toast.makeText(getApplication(), R.string.already_exist_character_name, Toast.LENGTH_SHORT).show();
             }
         }else{
             Toast.makeText(getApplication(), R.string.character_required_values, Toast.LENGTH_SHORT).show();

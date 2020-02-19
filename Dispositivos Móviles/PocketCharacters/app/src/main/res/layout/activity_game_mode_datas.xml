@@ -11,8 +11,10 @@
 
     <Button
         android:id="@+id/btnStatList"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="400sp"
+        android:layout_gravity="center"
         android:text="@string/stat_List"
         android:onClick="throwStatListActivity"
         android:layout_margin="10sp"
@@ -20,8 +22,10 @@
 
     <Button
         android:id="@+id/btnTypeObjectList"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:minWidth="400sp"
         android:text="@string/object_list"
         android:onClick="throwObjectListSimpleActivity"
         android:textAlignment="center"
