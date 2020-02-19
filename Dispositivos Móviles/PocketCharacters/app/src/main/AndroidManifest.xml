@@ -41,7 +41,7 @@
             android:name=".Activities.CharacterListActivity"
             android:label="@string/title_activity_character_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".Activities.MainActivity" android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

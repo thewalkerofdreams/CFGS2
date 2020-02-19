@@ -1,11 +1,15 @@
 package es.iesnervion.yeray.pocketcharacters.Activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +30,7 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
     NewCharacterActivityVM viewModel;
     Spinner spinner;
     EditText characterName, chapterName, story;
+    TextView txtCharacterName, txtChapterName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,17 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
+                    (float) 1.0
+            );
+            param.weight = 25;
+
+            story.setLayoutParams(param);
+        }
     }
 
 
