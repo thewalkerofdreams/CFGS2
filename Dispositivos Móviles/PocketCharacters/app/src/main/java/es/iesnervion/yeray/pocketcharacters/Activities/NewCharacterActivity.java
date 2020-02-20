@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -30,7 +31,7 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
     NewCharacterActivityVM viewModel;
     Spinner spinner;
     EditText characterName, chapterName, story;
-    TextView txtCharacterName, txtChapterName;
+    Button btnCreateCharacter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +63,9 @@ public class NewCharacterActivity extends AppCompatActivity implements AdapterVi
                     0,
                     (float) 1.0
             );
-            param.weight = 25;
-
+            param.weight = 20;
+            param.setMarginStart(11);
+            param.setMarginEnd(11);
             story.setLayoutParams(param);
         }
     }
