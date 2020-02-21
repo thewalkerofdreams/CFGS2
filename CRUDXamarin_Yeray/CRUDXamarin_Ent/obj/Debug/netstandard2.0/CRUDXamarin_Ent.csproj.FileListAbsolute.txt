@@ -15,3 +15,10 @@ C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_Ent\obj\Debu
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.AssemblyInfo.cs
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.dll
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\bin\Debug\netstandard2.0\CRUDXamarin_Ent.deps.json
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\bin\Debug\netstandard2.0\CRUDXamarin_Ent.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\bin\Debug\netstandard2.0\CRUDXamarin_Ent.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.AssemblyInfoInputs.cache
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.AssemblyInfo.cs
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_Ent\obj\Debug\netstandard2.0\CRUDXamarin_Ent.pdb

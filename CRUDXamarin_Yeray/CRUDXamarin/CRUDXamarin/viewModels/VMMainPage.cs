@@ -35,6 +35,9 @@ namespace CRUDXamarin.viewModels
 
         }
 
+        public DelegateCommand GoToAddPageCommand { get; }
+
+        #region Commands
         private async void ExecuteDeleteCommand()
         {
             var answer = await Application.Current.MainPage.DisplayAlert("Delete", "Do you want to delete this element?", "Yes", "No");
@@ -79,6 +82,7 @@ namespace CRUDXamarin.viewModels
             return habilitado;
         }
 
+        #endregion
         public clsPersona PersonaAux
         {
             get
@@ -151,8 +155,7 @@ namespace CRUDXamarin.viewModels
 
             //this._personaSeleccionada = new clsPersona();
             this._personaAux = new clsPersona();
-            this.DeleteCommand = new DelegateCommand
-                (ExecuteDeleteCommand, CanExecuteDeleteCommand);
+            this.DeleteCommand = new DelegateCommand(ExecuteDeleteCommand, CanExecuteDeleteCommand);
         }
 
         private async void cargarListados()

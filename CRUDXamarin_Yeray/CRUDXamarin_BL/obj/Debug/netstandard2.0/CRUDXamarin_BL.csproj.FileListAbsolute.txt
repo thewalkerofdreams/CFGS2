@@ -26,3 +26,16 @@ C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_BL\obj\Debug
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.csproj.CopyComplete
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.dll
 C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_BL.deps.json
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_BL.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_BL.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_DAL.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_Ent.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_DAL.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\bin\Debug\netstandard2.0\CRUDXamarin_Ent.pdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.csprojAssemblyReference.cache
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.AssemblyInfoInputs.cache
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.AssemblyInfo.cs
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.csproj.CopyComplete
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.dll
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin_BL\obj\Debug\netstandard2.0\CRUDXamarin_BL.pdb

@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\CRUDXamarin_BL\CRUDXamarin_BL.csproj" />
     <ProjectReference Include="..\..\CRUDXamarin_Ent\CRUDXamarin_Ent.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\AddPerson.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
