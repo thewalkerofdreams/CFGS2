@@ -12,11 +12,17 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
 public class ObjectTypeListActivityVM extends AndroidViewModel {
     private ArrayList<ClsObjectType> _typeList;
     private int _regionSelected;
+    private ClsObjectType _typeObjectToDelete;
+    private boolean _openDialogDeleteTypeObject;
+    private boolean _openDialogCreateTypeObject;
 
     public ObjectTypeListActivityVM(Application application){
         super(application);
         _typeList = new ArrayList<ClsObjectType>();
         loadList();
+        _typeObjectToDelete = null;
+        _openDialogCreateTypeObject = false;
+        _openDialogDeleteTypeObject = false;
     }
 
     //Get Y Set
@@ -34,6 +40,30 @@ public class ObjectTypeListActivityVM extends AndroidViewModel {
 
     public void set_regionSelected(int _regionSelected) {
         this._regionSelected = _regionSelected;
+    }
+
+    public ClsObjectType get_typeObjectToDelete() {
+        return _typeObjectToDelete;
+    }
+
+    public void set_typeObjectToDelete(ClsObjectType _typeObjectToDelete) {
+        this._typeObjectToDelete = _typeObjectToDelete;
+    }
+
+    public boolean is_openDialogDeleteTypeObject() {
+        return _openDialogDeleteTypeObject;
+    }
+
+    public void set_openDialogDeleteTypeObject(boolean _openDialogDeleteTypeObject) {
+        this._openDialogDeleteTypeObject = _openDialogDeleteTypeObject;
+    }
+
+    public boolean is_openDialogCreateTypeObject() {
+        return _openDialogCreateTypeObject;
+    }
+
+    public void set_openDialogCreateTypeObject(boolean _openDialogCreateTypeObject) {
+        this._openDialogCreateTypeObject = _openDialogCreateTypeObject;
     }
 
     //Funciones sobre la BBDD

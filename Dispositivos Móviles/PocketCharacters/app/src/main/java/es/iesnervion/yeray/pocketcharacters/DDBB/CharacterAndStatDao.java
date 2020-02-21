@@ -36,6 +36,10 @@ public interface CharacterAndStatDao {
     ClsCharacterAndStat getCharacterAndStat(int idCharacter, int idStat);
 
     @Transaction
+    @Query("SELECT * FROM ClsCharacterAndStat WHERE idStat = :idStat")
+    List<ClsCharacterAndStat> getCharacterAndStat(int idStat);
+
+    @Transaction
     @Query("SELECT ClsCharacterAndStat.idCharacter, ClsCharacterAndStat.idStat, ClsCharacterAndStat.value FROM ClsStat " +
             "INNER JOIN ClsCharacterAndStat ON ClsStat.id = ClsCharacterAndStat.idStat " +
             "WHERE ClsStat.name = :statName AND ClsCharacterAndStat.idCharacter = :idCharacter")

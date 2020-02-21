@@ -14,11 +14,15 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
     private ArrayList<ClsObject> _objectList;
     private int _regionSelected;
     private String _actualGameMode;
+    private ClsObject _objectToDelete;
+    private boolean _openDialogDeleteObject;
 
     public ObjectListSimpleActivityVM(Application application){
         super(application);
         _objectList = new ArrayList<ClsObject>();
         _actualGameMode = "";
+        _objectToDelete = null;
+        _openDialogDeleteObject = false;
     }
 
     //Get Y Set
@@ -45,6 +49,22 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
     public void set_actualGameMode(String _actualGameMode) {
         this._actualGameMode = _actualGameMode;
         loadList();
+    }
+
+    public ClsObject get_objectToDelete() {
+        return _objectToDelete;
+    }
+
+    public void set_objectToDelete(ClsObject _objectToDelete) {
+        this._objectToDelete = _objectToDelete;
+    }
+
+    public boolean is_openDialogDeleteObject() {
+        return _openDialogDeleteObject;
+    }
+
+    public void set_openDialogDeleteObject(boolean _openDialogDeleteObject) {
+        this._openDialogDeleteObject = _openDialogDeleteObject;
     }
 
     //Funciones sobre la BBDD

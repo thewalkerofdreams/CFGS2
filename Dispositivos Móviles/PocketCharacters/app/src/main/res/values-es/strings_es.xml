@@ -96,6 +96,8 @@
     <string name="character_description">Descripción del personaje...</string>
     <string name="description_required">¡La descripción no puede estar vacía!</string>
     <string name="description_saved">¡Se ha modificado la descripción del personaje!</string>
+    <string name="stat_asigned">¡La estadística ya esta asignada a un personaje! ¡Debes eliminar a los personajes con esa estadística!</string>
+    <string name="object_equiped">¡El objeto ya esta asignado a un personaje! ¡Debes eliminar a los personajes con ese objeto!</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="tab_text_1">Introducción</string>
     <string name="tab_text_2">Modos de Juego</string>

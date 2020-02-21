@@ -40,6 +40,7 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     AdapterObjectListSimple adapter;
     ListView listView;
     ObjectListSimpleActivityVM viewModel;
+    AlertDialog alertDialogDeleteObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,10 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
                 throwNewObjectActivity();
             }
         });
+
+        if(savedInstanceState != null && viewModel.is_openDialogDeleteObject()) {//Si se encuentra abierto el dialogo de deleteObject
+            showDialogToDeleteObject();
+        }
     }
 
     @Override
@@ -76,7 +81,38 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsObject item = (ClsObject) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        if(new MethodsDDBB().objectEquipToACharacter(this, item.get_id())){
+            Toast.makeText(getBaseContext(), R.string.object_equiped, Toast.LENGTH_SHORT).show();
+        }else{
+            viewModel.set_objectToDelete(item);
+            showDialogToDeleteObject();
+            viewModel.set_openDialogDeleteObject(true);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteObject != null && alertDialogDeleteObject.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteObject.dismiss();// close dialog to prevent leaked window
+            viewModel.set_openDialogDeleteObject(true);
+        }
+    }
+
+    /**
+    * Interfaz
+    * Nombre: showDialogToDeleteObject
+    * Comentario: Este método muestra un dialogo por pantalla para eliminar un objeto, si el usuario confirma
+    * la acción, se eliminará ese objeto de la base de datos.
+    * Cabecera: public void showDialogToDeleteObject()
+    * Postcondiciones: El método elimina un objeto de la base de datos o no hace nada si el usuario cancela
+    * el dialogo.
+    * */
+    public void showDialogToDeleteObject(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_object);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
@@ -85,20 +121,21 @@ public class ObjectListSimpleActivity extends AppCompatActivity implements Adapt
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.object_deleted, Toast.LENGTH_SHORT).show();
-                AppDataBase.getDataBase(getApplication()).objectDao().deleteObject(item);
+                AppDataBase.getDataBase(getApplication()).objectDao().deleteObject(viewModel.get_objectToDelete());
                 reloadList();
+                viewModel.set_openDialogDeleteObject(false);
             }
         });
 
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_openDialogDeleteObject(false);
             }
         });
 
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-        return true;
+        alertDialogDeleteObject = alertDialogBuilder.create();
+        alertDialogDeleteObject.show();
     }
 
     /**

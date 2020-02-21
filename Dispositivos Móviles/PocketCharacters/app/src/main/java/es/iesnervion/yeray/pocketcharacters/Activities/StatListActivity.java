@@ -30,6 +30,7 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
     AdapterStatList adapter;
     StatListActivityVM viewModel;
     ListView listView;
+    AlertDialog alertDialogDeleteStat, alertDialogCreateStat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,34 +52,42 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
                 dialogNewStat();
             }
         });
+
+        if(savedInstanceState != null && viewModel.is_openDialogDeleteStat()) {//Si el dialogo de eliminación estaba abierto lo recargamos
+            showDialogDeleteStat();
+        }else{
+            if(savedInstanceState != null && viewModel.is_openDialogCreateStat()){//Si el dialogo de creación estaba abierto lo recargamos
+                dialogNewStat();
+            }
+        }
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsStat item = (ClsStat) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage(R.string.question_delete_stat);// Setting Alert Dialog Message
-        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getBaseContext(), R.string.stat_deleted, Toast.LENGTH_SHORT).show();
-                AppDataBase.getDataBase(getApplication()).statDao().deleteStat(item);
-                reloadList();
-            }
-        });
-
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        if(new MethodsDDBB().statAsigned(this, item.get_id())){
+            Toast.makeText(getApplication(), R.string.stat_asigned, Toast.LENGTH_SHORT).show();
+        }else{
+            viewModel.set_statToDelete(item);
+            viewModel.set_openDialogDeleteStat(true);
+            showDialogDeleteStat();
+        }
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteStat != null && alertDialogDeleteStat.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteStat.dismiss();// close dialog to prevent leaked window
+            viewModel.set_openDialogDeleteStat(true);
+        }else{
+            if(alertDialogCreateStat != null && alertDialogCreateStat.isShowing()){//Si se encuentra abierto el dialogo de createGameMode
+                alertDialogCreateStat.dismiss();
+                viewModel.set_openDialogCreateStat(true);
+            }
+        }
     }
 
     /**
@@ -113,6 +122,7 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
                                 AppDataBase.getDataBase(getApplication()).statDao().insertStat(stat);
                                 reloadList();
                                 Toast.makeText(getApplication(), R.string.stat_saved, Toast.LENGTH_SHORT).show();
+                                viewModel.set_openDialogCreateStat(false);
                             }
                         }
                     }
@@ -120,11 +130,47 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
                 .setNegativeButton(getString(R.string.dialog_negative_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        viewModel.set_openDialogCreateStat(false);
                         dialog.cancel();
                     }
                 });
+        alertDialogCreateStat = builder.create();
+        alertDialogCreateStat.show();//Lanzamos el dialogo
+    }
 
-        builder.show();//Lanzamos el dialogo
+    /**
+     * Interfaz
+     * Nombre: showDialogDeleteStat
+     * Comentario: Este método muestra por pantalla un dialogo para eliminar un stat,
+     * si el usuario confirma la acción, se elimina ese stat de la base de datos.
+     * Cabecera: public void showDialogDeleteStat()
+     * Postcondiciones: El método elimina un stat de la base de datos o se cancela el dialogo.
+     * */
+    public void showDialogDeleteStat(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_stat);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getBaseContext(), R.string.stat_deleted, Toast.LENGTH_SHORT).show();
+                AppDataBase.getDataBase(getApplication()).statDao().deleteStat(viewModel.get_statToDelete());
+                reloadList();
+                viewModel.set_openDialogDeleteStat(false);
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_openDialogDeleteStat(false);
+            }
+        });
+
+        alertDialogDeleteStat = alertDialogBuilder.create();
+        alertDialogDeleteStat.show();
     }
 
     /**

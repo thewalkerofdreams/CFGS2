@@ -55,11 +55,57 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
             }
         });
 
-        if(savedInstanceState != null && viewModel.is_dialogDeleteShowing()) {
+        if(savedInstanceState != null && viewModel.is_dialogDeleteShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
             showDialogDeleteGameMode(getApplication());
         }else{
-            if(savedInstanceState != null && viewModel.is_dialogCreateShowing()){
+            if(savedInstanceState != null && viewModel.is_dialogCreateShowing()){//Si el dialogo de creación estaba abierto lo recargamos
                 dialogNewGameMode();
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+        startActivity(new Intent(this, GameModeDatasActivity.class).putExtra("GameMode", item.get_name()));
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+        if(!new MethodsDDBB().gameModeDependency(getApplication(), item.get_name())){
+            viewModel.set_gameModeToDelete(item);//Almacenamos el item seleccionado en el VM
+            showDialogDeleteGameMode(this);//Abrimos el dialogo de eliminación
+        }else{
+            Toast.makeText(getApplication(), getApplication().getString(R.string.you_cant_delete_this_game_mode), Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    /**
+    * Interfaz
+    * Nombre: reloadList
+    * Comentario: Este método nos permite recargar la lista de modos de juego.
+    * Cabecera: public void reloadList()
+    * Postcondiciones: El método recarga la lista.
+    * */
+    public void reloadList(){
+        viewModel.set_gameModeList(new ArrayList<>(AppDataBase.getDataBase(getApplication()).gameModeDao().getAllGameModes()));
+        adapter = new AdapterGameModeList(this, R.layout.item_game_mode_list, viewModel.get_gameModeList());
+        listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteGameMode != null && alertDialogDeleteGameMode.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteGameMode.dismiss();// close dialog to prevent leaked window
+            viewModel.set_dialogDeleteShowing(true);
+        }else{
+            if(alertDialogCreateGameMode != null && alertDialogCreateGameMode.isShowing()){//Si se encuentra abierto el dialogo de createGameMode
+                alertDialogCreateGameMode.dismiss();
+                viewModel.set_dialogCreateShowing(true);
             }
         }
     }
@@ -109,54 +155,14 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
         alertDialogCreateGameMode.show();//Lanzamos el dialogo
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        startActivity(new Intent(this, GameModeDatasActivity.class).putExtra("GameMode", item.get_name()));
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        final ClsGameMode item = (ClsGameMode) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        if(!new MethodsDDBB().gameModeDependency(getApplication(), item.get_name())){
-            viewModel.set_gameModeToDelete(item);
-            showDialogDeleteGameMode(this);
-        }else{
-            Toast.makeText(getApplication(), getApplication().getString(R.string.you_cant_delete_this_game_mode), Toast.LENGTH_SHORT).show();
-        }
-        return true;
-    }
-
     /**
-    * Interfaz
-    * Nombre: reloadList
-    * Comentario: Este método nos permite recargar la lista de modos de juego.
-    * Cabecera: public void reloadList()
-    * Postcondiciones: El método recarga la lista.
-    * */
-    public void reloadList(){
-        viewModel.set_gameModeList(new ArrayList<>(AppDataBase.getDataBase(getApplication()).gameModeDao().getAllGameModes()));
-        adapter = new AdapterGameModeList(this, R.layout.item_game_mode_list, viewModel.get_gameModeList());
-        listView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        if(alertDialogDeleteGameMode != null && alertDialogDeleteGameMode.isShowing()) {
-            // close dialog to prevent leaked window
-            alertDialogDeleteGameMode.dismiss();
-            viewModel.set_dialogDeleteShowing(true);
-        }
-
-        if(alertDialogCreateGameMode != null && alertDialogCreateGameMode.isShowing()){
-            alertDialogCreateGameMode.dismiss();
-            viewModel.set_dialogCreateShowing(true);
-        }
-    }
-
-
+     * Interfaz
+     * Nombre: showDialogDeleteGameMode
+     * Comentario: Este método muestra por pantalla un dialogo para eliminar un modo de juego, si el usuario
+     * confirma la eliminación, se elimina ese modo de juego de la base de datos.
+     * Cabecera: public void showDialogDeleteGameMode()
+     * Postcondiciones: El método elimina un GameMode en la base de datos o se cancela el dialogo.
+     * */
     protected void showDialogDeleteGameMode(final Context context) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title

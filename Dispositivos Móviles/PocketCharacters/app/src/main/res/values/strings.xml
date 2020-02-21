@@ -95,6 +95,8 @@
     <string name="save_description">Save Description</string>
     <string name="description_required">The description is required!</string>
     <string name="description_saved">Description saved!</string>
+    <string name="stat_asigned">The stat is already asigned to a person! You must delete all the references first!</string>
+    <string name="object_equiped">The object is already equiped to a person! You must delete all the references first!</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="tab_text_1">Intro</string>
     <string name="tab_text_2">GameModes</string>

@@ -35,6 +35,7 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
     AdapterObjectTypeList adapter;
     ListView listView;
     ObjectTypeListActivityVM viewModel;
+    AlertDialog alertDialogCreateType, alertDialogDeleteType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,14 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                 dialogNewObjectType();
             }
         });
+
+        if(savedInstanceState != null && viewModel.is_openDialogDeleteTypeObject()) {//Si el dialogo de eliminación estaba abierto lo recargamos
+            showDialogDeleteTypeObject();
+        }else{
+            if(savedInstanceState != null && viewModel.is_openDialogCreateTypeObject()){//Si el dialogo de creación estaba abierto lo recargamos
+                dialogNewObjectType();
+            }
+        }
     }
 
     @Override
@@ -63,30 +72,26 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         if(new MethodsDDBB().existAnyObjectByType(this, item.get_name())){
             Toast.makeText(getBaseContext(), R.string.you_cant_delete_this_object_type, Toast.LENGTH_SHORT).show();
         }else{
-            androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-            alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
-            alertDialogBuilder.setMessage(R.string.question_delete_type);// Setting Alert Dialog Message
-            alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
-            alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Toast.makeText(getBaseContext(), R.string.type_deleted, Toast.LENGTH_SHORT).show();
-                    AppDataBase.getDataBase(getApplication()).objectTypeDao().deleteObjectType(item);
-                    reloadList();
-                }
-            });
-
-            alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-
-            androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            viewModel.set_typeObjectToDelete(item);
+            showDialogDeleteTypeObject();
+            viewModel.set_openDialogDeleteTypeObject(true);
         }
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteType != null && alertDialogDeleteType.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteType.dismiss();// close dialog to prevent leaked window
+            viewModel.set_openDialogDeleteTypeObject(true);
+        }else{
+            if(alertDialogCreateType != null && alertDialogCreateType.isShowing()){//Si se encuentra abierto el dialogo de createGameMode
+                alertDialogCreateType.dismiss();
+                viewModel.set_openDialogCreateTypeObject(true);
+            }
+        }
     }
 
     /**
@@ -120,6 +125,7 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                                 AppDataBase.getDataBase(getApplication()).objectTypeDao().insertObjectType(new ClsObjectType(typeName));
                                 reloadList();
                                 Toast.makeText(getApplication(), R.string.type_saved, Toast.LENGTH_SHORT).show();
+                                viewModel.set_openDialogCreateTypeObject(false);
                             }
                         }
                     }
@@ -127,11 +133,48 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                 .setNegativeButton(getString(R.string.dialog_negative_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        viewModel.set_openDialogCreateTypeObject(false);
                         dialog.cancel();
                     }
                 });
 
-        builder.show();//Lanzamos el dialogo
+        alertDialogCreateType = builder.create();
+        alertDialogCreateType.show();//Lanzamos el dialogo
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showDialogDeleteTypeObject
+     * Comentario: Este método muestra por pantalla un dialogo para eliminar un tipo de objeto,
+     * si el usuario confirma la acción, se elimina ese tipo de la base de datos.
+     * Cabecera: public void showDialogDeleteTypeObject()
+     * Postcondiciones: El método elimina un tipo de objeto de la base de datos o se cancela el dialogo.
+     * */
+    public void showDialogDeleteTypeObject(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_type);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getBaseContext(), R.string.type_deleted, Toast.LENGTH_SHORT).show();
+                AppDataBase.getDataBase(getApplication()).objectTypeDao().deleteObjectType(viewModel.get_typeObjectToDelete());
+                reloadList();
+                viewModel.set_openDialogDeleteTypeObject(false);
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_openDialogDeleteTypeObject(false);
+            }
+        });
+
+        alertDialogDeleteType = alertDialogBuilder.create();
+        alertDialogDeleteType.show();
     }
 
     /**

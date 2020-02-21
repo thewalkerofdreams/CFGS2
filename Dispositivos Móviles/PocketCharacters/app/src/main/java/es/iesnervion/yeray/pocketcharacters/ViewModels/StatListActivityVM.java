@@ -13,11 +13,17 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 public class StatListActivityVM extends AndroidViewModel {
     private ArrayList<ClsStat> _statList;
     private String _gameMode;
+    private ClsStat _statToDelete;
+    private boolean _openDialogCreateStat;
+    private boolean _openDialogDeleteStat;
 
     public StatListActivityVM(Application application){
         super(application);
         _statList = new ArrayList<ClsStat>();
         _gameMode = "";
+        _openDialogCreateStat = false;
+        _openDialogDeleteStat = false;
+        _statToDelete = null;
     }
 
     //Get Y Set
@@ -36,6 +42,30 @@ public class StatListActivityVM extends AndroidViewModel {
     public void set_gameMode(String _gameMode) {
         this._gameMode = _gameMode;
         loadList();//Cargamos la lista de stats a partir del nuevo gameMode
+    }
+
+    public boolean is_openDialogCreateStat() {
+        return _openDialogCreateStat;
+    }
+
+    public void set_openDialogCreateStat(boolean _openDialogCreateStat) {
+        this._openDialogCreateStat = _openDialogCreateStat;
+    }
+
+    public boolean is_openDialogDeleteStat() {
+        return _openDialogDeleteStat;
+    }
+
+    public void set_openDialogDeleteStat(boolean _openDialogDeleteStat) {
+        this._openDialogDeleteStat = _openDialogDeleteStat;
+    }
+
+    public ClsStat get_statToDelete() {
+        return _statToDelete;
+    }
+
+    public void set_statToDelete(ClsStat _statToDelete) {
+        this._statToDelete = _statToDelete;
     }
 
     //Funciones sobre la base de datos

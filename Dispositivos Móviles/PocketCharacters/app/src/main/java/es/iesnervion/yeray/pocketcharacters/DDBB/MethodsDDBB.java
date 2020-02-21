@@ -183,6 +183,54 @@ public class MethodsDDBB {
     }
 
     /**
+    * Interfaz
+    * Nombre: statAsigned
+    * Comentario: Este método nos permite comprobar si un stat específico tiene está asignado a algún
+    * personaje en la base de datos.
+    * Cabecera: public boolean statAsigned(Context context, int idStat)
+    * Entrada:
+    *   -Context context
+    *   -int idStat
+    * Salida:
+    *   -boolean asigned
+    * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el stat está
+    * asignado a almenos un personaje o false en caso contrario.
+    * */
+    public boolean statAsigned(Context context, int idStat){
+        boolean asigned = false;
+        ArrayList<ClsCharacterAndStat> listado = new ArrayList<>(AppDataBase.getDataBase(context).characterAndStatDao().getCharacterAndStat(idStat));
+        if(listado.size() > 0){
+            asigned = true;
+        }
+
+        return asigned;
+    }
+
+    /*
+     * Interfaz
+     * Nombre: objectEquipToACharacter
+     * Comentario: Este método nos permite comprobar si un objeto específico tiene está asignado a algún
+     * personaje en la base de datos.
+     * Cabecera: public boolean objectEquipToACharacter(Context context, int idObject)
+     * Entrada:
+     *   -Context context
+     *   -int idObject
+     * Salida:
+     *   -boolean asigned
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el objeto está
+     * asignado a almenos un personaje o false en caso contrario.
+     * */
+    public boolean objectEquipToACharacter(Context context, int idObject){
+        boolean asigned = false;
+        ArrayList<ClsObjectAndCharacter> listado = new ArrayList<ClsObjectAndCharacter>(AppDataBase.getDataBase(context).objectAndCharacterDao().getObjectAndCharacter(idObject));
+        if(listado.size() > 0){
+            asigned = true;
+        }
+
+        return asigned;
+    }
+
+    /**
      * Interfaz
      * Nombre: existStat
      * Comentario: Este método nos permite verificar si existe un stat en la base

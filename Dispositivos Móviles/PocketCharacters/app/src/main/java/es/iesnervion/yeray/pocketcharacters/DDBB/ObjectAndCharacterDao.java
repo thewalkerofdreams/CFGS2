@@ -37,6 +37,10 @@ public interface ObjectAndCharacterDao {
     ClsObjectAndCharacter getObjectAndCharacter(int idCharacter, int idObject);
 
     @Transaction
+    @Query("SELECT * FROM ClsObjectAndCharacter WHERE idObject = :idObject")
+    List<ClsObjectAndCharacter> getObjectAndCharacter(int idObject);
+
+    @Transaction
     @Query("SELECT ClsObjectAndCharacter.idCharacter, ClsObjectAndCharacter.idObject, ClsObjectAndCharacter.quantity FROM ClsObject " +
             "INNER JOIN ClsObjectAndCharacter ON ClsObject.id = ClsObjectAndCharacter.idObject " +
             "INNER JOIN ClsCharacter ON ClsObjectAndCharacter.idCharacter = ClsCharacter.id " +
