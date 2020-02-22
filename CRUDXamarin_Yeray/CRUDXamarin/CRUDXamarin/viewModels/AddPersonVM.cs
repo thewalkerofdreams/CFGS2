@@ -1,7 +1,9 @@
 ﻿using CRUDXamarin_BL.Handler;
+using CRUDXamarin_BL.List;
 using CRUDXamarin_Ent;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Xamarin.Forms;
 
@@ -13,18 +15,22 @@ namespace CRUDXamarin.viewModels
         private String _lastName;
         private DateTime _dateOfBirth;
         private String _phone;
-        private int _departamentId;
+        private DateTime _actualDate;
+        private ObservableCollection<clsDepartamento> _departamentList;
+        private clsDepartamento _departamentSelected;
        
         public DelegateCommand SaveCommand { get; }
 
         public AddPersonVM()
         {
+            cargarListadoDepartamentos();
             _firstName = "";
             _lastName = "";
             _dateOfBirth = new DateTime();
             _phone = "";
-            _departamentId = 0;
             this.SaveCommand = new DelegateCommand(ExecuteInsertCommand, CanExecuteDeleteCommand);
+            _actualDate = DateTime.Now;
+            _departamentSelected = null;
         }
 
         #region Propiedades Públicas
@@ -84,16 +90,32 @@ namespace CRUDXamarin.viewModels
             }
         }
 
-        public int DepartamentId
+        public DateTime ActualDate
         {
             get
             {
-                return _departamentId;
+                return _actualDate;
+            }
+        }
+
+        public ObservableCollection<clsDepartamento> DepartamentList
+        {
+            get
+            {
+                return _departamentList;
+            }
+        }
+
+        public clsDepartamento DepartamentSelected
+        {
+            get
+            {
+                return _departamentSelected;
             }
             set
             {
-                _departamentId = value;
-                NotifyPropertyChanged("DepartamentId");
+                _departamentSelected = value;
+                NotifyPropertyChanged("DepartamentSelected");
                 SaveCommand.RaiseCanExecuteChanged();
             }
         }
@@ -112,7 +134,7 @@ namespace CRUDXamarin.viewModels
                 personaACrear.apellidosPersona = _lastName;
                 personaACrear.fechaNacimientoPersona = _dateOfBirth;
                 personaACrear.telefonoPersona = _phone;
-                personaACrear.idDepartamento = _departamentId;
+                personaACrear.idDepartamento = _departamentSelected.Id;
                 try
                 {
 
@@ -138,11 +160,26 @@ namespace CRUDXamarin.viewModels
         private bool CanExecuteDeleteCommand()
         {
             bool habilitado = true;
-            if (_firstName.Equals("") || _lastName.Equals("") || _phone.Equals("") /*|| _dateOfBirth.Equals(new DateTime())*/ || _departamentId == 0)
+            if (_firstName.Equals("") || _lastName.Equals("") || _phone.Equals("") || _dateOfBirth.Equals(new DateTime()) || _departamentSelected == null)
             {
                 habilitado = false;
             }
             return habilitado;
+        }
+        #endregion
+
+        #region Funciones Listado
+        private async void cargarListadoDepartamentos()
+        {
+            try
+            {
+                _departamentList = new ObservableCollection<clsDepartamento>(await new clsListadosDepartamentosBL().listadoCompletoDepartamentos());
+                NotifyPropertyChanged("DepartamentList");
+            }
+            catch (Exception)
+            {
+                falloConexion();
+            }
         }
         #endregion
 

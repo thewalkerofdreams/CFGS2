@@ -55,3 +55,5 @@ C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netst
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_DAL.pdb
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\obj\Debug\netstandard2.0\XamlC.stamp
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\obj\Debug\netstandard2.0\CRUDXamarin.csproj.CopyComplete
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\obj\Debug\netstandard2.0\Views\EditPerson.xaml.g.cs
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\obj\Debug\netstandard2.0\Views\DetailsPerson.xaml.g.cs

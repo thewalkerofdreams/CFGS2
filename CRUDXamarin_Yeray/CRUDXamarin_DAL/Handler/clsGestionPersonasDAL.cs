@@ -89,7 +89,6 @@ namespace CRUDXamarin_DAL.Handler
                 
             }
 
-
             return estado;
         }
 

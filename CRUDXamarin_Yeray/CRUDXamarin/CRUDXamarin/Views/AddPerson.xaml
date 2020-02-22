@@ -7,16 +7,16 @@
              x:Class="CRUDXamarin.Views.AddPerson">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label Text="Pantalla de Inserción!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
 
             <Editor Placeholder="FirstName" PlaceholderColor="Olive" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceEventName=FirstName}"/>
             <Editor Placeholder="LastName" PlaceholderColor="Olive" Text="{Binding LastName, Mode=TwoWay, UpdateSourceEventName=LastName}"/>
             <Editor Placeholder="Phone" PlaceholderColor="Olive" Text="{Binding Phone, Mode=TwoWay, UpdateSourceEventName=Phone}"/>
-            <Editor Placeholder="DateOfBith" PlaceholderColor="Olive" Text="{Binding DateOfBirth, Mode=TwoWay, UpdateSourceEventName=DateOfBirth}"/>
-            <Editor Placeholder="Departamento" PlaceholderColor="Olive" Text="{Binding DepartamentId, Mode=TwoWay, UpdateSourceEventName=DepartamentId}"/>
-            
+            <DatePicker Date="{Binding DateOfBirth, Mode=TwoWay, UpdateSourceEventName=DateOfBirth}" MaximumDate="{Binding ActualDate}"/>
+            <Picker Title="Select a Departament" ItemsSource="{Binding DepartamentList}" ItemDisplayBinding="{Binding Nombre}"  SelectedItem="{Binding DepartamentSelected, Mode=TwoWay}"/>
+
             <Button Text="Add Person" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
     </ContentPage.Content>

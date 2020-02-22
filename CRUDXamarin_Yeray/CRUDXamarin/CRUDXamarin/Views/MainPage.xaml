@@ -37,16 +37,24 @@
 
             </Button>
             <Button
-            Text="Update"
+                x:Name="btnUpdate"
+                Text="Update"
+                Clicked="Button_Clicked_1"
+                IsEnabled="{Binding VisivilityButtonsSelectedPerson}"
             >
 
             </Button>
             <Button
                 Text="Delete"
                 Command="{Binding DeleteCommand}"
-                >
-                
-            </Button>
+                ></Button>
+
+            <Button
+                x:Name="btnDetails"
+                Text="Details"
+                Clicked="Button_Clicked_2"
+                IsEnabled="{Binding VisivilityButtonsSelectedPerson}"
+                ></Button>
         </StackLayout>
        
     </StackLayout>

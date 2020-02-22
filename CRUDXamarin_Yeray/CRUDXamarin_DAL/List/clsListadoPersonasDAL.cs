@@ -53,8 +53,6 @@ namespace CRUDXamarin_DAL.List
             return listaPersonas;
         }
 
-
-
         /// <summary>
         /// Metodo que devuelve el objeto persona correspondiente a la ID pasada como parámetro
         /// </summary>

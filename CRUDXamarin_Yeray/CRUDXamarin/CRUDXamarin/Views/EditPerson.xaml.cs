@@ -1,0 +1,23 @@
+﻿using CRUDXamarin.viewModels;
+using CRUDXamarin_Ent;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace CRUDXamarin.Views
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class EditPerson : ContentPage
+    {
+        public EditPerson(clsPersona clsPersona)
+        {
+            InitializeComponent();
+            BindingContext = new EditPersonVM(clsPersona);
+        }
+    }
+}
