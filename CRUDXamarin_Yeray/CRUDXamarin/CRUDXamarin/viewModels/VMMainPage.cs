@@ -155,7 +155,7 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Funciones Listado
-        private async void cargarListados()
+        public async void cargarListados()
         {
             try
             {
