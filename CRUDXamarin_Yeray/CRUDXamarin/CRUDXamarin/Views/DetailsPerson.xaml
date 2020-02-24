@@ -8,8 +8,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Pantalla de Detalles!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
 
             <Label Text="{Binding PersonToSee.nombrePersona}"
                    VerticalOptions="CenterAndExpand" 

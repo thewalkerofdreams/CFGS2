@@ -932,7 +932,6 @@ C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Deb
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\qualifiers.txt.intermediate
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\ProjectArchitectures.txt
-C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885274160000000.json
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\App.xbf
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\MainPage.xbf
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\CRUDXamarin.UWP.xr.xml
@@ -1246,3 +1245,4 @@ C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\Xamarin.Forms.Platform.UAP.pri.xml
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\ProjectArchitectures.txt
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636758516200000000.json
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636758516200000000.json

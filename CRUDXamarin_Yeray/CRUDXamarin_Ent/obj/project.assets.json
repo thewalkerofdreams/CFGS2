@@ -179,24 +179,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ymcampanario\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\thewa\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj",
+      "projectUniqueName": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj",
       "projectName": "CRUDXamarin_Ent",
-      "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj",
-      "packagesPath": "C:\\Users\\ymcampanario\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\obj\\",
+      "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\CRUDXamarin_Ent.csproj",
+      "packagesPath": "C:\\Users\\thewa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin_Ent\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\ymcampanario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\thewa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
@@ -227,10 +228,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

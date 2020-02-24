@@ -45,6 +45,9 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Métodos de Gestión
+        /// <summary>
+        /// Comentario: Este método nos permite obtener el departamento de la persona.
+        /// </summary>
         private async void getPersonDepartament()
         {
             try

@@ -8,8 +8,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Pantalla de Inserción!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
 
             <Editor Placeholder="FirstName" PlaceholderColor="Olive" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceEventName=FirstName}"/>
             <Editor Placeholder="LastName" PlaceholderColor="Olive" Text="{Binding LastName, Mode=TwoWay, UpdateSourceEventName=LastName}"/>

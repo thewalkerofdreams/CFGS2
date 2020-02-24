@@ -28,7 +28,7 @@ namespace CRUDXamarin.viewModels
             _lastName = "";
             _dateOfBirth = new DateTime();
             _phone = "";
-            this.SaveCommand = new DelegateCommand(ExecuteInsertCommand, CanExecuteDeleteCommand);
+            this.SaveCommand = new DelegateCommand(ExecuteInsertCommand, CanExecuteSaveCommand);
             _actualDate = DateTime.Now;
             _departamentSelected = null;
         }
@@ -122,6 +122,9 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Comentario: Este método nos permite insertar una nueva persona en la base de datos. 
+        /// </summary>
         private async void ExecuteInsertCommand()
         {
             var answer = await Application.Current.MainPage.DisplayAlert("Add", "Do you want to add this person?", "Yes", "No");
@@ -157,7 +160,11 @@ namespace CRUDXamarin.viewModels
 
         }
 
-        private bool CanExecuteDeleteCommand()
+        /// <summary>
+        /// Comentario: Este método nos permite verificar si podemos ejecutar el comando de insertar una persona.
+        /// </summary>
+        /// <returns></returns>
+        private bool CanExecuteSaveCommand()
         {
             bool habilitado = true;
             if (_firstName.Equals("") || _lastName.Equals("") || _phone.Equals("") || _dateOfBirth.Equals(new DateTime()) || _departamentSelected == null)
@@ -169,6 +176,9 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Funciones Listado
+        /// <summary>
+        /// Comentario: Este método nos permite cargar la lista de departamentos de la base de datos.
+        /// </summary>
         private async void cargarListadoDepartamentos()
         {
             try

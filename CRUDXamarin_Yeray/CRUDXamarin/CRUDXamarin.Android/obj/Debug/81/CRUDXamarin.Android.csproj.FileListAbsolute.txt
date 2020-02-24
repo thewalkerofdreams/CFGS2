@@ -606,7 +606,6 @@ C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Deb
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\stamp\_GenerateJavaStubs.stamp
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\stamp\_ResolveLibraryProjectImports.stamp
-C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\CRUDXamarin.dll.mdb
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\CRUDXamarin.Android.dll
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\CRUDXamarin.Android.pdb
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\com.companyname.CRUDXamarin.apk
@@ -649,7 +648,6 @@ C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\R.cs.flag
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\R.txt
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\uploadflags.txt
-C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin.dll
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin.dll
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\FormsViewGroup.pdb
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\Mono.Android.pdb

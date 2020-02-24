@@ -995,21 +995,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ymcampanario\\.nuget\\packages\\": {}
+    "C:\\Users\\thewa\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\CRUDXamarin.Android.csproj",
+      "projectUniqueName": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\CRUDXamarin.Android.csproj",
       "projectName": "CRUDXamarin.Android",
-      "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\CRUDXamarin.Android.csproj",
-      "packagesPath": "C:\\Users\\ymcampanario\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\obj\\",
+      "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\CRUDXamarin.Android.csproj",
+      "packagesPath": "C:\\Users\\thewa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin.Android\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\ymcampanario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\thewa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "monoandroid81"
@@ -1021,8 +1026,8 @@
       "frameworks": {
         "monoandroid81": {
           "projectReferences": {
-            "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin\\CRUDXamarin.csproj": {
-              "projectPath": "C:\\Users\\ymcampanario\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin\\CRUDXamarin.csproj"
+            "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin\\CRUDXamarin.csproj": {
+              "projectPath": "C:\\Users\\thewa\\Desktop\\CRUDXamarin_Yeray\\CRUDXamarin\\CRUDXamarin\\CRUDXamarin.csproj"
             }
           }
         }

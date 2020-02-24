@@ -13,7 +13,7 @@ namespace CRUDXamarin.viewModels
     {
         private clsPersona _personToMod;
         private DateTime _actualDate;
-        private clsDepartamento _personsDepartament;
+        private clsDepartamento _personsDepartament = null;
         private ObservableCollection<clsDepartamento> _departamentList;
         public DelegateCommand ModCommand { get; }
 
@@ -46,7 +46,7 @@ namespace CRUDXamarin.viewModels
             set
             {
                 _personToMod = value;
-                ModCommand.RaiseCanExecuteChanged();//No funciona ya que estoy modificando sus propiedades... Como hacer esto desde este mismo VM sin hacer mal código?
+                //ModCommand.RaiseCanExecuteChanged();//No funciona ya que modifico las propiedades de la persona, nunca va a entrar aquí
                 NotifyPropertyChanged("PersonToMod");
             }
         }
@@ -70,9 +70,12 @@ namespace CRUDXamarin.viewModels
                 {
                     _personsDepartament = value;
                     NotifyPropertyChanged("PersonsDepartament");
-                    _personToMod.idDepartamento = _personsDepartament.Id;
-                    NotifyPropertyChanged("PersonToMod");
-                }
+                    if (_personsDepartament != null)
+                    {
+                        _personToMod.idDepartamento = _personsDepartament.Id;
+                        NotifyPropertyChanged("PersonToMod");
+                    }
+                }  
             }
         }
 
@@ -88,6 +91,7 @@ namespace CRUDXamarin.viewModels
         #region Commands
         private async void ExecuteModCommand()
         {
+            //Esta comprobación no puedo hacerla en este caso en el método CanExecuteModCommand
             if (_personToMod != null && !_personToMod.nombrePersona.Equals("") && !_personToMod.apellidosPersona.Equals("") && !_personToMod.telefonoPersona.Equals("") &&
                 !_personToMod.fechaNacimientoPersona.Equals(new DateTime()) && _personsDepartament != null)//Por ahora lo dejamos aquí
             {
@@ -119,20 +123,26 @@ namespace CRUDXamarin.viewModels
                 }
             }
         }
-
-        private bool CanExecuteModCommand()
-        {
-            bool habilitado = true;
-            if (_personToMod == null || _personToMod.nombrePersona.Equals("") || _personToMod.apellidosPersona.Equals("") || _personToMod.telefonoPersona.Equals("") ||
-                _personToMod.fechaNacimientoPersona.Equals(new DateTime()) || _personsDepartament == null)
-            {
-                habilitado = false;
-            }
-            return habilitado;
-        }
+        /// <summary>
+        /// Comentario: Este método nos va a permitir verificar si podemos ejecutar un comando. 
+        /// </summary>
+        /// <returns></returns>
+        //private bool CanExecuteModCommand()
+        //{
+        //    bool habilitado = true;
+        //    if (_personToMod == null || _personToMod.nombrePersona.Equals("") || _personToMod.apellidosPersona.Equals("") || _personToMod.telefonoPersona.Equals("") ||
+        //        _personToMod.fechaNacimientoPersona.Equals(new DateTime()) || _personsDepartament == null)
+        //    {
+        //        habilitado = false;
+        //    }
+        //    return habilitado;
+        //}
         #endregion
 
         #region Funciones Listado
+        /// <summary>
+        /// Comentario: Este método nos permite cargar el listado de todos los departamentos de la base de datos.
+        /// </summary>
         private async void cargarListadoDepartamentos()
         {
             try
@@ -148,6 +158,9 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Métodos de Gestión
+        /// <summary>
+        /// Comentario: Este método nos permite obtener el departamento de la persona a editar.
+        /// </summary>
         private async void getPersonDepartament()
         {
             try

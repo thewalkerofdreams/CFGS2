@@ -8,14 +8,14 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Pantalla de Edición"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
 
             <Editor Placeholder="FirstName" PlaceholderColor="Olive" Text="{Binding PersonToMod.nombrePersona, Mode=TwoWay, UpdateSourceEventName=PersonToMod.nombrePersona}"/>
             <Editor Placeholder="LastName" PlaceholderColor="Olive" Text="{Binding PersonToMod.apellidosPersona, Mode=TwoWay, UpdateSourceEventName=PersonToMod.apellidosPersona}"/>
             <Editor Placeholder="Phone" PlaceholderColor="Olive" Text="{Binding PersonToMod.telefonoPersona, Mode=TwoWay, UpdateSourceEventName=PersonToMod.telefonoPersona}"/>
             <DatePicker Date="{Binding PersonToMod.fechaNacimientoPersona, Mode=TwoWay, UpdateSourceEventName=PersonToMod.fechaNacimientoPersona}" MaximumDate="{Binding ActualDate}"/>
-            <Picker ItemsSource="{Binding DepartamentList}" ItemDisplayBinding="{Binding Nombre}"  SelectedItem="{Binding PersonsDepartament, Mode=TwoWay}"/>
+            <Picker ItemsSource="{Binding DepartamentList}" ItemDisplayBinding="{Binding Nombre, Mode=TwoWay}"  SelectedItem="{Binding PersonsDepartament, Mode=TwoWay}"/>
            
             <Button Text="Mod Person" Command="{Binding ModCommand}"></Button>
         </StackLayout>
