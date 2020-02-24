@@ -11,13 +11,15 @@ class Request
     private $format;
     //in $accept we store the format of the content that the server will send
     private $accept;
+    private $token;
 
-    public function __construct($verb, $url_elements, $query_string, $body, $content_type, $accept)
+    public function __construct($verb, $url_elements, $query_string, $body, $content_type, $accept, $token)
     {
         $this->verb = $verb;
         $this->url_elements = $url_elements;
         $this->query_string = $query_string;
         $this->parseBody($body, $content_type);
+        $this->token = $token;
 
         switch ($accept) {
             case 'application/json':
@@ -189,4 +191,20 @@ class Request
         $this->accept = $accept;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $llave
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
 }

@@ -7,6 +7,10 @@ class UsuarioController extends Controller
 {
     public function manageGetVerb(Request $request)
     {
+        //Obtenemos el Token
+        $cadena = $request ->getToken();
+        $token['Authorization'] = "Bearer " . $cadena;
+
         $listaUsuarios = null;
         $id = null;
         $response = null;
@@ -31,7 +35,7 @@ class UsuarioController extends Controller
             }
         }
 
-        $response = new Response($code, null, $listaUsuarios, $request->getAccept());
+        $response = new Response($code, $token, $listaUsuarios, $request->getAccept());
         $response->generate();
     }
 
@@ -47,11 +51,14 @@ class UsuarioController extends Controller
      * */
     public function manageDeleteVerb(Request $request)
     {
+        //Obtenemos el Token
+        $cadena = $request ->getToken();
+        $token['Authorization'] = "Bearer " . $cadena;
+
         $filasAfectadas = null;
         $id = null;
         $response = null;
         $code = null;
-        $header = null;
 
         //if the URI refers to a libro entity, instead of the libro collection
         if (isset($request->getUrlElements()[2])) {
@@ -62,8 +69,6 @@ class UsuarioController extends Controller
 
         if ($filasAfectadas > 0) {//Si se ha eliminado algún libro
             $code = '200';
-            $cadena = Autentication::generateToken();
-            $header['Authorization'] = "Bearer " . $cadena;
         } else {
             //We could send 404 in any case, but if we want more precission,
             //we can send 400 if the syntax of the entity was incorrect...
@@ -74,7 +79,7 @@ class UsuarioController extends Controller
             }
         }
 
-        $response = new Response($code, $header, null, $request->getAccept());
+        $response = new Response($code, $token, null, $request->getAccept());
         $response->generate();
     }
 
@@ -90,11 +95,14 @@ class UsuarioController extends Controller
      * */
     public function managePutVerb(Request $request)
     {
+        //Obtenemos el Token
+        $cadena = $request ->getToken();
+        $token['Authorization'] = "Bearer " . $cadena;
+
         $usuarioModificado = false;
         $id = null;
         $response = null;
         $code = null;
-        $header = null;
 
         //if the URI refers to a libro entity
         if (isset($request->getUrlElements()[2])) {
@@ -123,7 +131,7 @@ class UsuarioController extends Controller
 
         }
 
-        $response = new Response($code, $header, null, $request->getAccept());
+        $response = new Response($code, $token, null, $request->getAccept());
         $response->generate();
     }
 
@@ -139,11 +147,14 @@ class UsuarioController extends Controller
      * */
     public function managePostVerb(Request $request)
     {
+        //Obtenemos el Token
+        $cadena = $request ->getToken();
+        $token['Authorization'] = "Bearer " . $cadena;
+
         $usuario = null;
         $id = null;
         $response = null;
         $code = null;
-        $header = null;
 
         //if the URI refers to a libro entity, instead of the libro collection
         if (isset($request->getUrlElements()[2])) {
@@ -170,7 +181,7 @@ class UsuarioController extends Controller
 
         }
 
-        $response = new Response($code, $header, $usuario, $request->getAccept());
+        $response = new Response($code, $token, $usuario, $request->getAccept());
         $response->generate();
     }
 }
