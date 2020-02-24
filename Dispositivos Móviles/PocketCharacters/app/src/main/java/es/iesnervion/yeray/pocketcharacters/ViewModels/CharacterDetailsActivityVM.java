@@ -12,6 +12,7 @@ public class CharacterDetailsActivityVM extends AndroidViewModel implements Seri
 
     private ClsCharacterModel _inCharacter;
     private ClsCharacterModel _outCharacter;
+    //Constructor
     public CharacterDetailsActivityVM(Application application){
         super(application);
     }

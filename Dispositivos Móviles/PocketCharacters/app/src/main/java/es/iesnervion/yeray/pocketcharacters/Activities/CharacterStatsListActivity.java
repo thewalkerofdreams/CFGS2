@@ -27,7 +27,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacterAndStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.Fragments.CharacterStatsListFragment;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterStats;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterCharacterStats;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterStatsListActivityVM;
 

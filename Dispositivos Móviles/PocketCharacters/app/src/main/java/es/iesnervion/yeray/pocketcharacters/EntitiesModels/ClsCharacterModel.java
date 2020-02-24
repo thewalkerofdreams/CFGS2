@@ -65,16 +65,6 @@ public class ClsCharacterModel implements Serializable {
     * Postcondiciones: El método carga los stats del personaje en el atributo "-stats".
     * */
     public void loadStats(){
-        /*ArrayList<ClsStat> stats = new ArrayList<>(AppDataBase.getDataBase(_context).statDao().getStatsByGameMode(_character.get_gameMode()));
-
-        for(int i = 0; i < stats.size(); i++){
-            ClsCharacterAndStat characterAndStats = AppDataBase.getDataBase(_context).characterAndStatDao().getCharacterAndStat(
-                    _character.get_id(), stats.get(i).get_id());
-            if(characterAndStats != null){
-                ClsStatModel statModel = new ClsStatModel(stats.get(i).get_name(), characterAndStats.get_value());
-                _stats.add(statModel);
-            }
-        }*/
         _stats = new ArrayList<>(AppDataBase.getDataBase(_context).characterAndStatDao().getStatsAndValueByCharacter(_character.get_id()));
     }
 }

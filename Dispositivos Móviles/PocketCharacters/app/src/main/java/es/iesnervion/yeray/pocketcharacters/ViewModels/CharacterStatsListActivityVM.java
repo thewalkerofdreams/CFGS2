@@ -18,6 +18,7 @@ public class CharacterStatsListActivityVM extends AndroidViewModel implements Se
     private MutableLiveData<ArrayList<ClsStatModel>> _statList;
     private MutableLiveData<ClsStatModel> _statSelected;
 
+    //Constructor
     public CharacterStatsListActivityVM(Application application) {
         super(application);
         _statList = new MutableLiveData<ArrayList<ClsStatModel>>();

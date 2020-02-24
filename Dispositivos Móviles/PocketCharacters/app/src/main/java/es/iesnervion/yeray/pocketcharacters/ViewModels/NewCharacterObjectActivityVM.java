@@ -17,6 +17,7 @@ public class NewCharacterObjectActivityVM extends AndroidViewModel {
     private String _quantity;
     private ArrayList<ClsObject> _objects;
 
+    //Constructor
     public NewCharacterObjectActivityVM(Application application){
         super(application);
         _objects = new ArrayList<ClsObject>();

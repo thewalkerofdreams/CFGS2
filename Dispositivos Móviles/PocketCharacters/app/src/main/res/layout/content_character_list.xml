@@ -23,6 +23,7 @@
             android:layout_weight="33"
             android:text="@string/characters"
             android:textSize="18sp"
+            android:layout_marginStart="5sp"
             android:textStyle="bold"></TextView>
 
         <TextView
@@ -49,5 +50,6 @@
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="5sp"
         app:layout_constraintTop_toTopOf="parent"></ListView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,17 +16,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterGameModeList;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterObjectListSimple;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterObjectTypeList;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterObjectTypeList;
 import es.iesnervion.yeray.pocketcharacters.R;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.ObjectListSimpleActivityVM;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.ObjectTypeListActivityVM;
 
 public class ObjectTypeListActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {

@@ -17,6 +17,7 @@ public class NewObjectActivityVM extends AndroidViewModel {
     private ArrayList<ClsObjectType> _objectTypes;
     private String _actualGameMode;
 
+    //Constructor
     public NewObjectActivityVM(Application application){
         super(application);
         _objectTypes = new ArrayList<>();

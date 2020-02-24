@@ -1,7 +1,5 @@
 package es.iesnervion.yeray.pocketcharacters.EntitiesModels;
 
-import androidx.room.Ignore;
-
 import java.io.Serializable;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
 

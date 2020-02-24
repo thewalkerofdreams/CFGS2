@@ -17,6 +17,7 @@ public class StatListActivityVM extends AndroidViewModel {
     private boolean _openDialogCreateStat;
     private boolean _openDialogDeleteStat;
 
+    //Constructor
     public StatListActivityVM(Application application){
         super(application);
         _statList = new ArrayList<ClsStat>();

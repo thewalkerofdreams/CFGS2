@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="2sp"
                 android:paddingLeft="20sp"
-                android:paddingTop="5sp"
+                android:paddingTop="15sp"
                 android:textStyle="bold"
                 android:text="@string/form_character_name"></TextView>
 
@@ -82,8 +82,9 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:fontFamily="serif"
+            android:paddingStart="5sp"
             android:layout_margin="5sp"
-            android:background="#FFFAFA"></TextView>
+            android:background="@drawable/share_rounded_corner_with_border"></TextView>
 
         <LinearLayout
             android:id="@+id/LinearLayout02DatasCharacter"
@@ -106,7 +107,7 @@
                 android:layout_weight="40"
                 android:layout_height="60dp"
                 android:onClick="throwCharacterStatsListActivity"
-                android:text="@string/mod"></Button>
+                android:text="@string/stat_mod"></Button>
         </LinearLayout>
 
         <LinearLayout

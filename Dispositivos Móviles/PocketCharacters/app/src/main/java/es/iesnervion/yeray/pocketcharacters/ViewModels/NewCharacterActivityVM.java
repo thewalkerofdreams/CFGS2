@@ -17,6 +17,7 @@ public class NewCharacterActivityVM extends AndroidViewModel {
     private String _story;
     private ArrayList<ClsGameMode> _gameModes;
 
+    //Constructor
     public NewCharacterActivityVM(Application application){
         super(application);
         _gameModes = new ArrayList<>();
@@ -65,7 +66,7 @@ public class NewCharacterActivityVM extends AndroidViewModel {
     }
 
     //Funciones sobre la base de datos
-    /*
+    /**
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de GameModes de la base de datos,

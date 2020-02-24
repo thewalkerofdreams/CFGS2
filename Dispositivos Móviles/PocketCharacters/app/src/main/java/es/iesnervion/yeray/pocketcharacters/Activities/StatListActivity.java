@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsStat;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterStatList;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterStatList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.StatListActivityVM;
 

@@ -24,6 +24,7 @@
             android:layout_weight="33"
             android:text="@string/stats"
             android:textSize="18sp"
+            android:layout_marginStart="5sp"
             android:textStyle="bold"></TextView>
 
         <TextView
@@ -40,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="70"
+        android:layout_marginStart="5sp"
         android:clickable="true"
         ></ListView>
 

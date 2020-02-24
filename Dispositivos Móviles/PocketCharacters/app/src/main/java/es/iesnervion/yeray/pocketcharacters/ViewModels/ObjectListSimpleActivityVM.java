@@ -17,6 +17,7 @@ public class ObjectListSimpleActivityVM extends AndroidViewModel {
     private ClsObject _objectToDelete;
     private boolean _openDialogDeleteObject;
 
+    //Constructor
     public ObjectListSimpleActivityVM(Application application){
         super(application);
         _objectList = new ArrayList<ClsObject>();

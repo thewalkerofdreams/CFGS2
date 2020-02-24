@@ -8,6 +8,7 @@
     <string name="tutorial">Tutorial</string>
     <string name="synchronize_with_server">Sincronizar con el servidor</string>
     <string name="mod">MOD</string>
+    <string name="stat_mod">Mod Estadísticas</string>
     <string name="form_type">Tipo: </string>
     <string name="form_name">Nombre: </string>
     <string name="form_quantity">Cantidad: </string>

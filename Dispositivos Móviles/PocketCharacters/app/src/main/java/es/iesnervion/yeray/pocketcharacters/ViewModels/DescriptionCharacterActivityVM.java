@@ -12,6 +12,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsCharacterModel;
 public class DescriptionCharacterActivityVM extends AndroidViewModel implements Serializable {
 
     private ClsCharacterModel _actualCharacter;
+    //Constructor
     public DescriptionCharacterActivityVM(Application application){
         super(application);
     }

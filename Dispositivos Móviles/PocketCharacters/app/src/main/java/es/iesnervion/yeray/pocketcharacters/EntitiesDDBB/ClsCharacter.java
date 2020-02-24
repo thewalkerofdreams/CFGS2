@@ -22,8 +22,6 @@ public class ClsCharacter implements Serializable {
     private String _chapterName;//Sesión de juego
     @ColumnInfo(name = "story")
     private String _story;
-    //@ColumnInfo(name = "creationDate")
-    //private Date _creationDate;
 
     //Constructores
     public ClsCharacter(){
@@ -32,7 +30,6 @@ public class ClsCharacter implements Serializable {
         _characterName = "DEFAULT";
         _chapterName = "DEFAULT";
         _story = "DEFAULT";
-        //_creationDate = null;
     }
 
     @Ignore
@@ -41,7 +38,6 @@ public class ClsCharacter implements Serializable {
         _characterName = characterName;
         _chapterName = chapterName;
         _story = story;
-        //_creationDate = creationDate;
     }
 
     @Ignore
@@ -93,14 +89,5 @@ public class ClsCharacter implements Serializable {
     public void set_story(String _story) {
         this._story = _story;
     }
-
-    /*public Date get_creationDate() {
-        return _creationDate;
-    }
-
-    public void set_creationDate(Date _creationDate) {
-        this._creationDate = _creationDate;
-    }
-*/
 
 }

@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterList;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterCharacterList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterListActivityVM;
 

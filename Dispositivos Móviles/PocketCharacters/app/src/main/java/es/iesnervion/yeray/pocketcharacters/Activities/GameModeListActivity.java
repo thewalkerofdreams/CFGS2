@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterGameModeList;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterGameModeList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.GameModeListActivityVM;
 

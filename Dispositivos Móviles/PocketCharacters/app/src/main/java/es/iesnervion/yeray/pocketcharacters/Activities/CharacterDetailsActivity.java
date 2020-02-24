@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,7 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterStats;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterCharacterStats;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterDetailsActivityVM;
 
@@ -29,7 +28,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     ListView listView;
     EditText characterName, chapterName;
     CharacterDetailsActivityVM viewModel;
-    Button btnModStats, btnInventary, btnDescription;
+    Button btnInventary, btnDescription;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,32 +45,17 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         listView = findViewById(R.id.ListViewStats);
         reloadList();//Cargamos la lista de stats del personaje
 
-        //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//Deshabilitamos el foco por defecto
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            /*LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, 0, (float) 1.0);
-            param.weight = 60;
-            param.setMarginStart(10);
-            param.setMarginEnd(5);
-            param.height = 80;
-            listView.setLayoutParams(param);//Ajustamos la lista en la pantalla horizontal
-
-            btnModStats = findViewById(R.id.btnModstats);
-            param.weight = 40;
-            param.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            btnModStats.setLayoutParams(param);*/
-
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
             LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     0,
                     (float) 1.0
             );
-
             param2.weight = 40;
             LinearLayout layout = findViewById(R.id.LinearLayout01DatasCharacter);
             layout.setLayoutParams(param2);
-
-            LinearLayout layout3 = findViewById(R.id.LinearLayout03DatasCharacter);//Modificamos los botonos del final de la pantalla
+            //Modificamos los botonos del final de la pantalla
+            LinearLayout layout3 = findViewById(R.id.LinearLayout03DatasCharacter);
             layout3.setOrientation(LinearLayout.HORIZONTAL);
 
             LinearLayout.LayoutParams param3 = new LinearLayout.LayoutParams(
@@ -85,7 +69,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
             btnDescription.setLayoutParams(param3);
             btnInventary = findViewById(R.id.btnInventory);
             btnInventary.setLayoutParams(param3);
-
+            //Ajustamos el texto del listado de estadísticas
             LinearLayout.LayoutParams param4 = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     0,

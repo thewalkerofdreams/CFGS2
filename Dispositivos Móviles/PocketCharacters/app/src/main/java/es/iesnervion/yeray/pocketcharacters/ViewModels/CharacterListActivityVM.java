@@ -17,6 +17,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 public class CharacterListActivityVM extends AndroidViewModel implements Serializable {
     private ArrayList<ClsCharacter> _characterList;
 
+    //Constructor
     public CharacterListActivityVM(Application application){
         super(application);
         _characterList = new ArrayList<ClsCharacter>();

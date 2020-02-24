@@ -11,6 +11,7 @@ public class EditObjectActivityVM extends AndroidViewModel {
     private ClsObject _inObject;//Contiene el objeto con los datos iniciales
     private ClsObject _outObject;//Contiene el objeto con los cambios
 
+    //Constructor
     public EditObjectActivityVM(Application application){
         super(application);
         _inObject = new ClsObject();

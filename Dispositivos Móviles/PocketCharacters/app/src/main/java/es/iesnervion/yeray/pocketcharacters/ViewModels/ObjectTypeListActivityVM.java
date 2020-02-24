@@ -16,6 +16,7 @@ public class ObjectTypeListActivityVM extends AndroidViewModel {
     private boolean _openDialogDeleteTypeObject;
     private boolean _openDialogCreateTypeObject;
 
+    //Constructor
     public ObjectTypeListActivityVM(Application application){
         super(application);
         _typeList = new ArrayList<ClsObjectType>();

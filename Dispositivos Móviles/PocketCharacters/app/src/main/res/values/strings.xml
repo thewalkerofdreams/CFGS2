@@ -7,6 +7,7 @@
     <string name="tutorial">Tutorial</string>
     <string name="synchronize_with_server">synchronize with server</string>
     <string name="mod">MOD</string>
+    <string name="stat_mod">Update Stats</string>
     <string name="form_type">Type: </string>
     <string name="form_name">Name: </string>
     <string name="form_quantity">Quantity: </string>

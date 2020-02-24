@@ -17,6 +17,7 @@ public class NewCharacterStatActivityVM extends AndroidViewModel {
     private String _statValue;
     private ArrayList<ClsStat> _stats;
 
+    //Constructor
     public NewCharacterStatActivityVM(Application application){
         super(application);
         _stats = new ArrayList<ClsStat>();

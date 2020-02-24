@@ -19,6 +19,7 @@ public class CharacterObjectListActivityVM extends AndroidViewModel {
     private MutableLiveData<ArrayList<ClsObjectAndQuantity>> _objectList;
     private MutableLiveData<ClsObjectAndQuantity> _objectSelected;
 
+    //Constructor
     public CharacterObjectListActivityVM(Application application) {
         super(application);
         _objectList = new MutableLiveData<ArrayList<ClsObjectAndQuantity>>();

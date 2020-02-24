@@ -26,7 +26,7 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectAndCharacter;
 import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsObjectAndQuantity;
 import es.iesnervion.yeray.pocketcharacters.Fragments.CharacterObjectsListFragment;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterObjectList;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterObjectList;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterObjectListActivityVM;
 

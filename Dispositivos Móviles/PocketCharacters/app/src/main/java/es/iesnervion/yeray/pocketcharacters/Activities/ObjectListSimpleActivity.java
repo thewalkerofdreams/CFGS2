@@ -1,12 +1,10 @@
 package es.iesnervion.yeray.pocketcharacters.Activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -16,23 +14,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObject;
-import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsObjectType;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterCharacterList;
-import es.iesnervion.yeray.pocketcharacters.Lists.AdapterObjectListSimple;
+import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterObjectListSimple;
 import es.iesnervion.yeray.pocketcharacters.R;
-import es.iesnervion.yeray.pocketcharacters.ViewModels.CharacterListActivityVM;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.ObjectListSimpleActivityVM;
 
 public class ObjectListSimpleActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{

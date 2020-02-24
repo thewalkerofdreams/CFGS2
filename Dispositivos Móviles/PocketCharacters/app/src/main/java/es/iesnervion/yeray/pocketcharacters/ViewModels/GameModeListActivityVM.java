@@ -14,6 +14,7 @@ public class GameModeListActivityVM extends AndroidViewModel {
     private boolean _dialogDeleteShowing;
     private boolean _dialogCreateShowing;
 
+    //Constructor
     public GameModeListActivityVM(Application application){
         super(application);
         _gameModeList = new ArrayList<ClsGameMode>();
