@@ -14,29 +14,15 @@ namespace CRUDXamarin
         public MainPage()
         {
             InitializeComponent();
-            BindingContext = new VMMainPage();
+            BindingContext = new VMMainPage(Navigation);
             viewModel = (VMMainPage) BindingContext;
-        }
-
-        private async void Button_Clicked(object sender, EventArgs e)//nos direcciona a la pádina de creación
-        {
-            await Navigation.PushAsync(new CRUDXamarin.Views.AddPerson());
-        }
-
-        private async void Button_Clicked_1(object sender, EventArgs e)//nos direcciona a la pádina de edición
-        {
-            await Navigation.PushAsync(new CRUDXamarin.Views.EditPerson(viewModel.PersonaSeleccionada));
-        }
-
-        private async void Button_Clicked_2(object sender, EventArgs e)//nos direcciona a la pádina de detalles
-        {
-            await Navigation.PushAsync(new CRUDXamarin.Views.DetailsPerson(viewModel.PersonaSeleccionada));
         }
 
         protected override void OnAppearing()//Cuando volvemos a la página recargaremos la lista de personas
         {
             base.OnAppearing();
             viewModel.cargarListados();
+            viewModel.PersonaSeleccionada = null;
         }
     }
 }

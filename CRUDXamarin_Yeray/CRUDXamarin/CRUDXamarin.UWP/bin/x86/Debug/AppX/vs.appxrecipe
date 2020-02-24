@@ -10,7 +10,7 @@
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>ec0cc741-fd3e-485c-81be-68815c480690</PackageIdentityName>
     <PackageIdentityPublisher>CN=11f12d34-7800-431a-8c5d-c702eee26f69</PackageIdentityPublisher>
-    <IntermediateOutputPath>C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\obj\x86\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType>
     </RemoteDeploymentType>
     <PackageRegistrationPath>
@@ -18,8 +18,8 @@
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
-    <LayoutDir>C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>EE33AE6C83938D70CAAA166C6F9B6F2004D273C6C0957567F1F61FA63BB108E2</RegisteredManifestChecksum>
+    <LayoutDir>C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\AppX</LayoutDir>
+    <RegisteredManifestChecksum>F2D66E62FD78DD55565BDF708967AC9A7F75BC3319952AAC44E0189E94888518</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>a1f95bf4-05ea-4c9b-93fd-560a4360440b_1.0.0.0_x86__f6z3n1gp2mha6</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>a1f95bf4-05ea-4c9b-93fd-560a4360440b_f6z3n1gp2mha6!App</RegisteredUserModeAppID>
     <RegisteredPackageID>a1f95bf4-05ea-4c9b-93fd-560a4360440b</RegisteredPackageID>
@@ -27,16 +27,16 @@
     <RegisteredVersion>1.0.0.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\Core\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-02-17T11:15:15.284</Modified>
+      <Modified>2020-02-24T13:17:42.996</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\CRUDXamarin.UWP.exe">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\CRUDXamarin.UWP.exe">
       <PackagePath>entrypoint\CRUDXamarin.UWP.exe</PackagePath>
-      <Modified>2020-02-17T11:15:13.772</Modified>
+      <Modified>2020-02-24T13:17:41.533</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ymcampanario\.nuget\packages\newtonsoft.json\12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll">
       <PackagePath>Newtonsoft.Json.dll</PackagePath>
@@ -722,188 +722,192 @@
       <PackagePath>Xamarin.Forms.Xaml.dll</PackagePath>
       <Modified>2018-11-13T19:15:22.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin.dll">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin.dll">
       <PackagePath>CRUDXamarin.dll</PackagePath>
-      <Modified>2020-02-17T11:14:51.711</Modified>
+      <Modified>2020-02-24T13:17:34.352</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_Ent.dll">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_Ent.dll">
       <PackagePath>CRUDXamarin_Ent.dll</PackagePath>
-      <Modified>2020-02-17T11:14:10.950</Modified>
+      <Modified>2020-02-24T13:06:52.460</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_BL.dll">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_BL.dll">
       <PackagePath>CRUDXamarin_BL.dll</PackagePath>
-      <Modified>2020-02-17T11:14:11.714</Modified>
+      <Modified>2020-02-24T13:06:53.214</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_DAL.dll">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin\bin\Debug\netstandard2.0\CRUDXamarin_DAL.dll">
       <PackagePath>CRUDXamarin_DAL.dll</PackagePath>
-      <Modified>2020-02-17T11:14:11.438</Modified>
+      <Modified>2020-02-24T13:06:52.695</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-100.png">
+    <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\bin\10.0.17763.0\XamlCompiler\Microsoft.UI.Xaml.Markup.winmd">
+      <PackagePath>Microsoft.UI.Xaml.Markup.winmd</PackagePath>
+      <Modified>2018-10-23T00:33:40.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-100.png">
       <PackagePath>Assets\LargeTile.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.611</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-200.png">
       <PackagePath>Assets\LargeTile.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\LargeTile.scale-400.png">
       <PackagePath>Assets\LargeTile.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-100.png">
       <PackagePath>Assets\SmallTile.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-200.png">
       <PackagePath>Assets\SmallTile.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SmallTile.scale-400.png">
       <PackagePath>Assets\SmallTile.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-100.png">
       <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\SplashScreen.scale-400.png">
       <PackagePath>Assets\SplashScreen.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-100.png">
       <PackagePath>Assets\Square150x150Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.613</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square150x150Logo.scale-400.png">
       <PackagePath>Assets\Square150x150Logo.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-16.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-16.png">
       <PackagePath>Assets\Square44x44Logo.altform-unplated_targetsize-16.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-256.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-256.png">
       <PackagePath>Assets\Square44x44Logo.altform-unplated_targetsize-256.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-48.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.altform-unplated_targetsize-48.png">
       <PackagePath>Assets\Square44x44Logo.altform-unplated_targetsize-48.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-100.png">
       <PackagePath>Assets\Square44x44Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.scale-400.png">
       <PackagePath>Assets\Square44x44Logo.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-16.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-16.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-16.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-256.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-256.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-256.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-48.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Square44x44Logo.targetsize-48.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-48.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-100.png">
       <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-200.png">
       <PackagePath>Assets\StoreLogo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\StoreLogo.scale-400.png">
       <PackagePath>Assets\StoreLogo.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-100.png">
       <PackagePath>Assets\Wide310x150Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-400.png">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Assets\Wide310x150Logo.scale-400.png">
       <PackagePath>Assets\Wide310x150Logo.scale-400.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2020-01-29T12:21:34.000</Modified>
+      <Modified>2020-02-24T10:57:17.629</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\Properties\Default.rd.xml">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
-      <Modified>2020-01-29T12:21:42.000</Modified>
+      <Modified>2020-02-24T10:57:17.644</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\CRUDXamarin.UWP.xr.xml">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\CRUDXamarin.UWP.xr.xml">
       <PackagePath>CRUDXamarin.UWP.xr.xml</PackagePath>
-      <Modified>2020-01-29T12:21:40.000</Modified>
+      <Modified>2020-02-24T10:57:18.529</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\App.xbf">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2020-02-17T11:15:13.533</Modified>
+      <Modified>2020-02-24T13:17:41.340</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\MainPage.xbf">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2020-02-17T11:15:13.533</Modified>
+      <Modified>2020-02-24T13:17:41.341</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.17134.0\Windows.winmd">
+    <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.17763.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
-      <Modified>2018-04-19T20:01:52.000</Modified>
+      <Modified>2018-10-22T23:44:28.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ymcampanario\.nuget\packages\xamarin.forms\3.4.0.1008975\lib\uap10.0\Xamarin.Forms.Platform.UAP\Xamarin.Forms.Platform.UAP.xr.xml">
       <PackagePath>Xamarin.Forms.Platform.UAP\Xamarin.Forms.Platform.UAP.xr.xml</PackagePath>
       <Modified>2018-11-13T19:15:20.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2020-02-17T11:11:13.743</Modified>
+      <Modified>2020-02-24T13:07:12.450</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\Xamarin_Yeray\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\Core\CRUDXamarin.UWP.exe">
+    <AppxPackagedFile Include="C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.UWP\bin\x86\Debug\Core\CRUDXamarin.UWP.exe">
       <PackagePath>CRUDXamarin.UWP.exe</PackagePath>
-      <Modified>2020-02-17T11:15:15.260</Modified>
+      <Modified>2020-02-24T13:17:42.990</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

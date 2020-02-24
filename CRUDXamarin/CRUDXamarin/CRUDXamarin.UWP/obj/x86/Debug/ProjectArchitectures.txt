@@ -1,1 +1,0 @@
-C:\Users\thewa\Desktop\CRUDXamarin\CRUDXamarin\CRUDXamarin.UWP\CRUDXamarin.UWP.csproj;x86

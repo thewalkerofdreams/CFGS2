@@ -15,13 +15,6 @@ namespace CRUDXamarin_DAL.Handler
 {
     public class clsGestionPersonasDAL
     {
-        /*Aqui se hacen los metodos pa los insert update delete y eso
-         No deberia saltar excepcion en los nonquery ya que debemos validar
-         el modelo con los data anotations y eso y no debemos hacer nada sin
-         que el modelo este bien
-         */
-
-
         /// <summary>
         /// Comentario: Este método nos permite insertar una persona en la base de datos.
         /// </summary>
@@ -45,13 +38,12 @@ namespace CRUDXamarin_DAL.Handler
             try
             {
                 datos = JsonConvert.SerializeObject(oPersona);
-
                 contenido = new StringContent(datos, System.Text.Encoding.UTF8, "application/json");
                 response = await client.PostAsync(miUri, contenido);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw e;
             }
 
             if (response.IsSuccessStatusCode)
@@ -73,23 +65,25 @@ namespace CRUDXamarin_DAL.Handler
         /// </returns>
         public async Task<int> eliminarPersonaAsync(int idPersona)
         {
-            int estado = 0;
-            //Cliente HTTP
+            String ruta = clsMyConnection.getUriBase();
+            int filasAfectadas = 0;
             HttpClient httpClient = new HttpClient();
-            string cadena = clsMyConnection.getUriBase() + "PersonaApi/" + idPersona;
-            Uri uri = new Uri(cadena);
-            //clsPersona persona = null;
-            /*Envuelvelo en un try catch*/
-            HttpResponseMessage response = await httpClient.DeleteAsync(uri);
+            Uri uri = new Uri($"{ruta}PersonaApi/{idPersona}");
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-
-                estado = 1;
-                
+                HttpResponseMessage response = await httpClient.DeleteAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    filasAfectadas = 1;
+                }
             }
-
-            return estado;
+            catch (Exception e)
+            {
+                throw e;
+            }
+           
+            return filasAfectadas;
         }
 
         /// <summary>
@@ -107,7 +101,7 @@ namespace CRUDXamarin_DAL.Handler
             String ruta = clsMyConnection.getUriBase();
             String datos;
             HttpContent contenido;
-            Uri miUri = new Uri($"{ruta}PersonaApi/{oPersona.idPersona}");
+            Uri uri = new Uri($"{ruta}PersonaApi/{oPersona.idPersona}");
             int filas = 0;
 
             HttpResponseMessage response = new HttpResponseMessage();
@@ -116,11 +110,11 @@ namespace CRUDXamarin_DAL.Handler
             {
                 datos = JsonConvert.SerializeObject(oPersona);
                 contenido = new StringContent(datos, System.Text.Encoding.UTF8, "application/json");
-                response = await client.PutAsync(miUri, contenido);
+                response = await client.PutAsync(uri, contenido);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw e;
             }
 
             if (response.IsSuccessStatusCode)
@@ -141,20 +135,17 @@ namespace CRUDXamarin_DAL.Handler
         public async Task<clsPersona> obtenerPersona(int id)
         {
             String ruta = clsMyConnection.getUriBase();
-
             clsPersona persona = new clsPersona();
-
             HttpClient client = new HttpClient();
-
             HttpResponseMessage response = new HttpResponseMessage();
 
             try
             {
                 response = await client.GetAsync($"{ruta}PersonaApi/{id}");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw e;
             }
 
             if (response.IsSuccessStatusCode)

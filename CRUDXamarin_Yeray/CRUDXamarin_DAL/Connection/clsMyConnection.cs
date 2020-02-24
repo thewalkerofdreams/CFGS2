@@ -10,14 +10,12 @@ using System.Data.SqlClient;
 //   _user: cadena, básica. Consultable/modificable.
 //   _pass: cadena, básica. Consultable/modificable.
 
-
-
 namespace CRUDXamarin_DAL.Connection
 {
     public class clsMyConnection
     {
         /// <summary>
-        /// Devuelve la uri base de la api en forma de string
+        /// Comentario: Devuelve la uri base de la api en forma de string
         /// </summary>
         /// <returns>
         /// devuelve la cadena base 
@@ -28,7 +26,6 @@ namespace CRUDXamarin_DAL.Connection
             uriBase = "https://personasapi-avazquez.azurewebsites.net/api/";
             return uriBase;
         }
-
 
     }
 

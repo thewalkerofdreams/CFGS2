@@ -10,7 +10,7 @@ namespace CRUDXamarin_BL.List
     public class clsListadosDepartamentosBL
     {
         /// <summary>
-        /// Metodo que devuelve la lista completa de departamentos
+        /// Comentario: Este método devuelve la lista completa de departamentos
         /// que hay en la BBDD
         /// </summary>
         /// <returns>
@@ -19,9 +19,7 @@ namespace CRUDXamarin_BL.List
         public async Task<List<clsDepartamento>> listadoCompletoDepartamentos()
         {
             clsListadoDepartamentosDAL listadoDepartamentosDAL = new clsListadoDepartamentosDAL();
-            List<clsDepartamento> listadoFiltradoPorBL = new List<clsDepartamento>();
-            listadoFiltradoPorBL = await listadoDepartamentosDAL.listadoCompletoDepartamentos();
-            return listadoFiltradoPorBL;
+            return await listadoDepartamentosDAL.listadoCompletoDepartamentos(); ;
         }
     }
 }

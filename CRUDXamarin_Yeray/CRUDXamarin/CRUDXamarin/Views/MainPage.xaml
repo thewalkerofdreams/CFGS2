@@ -30,31 +30,47 @@
         <StackLayout
             Orientation="Horizontal"
             >
+            <!--
             <Button
                 Text="Add"
-                Clicked="Button_Clicked"
-            >
+                Clicked="Button_Clicked"        
+            >-->
 
-            </Button>
             <Button
+                Text="Add"
+                Command="{Binding AddCommand}"        
+            >
+            
+            </Button>
+            <!--<Button
                 x:Name="btnUpdate"
                 Text="Update"
                 Clicked="Button_Clicked_1"
-                IsEnabled="{Binding VisivilityButtonsSelectedPerson}"
+                IsEnabled="{Binding VisibilityButtonsSelectedPerson, Mode=TwoWay}"
+            >-->
+            <Button
+                Text="Update"
+                Command="{Binding EditCommand}"
             >
-
-            </Button>
+            
+                </Button>
             <Button
                 Text="Delete"
                 Command="{Binding DeleteCommand}"
                 ></Button>
-
+            <!--
             <Button
                 x:Name="btnDetails"
                 Text="Details"
                 Clicked="Button_Clicked_2"
-                IsEnabled="{Binding VisivilityButtonsSelectedPerson}"
+                IsEnabled="{Binding VisibilityButtonsSelectedPerson, Mode=TwoWay}"
+                ></Button>-->
+
+            <Button
+                Text="Details"
+                Command="{Binding DetailsCommand}"
                 ></Button>
+
         </StackLayout>
        
     </StackLayout>

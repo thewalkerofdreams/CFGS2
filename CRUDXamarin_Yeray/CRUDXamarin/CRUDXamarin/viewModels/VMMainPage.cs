@@ -13,68 +13,63 @@ namespace CRUDXamarin.viewModels
     {
         private ObservableCollection<clsPersona> listadoPersonas;
         private clsPersona _personaSeleccionada;
-        private clsPersona _personaAux { get; set; }
-        private bool _visivilityButtonsSelectedPerson;
+        private INavigation _navigation;//Lo utilizaremos para navegar a las demás pantallas
 
         #region Constructores
         public VMMainPage()
         {
             try
             {
-                cargarListados();   //esto esta mal
+                cargarListados();   
                 NotifyPropertyChanged("ListadoPersonas");
             }
             catch (Exception)
             {
                 falloConexion();
             }
-            this._personaAux = new clsPersona();
             this.DeleteCommand = new DelegateCommand(ExecuteDeleteCommand, CanExecuteDeleteCommand);
-            _visivilityButtonsSelectedPerson = false;//Nos permite habilitar los botones cuando se seleccione una persona
+            this.AddCommand = new DelegateCommand(ExecuteAddCommand);
+            this.EditCommand = new DelegateCommand(ExecuteEditCommand, CanExecuteDeleteCommand);
+            this.DetailsCommand = new DelegateCommand(ExecuteDetailsCommand, CanExecuteDeleteCommand);
+            _navigation = null;
+        }
+
+        public VMMainPage(INavigation navigation)
+        {
+            try
+            {
+                cargarListados();
+                NotifyPropertyChanged("ListadoPersonas");
+            }
+            catch (Exception)
+            {
+                falloConexion();
+            }
+            this.DeleteCommand = new DelegateCommand(ExecuteDeleteCommand, CanExecuteDeleteCommand);
+            this.AddCommand = new DelegateCommand(ExecuteAddCommand);
+            this.EditCommand = new DelegateCommand(ExecuteEditCommand, CanExecuteDeleteCommand);
+            this.DetailsCommand = new DelegateCommand(ExecuteDetailsCommand, CanExecuteDeleteCommand);
+            _navigation = navigation;
         }
         #endregion
 
         #region Propiedades Públicas
-        public clsPersona PersonaAux
-        {
-            get
-            {
-                NotifyPropertyChanged("PersonaSeleccionada");
-                return this._personaAux;
-            }
-            set
-            {
-                this._personaSeleccionada = value;
-            }
-        }
-
         public clsPersona PersonaSeleccionada
         {
             get
-            {
-                try
-                {
-                    if (this._personaSeleccionada != null)
-                    {
-                        clsListadosPersonaBL listadosPersonaBL = new clsListadosPersonaBL();
-                        clsPersona personaReal = listadosPersonaBL.obtenerObjetoPersonaPorID(this._personaSeleccionada.idPersona);
-                    }
-                }
-                catch (Exception)
-                {
-
-                }
+            {            
                 return this._personaSeleccionada;
             }
             set
             {
-                if (_personaSeleccionada != value)//esto solo se necesita si usas xBind
+                if (_personaSeleccionada != value)//Solo se necesita si se usa xBind
                 {
                     this._personaSeleccionada = value;
                     DeleteCommand.RaiseCanExecuteChanged();
+                    AddCommand.RaiseCanExecuteChanged();
+                    EditCommand.RaiseCanExecuteChanged();
+                    DetailsCommand.RaiseCanExecuteChanged();
                     NotifyPropertyChanged("PersonaSeleccionada");
-                    _visivilityButtonsSelectedPerson = true;
-                    NotifyPropertyChanged("VisivilityButtonsSelectedPerson");
                 }
             }
         }
@@ -83,38 +78,34 @@ namespace CRUDXamarin.viewModels
         {
             get
             {
-                //cargarListados();
                 return this.listadoPersonas;
             }
             set { this.listadoPersonas = value; }
         }
-        public DelegateCommand DeleteCommand
-        {
-            get;
+        public DelegateCommand DeleteCommand{get;}
+        public DelegateCommand AddCommand{get;}
+        public DelegateCommand EditCommand { get; }
+        public DelegateCommand DetailsCommand { get; }
 
-        }
-        public DelegateCommand SaveCommand
-        {
-            get;
-
-        }
-
-        public bool VisivilityButtonsSelectedPerson
+        public INavigation Navigation
         {
             get
             {
-                return _visivilityButtonsSelectedPerson;
+                return _navigation;
             }
             set
             {
-                _visivilityButtonsSelectedPerson = value;
-                NotifyPropertyChanged("VisivilityButtonsSelectedPerson");
+                _navigation = value;
+                NotifyPropertyChanged("Navigation");
             }
         }
         #endregion
 
 
         #region Commands
+        /// <summary>
+        /// Comentario: Este método nos permite eliminar a una persona de la base de datos.
+        /// </summary>
         private async void ExecuteDeleteCommand()
         {
             var answer = await Application.Current.MainPage.DisplayAlert("Delete", "Do you want to delete this element?", "Yes", "No");
@@ -129,8 +120,6 @@ namespace CRUDXamarin.viewModels
                         cargarListados();
                         this._personaSeleccionada = null;
                         NotifyPropertyChanged("PersonaSeleccionada");
-                        _visivilityButtonsSelectedPerson = false;
-                        NotifyPropertyChanged("VisivilityButtonsSelectedPerson");  
                     }
                     
                 }
@@ -138,10 +127,13 @@ namespace CRUDXamarin.viewModels
                 {
                     falloConexion();
                 }
-
             }
-
         }
+        /// <summary>
+        /// Comentario: Este método nos permite verificar si podemos ejecutar un comando específico.
+        /// </summary>
+        /// <returns>El método devuelve un valor booleano asociado al nombre, true si se puede ejecutar el comando
+        /// y false en caso contrario.</returns>
         private bool CanExecuteDeleteCommand()
         {
             bool habilitado = true;
@@ -152,33 +144,61 @@ namespace CRUDXamarin.viewModels
             return habilitado;
         }
 
+        /// <summary>
+        /// Comentario: Este método nos permite cargar una pantalla de inserción de personas.
+        /// </summary>
+        private async void ExecuteAddCommand()
+        {
+            clsGestionPersonasBL gestionPersonasBl = new clsGestionPersonasBL();
+            await _navigation.PushAsync(new CRUDXamarin.Views.AddPerson());
+        }
+
+        /// <summary>
+        /// Comentario: Este método nos permite cargar una pantalla de edición de persona.
+        /// </summary>
+        private async void ExecuteEditCommand()
+        {
+            clsGestionPersonasBL gestionPersonasBl = new clsGestionPersonasBL();
+            await Navigation.PushAsync(new CRUDXamarin.Views.EditPerson(_personaSeleccionada));
+        }
+
+        /// <summary>
+        /// Comentario: Este método nos permite cargar una pantalla de detalles de persona.
+        /// </summary>
+        private async void ExecuteDetailsCommand()
+        {
+            clsGestionPersonasBL gestionPersonasBl = new clsGestionPersonasBL();
+            await Navigation.PushAsync(new CRUDXamarin.Views.DetailsPerson(_personaSeleccionada));
+        }
         #endregion
 
         #region Funciones Listado
+        /// <summary>
+        /// Comentario: Este método nos permite cargar el listado de personas.
+        /// </summary>
         public async void cargarListados()
         {
             try
             {
-                this.listadoPersonas = new ObservableCollection<clsPersona>
-                (await new clsListadosPersonaBL().listadoPersonasOrdinario());
-                
-                NotifyPropertyChanged("ListadoPersonas");
-                
+                this.listadoPersonas = new ObservableCollection<clsPersona>(await new clsListadosPersonaBL().listadoPersonasCompleto());
+                NotifyPropertyChanged("ListadoPersonas");  
             }
             catch (Exception)
             {
                 falloConexion();
             }
-
         }
         #endregion
 
         #region Mensajes
+        /// <summary>
+        /// Comentario: Este método nos permite mostrar un mensaje de error de conexión por pantalla.
+        /// </summary>
         private async void falloConexion()
         {
             await Application.Current.MainPage.DisplayAlert(
                    "Alert",
-                   "Alerta mannn",
+                   "Connection Error",
                    "OK"
                    );
             return;

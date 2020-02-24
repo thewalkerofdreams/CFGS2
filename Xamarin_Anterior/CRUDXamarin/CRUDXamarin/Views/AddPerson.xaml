@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="CRUDXamarin.Views.AddPerson">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Pantalla de Inserción!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+
+            <Editor Placeholder="FirstName" PlaceholderColor="Olive" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceEventName=FirstName}"/>
+            <Editor Placeholder="LastName" PlaceholderColor="Olive" Text="{Binding LastName, Mode=TwoWay, UpdateSourceEventName=LastName}"/>
+            <Editor Placeholder="Phone" PlaceholderColor="Olive" Text="{Binding Phone, Mode=TwoWay, UpdateSourceEventName=Phone}"/>
+            <DatePicker Date="{Binding DateOfBirth, Mode=TwoWay, UpdateSourceEventName=DateOfBirth}" MaximumDate="{Binding ActualDate}"/>
+            <Picker Title="Select a Departament" ItemsSource="{Binding DepartamentList}" ItemDisplayBinding="{Binding Nombre}"  SelectedItem="{Binding DepartamentSelected, Mode=TwoWay}"/>
+
+            <Button Text="Add Person" Command="{Binding SaveCommand}"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

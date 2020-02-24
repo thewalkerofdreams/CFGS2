@@ -21,11 +21,8 @@ namespace CRUDXamarin_DAL.Handler
         public async Task<clsDepartamento> obtenerDepartamento(int id)
         {
             String ruta = clsMyConnection.getUriBase();
-
             clsDepartamento departamento = new clsDepartamento();
-
             HttpClient client = new HttpClient();
-
             HttpResponseMessage response = new HttpResponseMessage();
 
             try
@@ -40,7 +37,7 @@ namespace CRUDXamarin_DAL.Handler
             if (response.IsSuccessStatusCode)
             {
                 string dep = await response.Content.ReadAsStringAsync();
-                prueba = JsonConvert.DeserializeObject<String>(dep);//Tengo que decirle a Ángela que la desearialización fallo porque solo obtiene el nombre del departamento en el Json
+                prueba = JsonConvert.DeserializeObject<String>(dep);//La desearialización solo obtiene el nombre del departamento en el Json
             }
             departamento = new clsDepartamento(id, prueba);
 
