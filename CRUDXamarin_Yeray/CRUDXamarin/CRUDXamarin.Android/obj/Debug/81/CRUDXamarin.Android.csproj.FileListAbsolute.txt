@@ -697,3 +697,4 @@ C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\linksrc\Mono.Security.pdb
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\CRUDXamarin.dll.mdb
 C:\Users\ymcampanario\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\obj\Debug\81\linksrc\CRUDXamarin.dll.mdb
+C:\Users\thewa\Desktop\CRUDXamarin_Yeray\CRUDXamarin\CRUDXamarin.Android\bin\Debug\CRUDXamarin.dll.mdb

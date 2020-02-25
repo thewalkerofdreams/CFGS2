@@ -13,7 +13,7 @@ namespace CRUDXamarin.viewModels
     {
         private clsPersona _personToMod;
         private DateTime _actualDate;
-        private clsDepartamento _personsDepartament = null;
+        private clsDepartamento _personsDepartament;
         private ObservableCollection<clsDepartamento> _departamentList;
         public DelegateCommand ModCommand { get; }
 
@@ -32,7 +32,7 @@ namespace CRUDXamarin.viewModels
             _personToMod = persona;
             _actualDate = DateTime.Now;
             ModCommand = new DelegateCommand(ExecuteModCommand);
-            getPersonDepartament();
+            //getPersonDepartament();//Esto debería haber funcionado
         }
         #endregion
 
@@ -89,6 +89,9 @@ namespace CRUDXamarin.viewModels
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Comentario: Este método nos permite modificar una persona en la base de datos.
+        /// </summary>
         private async void ExecuteModCommand()
         {
             //Esta comprobación no puedo hacerla en este caso en el método CanExecuteModCommand
@@ -149,6 +152,17 @@ namespace CRUDXamarin.viewModels
             {
                 _departamentList = new ObservableCollection<clsDepartamento>(await new clsListadosDepartamentosBL().listadoCompletoDepartamentos());
                 NotifyPropertyChanged("DepartamentList");
+                clsDepartamento depAux = await new clsGestionDepartamentosBL().obtenerDepartamento(_personToMod.idDepartamento);
+                Boolean encontrado = false;
+                for (int i = 0; i < _departamentList.Count && !encontrado; i++)//Esto es de Pablo un poco modificado, No se muy bien porque solo funciona así.
+                {
+                    if (depAux.Id == _departamentList[i].Id)
+                    {
+                        _personsDepartament = _departamentList[i];
+                        NotifyPropertyChanged("PersonsDepartament");
+                        encontrado = true;
+                    }
+                }
             }
             catch (Exception)
             {
@@ -161,7 +175,7 @@ namespace CRUDXamarin.viewModels
         /// <summary>
         /// Comentario: Este método nos permite obtener el departamento de la persona a editar.
         /// </summary>
-        private async void getPersonDepartament()
+        private async void getPersonDepartament()//Actualmente no la utilizo
         {
             try
             {
@@ -172,7 +186,7 @@ namespace CRUDXamarin.viewModels
             {
                 falloConexion();
             }
-
+            
         }
         #endregion
 
