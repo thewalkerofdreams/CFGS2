@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="20sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"></ImageView>
+
+    <EditText
+        android:id="@+id/EditTextNickNameActivityCreateCount"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="10sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:hint="@string/hint_nickName"></EditText>
+
+    <EditText
+        android:id="@+id/EditTextPasswor01dActivityCreateCount"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:hint="@string/hint_password"></EditText>
+
+    <EditText
+        android:id="@+id/EditTextPasswor02dActivityCreateCount"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:hint="@string/hint_repeat_the_password"></EditText>
+
+    <Button
+        android:id="@+id/btnCreateCountActivityCreateCount"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="30sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:text="@string/create"
+        android:onClick="trySaveCount"></Button>
+
+</LinearLayout>
