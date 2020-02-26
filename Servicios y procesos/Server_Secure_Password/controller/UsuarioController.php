@@ -109,7 +109,8 @@ class UsuarioController extends Controller
             $id = $request->getUrlElements()[2];
         }
 
-        $parametros =(object)$request->getBodyParameters();
+        //$parametros =(object)$request->getBodyParameters();
+        $parametros =$request->getBodyParameters();
         //$libro = new UsuarioModel($id,$parametros->titulo,$parametros->numpag);
 
         if($parametros->username != null && $parametros->hashkey != null){
@@ -118,8 +119,6 @@ class UsuarioController extends Controller
 
         if ($usuarioModificado == true) {//Si se ha conseguido modifica algún libro
             $code = '200';
-            $cadena = Autentication::generateToken();
-            $header['Authorization'] = "Bearer " . $cadena;
         } else {
             //We could send 404 in any case, but if we want more precission,
             //we can send 400 if the syntax of the entity was incorrect...
@@ -148,7 +147,7 @@ class UsuarioController extends Controller
     public function managePostVerb(Request $request)
     {
         //Obtenemos el Token
-        $cadena = $request ->getToken();
+        $cadena = $request->getToken();
         $token['Authorization'] = "Bearer " . $cadena;
 
         $usuario = null;
@@ -164,24 +163,28 @@ class UsuarioController extends Controller
         //$parametros =(Object) $request->getBodyParameters();
         //$libroEntrada = new UsuarioModel($parametros);
 
-        $usuario = UsuarioHandlerModel::postUsuario($request->getBodyParameters());
+        $user = $request->getBodyParameters();
 
-        if ($usuario != null) {//Si se ha encontrado algún libro
-            $code = '200';
-            $cadena = Autentication::generateToken();//Generamos el token
-            $header['Authorization'] = "Bearer " . $cadena;
-        } else {
-            //We could send 404 in any case, but if we want more precission,
-            //we can send 400 if the syntax of the entity was incorrect...
-            if (UsuarioHandlerModel::isValid($id)) {//Si el id es válido, es decir, es un número
-                $code = '404';
+        if (!Autentication::checkUser($user->username)) {//Si no existe el usuario o es un get
+            $usuario = UsuarioHandlerModel::postUsuario($request->getBodyParameters());
+        }else{
+            $usuario = null;
+        }
+            if ($usuario != null) {//Si se ha encontrado algún libro
+                $code = '200';
             } else {
-                $code = '400';
+                //We could send 404 in any case, but if we want more precission,
+                //we can send 400 if the syntax of the entity was incorrect...
+                if (UsuarioHandlerModel::isValid($id)) {//Si el id es válido, es decir, es un número
+                    $code = '404';
+                } else {
+                    $code = '400';
+                }
+
             }
 
+            $response = new Response($code, $token, $usuario, $request->getAccept());
+            $response->generate();
         }
 
-        $response = new Response($code, $token, $usuario, $request->getAccept());
-        $response->generate();
-    }
 }

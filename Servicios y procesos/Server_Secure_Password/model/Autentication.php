@@ -95,7 +95,7 @@ class Autentication
         $existe = false;
         $pwd = "";
         $db = DatabaseModel::getInstance();
-        $db_connection = $db -> getConnection();
+        $db_connection = $db->getConnection();
 
 
         if($token == null){//Si no se pasa ningún token
@@ -156,23 +156,24 @@ class Autentication
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true
      * si existe el usuario en la base de datos y false en caso contrario.
      * */
-    static function checkUser($request) {
+    static function checkUser($username) {
         $usuarioExistente = false;
         $name = "";
+        $nombre = "";
         $db = DatabaseModel::getInstance();
         $db_connection = $db -> getConnection();
         $body = null;
 
-        $body = $request->getBodyParameters();
-        $nombre = $body->name;
+        //$body = $request->getBodyParameters();
+        //$nombre = $body->username;
 
         $query = "SELECT " . \ConstantesDB\ConsUsuariosModel::USERNAME. " FROM " . \ConstantesDB\ConsUsuariosModel::TABLE_NAME . " WHERE " . \ConstantesDB\ConsUsuariosModel::USERNAME . " = ? ";
         $prep_query = $db_connection -> prepare($query);
-        $prep_query -> bind_param('s', $nombre);
+        $prep_query -> bind_param('s', $username);
         $prep_query -> execute();
         $prep_query -> bind_result( $name);
         while($prep_query -> fetch()) {
-            if($nombre == $name) {
+            if($username == $name) {
                 $usuarioExistente = true;
             }
         }

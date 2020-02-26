@@ -6,6 +6,8 @@ use \InvalidArgumentException;
 use \UnexpectedValueException;
 use \DateTime;
 
+require_once "SignatureInvalidException.php";
+
 /**
  * JSON Web Token implementation, based on this spec:
  * https://tools.ietf.org/html/rfc7519
@@ -110,7 +112,7 @@ class JWT
 
         // Check the signature
         if (!static::verify("$headb64.$bodyb64", $sig, $key, $header->alg)) {
-            throw new SignatureInvalidException('Signature verification failed');
+            throw new SignatureInvalidException ('Signature verification failed');
         }
 
         // Check the nbf if it is defined. This is the time that the

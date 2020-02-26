@@ -102,8 +102,8 @@ class UsuarioHandlerModel
         $usuarioModificado = false;
 
         $id = $id;
-        $username = $bodyParameters->titulo; //esto es el titulo
-        $hashkey = $bodyParameters->numpag; //esto es el número de paginas
+        $username = $bodyParameters->username; //esto es el titulo
+        $hashkey = $bodyParameters->hashkey; //esto es el número de paginas
 
         $query = "UPDATE ".\ConstantesDB\ConsUsuariosModel::TABLE_NAME
             ." SET ".

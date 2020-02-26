@@ -95,7 +95,7 @@ else {
 
 //Si la autentificación es correcta o es un post
 if(Autentication::checkAuthentication($usuario, $contrasena, $token) || (ucfirst(strtolower($verb)) == "Post" && ucfirst($url_elements[1]) == "Usuario")) {
-    if (!Autentication::checkUser($req) || ucfirst(strtolower($verb)) == "Get") {//Si no existe el usuario o es un get
+
         if (class_exists($controller_name)) {//Si existe la clase controller
             $token = Autentication::generateToken();
             $req -> setToken($token);
@@ -107,11 +107,6 @@ if(Autentication::checkAuthentication($usuario, $contrasena, $token) || (ucfirst
             $controller = new NotFoundController();
             $controller->manage($req); //We don't care about the HTTP verb
         }
-    }
-    else {
-        $controller = new ConflictController(); //Lo mejor seria el 409 Conflict
-        $controller->manage($req);
-    }
 
 }
 else {
