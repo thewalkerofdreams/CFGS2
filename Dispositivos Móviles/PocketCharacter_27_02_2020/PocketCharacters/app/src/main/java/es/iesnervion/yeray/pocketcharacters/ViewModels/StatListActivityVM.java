@@ -16,7 +16,6 @@ public class StatListActivityVM extends AndroidViewModel {
     private ClsStat _statToDelete;
     private boolean _openDialogCreateStat;
     private boolean _openDialogDeleteStat;
-    private String _newStatName;
 
     //Constructor
     public StatListActivityVM(Application application){
@@ -68,14 +67,6 @@ public class StatListActivityVM extends AndroidViewModel {
 
     public void set_statToDelete(ClsStat _statToDelete) {
         this._statToDelete = _statToDelete;
-    }
-
-    public String get_newStatName() {
-        return _newStatName;
-    }
-
-    public void set_newStatName(String _newStatName) {
-        this._newStatName = _newStatName;
     }
 
     //Funciones sobre la base de datos

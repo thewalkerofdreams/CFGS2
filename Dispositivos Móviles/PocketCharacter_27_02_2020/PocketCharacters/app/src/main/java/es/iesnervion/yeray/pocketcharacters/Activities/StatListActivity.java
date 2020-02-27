@@ -31,7 +31,6 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
     StatListActivityVM viewModel;
     ListView listView;
     AlertDialog alertDialogDeleteStat, alertDialogCreateStat;
-    EditText nameEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,8 +101,8 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
      * */
     public void dialogNewStat(){
         AlertDialog.Builder builder = new AlertDialog.Builder(StatListActivity.this);
-        nameEdit = new EditText(StatListActivity.this);
-        nameEdit.setText(viewModel.get_newStatName());
+        //Declaramos un editText temporal
+        final EditText nameEdit = new EditText(StatListActivity.this);
         nameEdit.setHint(R.string.stat_name);//Le insertamos una pista
         // Build the dialog box
         builder.setTitle(R.string.new_stat)
@@ -112,19 +111,18 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
                 .setPositiveButton(getString(R.string.dialog_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        viewModel.set_newStatName(nameEdit.getText().toString().trim());
-                        if (viewModel.get_newStatName().length() == 0) {
+                        String statName = nameEdit.getText().toString();
+                        if (statName.length() == 0) {
                             Toast.makeText(getApplication(), R.string.name_stat_empty, Toast.LENGTH_SHORT).show();
                         } else {
-                            if(new MethodsDDBB().existStat(getApplication(), viewModel.get_gameMode(), viewModel.get_newStatName())){//Si ya existe un stat con ese nombre en el mismo gameMode
+                            if(new MethodsDDBB().existStat(getApplication(), viewModel.get_gameMode(), statName)){//Si ya existe un stat con ese nombre en el mismo gameMode
                                 Toast.makeText(getApplication(), R.string.already_exist_stat_game_mode, Toast.LENGTH_SHORT).show();
                             }else{
-                                ClsStat stat = new ClsStat(viewModel.get_newStatName(), viewModel.get_gameMode());
+                                ClsStat stat = new ClsStat(statName, viewModel.get_gameMode());
                                 AppDataBase.getDataBase(getApplication()).statDao().insertStat(stat);
                                 reloadList();
                                 Toast.makeText(getApplication(), R.string.stat_saved, Toast.LENGTH_SHORT).show();
                                 viewModel.set_openDialogCreateStat(false);
-                                viewModel.set_newStatName("");
                             }
                         }
                     }
@@ -133,7 +131,6 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         viewModel.set_openDialogCreateStat(false);
-                        viewModel.set_newStatName("");
                         dialog.cancel();
                     }
                 });
@@ -187,14 +184,5 @@ public class StatListActivity extends AppCompatActivity implements AdapterView.O
         viewModel.set_statList(new ArrayList<ClsStat>(AppDataBase.getDataBase(getApplication()).statDao().getStatsByGameMode(viewModel.get_gameMode())));
         adapter = new AdapterStatList(this, R.layout.item_stat_list, viewModel.get_statList());
         listView.setAdapter(adapter);
-    }
-
-    public void onStop() {
-
-        super.onStop();
-
-        if(alertDialogCreateStat != null){//Si cerramos la actividad con un dialogo de creación en pantalla
-            viewModel.set_newStatName(nameEdit.getText().toString());//Guardamos sus datos
-        }
     }
 }

@@ -10,7 +10,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.view.View;
@@ -25,7 +24,6 @@ import es.iesnervion.yeray.pocketcharacters.DDBB.AppDataBase;
 import es.iesnervion.yeray.pocketcharacters.DDBB.MethodsDDBB;
 import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsGameMode;
 import es.iesnervion.yeray.pocketcharacters.Adapters.AdapterGameModeList;
-import es.iesnervion.yeray.pocketcharacters.EntitiesModels.ClsStatModel;
 import es.iesnervion.yeray.pocketcharacters.R;
 import es.iesnervion.yeray.pocketcharacters.ViewModels.GameModeListActivityVM;
 
@@ -35,7 +33,6 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
     GameModeListActivityVM viewModel;
     ListView listView;
     AlertDialog alertDialogDeleteGameMode, alertDialogCreateGameMode;
-    EditText nameEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +121,7 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
      * */
     public void dialogNewGameMode(){
         AlertDialog.Builder builder = new AlertDialog.Builder(GameModeListActivity.this);
-        nameEdit = new EditText(GameModeListActivity.this);
-        nameEdit.setText(viewModel.get_newGameModeName());
+        final EditText nameEdit = new EditText(GameModeListActivity.this);
         nameEdit.setHint(getString(R.string.set_game_mode_name_hint));//Le insertamos una pista
         builder.setTitle(getString(R.string.dialog_title))
                 .setView(nameEdit)
@@ -133,18 +129,17 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
                 .setPositiveButton(getString(R.string.dialog_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        viewModel.set_newGameModeName(nameEdit.getText().toString().trim());
-                        if (viewModel.get_newGameModeName().length() == 0) {
+                        String gameModeName = nameEdit.getText().toString();
+                        if (gameModeName.length() == 0) {
                             Toast.makeText(getApplication(), getApplication().getString(R.string.dialog_toast1), Toast.LENGTH_SHORT).show();
                         } else {
-                            if(new MethodsDDBB().existGameMode(getApplication(), viewModel.get_newGameModeName())){//Si ya existe un GameMode con ese nombre
+                            if(new MethodsDDBB().existGameMode(getApplication(), gameModeName)){//Si ya existe un GameMode con ese nombre
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.dialog_toast2), Toast.LENGTH_SHORT).show();
                             }else{
-                                AppDataBase.getDataBase(getApplication()).gameModeDao().insertGameMode(new ClsGameMode(viewModel.get_newGameModeName()));
+                                AppDataBase.getDataBase(getApplication()).gameModeDao().insertGameMode(new ClsGameMode(gameModeName));
                                 reloadList();
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.dialog_toast3), Toast.LENGTH_SHORT).show();
                                 viewModel.set_dialogCreateShowing(false);
-                                viewModel.set_newGameModeName("");
                             }
                         }
                     }
@@ -153,7 +148,6 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         viewModel.set_dialogCreateShowing(false);
-                        viewModel.set_newGameModeName("");
                         dialog.cancel();
                     }
                 });
@@ -194,14 +188,5 @@ public class GameModeListActivity extends AppCompatActivity implements AdapterVi
 
         alertDialogDeleteGameMode = alertDialogBuilder.create();
         alertDialogDeleteGameMode.show();
-    }
-
-    public void onStop() {
-
-        super.onStop();
-
-        if(alertDialogCreateGameMode != null){//Si cerramos la actividad con un dialogo de creación en pantalla
-            viewModel.set_newGameModeName(nameEdit.getText().toString());//Guardamos sus datos
-        }
     }
 }

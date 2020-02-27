@@ -15,7 +15,6 @@ public class ObjectTypeListActivityVM extends AndroidViewModel {
     private ClsObjectType _typeObjectToDelete;
     private boolean _openDialogDeleteTypeObject;
     private boolean _openDialogCreateTypeObject;
-    private String _newObjectType;
 
     //Constructor
     public ObjectTypeListActivityVM(Application application){
@@ -66,14 +65,6 @@ public class ObjectTypeListActivityVM extends AndroidViewModel {
 
     public void set_openDialogCreateTypeObject(boolean _openDialogCreateTypeObject) {
         this._openDialogCreateTypeObject = _openDialogCreateTypeObject;
-    }
-
-    public String get_newObjectType() {
-        return _newObjectType;
-    }
-
-    public void set_newObjectType(String _newObjectType) {
-        this._newObjectType = _newObjectType;
     }
 
     //Funciones sobre la BBDD

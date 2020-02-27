@@ -29,7 +29,6 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
     ListView listView;
     ObjectTypeListActivityVM viewModel;
     AlertDialog alertDialogCreateType, alertDialogDeleteType;
-    EditText nameEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +99,7 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
     public void dialogNewObjectType(){
         AlertDialog.Builder builder = new AlertDialog.Builder(ObjectTypeListActivity.this);
         //Declaramos un editText temporal
-        nameEdit = new EditText(ObjectTypeListActivity.this);
-        nameEdit.setText(viewModel.get_newObjectType());
+        final EditText nameEdit = new EditText(ObjectTypeListActivity.this);
         nameEdit.setHint(R.string.new_type);//Le insertamos una pista
         // Build the dialog box
         builder.setTitle(R.string.new_type)
@@ -110,18 +108,17 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                 .setPositiveButton(getString(R.string.dialog_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        viewModel.set_newObjectType(nameEdit.getText().toString().trim());
-                        if (viewModel.get_newObjectType().length() == 0) {
+                        String typeName = nameEdit.getText().toString();
+                        if (typeName.length() == 0) {
                             Toast.makeText(getApplication(), R.string.type_name_empty, Toast.LENGTH_SHORT).show();
                         } else {
-                            if(new MethodsDDBB().existTypeObject(getApplication(), viewModel.get_newObjectType())){//Si ya existe un tipo con ese nombre
+                            if(new MethodsDDBB().existTypeObject(getApplication(), typeName)){//Si ya existe un tipo con ese nombre
                                 Toast.makeText(getApplication(), R.string.already_exist_type_name, Toast.LENGTH_SHORT).show();
                             }else{
-                                AppDataBase.getDataBase(getApplication()).objectTypeDao().insertObjectType(new ClsObjectType(viewModel.get_newObjectType()));
+                                AppDataBase.getDataBase(getApplication()).objectTypeDao().insertObjectType(new ClsObjectType(typeName));
                                 reloadList();
                                 Toast.makeText(getApplication(), R.string.type_saved, Toast.LENGTH_SHORT).show();
                                 viewModel.set_openDialogCreateTypeObject(false);
-                                viewModel.set_newObjectType("");
                             }
                         }
                     }
@@ -130,7 +127,6 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         viewModel.set_openDialogCreateTypeObject(false);
-                        viewModel.set_newObjectType("");
                         dialog.cancel();
                     }
                 });
@@ -185,14 +181,5 @@ public class ObjectTypeListActivity extends AppCompatActivity implements Adapter
         viewModel.loadList();
         adapter = new AdapterObjectTypeList(this, R.layout.item_object_type_list, viewModel.get_typeList());
         listView.setAdapter(adapter);
-    }
-
-    public void onStop() {
-
-        super.onStop();
-
-        if(alertDialogCreateType != null){//Si cerramos la actividad con un dialogo de creación en pantalla
-            viewModel.set_newObjectType(nameEdit.getText().toString());//Guardamos sus datos
-        }
     }
 }
