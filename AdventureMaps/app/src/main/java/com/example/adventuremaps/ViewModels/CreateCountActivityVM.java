@@ -4,17 +4,27 @@ import androidx.lifecycle.ViewModel;
 
 public class CreateCountActivityVM extends ViewModel {
 
+    private String _nickName;
     private String _email;
     private String _password01;
     private String _password02;
 
     public CreateCountActivityVM(){
+        _nickName = "";
         _email = "";
         _password01 = "";
         _password02 = "";
     }
 
     //Get y Set
+    public String get_nickName() {
+        return _nickName;
+    }
+
+    public void set_nickName(String _nickName) {
+        this._nickName = _nickName;
+    }
+
     public String get_email() {
         return _email;
     }

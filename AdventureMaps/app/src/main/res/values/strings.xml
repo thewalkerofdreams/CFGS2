@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AdventureMaps</string>
     <string name="hint_nickName">NickName</string>
+    <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_repeat_the_password">Repeat the password</string>
     <string name="forgotten_password">Forgot your password?</string>
@@ -9,10 +10,23 @@
     <string name="create_count">Create Count</string>
     <string name="email_empty">Email empty!</string>
     <string name="password_empty">Password empty!</string>
+    <string name="all_fields_required">All fields are required!</string>
     <string name="password_not_equals">Password not equals!</string>
     <string name="login_successful">Login successful!</string>
     <string name="login_error">Email or password incorrect!</string>
     <string name="create_count_error">Could not create account!</string>
     <string name="create_count_error_colision">The user already exist in the app!</string>
     <string name="create_count_successful">Account created!</string>
+    <string name="title_activity_main_tabbet">MainTabbetActivity</string>
+    <string name="tab_text_1">Start</string>
+    <string name="tab_text_2">Localizations</string>
+    <string name="tab_text_3">Routes</string>
+    <string name="tab_text_4">Maps</string>
+    <string name="tab_text_5">User</string>
+    <string name="nickName_form">NickName: </string>
+    <string name="email_form">Email: </string>
+    <string name="number_user_routes_form">Routes created: </string>
+    <string name="number_user_localizations_form">Localizations created: </string>
+    <string name="change_password">Change password</string>
+    <string name="tutorial">Tutorial</string>
 </resources>

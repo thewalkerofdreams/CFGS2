@@ -1,4 +1,4 @@
-package com.example.adventuremaps;
+package com.example.adventuremaps.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,13 +11,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.adventuremaps.ViewModels.CreateCountActivityVM;
+import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                 //Verificamos que se pudo registrar el usuario
                                 if(task.isSuccessful()){
                                     Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
-                                    //TODO Aquí lanzaremos a la pestaña de inicio de la aplicación
-                                    //TODO Tenemos que pasarle el correo también... Supongo...
+                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class));
                                 }else{
                                     Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
                                 }
