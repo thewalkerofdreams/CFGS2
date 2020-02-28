@@ -1,7 +1,9 @@
 package com.example.adventuremaps.Activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
@@ -42,5 +44,18 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwChangePasswordActivity
+     * Comentario: Este método lanza la actividad ChangePasswordActivity
+     * Cabecera: public void throwChangePasswordActivity(View v)
+     * Entrada:
+     *  -View v
+     * Postcondiciones: El método lanza la actividad ChangePasswordActivity.
+     */
+    public void throwChangePasswordActivity(View v){
+        startActivity(new Intent(this, ChangePasswordActivity.class));
     }
 }

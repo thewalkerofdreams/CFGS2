@@ -30,4 +30,11 @@
     <string name="change_password">Change password</string>
     <string name="tutorial">Tutorial</string>
     <string name="logout">Logout</string>
+    <string name="hint_old_password">Old password</string>
+    <string name="hint_new_password">New password</string>
+    <string name="password_updated">Password updated!</string>
+    <string name="error_password_updated">Error to update teh password!</string>
+    <string name="send_new_password">Send new password</string>
+    <string name="send_new_password_error">Error to send the new password!</string>
+    <string name="sent_new_password">sent the new password to your email!</string>
 </resources>

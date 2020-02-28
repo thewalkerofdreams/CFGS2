@@ -96,4 +96,17 @@ public class MainActivity extends AppCompatActivity {
     public void throwCreateCountActivity(View v){
         startActivity(new Intent(this, CreateCountActivity.class));
     }
+
+    /**
+     * Interfaz
+     * Nombre: throwSendNewPasswordActivity
+     * Comentario: Este método lanza la actividad SendNewPasswordActivity.
+     * Cabecera: public void throwSendNewPasswordActivity(View v)
+     * Entrada:
+     *  -View v
+     * Postcondiciones: El método lanza la actividad SendNewPasswordActivity.
+     */
+    public void throwSendNewPasswordActivity(View v){
+        startActivity(new Intent(this, SendNewPasswordActivity.class));
+    }
 }
