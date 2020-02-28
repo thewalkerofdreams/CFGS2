@@ -9,8 +9,11 @@ import com.example.adventuremaps.Fragments.FragmentRoutes;
 import com.example.adventuremaps.Fragments.FragmentStart;
 import com.example.adventuremaps.Fragments.FragmentUser;
 import com.example.adventuremaps.R;
+import com.example.adventuremaps.ViewModels.MainActivityVM;
+import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +21,8 @@ import com.example.adventuremaps.Activities.ui.main.SectionsPagerAdapter;
 
 public class MainTabbetActivity extends AppCompatActivity implements FragmentStart.OnFragmentInteractionListener, FragmentLocalizations.OnFragmentInteractionListener,
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
+
+    private MainTabbetActivityVM viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
+        //Instanciamos el VM
+        viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
+        viewModel.set_actualEmailUser(getIntent().getStringExtra("LoginEmail"));
     }
 
     @Override

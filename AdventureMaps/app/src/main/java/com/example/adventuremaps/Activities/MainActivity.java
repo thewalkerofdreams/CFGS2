@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                 //Verificamos que se pudo registrar el usuario
                                 if(task.isSuccessful()){
                                     Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class));
+                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
                                 }else{
                                     Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
                                 }
