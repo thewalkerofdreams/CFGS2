@@ -36,6 +36,7 @@ public class FragmentUser extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
+        //Instanciamos los elementos del View
         txtEmail = view.findViewById(R.id.TextViewEmailInfoActivity);
         txtNickName = view.findViewById(R.id.TextViewNickNameInfoActivity);
 

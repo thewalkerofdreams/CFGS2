@@ -29,4 +29,5 @@
     <string name="number_user_localizations_form">Localizations created: </string>
     <string name="change_password">Change password</string>
     <string name="tutorial">Tutorial</string>
+    <string name="logout">Logout</string>
 </resources>

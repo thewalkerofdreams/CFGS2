@@ -18,7 +18,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/email_form"></TextView>
+            android:text="@string/email_form"
+            android:layout_marginRight="5sp"></TextView>
 
         <TextView
             android:id="@+id/TextViewEmailInfoActivity"
@@ -40,7 +41,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/nickName_form"></TextView>
+            android:text="@string/nickName_form"
+            android:layout_marginRight="5sp"></TextView>
 
         <TextView
             android:id="@+id/TextViewNickNameInfoActivity"
@@ -62,7 +64,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/number_user_localizations_form"></TextView>
+            android:text="@string/number_user_localizations_form"
+            android:layout_marginRight="5sp"></TextView>
 
         <TextView
             android:id="@+id/TextViewNumberLocalizationsInfoActivity"
@@ -84,7 +87,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/number_user_localizations_form"></TextView>
+            android:text="@string/number_user_localizations_form"
+            android:layout_marginRight="5sp"></TextView>
 
         <TextView
             android:id="@+id/TextViewNumberRoutesInfoActivity"
@@ -96,9 +100,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="20"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="10sp"
+        android:layout_weight="15"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
         android:layout_marginStart="25sp"
         android:layout_marginEnd="25sp"
         android:text="@string/change_password"></Button>
@@ -106,9 +110,19 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="20"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="20sp"
+        android:layout_weight="15"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_marginStart="25sp"
+        android:layout_marginEnd="25sp"
+        android:text="@string/logout"></Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="15"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"
         android:layout_marginStart="25sp"
         android:layout_marginEnd="25sp"
         android:text="@string/tutorial"></Button>
