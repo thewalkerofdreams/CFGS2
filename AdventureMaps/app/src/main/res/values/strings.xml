@@ -37,4 +37,5 @@
     <string name="send_new_password">Send new password</string>
     <string name="send_new_password_error">Error to send the new password!</string>
     <string name="sent_new_password">sent the new password to your email!</string>
+    <string name="password_lenght_error">The password must be larger than 6!</string>
 </resources>

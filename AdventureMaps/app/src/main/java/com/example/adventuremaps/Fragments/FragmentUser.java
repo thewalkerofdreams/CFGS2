@@ -48,7 +48,6 @@ public class FragmentUser extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         // Read from the database
         myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override

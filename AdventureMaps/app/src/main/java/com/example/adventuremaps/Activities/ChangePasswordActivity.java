@@ -76,16 +76,20 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 if(viewModel.get_newPassword01().equals(viewModel.get_newPassword02())){
-                                    user.updatePassword(viewModel.get_newPassword01()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(getApplication(), R.string.password_updated, Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(getApplication(), R.string.error_password_updated, Toast.LENGTH_SHORT).show();
+                                    if(viewModel.get_newPassword01().length() >= 6){
+                                        user.updatePassword(viewModel.get_newPassword01()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getApplication(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getApplication(), R.string.error_password_updated, Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }else{
+                                        Toast.makeText(getApplication(), R.string.password_lenght_error, Toast.LENGTH_SHORT).show();
+                                    }
                                 }else{
                                     Toast.makeText(getApplication(), R.string.password_not_equals, Toast.LENGTH_SHORT).show();
                                 }
@@ -99,37 +103,4 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Interfaz
-     * Nombre: autentificarCorreoYCuenta
-     * Comentario: Este método nos permite verificar si existe una cuenta en la plataforma
-     * con un correo y contraseña específica.
-     * Cabecera: public boolean autentificarCorreoYCuenta(String email, String password)
-     * Entrada:
-     *  -String email
-     *  -String password
-     * Salida:
-     *  -boolean exist
-     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si existe una
-     * cuenta en la plataforma con ese correo y contraseña o false en caso contrario.
-     */
-    /*public boolean autentificarCorreoYCuenta(String email, String password){
-        boolean exist = false;
-
-         user = firebaseApp.auth().currentUser;
-        Credential credential = firebase.auth.EmailAuthProvider.credential(
-                firebase.auth().currentUser.email,
-                providedPassword
-        );
-
-        // Prompt the user to re-provide their sign-in credentials
-
-        user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
-            // User re-authenticated.
-        }).catch(function(error) {
-            // An error happened.
-        });
-
-        return exist;
-    }*/
 }

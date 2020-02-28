@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.R;
-import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.example.adventuremaps.ViewModels.SendNewPasswordActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

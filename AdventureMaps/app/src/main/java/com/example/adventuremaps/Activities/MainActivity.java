@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(!viewModel.get_email().isEmpty()){
             if(!viewModel.get_password().isEmpty()){
+                progressDialog.show();
                 firebaseAuth.signInWithEmailAndPassword(viewModel.get_email(), viewModel.get_password())
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressDialog.show();
                                 //Verificamos que se pudo registrar el usuario
                                 if(task.isSuccessful()){
                                     Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
