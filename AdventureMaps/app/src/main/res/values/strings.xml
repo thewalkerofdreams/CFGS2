@@ -42,4 +42,24 @@
     <string name="no">No</string>
     <string name="title_logout">Logout</string>
     <string name="question_logout">Do you really want logout? You cant access the application without connection!</string>
+
+    <string name="basic_offline_deleted_toast">Delete the last item in the offlineRegions</string>
+    <string name="simple_offline_end_progress_success">Calculate the download percentage</string>
+    <string name="access_token">pk.eyJ1IjoicmFjY29vbm11cmt5IiwiYSI6ImNrNWM3bWpscjAxcXEzZm1zdHZqZ2JmNTIifQ.NEMaG9Fj2j5Z9B2a02PIbg</string>
+    <string name="download_button_text">Download Map</string>
+    <string name="list_button_text">Map List</string>
+    <string name="set_region_name_hint">Name of the region</string>
+    <string name="dialog_toast">The region name is empty</string>
+    <string name="dialog_title">Name of the new Region</string>
+    <string name="dialog_message">Download the region that you are seeing</string>
+    <string name="dialog_positive_button">Download</string>
+    <string name="dialog_negative_button">Cancel</string>
+    <string name="end_progress_success">Download Success!</string>
+    <string name="toast_no_regions_yet">No regions yet!</string>
+    <string name="navigate_title">Maps</string>
+    <string name="navigate_positive_button">Navigate to</string>
+    <string name="navigate_negative_button_title">Cancel</string>
+    <string name="toast_region_deleted">Region eliminated</string>
+    <string name="navigate_neutral_button_title">Delete</string>
+    <string name="region_name">region_name</string>
 </resources>

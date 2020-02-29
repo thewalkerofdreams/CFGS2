@@ -34,6 +34,10 @@ dependencies {
     //FireBase Dependency
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     implementation 'com.google.firebase:firebase-database:16.0.4'
+    //Dependencia de mapbox
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.1'
+    // timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 }
