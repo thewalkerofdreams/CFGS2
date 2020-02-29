@@ -2,11 +2,13 @@ package com.example.adventuremaps.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -96,5 +98,14 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override//Controlamos la respuesta a los permisos
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                PlaceholderFragment.newInstance(4);//Recargamos el fragment
+            }
+        }
     }
 }

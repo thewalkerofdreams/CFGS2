@@ -62,4 +62,7 @@
     <string name="toast_region_deleted">Region eliminated</string>
     <string name="navigate_neutral_button_title">Delete</string>
     <string name="region_name">region_name</string>
+    <string name="exceeded_download_limit">Exceeded download limit</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="question_delete_region">Do you really want delete this region?</string>
 </resources>

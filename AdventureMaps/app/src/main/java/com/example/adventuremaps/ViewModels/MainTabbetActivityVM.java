@@ -9,7 +9,6 @@ import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.ViewModel;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
@@ -27,7 +26,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     //JSON encoding/decoding
     private final String JSON_CHARSET = "UTF-8";
     private final String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
-    private LocationManager _locManager;
+    private LocationManager _locManager; //This class provides access to the system location services
     private Location _actualLocation;
     private Context _context;
     private int _regionSelected;
@@ -35,6 +34,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     public MainTabbetActivityVM(Application application){
         super(application);
         _actualEmailUser = "";
+
         //Fragment Offline Maps Part
         _context = application.getBaseContext();
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
@@ -50,6 +50,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     public void set_actualEmailUser(String _actualEmailUser) {
         this._actualEmailUser = _actualEmailUser;
     }
+
     //Gets y Sets Fragment Offline Maps Part
     public Location get_actualLocation() {
         return _actualLocation;
@@ -77,26 +78,27 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
 
     //Functions Fragment Offline Maps Part
-    /*
+    /**
      * Interfaz
      * Nombre: getLastKnownLocation
      * Comentario: Este método nos permite obtener la última localización
      * conocida del dispositivo.
      * Cabecera: private Location getLastKnownLocation()
-     * Postcondiciones: El método modifica el estado del atributo _actualLocalization.
+     * Postcondiciones: El método modifica el estado del atributo _actualLocalization del viewModel.
      * */
     private Location getLastKnownLocation() {
-        List<String> providers = _locManager.getProviders(true);
+        List<String> providers = _locManager.getProviders(true); //Returns a list of the names of location providers.
         Location bestLocation = null;
+        //Si el usuario aceptó los permisos de localización
         if(ActivityCompat.checkSelfPermission(_context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(_context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
             for (String provider : providers) {
-                Location l = _locManager.getLastKnownLocation(provider);
+                Location l = _locManager.getLastKnownLocation(provider); //Gets the last known location from the given provider, or null if there is no last known location.
                 if (l == null) {
                     continue;
                 }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                    // Found best last known location: %s", l);
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {//getAccuracy: Get the estimated horizontal accuracy of this location, radial, in meters.
                     bestLocation = l;
                 }
             }
@@ -104,7 +106,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return bestLocation;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: getRegionName
      * Comentario: Con este método obtenemos el nombre de la región de un metadato offlineRegion.

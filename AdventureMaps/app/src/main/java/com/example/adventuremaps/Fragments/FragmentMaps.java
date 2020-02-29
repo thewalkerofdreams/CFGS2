@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -45,7 +46,7 @@ import timber.log.Timber;
 public class FragmentMaps extends Fragment {
 
     //ViewModel
-    MainTabbetActivityVM viewModel;
+    private MainTabbetActivityVM viewModel;
     //UI elements
     private MapView mapView;
     private MapboxMap map;
@@ -65,22 +66,25 @@ public class FragmentMaps extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Necesitamos instanciar Mapbox con una de sus claves, la obtenemos a través de una cuenta.
+        //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
-        // Inflate the layout for this fragment
+        //Inflamos el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        //Pedimos los permisos
+        //Comprobamos que tiene los permisos, si no los tiene enviamos un dialogo
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-
+        //Si se han aceptado los permisos continuamos
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            //Instanciamos el VM
             viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
+
+            //Instanciamos los elementos de la UI
             mapView = view.findViewById(R.id.mapView);
             mapView.onCreate(savedInstanceState);
             mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
@@ -97,11 +101,14 @@ public class FragmentMaps extends Fragment {
                                     .tilt(20)
                                     .build();
                             map.setCameraPosition(position);
-                            //Asignamos el progressBar
+
+                            //Instanciamos el progressBar
                             progressBar = getActivity().findViewById(R.id.progress_bar);
+
                             //Instanciamos la variable offlineManager
                             offlineManager = OfflineManager.getInstance(getActivity());
-                            //Asignamos los botones de la actividad
+
+                            //Instanciamos los botones de la actividad
                             downloadButton = getActivity().findViewById(R.id.download_button);
                             downloadButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -109,6 +116,7 @@ public class FragmentMaps extends Fragment {
                                     downloadRegionDialog();
                                 }
                             });
+
                             listButton = getActivity().findViewById(R.id.list_button);
                             listButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -125,32 +133,23 @@ public class FragmentMaps extends Fragment {
         return view;
     }
 
-    @Override//Controlamos la respuesta a los permisos
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //finish();
-                //startActivity(getIntent());
-            }
-        }
-    }
-
-    /*
+    /**
      * Interfaz
      * Nombre: downloadRegionDialog
      * Comentario: Este método muestra un dialogo por pantalla para descargar la región actual.
      * Cabecera: private void downloadRegionDialog()
      * Postcondiciones: Si el usuario ha introducido un nombre para la región y ha confirmado guardarlo,
-     * se almacenará esa nueva región. En caso de falta de memoria o conexión el método informa de ello
+     * se almacenará esa nueva región. En caso de falta de memoria o de conexión el método informa de ello
      * al usuario.
      * */
     private void downloadRegionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//Declaramos un dialogo
+
         //Declaramos un editText temporal
         final EditText regionNameEdit = new EditText(getActivity());
         regionNameEdit.setHint(getString(R.string.set_region_name_hint));//Le insertamos una pista
-        // Build the dialog box
+
+        //Contruimos el dialogo
         builder.setTitle(getString(R.string.dialog_title))
                 .setView(regionNameEdit)
                 .setMessage(getString(R.string.dialog_message))
@@ -158,8 +157,7 @@ public class FragmentMaps extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String regionName = regionNameEdit.getText().toString();
-                        //Es necesario el nombre de la región, si esta vacío se mostrará un mensaje de error
-                        //por pantalla y no se realizará la descarga.
+                        //Es necesario el nombre de la región, si esta vacío se mostrará un mensaje de error por pantalla y no se realizará la descarga.
                         if (regionName.length() == 0) {
                             Toast.makeText(getActivity(), getString(R.string.dialog_toast), Toast.LENGTH_SHORT).show();
                         } else {
@@ -178,20 +176,22 @@ public class FragmentMaps extends Fragment {
     }
 
     private void downloadRegion(final String regionName) {
-        //Definimos los parámetros de la región offline, indicando los límites, el mínimo y máximo zoom y los metadatos
-        startProgress();//Start the progressBar
-        // Creamos la definición offline usando el estilo actual y los límites visibles del area del mapa
+        startProgress();//Activamos e iniciamos el progressBar
+
+        //Creamos la definición offline usando el estilo actual y los límites visibles del area del mapa
         map.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 String styleUrl = style.getUri();
-                LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;//Esto me ahorra demasiado trabajo, aprende google maps!!!
+
+                LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
                 double minZoom = map.getCameraPosition().zoom;
                 double maxZoom = map.getMaxZoomLevel();
+
                 //Con esto obtenemos la densidad lógica de la pantalla, nos permitirá ajustar el estilo a la pantalla del dispositivo.
                 float pixelRatio = getActivity().getResources().getDisplayMetrics().density;
                 OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
-                        styleUrl, bounds, minZoom, maxZoom, pixelRatio);//Aquí instanciamos la definición offline
+                        styleUrl, bounds, minZoom, maxZoom, pixelRatio);
 
                 //Creamos un JSONObject usando el título de la región,
                 //convertiendolo a una cadena y usandolo para crear una variable de metadato.
@@ -203,7 +203,7 @@ public class FragmentMaps extends Fragment {
                     String json = jsonObject.toString();//Pasamos el objeto a un String
                     metadata = json.getBytes(viewModel.getJsonCharset());//Pasamos esa cadena a un array de bytes
                 } catch (Exception exception) {
-                    Timber.e("Failed to encode metadata: %s", exception.getMessage());
+                    Timber.e("Failed to encode metadata: %s", exception.getMessage());//Utilizamos Timber en vez de un Log
                     metadata = null;
                 }
 
@@ -211,7 +211,7 @@ public class FragmentMaps extends Fragment {
                 offlineManager.createOfflineRegion(definition, metadata, new OfflineManager.CreateOfflineRegionCallback() {
                     @Override
                     public void onCreate(OfflineRegion offlineRegion) {
-                        Timber.d( "Offline region created: %s" , regionName);
+                        //Timber.d( "Offline region created: %s" , regionName);
                         FragmentMaps.this.offlineRegion = offlineRegion;
                         launchDownload();//Comenzamos la descarga de la región
                     }
@@ -225,8 +225,17 @@ public class FragmentMaps extends Fragment {
         });
     }
 
+    /**
+     * Interfaz
+     * Nombre: launchDownload
+     * Comentario: Este método nos permite descargar la región actual que muestra el mapa de MapBox.
+     * Cabecera: private void launchDownload()
+     * Postccondiciones: El método descarga la región actual, en caso de haber superado el límite de
+     * descarga por defecto de mapBox, el método informará de ello al usuario y no se almacenará la
+     * región.
+     */
     private void launchDownload() {
-        //Colocamos un observador a la barra de descarga y avisaremos al usuario cuando esta finalice.
+        //Observer a offlineRegion, cuando se vaya descargando el mapa iremos actualizando un progressbar
         offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
             @Override
             public void onStatusChanged(OfflineRegionStatus status) {//Se llamará cuando el estado de la descarga cambie
@@ -235,14 +244,10 @@ public class FragmentMaps extends Fragment {
                         ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) : 0.0;
 
                 if (status.isComplete()) {//Se ha completado la descarga
-                    endProgress(getString(R.string.end_progress_success));
+                    endProgress();//Deshabilitamos el progressbar y habilitamos los botones de la interfaz
+                    Toast.makeText(getActivity(), R.string.end_progress_success, Toast.LENGTH_LONG).show();//Mensaje de descarga completada
                 } else if (status.isRequiredResourceCountPrecise()) {
                     setPercentage((int) Math.round(percentage));//Modificamos el porcentaje de descarga en la barra
-                    //Indicamos al usuario como va la descarga
-                    Timber.d("%s/%s resources; %s bytes downloaded.",//Estos mensajes me aparecerán con el debug
-                            String.valueOf(status.getCompletedResourceCount()),
-                            String.valueOf(status.getRequiredResourceCount()),
-                            String.valueOf(status.getCompletedResourceSize()));
                 }
             }
 
@@ -253,20 +258,26 @@ public class FragmentMaps extends Fragment {
             }
 
             @Override
-            public void mapboxTileCountLimitExceeded(long limit) {//Si no se puede descargar por falta de memoria
-                Timber.e("Mapbox tile count limit exceeded: %s", limit);
+            public void mapboxTileCountLimitExceeded(long limit) {//Si se supera el límite de descarga
+                //Timber.e("Mapbox tile count limit exceeded: %s", limit);
+                Toast.makeText(getActivity(), getString(R.string.exceeded_download_limit), Toast.LENGTH_SHORT).show();
             }
         });
 
-        //Cambiamos el estado de la región offline
+        //Cambiamos el estado de la región offline a activa
         offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
     }
 
+    /**
+     * Interfaz
+     * Nombre: downloadedRegionList
+     * Comentario: Este método carga una lista de las regiones offline descargadas.
+     * Cabecera: private void downloadedRegionList()
+     * Postcondiciones: El método muestra una lista de la regiones descargadas, en una interfaz
+     * donde se podrá viajar a estas regiones e incluso eliminarlas.
+     */
     private void downloadedRegionList() {
-        //Creamos una lista de regiones descargadas cuando el usuario pulse el botón del listado
-        viewModel.set_regionSelected(0);//Reseteamos el indicador de la región seleccionada
-
-        //Consulta la base de datos asincronamente
+        //Consultamos la base de datos de MapBox asincronamente
         offlineManager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
             @Override
             public void onList(final OfflineRegion[] offlineRegions) {
@@ -274,11 +285,14 @@ public class FragmentMaps extends Fragment {
                 if (offlineRegions == null || offlineRegions.length == 0) {
                     Toast.makeText(getActivity(), getString(R.string.toast_no_regions_yet), Toast.LENGTH_SHORT).show();
                 }else{
+                    viewModel.set_regionSelected(0);//Seleccionamos la primera región por defecto
+
                     //Añadimos todos los nombres de las regiones descargadas a la lista
                     ArrayList<String> offlineRegionsNames = new ArrayList<>();
                     for (OfflineRegion offlineRegion : offlineRegions) {
                         offlineRegionsNames.add(viewModel.getRegionName(offlineRegion));
                     }
+
                     //Para mostrar la lista de regiones en un dialogo, esta debe ser un array de CharSequence
                     final CharSequence[] items = offlineRegionsNames.toArray(new CharSequence[offlineRegionsNames.size()]);
 
@@ -295,16 +309,16 @@ public class FragmentMaps extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
                                     Toast.makeText(getActivity(), items[viewModel.get_regionSelected()], Toast.LENGTH_LONG).show();
+
                                     //Obtenemos los límites de la región y el zoom
                                     LatLngBounds bounds = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getBounds();
                                     double regionZoom = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getMinZoom();
 
-                                    //Modificamos la posición de la "camara" sobre el mapa
+                                    //Modificamos la posición de la "camara" sobre el mapa, centrandola en el centro de la ragión a la que se ha navegado
                                     CameraPosition cameraPosition = new CameraPosition.Builder()
                                             .target(bounds.getCenter())
                                             .zoom(regionZoom)
                                             .build();
-
                                     map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));//Movemos la "camara"
                                 }
                             })
@@ -316,24 +330,20 @@ public class FragmentMaps extends Fragment {
                                     progressBar.setVisibility(View.VISIBLE);
 
                                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                            .setTitle("Confirm Delete")// Setting Alert Dialog Title
-                                            //alertDialogBuilder.setIcon(R.drawable.question);// Icon Of Alert Dialog
-                                            .setMessage("Do you really want delete this route?")// Setting Alert Dialog Message
-                                            .setCancelable(false)//Para que no podamos quitar el dialogo sin contestarlo
-
-                                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-
+                                            .setTitle(R.string.confirm_delete)// Setting Alert Dialog Title
+                                            .setMessage(R.string.question_delete_region)// Setting Alert Dialog Message
+                                            .setCancelable(false)//De esta manera no podemos quitar el dialogo sin contestarlo
+                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface arg0, int arg1) {
                                                     //Comenzamos el proceso de eliminación
                                                     offlineRegions[viewModel.get_regionSelected()].delete(new OfflineRegion.OfflineRegionDeleteCallback() {
                                                         @Override
                                                         public void onDelete() {
-                                                            //Cuando la región sea eliminada eliminamos el progressbar y le mandamos un mensaje al usuario
+                                                            //Cuando la región es eliminada inhabilitamos el progressbar e informamos al usuario
                                                             progressBar.setVisibility(View.INVISIBLE);
                                                             progressBar.setIndeterminate(false);
-                                                            Toast.makeText(getActivity(), getString(R.string.toast_region_deleted),
-                                                                    Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getActivity(), getString(R.string.toast_region_deleted), Toast.LENGTH_LONG).show();
                                                         }
 
                                                         @Override
@@ -345,7 +355,7 @@ public class FragmentMaps extends Fragment {
                                                     });
                                                 }
                                             })
-                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                 }
@@ -357,7 +367,6 @@ public class FragmentMaps extends Fragment {
                             .setNegativeButton(getString(R.string.navigate_negative_button_title), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
-                                    //Cuando el usuario cancela no pasa nada
                                 }
                             }).create();
                     dialog.show();
@@ -371,33 +380,55 @@ public class FragmentMaps extends Fragment {
         });
     }
 
-    //Metodos sobre el progressBar
+    //Metodos sobre el funcionamiento de los elementos de la UI
+
+    /**
+     * Interfaz
+     * Nombre: startProgress
+     * Comentario: Este método nos permite inhabilitar los botones de descarga de regiones y de
+     * la lista de estas regiones, además de habilitar el progressbar.
+     * Cabecera: private void startProgress()
+     */
     private void startProgress() {
         //Deshabilitamos los botones de la pantalla actual
         downloadButton.setEnabled(false);
         listButton.setEnabled(false);
 
-        //Iniciamos y mostramos el progress bar
+        //Habilitamos y mostramos el progress bar
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void setPercentage(final int percentage) {//Modificamos el estado del porcentaje del progressBar
+    /**
+     * Interfaz
+     * Nombre: setPercentage
+     * Comentario: Este método nos permite modificar el estado del porcentaje del progressBar.
+     * Cabecera: private void setPercentage(int percentage)
+     * Entrada:
+     *  @param percentage
+     * Postcondiciones: El método modifica el estado del progressbar.
+     */
+    private void setPercentage(int percentage) {
         progressBar.setIndeterminate(false);
         progressBar.setProgress(percentage);
     }
 
-    private void endProgress(final String message) {
+    /**
+     * Interfaz
+     * Nombre: endProgress
+     * Comentario: Este método nos permite deshabilitar el progressbar y habilitar los botones de descarga
+     * y del listado de las regiones de la interfaz.
+     * Cabecera: private void endProgress()
+     * Postcondiciones: El método habilita los botones de descarga y listado, además de deshabilitar el progressbar.
+     */
+    private void endProgress() {
         //Habilitamos los botones
         downloadButton.setEnabled(true);
         listButton.setEnabled(true);
 
-        //Paramos y ocultamos la barra de progreso
+        //Deshabilitamos y ocultamos la barra de progreso
         progressBar.setIndeterminate(false);
         progressBar.setVisibility(View.GONE);
-
-        //Mostramos un mensaje
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
