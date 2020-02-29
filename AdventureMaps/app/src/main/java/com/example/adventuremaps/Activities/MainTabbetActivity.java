@@ -1,9 +1,11 @@
 package com.example.adventuremaps.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
@@ -15,11 +17,13 @@ import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adventuremaps.Activities.ui.main.SectionsPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainTabbetActivity extends AppCompatActivity implements FragmentStart.OnFragmentInteractionListener, FragmentLocalizations.OnFragmentInteractionListener,
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
@@ -57,5 +61,40 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      */
     public void throwChangePasswordActivity(View v){
         startActivity(new Intent(this, ChangePasswordActivity.class));
+    }
+
+    /**
+     * Interfaz
+     * Nombre: logoutDialog
+     * Comentario: Este método nos carga un dialogo por pantalla para cerrar la sesión del usuario actual.
+     * Cabecera: public void logoutDialog(View v)
+     * Entrada:
+     *  -View v
+     * Postcondiciones: El método cierra la sesión del usuario actual, si el usuario confirma el dialogo o
+     * no hace nada si el usuario cancela el dialogo.
+     */
+    public void logoutDialog(View v){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.title_logout);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_logout);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();//Cerramos la actividad actual
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

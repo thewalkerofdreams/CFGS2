@@ -38,4 +38,8 @@
     <string name="send_new_password_error">Error to send the new password!</string>
     <string name="sent_new_password">sent the new password to your email!</string>
     <string name="password_lenght_error">The password must be larger than 6!</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_logout">Logout</string>
+    <string name="question_logout">Do you really want logout? You cant access the application without connection!</string>
 </resources>

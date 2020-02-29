@@ -1,9 +1,13 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CreateCountActivity extends AppCompatActivity {
 
     private EditText textNickName, textEmail, textPassword01, textPassword02;
+    private ImageView imageView;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference userReference;
     private CreateCountActivityVM viewModel;
@@ -47,6 +52,16 @@ public class CreateCountActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         progressDialog.setMessage("Performing online registration");
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//En landscape eliminamos el icono de la aplicación
+            imageView = findViewById(R.id.ImageViewCreateCountActivity);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    0,
+                    0,
+                    (float) 1.0
+            );
+            imageView.setLayoutParams(param);
+        }
     }
 
     /**
