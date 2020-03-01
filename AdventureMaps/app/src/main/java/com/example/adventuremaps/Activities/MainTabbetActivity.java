@@ -75,7 +75,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Postcondiciones: El método lanza la actividad CreateRouteActivity.
      */
     public void throwCreateRouteActivity(View v){
-        startActivity(new Intent(this, CreateRouteActivity.class));
+        startActivity(new Intent(this, CreateRouteActivity.class).putExtra("ActualEmail", viewModel.get_actualEmailUser()));
     }
 
     /**

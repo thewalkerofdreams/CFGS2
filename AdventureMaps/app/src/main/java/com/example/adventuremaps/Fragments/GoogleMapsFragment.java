@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
 
@@ -31,6 +32,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
 
     private GoogleMap map;
     private CreateRouteActivityVM viewModel;
+    private Polyline polyline;//No la convertimos en local para que podamos limpiar el mapa en caso de eliminación de un marcador
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-        viewModel.eliminarMarcador(marker);//Eliminamos el marcador
+        viewModel.eliminarMarcador(marker);//Eliminamos el marcador del VM
         marker.remove();//Lo eliminamos de la UI
         pintarLineas(viewModel.get_localizationPoints());//Volvemos a pintar las líneas de la ruta
     }
@@ -107,43 +109,51 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         map.setOnMarkerDragListener(this);
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: colocarMarcador
      * Comentario: Este método nos permite colocar un marcador en el mapa.
+     * Además el método almacena ese marcador en la lista de localizaciones
+     * del VM.
      * Cabecera: public void colocarMarcador(LatLng latLng)
      * Entrada:
      *   -LatLng latLng
      * Postcondiciones: El método coloca un marcador en el mapa.
      * */
-    public void colocarMarcador(LatLng latLng, ArrayList<ClsRoutePoint> localizaciones){
+    public void colocarMarcador(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);//Indicamos la posición del marcador
         markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
-        map.addMarker(markerOptions);//Agregamos el marcador a la UI
+        Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
 
-        viewModel.almacenarUltimaLocalizacion();//Almacenamos la última localización en el  VM
-        pintarLineas(localizaciones);//Volvemos a pintar las líneas de la ruta
+        //Almacenaremos un ClsMarkerWithPriority en la lista de puntos de localización del VM
+        ClsMarkerWithPriority markerWithPriority = new ClsMarkerWithPriority(marker, viewModel.getLastPositionNumber()+1);
+        viewModel.get_localizationPoints().add(markerWithPriority);
+
+        pintarLineas(viewModel.get_localizationPoints());//Volvemos a pintar las líneas de la ruta
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: pintarLineas
      * Comentario: Este método nos permite pintar las lineas entre las
      * diferentes localizaciones almacenadas para la ruta.
-     * Cabecera: public void pintarLineas(ArrayList<LocalizationPoint> localizaciones)
+     * Cabecera: private void pintarLineas(ArrayList<ClsMarkerWithPriority> localizaciones)
      * Entrada:
-     *   -ArrayList<LocalizationPoint> localizaciones
+     *   -ArrayList<ClsMarkerWithPriority> localizaciones
      * Postcondiciones: El método pinta lineas entre los diferentes puntos de localización.
      * */
-    public void pintarLineas(ArrayList<ClsRoutePoint> localizaciones) {
+    private void pintarLineas(ArrayList<ClsMarkerWithPriority> localizaciones) {
         PolylineOptions opcionesPoliLinea = new PolylineOptions();
-        for(int i = 0; i < localizaciones.size(); i++){
-            opcionesPoliLinea.add(new LatLng(localizaciones.get(i).getLatitude(), localizaciones.get(i).getLongitude()));
+        for(int i = 0; i < localizaciones.size(); i++){//Indicamos los puntos por los que va a pasar la línea
+            opcionesPoliLinea.add(new LatLng(localizaciones.get(i).getMarker().getPosition().latitude,
+                    localizaciones.get(i).getMarker().getPosition().longitude));
         }
 
-        opcionesPoliLinea.color(Color.BLUE);
-        Polyline polyline = map.addPolyline(opcionesPoliLinea);
+        if (polyline != null)
+            polyline.remove();//Removemos la polilínea del mapa
+
+        polyline = map.addPolyline(opcionesPoliLinea);
         polyline.setColor(Color.RED);//Indicamos el color de la línea
     }
 

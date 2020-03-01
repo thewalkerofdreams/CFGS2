@@ -69,4 +69,12 @@
     <string name="order_by_form">Order by: </string>
     <string name="new_route">New route</string>
     <string name="trash">Trash</string>
+    <string name="hint_route_name">Route name</string>
+    <string name="route_name_empty">Route name empty!</string>
+    <string name="insufficient_markers">The route must have at least two markers!</string>
+    <string name="save_route">Save Route</string>
+    <string name="dialog_message_route">Insert a route name</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="route_saved">Route Saved!</string>
 </resources>

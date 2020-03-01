@@ -1,10 +1,12 @@
 package com.example.adventuremaps.Activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.SeekBar;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,14 +15,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
+import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateRouteActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private CreateRouteActivityVM viewModel;
+    private DatabaseReference routeReference;
+    private DatabaseReference routePointReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             viewModel = ViewModelProviders.of(this).get(CreateRouteActivityVM.class);
+            viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
         }
     }
 
@@ -46,19 +57,17 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         String mensaje = "";
 
-        switch(requestCode){
-            case 1:
-                mensaje = "Coarse Location and Fine Location";
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Denied", Toast.LENGTH_SHORT).show();
-                }
-                break;
+        if(requestCode == 1){
+            mensaje = "Coarse Location and Fine Location";
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: intentarMarcarLocalizacion
      * Comentario: Este método nos permite marcar la última lozalización pulsada en el mapa.
@@ -76,7 +85,74 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
             GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
             LatLng latLng = new LatLng(viewModel.get_lastLocalizationClicked().getLatitude(), viewModel.get_lastLocalizationClicked().getLongitude());
             //Marcamos esa posición
-            fragment.colocarMarcador(latLng, viewModel.get_localizationPoints());
+            fragment.colocarMarcador(latLng);
         }
     }
+
+    /**
+     * Interfaz
+     * Nombre: trySaveRouteDialog
+     * Comentario: Este método nos permite guardar la ruta actual rellenando un dialogo con los
+     * datos finales de la ruta, si la ruta actual tiene menos de dos puntos de localizaciones, no
+     * se lanzará el dialogo, sino que se lanzará un mensaje de error informando al usuario que debe
+     * marcar como mínimo dos puntos en el mapa.
+     * Cabecera: public void trySaveRouteDialog(View v)
+     * Entrada:
+     *  -View v
+     * Postcondiciones: El método inserta la ruta actual en la plataforma de FireBase o devuelve un mensaje
+     * de error por pantalla si la ruta contiene menos de dos puntos de localización marcados en el mapa.
+     */
+    public void trySaveRouteDialog(View v){
+        if(viewModel.get_localizationPoints().size() >= 2){//Si la ruta actual tiene como mínimo dos puntos de localización
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final EditText nameEdit = new EditText(this);
+            nameEdit.setHint(getString(R.string.hint_route_name));//Le insertamos una pista
+            builder.setTitle(getString(R.string.save_route))
+                    .setView(nameEdit)
+                    .setMessage(getString(R.string.hint_route_name))
+                    .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String routeName = nameEdit.getText().toString();
+                            if (routeName.length() == 0) {
+                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
+                            } else {
+                                routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
+                                String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
+                                //Almacenamos la ruta
+                                ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                FirebaseDatabase.getInstance().getReference("Routes").
+                                        child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(newRoute);
+
+                                routePointReference = FirebaseDatabase.getInstance().getReference("ClsRoutePoint");
+                                //Almacenamos los puntos de la ruta
+                                for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
+                                    String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta
+                                    ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
+                                            routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
+
+                                    FirebaseDatabase.getInstance().getReference("RoutePoints").
+                                            child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .setValue(newRoutePoint);
+                                }
+
+                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialogCreateGameMode = builder.create();
+            alertDialogCreateGameMode.show();//Lanzamos el dialogo
+        }else{
+            Toast.makeText(getApplication(), getApplication().getString(R.string.insufficient_markers), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

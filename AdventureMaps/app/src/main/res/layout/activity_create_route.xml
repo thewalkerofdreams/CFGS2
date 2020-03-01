@@ -30,6 +30,7 @@
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_gravity="center"
+                android:onClick="trySaveRouteDialog"
                 android:background="@drawable/save"></Button>
 
         </LinearLayout>

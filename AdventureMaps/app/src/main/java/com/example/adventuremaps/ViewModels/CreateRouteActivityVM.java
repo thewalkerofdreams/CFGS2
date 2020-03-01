@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.google.android.gms.maps.model.Marker;
@@ -20,11 +21,12 @@ import java.util.List;
 
 public class CreateRouteActivityVM extends AndroidViewModel {
 
+    private String _actualEmailUser;
     private LocationManager _locManager;
     private Location _actualLocation;
     private float _zoom;
     private Context _context;
-    private ArrayList<ClsRoutePoint> _localizationPoints;
+    private ArrayList<ClsMarkerWithPriority> _localizationPoints;
     private ClsRoute _route;
     private ClsRoutePoint _lastLocalizationClicked;
 
@@ -33,10 +35,11 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         _context = application.getBaseContext();
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
-        _localizationPoints = new ArrayList<ClsRoutePoint>();
+        _localizationPoints = new ArrayList<ClsMarkerWithPriority>();
         _route = new ClsRoute();
         _lastLocalizationClicked = null;
         _zoom = 13;
+        _actualEmailUser = "";
     }
 
     public LocationManager get_locManager() {
@@ -63,11 +66,11 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         this._context = _context;
     }
 
-    public ArrayList<ClsRoutePoint> get_localizationPoints() {
+    public ArrayList<ClsMarkerWithPriority> get_localizationPoints() {
         return _localizationPoints;
     }
 
-    public void set_localizationPoints(ArrayList<ClsRoutePoint> _localizationPoints) {
+    public void set_localizationPoints(ArrayList<ClsMarkerWithPriority> _localizationPoints) {
         this._localizationPoints = _localizationPoints;
     }
 
@@ -95,7 +98,15 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         this._zoom = _zoom;
     }
 
-    /*
+    public String get_actualEmailUser() {
+        return _actualEmailUser;
+    }
+
+    public void set_actualEmailUser(String _actualEmailUser) {
+        this._actualEmailUser = _actualEmailUser;
+    }
+
+    /**
      * Interfaz
      * Nombre: getLastKnownLocation
      * Comentario: Este método nos permite obtener la última localización
@@ -122,31 +133,10 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         return bestLocation;
     }
 
-    /*
-     * Interfaz
-     * Nombre: almacenarUltimaLocalizacion
-     * Comentario: Este método nos permite almacenar la última localización almacenada en el ViewModel,
-     * en la lista de localizaciones.
-     * Cabecera: public boolean almacenarUltimaLocalizacion()
-     * Salida:
-     *   -boolean localizacionAlmacenada
-     * */
-    public boolean almacenarUltimaLocalizacion(){
-        boolean localizacionAlmacenada = false;
-        if(_lastLocalizationClicked != null){
-            _lastLocalizationClicked.setPriorityRoute((long) getLastPositionNumber()+1);//Modificamos el número del punto de localización
-            _localizationPoints.add(_lastLocalizationClicked);//Añadimos el punto de localización
-            _lastLocalizationClicked = null;
-            localizacionAlmacenada = true;
-        }
-
-        return localizacionAlmacenada;
-    }
-
-    /*
+    /**
      * Interfaz
      * Nombre: getLastPositionNumber
-     * Comentario: Este método nos permite obtener el número asignado al último
+     * Comentario: Este método nos permite obtener el número(prioridad) asignado al último
      * punto de localización añadido a la ruta. Si la función devuelve 0 significa que
      * aún no hay puntos de localización en la ruta.
      * Cabecera: public int getLastPositionNumber()
@@ -159,15 +149,15 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         int positionNumber = 0;
         int numeroDeLocalizaciones = _localizationPoints.size();
         if(numeroDeLocalizaciones > 0){
-            positionNumber = (int) (long) _localizationPoints.get(numeroDeLocalizaciones - 1).getPriorityRoute();
+            positionNumber = _localizationPoints.get(_localizationPoints.size() - 1).getPriority();
         }
         return positionNumber;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: eliminarMarcador
-     * Comentario: Este método nos permite eliminar de punto de localización
+     * Comentario: Este método nos permite eliminar un punto de localización
      * según un marcador dado por parámetro, es decir, si pasamos un marcador que tiene
      * la misma localización que uno de los puntos de localización almacenamos en este
      * ViewModel, se eliminará ese punto de localización.
@@ -179,7 +169,7 @@ public class CreateRouteActivityVM extends AndroidViewModel {
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si
      * se ha conseguido eliminar el punto de localización o false en caso contrario.
      * */
-    public boolean eliminarMarcador(Marker marcador){//TODO No puede eliminar aún correctamente un punto de ruta (No coinciden la LATLONG)
+    public boolean eliminarMarcador(Marker marcador){
         boolean eliminado = false;
         int pointNumber = getPointNumber(marcador);
 
@@ -191,10 +181,10 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         return eliminado;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: getPointNumber
-     * Comentario: Este método nos permite obtener el atributo pointNumber de un punto de
+     * Comentario: Este método nos permite obtener el atributo pointNumber(prioridad) de un punto de
      * localización según un marcador.
      * Cabecera: public int getPointNumber(Marker marcador)
      * Entrada:
@@ -210,13 +200,12 @@ public class CreateRouteActivityVM extends AndroidViewModel {
     private int getPointNumber(Marker marcador){
         boolean encontrado = false;
         int pointNumber = -1;
-        DecimalFormat df = new DecimalFormat("#.0");
 
         for(int i = 0; i < _localizationPoints.size() && !encontrado; i++){
             double latitude = marcador.getPosition().latitude;
             double longitude = marcador.getPosition().longitude;
-            if((int) _localizationPoints.get(i).getLatitude() == (int) latitude &&
-                    (int) _localizationPoints.get(i).getLongitude() == (int) longitude){
+            if( _localizationPoints.get(i).getMarker().getPosition().latitude == latitude &&
+                    _localizationPoints.get(i).getMarker().getPosition().longitude == longitude){
                 pointNumber = i;
                 encontrado = true;
             }
