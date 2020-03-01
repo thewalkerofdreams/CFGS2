@@ -65,8 +65,4 @@
     <string name="exceeded_download_limit">Exceeded download limit</string>
     <string name="confirm_delete">Confirm Delete</string>
     <string name="question_delete_region">Do you really want delete this region?</string>
-
-    <string name="order_by_form">Order by: </string>
-    <string name="new_route">New route</string>
-    <string name="trash">Trash</string>
 </resources>

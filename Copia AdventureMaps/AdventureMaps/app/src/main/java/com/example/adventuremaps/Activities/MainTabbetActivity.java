@@ -67,19 +67,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     /**
      * Interfaz
-     * Nombre: throwCreateRouteActivity
-     * Comentario: Este método lanza la actividad CreateRouteActivity
-     * Cabecera: public void throwCreateRouteActivity(View v)
-     * Entrada:
-     *  -View v
-     * Postcondiciones: El método lanza la actividad CreateRouteActivity.
-     */
-    public void throwCreateRouteActivity(View v){
-        startActivity(new Intent(this, CreateRouteActivity.class));
-    }
-
-    /**
-     * Interfaz
      * Nombre: logoutDialog
      * Comentario: Este método nos carga un dialogo por pantalla para cerrar la sesión del usuario actual.
      * Cabecera: public void logoutDialog(View v)

@@ -40,7 +40,4 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    //Dependencias GoogleMaps
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
