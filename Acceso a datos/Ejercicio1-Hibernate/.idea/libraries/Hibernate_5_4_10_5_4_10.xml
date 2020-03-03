@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="Hibernate 5.4.10-5.4.10" type="hibernate">
-    <properties version="5.4.10" />
+  <library name="Hibernate 5.4.10-5.4.10">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.7.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/byte-buddy-1.10.2.jar!/" />

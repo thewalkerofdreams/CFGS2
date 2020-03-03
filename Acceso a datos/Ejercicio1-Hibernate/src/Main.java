@@ -27,7 +27,7 @@ public class Main {
         return ourSessionFactory.openSession();
     }
 
-    public static void main(final String[] args) throws Exception {
+    /*public static void main(final String[] args) throws Exception {
         final Session session = getSession();
         try {
             System.out.println("querying all the managed entities...");
@@ -43,5 +43,18 @@ public class Main {
         } finally {
             session.close();
         }
+
+
+    }*/
+    //private static SessionFactory sessionFactory = null;
+
+    public static void main(String[] args){
+        Session session = null;
+        PersistenciaSeguro persistenciaSeguro = new PersistenciaSeguro();
+
+        //ourSessionFactory = MySessionFactory.getSessionFactory();
+        session = ourSessionFactory.openSession();
+
+
     }
 }

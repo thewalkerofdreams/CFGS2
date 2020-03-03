@@ -4,8 +4,8 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
-        <property name="hibernate.connection.url">jdbc:sqlserver://LAPTOP-F2HU8087;databaseName=SegurosDDBB</property>
+        <property name="hibernate.connection.driver_class"></property>
+        <property name="hibernate.connection.url"></property>
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
 
