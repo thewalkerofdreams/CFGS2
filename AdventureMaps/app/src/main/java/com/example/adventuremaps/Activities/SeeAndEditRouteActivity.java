@@ -2,7 +2,9 @@ package com.example.adventuremaps.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -57,6 +59,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             viewModel = ViewModelProviders.of(this).get(SeeAndEditRouteActivityVM.class);
             viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
+            viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
         }
     }
 
@@ -174,13 +177,21 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                boolean routeFound = false;
+
                 routePoints.clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("routes").getChildren()){
+                    for(DataSnapshot routes : datas.child("routes").getChildren()){
                         //loop 2 to go through all the child nodes of routes node
-                        for(DataSnapshot points : booksSnapshot.child("routePoints").getChildren()){
-                            ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
-                            routePoints.add(routePoint);
+                        ClsRoute route = routes.getValue(ClsRoute.class);
+                        if(route.getRouteId().equals(viewModel.get_actualIdRoute())){//Si es la ruta que queremos mostrar
+
+                            for(DataSnapshot points : routes.child("routePoints").getChildren()){
+                                ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
+                                routePoints.add(routePoint);
+                            }
+
+                            break;//TODO No me puedo creer que lo este solucionando así
                         }
                     }
                 }
@@ -203,10 +214,12 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
      * Postcondiciones: El método carga la ruta por defecto creada con anterioridad.
      */
     public void cargarRuta(){
-        //GoogleMapsFragment fragment = (GoogleMapsFragment) getFragmentManager().findFragmentById(R.id.);
+        GoogleMapsFragment fragment = (GoogleMapsFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
+        LatLng latLng;
 
-        FragmentManager fm = getSupportFragmentManager();
-        //If you added fragment via code and used a tag string when you added your fragment, use findFragmentByTag instead:
-        GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentByTag("yourTag");
+        for(int i = 0; i < routePoints.size(); i++){
+            latLng = new LatLng(routePoints.get(i).getLatitude(), routePoints.get(i).getLongitude());
+            fragment.colocarMarcador(latLng); //Comenzamos a marcar los puntos de la ruta almacenada
+        }
     }
 }

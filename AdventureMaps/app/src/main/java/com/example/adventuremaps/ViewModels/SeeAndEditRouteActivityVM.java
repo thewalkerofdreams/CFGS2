@@ -21,6 +21,7 @@ import java.util.List;
 public class SeeAndEditRouteActivityVM extends AndroidViewModel {
 
     private String _actualEmailUser;
+    private String _actualIdRoute;
     private LocationManager _locManager;
     private Location _actualLocation;
     private float _zoom;
@@ -39,6 +40,7 @@ public class SeeAndEditRouteActivityVM extends AndroidViewModel {
         _lastLocalizationClicked = null;
         _zoom = 13;
         _actualEmailUser = "";
+        _actualIdRoute = "";
     }
 
     public LocationManager get_locManager() {
@@ -103,6 +105,14 @@ public class SeeAndEditRouteActivityVM extends AndroidViewModel {
 
     public void set_actualEmailUser(String _actualEmailUser) {
         this._actualEmailUser = _actualEmailUser;
+    }
+
+    public String get_actualIdRoute() {
+        return _actualIdRoute;
+    }
+
+    public void set_actualIdRoute(String _actualIdRoute) {
+        this._actualIdRoute = _actualIdRoute;
     }
 
     /**

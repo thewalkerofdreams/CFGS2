@@ -57,7 +57,8 @@ public class FragmentRoutes extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsRoute item = (ClsRoute) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
-                intent.putExtra("IdRoute", item.getRouteId());
+                intent.putExtra("ActualIdRoute", item.getRouteId());
+                intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
                 startActivity(intent);
             }
         });
