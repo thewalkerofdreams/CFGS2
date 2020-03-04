@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
@@ -26,6 +27,7 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
 
     AdapterCharacterList adapter;
     ListView listView;
+    private AlertDialog alertDialogDeleteCharacter;
     CharacterListActivityVM viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,10 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
                 throwNewCharacterActivity();
             }
         });
+
+        if(savedInstanceState != null && viewModel.is_openDialogDeleteCharacter()) {//Si se encuentra abierto el dialogo de deleteObject
+            showDialogToDeleteCharacter();
+        }
     }
 
     @Override
@@ -61,7 +67,25 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final ClsCharacter item = (ClsCharacter) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
+
+        viewModel.set_characterToDelete(item);
+        showDialogToDeleteCharacter();
+        viewModel.set_openDialogDeleteCharacter(true);
+
+        return true;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showDialogToDeleteCharacter
+     * Comentario: Este método muestra un dialogo por pantalla para eliminar un personaje, si el usuario confirma
+     * la acción, se eliminará ese personaje de la base de datos.
+     * Cabecera: public void showDialogToDeleteCharacter()
+     * Postcondiciones: El método elimina un objeto de la base de datos o no hace nada si el usuario cancela
+     * el dialogo.
+     * */
+    public void showDialogToDeleteCharacter(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_character);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
@@ -70,20 +94,21 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getBaseContext(), R.string.character_deleted, Toast.LENGTH_SHORT).show();
-                viewModel.deleteCharacter(item);
+                viewModel.deleteCharacter(viewModel.get_characterToDelete());
                 reloadList();
+                viewModel.set_openDialogDeleteCharacter(false);
             }
         });
 
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_openDialogDeleteCharacter(false);
             }
         });
 
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return true;
     }
 
     @Override
@@ -124,4 +149,15 @@ public class CharacterListActivity extends AppCompatActivity implements AdapterV
         adapter = new AdapterCharacterList(this, R.layout.item_character_list, viewModel.get_characterList());
         listView.setAdapter(adapter);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteCharacter != null && alertDialogDeleteCharacter.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteCharacter.dismiss();// close dialog to prevent leaked window
+            viewModel.set_openDialogDeleteCharacter(true);
+        }
+    }
+
 }

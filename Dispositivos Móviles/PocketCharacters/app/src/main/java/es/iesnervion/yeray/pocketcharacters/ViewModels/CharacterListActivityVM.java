@@ -16,11 +16,15 @@ import es.iesnervion.yeray.pocketcharacters.EntitiesDDBB.ClsCharacter;
 
 public class CharacterListActivityVM extends AndroidViewModel implements Serializable {
     private ArrayList<ClsCharacter> _characterList;
+    private ClsCharacter _characterToDelete;
+    private boolean _openDialogDeleteCharacter;
 
     //Constructor
     public CharacterListActivityVM(Application application){
         super(application);
         _characterList = new ArrayList<ClsCharacter>();
+        _openDialogDeleteCharacter = false;
+        _characterToDelete = null;
         loadList();
     }
 
@@ -31,6 +35,22 @@ public class CharacterListActivityVM extends AndroidViewModel implements Seriali
 
     public void set_characterList(ArrayList<ClsCharacter> _characterList) {
         this._characterList = _characterList;
+    }
+
+    public ClsCharacter get_characterToDelete() {
+        return _characterToDelete;
+    }
+
+    public void set_characterToDelete(ClsCharacter _characterToDelete) {
+        this._characterToDelete = _characterToDelete;
+    }
+
+    public boolean is_openDialogDeleteCharacter() {
+        return _openDialogDeleteCharacter;
+    }
+
+    public void set_openDialogDeleteCharacter(boolean _openDialogDeleteCharacter) {
+        this._openDialogDeleteCharacter = _openDialogDeleteCharacter;
     }
 
     //Funciones sobre la base de datos
