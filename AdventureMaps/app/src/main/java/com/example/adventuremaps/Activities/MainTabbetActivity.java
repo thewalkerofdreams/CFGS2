@@ -2,6 +2,7 @@ package com.example.adventuremaps.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
 
     private MainTabbetActivityVM viewModel;
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,20 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);//Instanciamos el objeto SharedPreference
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("LoginEmail"));
+
+        String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
+        if(!email.isEmpty()){
+            viewModel.set_actualEmailUser(email);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("UserActualEmail", email);
+            editor.commit();
+        }else{
+            viewModel.set_actualEmailUser(sharedpreferences.getString("UserActualEmail", ""));
+        }
     }
 
     @Override

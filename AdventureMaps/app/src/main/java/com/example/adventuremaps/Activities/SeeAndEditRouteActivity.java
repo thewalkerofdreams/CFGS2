@@ -17,20 +17,28 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
-import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
+import com.example.adventuremaps.ViewModels.SeeAndEditRouteActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class CreateRouteActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+import java.util.ArrayList;
+import java.util.List;
 
-    private CreateRouteActivityVM viewModel;
+public class SeeAndEditRouteActivity extends AppCompatActivity {
+
+    private SeeAndEditRouteActivityVM viewModel;
     private DatabaseReference routeReference;
     private DatabaseReference routePointReference;
+    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
+    private ArrayList<ClsRoutePoint> routePoints = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         //Si la aplicación tiene los permisos de localización se instancia el VM
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            viewModel = ViewModelProviders.of(this).get(CreateRouteActivityVM.class);
+            viewModel = ViewModelProviders.of(this).get(SeeAndEditRouteActivityVM.class);
             viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
         }
     }
@@ -60,9 +68,9 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         if(requestCode == 1){
             mensaje = "Coarse Location and Fine Location";
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();
             }else{
-                Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, mensaje+" Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -156,4 +164,49 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         }
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Read from the database
+        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                routePoints.clear();//Limpiamos la lista de rutas
+                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("routes").getChildren()){
+                        //loop 2 to go through all the child nodes of routes node
+                        for(DataSnapshot points : booksSnapshot.child("routePoints").getChildren()){
+                            ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
+                            routePoints.add(routePoint);
+                        }
+                    }
+                }
+                cargarRuta();//Cargamos la ruta
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+    }
+
+
+    /**
+     * Interfaz
+     * Nombre: cargarRuta
+     * Comentario: Este método nos permite cargar la ruta a visualizar.
+     * Cabecera: public void cargarRuta()
+     * Postcondiciones: El método carga la ruta por defecto creada con anterioridad.
+     */
+    public void cargarRuta(){
+        //GoogleMapsFragment fragment = (GoogleMapsFragment) getFragmentManager().findFragmentById(R.id.);
+
+        FragmentManager fm = getSupportFragmentManager();
+        //If you added fragment via code and used a tag string when you added your fragment, use findFragmentByTag instead:
+        GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentByTag("yourTag");
+    }
 }
