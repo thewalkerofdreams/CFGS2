@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#FDEBD0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5sp"
+            android:text="@string/form_stat"></TextView>
+
+        <TextView
+            android:id="@+id/TextViewStatNameFrag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5sp"
+            android:minWidth="80sp"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5sp"
+            android:paddingTop="10sp"
+            android:text="@string/form_value"></TextView>
+
+        <EditText
+            android:id="@+id/EditTextStatValueFrag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5sp"
+            android:inputType="numberDecimal"
+            android:minWidth="100sp"></EditText>
+
+        <Button
+            android:id="@+id/btnModStat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/update"
+            android:layout_margin="5sp"></Button>
+    </LinearLayout>
+
+</LinearLayout>

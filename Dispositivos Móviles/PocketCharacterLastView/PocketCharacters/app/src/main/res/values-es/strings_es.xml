@@ -108,7 +108,7 @@
     <string name="game_modes_tutorial">El modo de juego hace referencia al sistema de juego que se va a emplear para almacenar un personaje.
     \nEl modo de juego es necesario para crear tanto personajes, como objetos y Estadísticas.</string>
     <string name="objects_and_stats">Las estadísticas son los atributos que tendrá un personaje de un modo de juego. \nSolo necesitas crear una vez
-    las estadísticas y los objetos para un modo de juego, luego solo habrá que seleccionarlas a la hora de edición del personaje. \nLos tipos de objeto son compartidos por todos los modos de juego.</string>
+    las estadísticas para un modo de juego, luego solo habrá que seleccionarlas a la hora de edición del personaje.</string>
     <string name="character_tutorial">El personaje es esencial para poder jugar la mayoría de los sistemas de Rol actuales. \nPor ello mismo
     la existencia de esta aplicación. \nLos personajes deben tener un nombre único en la App (Si eres del tipo de jugador que siempre utiliza el
         mismo nombre para dar vida a tus personajes, solo deberás agregar al final de cada nombre una terminación del modo de juego que se va a jugar por ejemplo).</string>
