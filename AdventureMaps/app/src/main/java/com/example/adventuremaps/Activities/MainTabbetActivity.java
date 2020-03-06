@@ -4,12 +4,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
+import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -27,6 +33,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adventuremaps.Activities.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainTabbetActivity extends AppCompatActivity implements FragmentStart.OnFragmentInteractionListener, FragmentLocalizations.OnFragmentInteractionListener,
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
@@ -123,6 +134,35 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: onClickRouteFav
+     * Comentario: Este método nos permite modificar el estado de favorito de una ruta del usuario actual.
+     * Cabecera: public void onClickRouteFav(View v)
+     * @param v
+     * Postcondiciones: El método modifica el estado del atributo favorito de una ruta, realizando el cambio
+     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
+     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
+     */
+    public void onClickRouteFav(View v){
+        //get the row the clicked button is in
+        LinearLayout vwParentRow = (LinearLayout)v.getParent();
+        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+        String routeId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        Map<String, Object> hopperUpdates = new HashMap<>();
+
+        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
+            btnChild.setBackgroundResource(R.drawable.empty_star);
+            hopperUpdates.put("favourite", false);
+        }else{
+            btnChild.setBackgroundResource(R.drawable.fill_star);
+            hopperUpdates.put("favourite", true);
+        }
+        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);
     }
 
     @Override//Controlamos la respuesta a los permisos

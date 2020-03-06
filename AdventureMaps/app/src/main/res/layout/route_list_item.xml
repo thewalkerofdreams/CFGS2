@@ -31,7 +31,7 @@
             android:id="@+id/ImageButtonRouteFav"
             android:layout_width="60sp"
             android:layout_height="60sp"
-            ></ImageButton>
+            android:onClick="onClickRouteFav"></ImageButton>
 
     </LinearLayout>
 

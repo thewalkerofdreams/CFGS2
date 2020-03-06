@@ -1,5 +1,7 @@
 package com.example.adventuremaps.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -17,6 +20,7 @@ import com.example.adventuremaps.Adapters.RouteListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +38,7 @@ public class FragmentRoutes extends Fragment {
     private RouteListAdapter adapter;
     private ArrayList<ClsRoute> itemsList = new ArrayList<>();
     private MainTabbetActivityVM viewModel;
+    private AlertDialog alertDialogDeleteRoute;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -63,7 +68,20 @@ public class FragmentRoutes extends Fragment {
                 startActivity(intent);
             }
         });
-        //listView.setOnItemLongClickListener(this);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ClsRoute item = (ClsRoute) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+                viewModel.set_routeSelected(item);
+                showDeleteRouteDialog();
+                return true;
+            }
+        });
+
+        if(savedInstanceState != null && viewModel.is_dialogDeleteRouteShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
+            showDeleteRouteDialog();
+        }
 
         return view;
     }
@@ -98,6 +116,47 @@ public class FragmentRoutes extends Fragment {
 
     /**
      * Interfaz
+     * Nombre: deleteRouteDialog
+     * Comentario: Este método muestra un dialogo por pantalla para eliminar una ruta seleccionada.
+     * Si el usuario confirma la eliminación, se eliminará la ruta de la plataforma FireBase, en caso
+     * contrario no sucederá nada.
+     * Cabecera: public void deleteRouteDialog()
+     * Postcondiciones: El método muestra un dialogo por pantalla, si el usuario lo confirma eliminará
+     * la tuta seleccionada, en caso contrario no sucederá nada.
+     */
+    public void showDeleteRouteDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_route);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getActivity(), R.string.route_deleted, Toast.LENGTH_SHORT).show();
+                //Eliminamos la ruta seleccionada
+                DatabaseReference drRoutePoint;
+                drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_routeSelected().getRouteId());
+                drRoutePoint.removeValue();
+
+                loadList();
+                viewModel.set_dialogDeleteRouteShowing(false);
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_dialogDeleteRouteShowing(false);
+            }
+        });
+
+        alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar las rutas del usuario en la lista actual.
      * Cabecera: public void loadList()
@@ -121,5 +180,15 @@ public class FragmentRoutes extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteRoute != null && alertDialogDeleteRoute.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteRoute.dismiss();// close dialog to prevent leaked window
+            viewModel.set_dialogDeleteRouteShowing(true);
+        }
     }
 }

@@ -77,4 +77,7 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="route_saved">Route Saved!</string>
+    <string name="question_delete_route">Do you really want delete this route?</string>
+    <string name="route_deleted">Route deleted!</string>
+
 </resources>

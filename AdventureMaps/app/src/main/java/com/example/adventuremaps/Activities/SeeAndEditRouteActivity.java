@@ -41,7 +41,6 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
 
     private CreateRouteActivityVM viewModel;
     private DatabaseReference routeReference;
-    private DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
     private ArrayList<ClsRoutePoint> routePoints = new ArrayList<>();
     private ArrayList<ClsRoutePoint> initialRoutePoints = new ArrayList<>();
@@ -62,7 +61,6 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             viewModel = ViewModelProviders.of(this).get(CreateRouteActivityVM.class);
-            //viewModel.set_mostrarRuta(true);
             viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
             viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
             viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
@@ -138,13 +136,10 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                                 viewModel.set_mostrarRuta(false);//Con esto indicamos que vamor a guardar datos en FireBase en el VM
 
                                 routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
-                                //String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
                                 String routeId = routePoints.get(0).getRouteId();
 
-                                //Eliminamos los anteriores puntos de la ruta
-                                deleteOldRoutePoints();
+                                deleteOldRoutePoints();//Eliminamos los anteriores puntos de la ruta
 
-                                //routePointReference = FirebaseDatabase.getInstance().getReference("ClsRoutePoint");
                                 //Almacenamos los puntos de la ruta
                                 for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
                                     String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta
@@ -175,16 +170,17 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Interfaz
+     * Nombre: deleteOldRoutePoints
+     * Comentario: Este método nos permite eliminar todos los puntos de localización de la ruta actual.
+     * Cabecera: public void deleteOldRoutePoints()
+     * Postcondiciones: El método elimina todos los puntos de localización de la ruta actual.
+     */
     public void deleteOldRoutePoints(){
         DatabaseReference drRoutePoint;
-
-        //for(int i = 0; i < initialRoutePoints.size(); i++){
-            //drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(initialRoutePoints.get(i).getRouteId()).child("routePoints").child(initialRoutePoints.get(i).getRoutePointId());
         drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(initialRoutePoints.get(0).getRouteId()).child("routePoints");
-            //drRoutePoint = FirebaseDatabase.getInstance().getReference("routePoints").child(initialRoutePoints.get(i).getRoutePointId());
-            drRoutePoint.removeValue();
-        //}
+        drRoutePoint.removeValue();
     }
 
     @Override

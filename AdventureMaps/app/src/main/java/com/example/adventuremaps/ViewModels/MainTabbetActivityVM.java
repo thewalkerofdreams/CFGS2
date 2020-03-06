@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.json.JSONObject;
@@ -31,6 +32,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Context _context;
     private int _regionSelected;
 
+    //Fragment Routes
+    private boolean _dialogDeleteRouteShowing;
+    private ClsRoute _routeSelected;
+
     public MainTabbetActivityVM(Application application){
         super(application);
         _actualEmailUser = "";
@@ -40,6 +45,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
+        _dialogDeleteRouteShowing = false;
+        _routeSelected = null;
     }
 
     //Get y Set
@@ -76,6 +83,22 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return JSON_FIELD_REGION_NAME;
     }
 
+    //Gets y Sets Fragment Routes
+    public boolean is_dialogDeleteRouteShowing() {
+        return _dialogDeleteRouteShowing;
+    }
+
+    public void set_dialogDeleteRouteShowing(boolean _dialogDeleteRouteShowing) {
+        this._dialogDeleteRouteShowing = _dialogDeleteRouteShowing;
+    }
+
+    public ClsRoute get_routeSelected() {
+        return _routeSelected;
+    }
+
+    public void set_routeSelected(ClsRoute _routeSelected) {
+        this._routeSelected = _routeSelected;
+    }
 
     //Functions Fragment Offline Maps Part
     /**

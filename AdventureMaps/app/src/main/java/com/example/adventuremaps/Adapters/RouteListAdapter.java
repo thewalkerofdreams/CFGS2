@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RouteListAdapter extends BaseAdapter {
     private Context _context;
@@ -62,11 +64,16 @@ public class RouteListAdapter extends BaseAdapter {
         }
 
         holder.get_routeName().setText(_item.getName());
-        holder.get_routeDateOfCreation().setText(String.valueOf(_item.getDateOfCreation()));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");//Convertimos la fecha del tipo Long a Date
+        Date resultdate = new Date(_item.getDateOfCreation());
+        holder.get_routeDateOfCreation().setText(sdf.format(resultdate));
+
+        holder.get_routeFav().setTag(_item.getRouteId());//Almacenamos el id de la ruta que representa el item en un tag del botón, para realizar los posteriores cambios de Fav.
         if(_item.getFavourite()){//Si la ruta esta marcada como favorita
-            holder.get_routeFav().setImageResource(R.drawable.fill_star);
+            holder.get_routeFav().setBackgroundResource(R.drawable.fill_star);
         }else{
-            holder.get_routeFav().setImageResource(R.drawable.empty_star);
+            holder.get_routeFav().setBackgroundResource(R.drawable.empty_star);
         }
 
         return v;
