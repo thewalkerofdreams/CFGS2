@@ -29,3 +29,4 @@ CREATE TABLE AsistenciaMedica(
 )
 
 SELECT * FROM Seguro
+SELECT * FROM AsistenciaMedica
