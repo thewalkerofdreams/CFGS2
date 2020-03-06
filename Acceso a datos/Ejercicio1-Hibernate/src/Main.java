@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.metamodel.EntityType;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Main {
@@ -52,9 +53,12 @@ public class Main {
         Session session = null;
         PersistenciaSeguro persistenciaSeguro = new PersistenciaSeguro();
 
-        //ourSessionFactory = MySessionFactory.getSessionFactory();
         session = ourSessionFactory.openSession();
 
+        //persistenciaSeguro.insertSeguro(session, new Seguro("45652367G", "Iván", "Moreno", "Romero", 23, 33, new Date(1996, 6, 14)));
+        //persistenciaSeguro.deleteSeguro(session,1);
+        //persistenciaSeguro.updateSeguro(session, new Seguro(2, "87658799K", "IvánNo", "MorenoNo", "Romero", 23, 33, new Date(1996, 6, 14)));
+        System.out.println(persistenciaSeguro.getSeguro(session, 2));
 
     }
 }

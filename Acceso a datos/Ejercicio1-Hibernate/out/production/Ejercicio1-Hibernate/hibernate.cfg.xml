@@ -4,8 +4,9 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.connection.driver_class"></property>
-        <property name="hibernate.connection.url"></property>
+        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="hibernate.connection.url">jdbc:sqlserver://107-12;databaseName=SegurosDDBB</property>
+        <property name="dialect">org.hibernate.dialect.SQLServer2008Dialect</property>
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
 
@@ -13,6 +14,9 @@
         <!-- <property name="hbm2ddl.auto">update</property> -->
         <property name="hibernate.connection.username">pruebaHibernate</property>
         <property name="hibernate.connection.password">pruebaHibernate</property>
+        <property name="hibernate.show_sql">true</property>
         <mapping class="Seguro"/>
+        <mapping resource="Seguro.hbm.xml"></mapping>
+
     </session-factory>
 </hibernate-configuration>

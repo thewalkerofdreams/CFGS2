@@ -14,6 +14,16 @@ public class Seguro {
     public Seguro(){
     }
 
+    public Seguro(String nif, String nombre, String apellido1, String apellido2, int edad, int numHijos, Date fechaCreacion){
+        this.nif = nif;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.edad = edad;
+        this.numHijos = numHijos;
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public Seguro(int idSeguro, String nif, String nombre, String apellido1, String apellido2, int edad, int numHijos, Date fechaCreacion){
         this.idSeguro = idSeguro;
         this.nif = nif;
@@ -87,5 +97,10 @@ public class Seguro {
 
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    @Override
+    public String toString(){
+        return getIdSeguro() +", "+getNombre();
     }
 }

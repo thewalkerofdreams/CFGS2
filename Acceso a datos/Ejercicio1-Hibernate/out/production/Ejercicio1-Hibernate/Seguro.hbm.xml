@@ -2,7 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="Seguro" table="Seguro" >
-        <id column="Id" name="idSeguro" type="integer"/>
+        <id name="idSeguro" column="idSeguro" type="integer">
+            <generator class="identity"></generator>
+        </id>
         <property name="nif" />
         <property name="nombre" />
         <property name="apellido1" />
