@@ -101,6 +101,8 @@ public class Seguro {
 
     @Override
     public String toString(){
-        return getIdSeguro() +", "+getNombre();
+        return "Id: "+getIdSeguro() +", Nombre: "+getNombre()+", Apellido: "+getApellido1()+" "+getApellido2()+", Edad: "+getEdad()
+                +", NumHijos: "+getNumHijos()+", FechaCreacion: "+getFechaCreacion().getYear() +"/"+getFechaCreacion().getMonth()+"/"+
+                getFechaCreacion().getDay();
     }
 }
