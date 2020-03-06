@@ -16,4 +16,16 @@ CREATE TABLE Seguro(
 	(idSeguro)
 )
 
+CREATE TABLE AsistenciaMedica(
+	idAsistenciaMedica int identity(1, 1),
+	idSeguro int,
+	breveDescripcion varchar(30),
+	lugar varchar(30),
+	CONSTRAINT PK_AsistenciaMedica primary key
+	(idAsistenciaMedica),
+	CONSTRAINT FK_AsistenciaMedica_Seguro foreign key
+	(idSeguro) references Seguro(idSeguro) ON UPDATE 
+	CASCADE ON DELETE CASCADE
+)
+
 SELECT * FROM Seguro
