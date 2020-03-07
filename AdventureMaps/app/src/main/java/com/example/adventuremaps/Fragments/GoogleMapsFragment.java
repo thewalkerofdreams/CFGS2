@@ -13,9 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
-import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
+import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 
-import com.example.adventuremaps.ViewModels.SeeAndEditRouteActivityVM;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,7 +31,7 @@ import java.util.Locale;
 public class GoogleMapsFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap map;
-    private CreateRouteActivityVM viewModel;
+    private RouteActivitiesVM viewModel;
     private Polyline polyline;//No la convertimos en local para que podamos limpiar el mapa en caso de eliminación de un marcador
 
     @Override
@@ -40,7 +39,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(CreateRouteActivityVM.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(RouteActivitiesVM.class);
 
         return view;
     }
@@ -95,7 +94,9 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         LatLng latLng;
         //Posicionamos el mapa en una localización y con un nivel de zoom
         float zoom;
-        if(viewModel.get_actualLocation() == null){
+
+
+        if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actusal del usuario
             latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
             zoom = 13;
         }else{
@@ -112,26 +113,71 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
 
     /**
      * Interfaz
+     * Nombre: moveCamera
+     * Comentario: Este método nos permite modificar la posición de la camara sobre el mapa.
+     * Cabecera: public void moveCamera(LatLng latlng)
+     * Entrada:
+     *  -LatLng latlng
+     * Postcondiciones: El método modifica la posición de la camara sobre el mapa del fragmento.
+     */
+    public void moveCamera(LatLng latlng, float zoom){
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+    }
+
+    /**
+     * Interfaz
      * Nombre: colocarMarcador
      * Comentario: Este método nos permite colocar un marcador en el mapa.
      * Además el método almacena ese marcador en la lista de localizaciones
-     * del VM.
+     * del VM. Si la latitud y longitud coincide con la última marca registrada,
+     * no se realizará el marcado.
      * Cabecera: public void colocarMarcador(LatLng latLng)
      * Entrada:
      *   -LatLng latLng
-     * Postcondiciones: El método coloca un marcador en el mapa.
+     * Postcondiciones: El método coloca un marcador en el mapa, excepto si
+     * la latitud y longitud coincide con la última marca registrada.
      * */
     public void colocarMarcador(LatLng latLng){
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);//Indicamos la posición del marcador
-        markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
-        Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
+        if(!sameLastMarker(latLng)){//De esta forma evitamos crear marcadores innecesarios
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);//Indicamos la posición del marcador
+            markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
+            Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
 
-        //Almacenaremos un ClsMarkerWithPriority en la lista de puntos de localización del VM
-        ClsMarkerWithPriority markerWithPriority = new ClsMarkerWithPriority(marker, viewModel.getLastPositionNumber()+1);
-        viewModel.get_localizationPoints().add(markerWithPriority);
+            //Almacenaremos un ClsMarkerWithPriority en la lista de puntos de localización del VM
+            ClsMarkerWithPriority markerWithPriority = new ClsMarkerWithPriority(marker, viewModel.getLastPositionNumber()+1);
+            viewModel.get_localizationPoints().add(markerWithPriority);
 
-        pintarLineas(viewModel.get_localizationPoints());//Volvemos a pintar las líneas de la ruta
+            pintarLineas(viewModel.get_localizationPoints());//Volvemos a pintar las líneas de la ruta
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: sameLastMarker
+     * Comentario: Este método nos permite verificar su una posición (Latitud y longitud) coinciden
+     * con el último marcador insertado en el mapa del fragmento.
+     * Cabecera: public boolean sameLastMarker(LatLng latLng)
+     * Entrada:
+     *  -LatLng latLng
+     * Salida:
+     *  -boolean samePosition
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si la posición
+     * coincide con el último marcador insertado en el mapa o false en caso contrario. Si el mapa
+     * no contiene ningún marcador también devolverá false.
+     */
+    public boolean sameLastMarker(LatLng latLng) {
+        boolean samePosition = false;
+        LatLng lastPositionMarked;
+
+        if(viewModel.get_localizationPoints().size() > 0){
+            lastPositionMarked = viewModel.get_localizationPoints().get(viewModel.get_localizationPoints().size() -1).getMarker().getPosition();
+            if(lastPositionMarked.latitude == latLng.latitude || lastPositionMarked.longitude == latLng.longitude){
+                samePosition = true;
+            }
+        }
+
+        return samePosition;
     }
 
     /**

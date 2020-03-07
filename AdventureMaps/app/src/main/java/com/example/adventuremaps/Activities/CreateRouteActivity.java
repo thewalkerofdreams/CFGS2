@@ -17,10 +17,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
-import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
-import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
+import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -28,9 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateRouteActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private CreateRouteActivityVM viewModel;
-    private DatabaseReference routeReference;
-    private DatabaseReference routePointReference;
+    private RouteActivitiesVM viewModel;
+    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         //Si la aplicación tiene los permisos de localización se instancia el VM
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            viewModel = ViewModelProviders.of(this).get(CreateRouteActivityVM.class);
+            viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
             viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
         }
     }
@@ -113,11 +111,11 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                     .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String routeName = nameEdit.getText().toString();
-                            if (routeName.length() == 0) {
+                            String routeName = nameEdit.getText().toString();//Nombre de la ruta a crear
+
+                            if (routeName.isEmpty()) {//Si esta vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
                                 String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
                                 //Almacenamos la ruta
                                 ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -125,7 +123,6 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                                         child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
                                         .setValue(newRoute);
 
-                                routePointReference = FirebaseDatabase.getInstance().getReference("ClsRoutePoint");
                                 //Almacenamos los puntos de la ruta
                                 for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
                                     String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta

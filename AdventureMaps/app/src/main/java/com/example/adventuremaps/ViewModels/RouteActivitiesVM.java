@@ -15,16 +15,13 @@ import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.google.android.gms.maps.model.Marker;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateRouteActivityVM extends AndroidViewModel {
+public class RouteActivitiesVM extends AndroidViewModel {
 
+    //Atributos para CreateRouteActivity y SeeAndEditRouteActivity
     private String _actualEmailUser;
-    private String _actualIdRoute;
-    private String _actualRouteName;
-    private boolean _mostrarRuta;
     private LocationManager _locManager;
     private Location _actualLocation;
     private float _zoom;
@@ -33,7 +30,13 @@ public class CreateRouteActivityVM extends AndroidViewModel {
     private ClsRoute _route;
     private ClsRoutePoint _lastLocalizationClicked;
 
-    public CreateRouteActivityVM(Application application){
+    //Atributos específicamos para SeeAndEditRouteActivity
+    private String _actualIdRoute;
+    private String _actualRouteName;
+    private boolean _mostrarRuta;
+    private ArrayList<ClsRoutePoint> _routePoints;
+
+    public RouteActivitiesVM(Application application){
         super(application);
         _context = application.getBaseContext();
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
@@ -46,8 +49,10 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         _actualIdRoute = "";
         _actualRouteName = "";
         _mostrarRuta = true;
+        _routePoints = new ArrayList<>();
     }
 
+    //Get y Set
     public LocationManager get_locManager() {
         return _locManager;
     }
@@ -112,6 +117,7 @@ public class CreateRouteActivityVM extends AndroidViewModel {
         this._actualEmailUser = _actualEmailUser;
     }
 
+    //Get y Set específicos para SeeAndEditRouteActivity
     public String get_actualIdRoute() {
         return _actualIdRoute;
     }
@@ -134,6 +140,14 @@ public class CreateRouteActivityVM extends AndroidViewModel {
 
     public void set_mostrarRuta(boolean _mostrarRuta) {
         this._mostrarRuta = _mostrarRuta;
+    }
+
+    public ArrayList<ClsRoutePoint> get_routePoints() {
+        return _routePoints;
+    }
+
+    public void set_routePoints(ArrayList<ClsRoutePoint> _routePoints) {
+        this._routePoints = _routePoints;
     }
 
     /**

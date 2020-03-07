@@ -2,9 +2,7 @@ package com.example.adventuremaps.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -17,33 +15,27 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
-import com.example.adventuremaps.ViewModels.CreateRouteActivityVM;
-import com.example.adventuremaps.ViewModels.SeeAndEditRouteActivityVM;
+import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Tag;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SeeAndEditRouteActivity extends AppCompatActivity {
 
-    private CreateRouteActivityVM viewModel;
-    private DatabaseReference routeReference;
-    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
-    private ArrayList<ClsRoutePoint> routePoints = new ArrayList<>();
-    private ArrayList<ClsRoutePoint> initialRoutePoints = new ArrayList<>();
+    private RouteActivitiesVM viewModel;
+    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +52,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         //Si la aplicación tiene los permisos de localización se instancia el VM
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            viewModel = ViewModelProviders.of(this).get(CreateRouteActivityVM.class);
+            viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
             viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
             viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
             viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
@@ -130,21 +122,26 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String routeName = nameEdit.getText().toString();
-                            if (routeName.length() == 0) {
+                            if (routeName.isEmpty()) {//Si el nombre de la ruta se encuentra vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                viewModel.set_mostrarRuta(false);//Con esto indicamos que vamor a guardar datos en FireBase en el VM
+                                viewModel.set_mostrarRuta(false);//Con esto indicamos que vamor a guardar datos en FireBase, para evitar recargar el mapa
 
-                                routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
-                                String routeId = routePoints.get(0).getRouteId();
+                                //Cambiamos el nombre de la ruta si ha cambiado
+                                if(!viewModel.get_actualRouteName().equals(nameEdit.getText().toString())){
+                                    Map<String, Object> hopperUpdates = new HashMap<>();
+                                    hopperUpdates.put("name", nameEdit.getText().toString());
+                                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute()).updateChildren(hopperUpdates);
+                                }
 
-                                deleteOldRoutePoints();//Eliminamos los anteriores puntos de la ruta
+                                //Eliminamos los anteriores puntos de la ruta
+                                deleteOldRoutePoints();
 
                                 //Almacenamos los puntos de la ruta
                                 for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
                                     String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta
                                     ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
-                                            routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
+                                            viewModel.get_actualIdRoute(), viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
 
                                     FirebaseDatabase.getInstance().getReference("Users").
                                             child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute())
@@ -178,8 +175,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
      * Postcondiciones: El método elimina todos los puntos de localización de la ruta actual.
      */
     public void deleteOldRoutePoints(){
-        DatabaseReference drRoutePoint;
-        drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(initialRoutePoints.get(0).getRouteId()).child("routePoints");
+        DatabaseReference drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
+                getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute()).child("routePoints");
         drRoutePoint.removeValue();
     }
 
@@ -189,31 +186,28 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         viewModel.set_mostrarRuta(true);
 
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {//Los datos del usuario actual
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                routePoints.clear();//Limpiamos la lista de rutas
+                viewModel.get_routePoints().clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot routes : datas.child("routes").getChildren()){
                         //loop 2 to go through all the child nodes of routes node
                         ClsRoute route = routes.getValue(ClsRoute.class);
                         if(route.getRouteId().equals(viewModel.get_actualIdRoute())){//Si es la ruta que queremos mostrar
 
-                            routePoints = new ArrayList<>();
-                            initialRoutePoints = new ArrayList<>();
                             for(DataSnapshot points : routes.child("routePoints").getChildren()){
                                 ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
-                                routePoints.add(routePoint);
-                                initialRoutePoints.add(routePoint);
+                                viewModel.get_routePoints().add(routePoint);
                             }
 
                             break;//TODO No me puedo creer que lo este solucionando así
                         }
                     }
                 }
-                if(viewModel.is_mostrarRuta()) {
+                if(viewModel.is_mostrarRuta()) {//Si queremos mostrar la ruta
                     cargarRuta();//Cargamos la ruta
                 }
             }
@@ -236,13 +230,14 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     public void cargarRuta(){
         GoogleMapsFragment fragment = (GoogleMapsFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
         LatLng latLng;
-        viewModel.set_localizationPoints(new ArrayList<ClsMarkerWithPriority>());
+        viewModel.get_localizationPoints().clear();
 
         if(fragment != null){//TODO Porque se mete a veces en esta función???
-            for(int i = 0; i < routePoints.size(); i++){
-                latLng = new LatLng(routePoints.get(i).getLatitude(), routePoints.get(i).getLongitude());
+            for(int i = 0; i < viewModel.get_routePoints().size(); i++){
+                latLng = new LatLng(viewModel.get_routePoints().get(i).getLatitude(), viewModel.get_routePoints().get(i).getLongitude());
                 fragment.colocarMarcador(latLng); //Comenzamos a marcar los puntos de la ruta almacenada
             }
+            fragment.moveCamera(new LatLng(viewModel.get_routePoints().get(0).getLatitude(), viewModel.get_routePoints().get(0).getLongitude()), 13);
         }
     }
 }
