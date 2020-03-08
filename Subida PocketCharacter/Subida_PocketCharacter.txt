@@ -1,0 +1,11 @@
+Título:
+PocketCharacter
+Descripción breve:
+Esta aplicación permite al usuario almacenar diferentes sistemas de juego de rol, permitiendole crear objetos, estadísticas y personajes específicos a un modo de juego.
+Descripción completa:
+El usuario podrá crear diferentes modos de juegos para sus partidas de Rol, cada modo de juego contendrá estadísticas (De personaje) y objetos que el mismo usuario generará. Una vez tengamos estos datos, solo tendremos que asignarlos a cada personaje en específico, ya no será necesario volverlos a crear o definir.
+Las estadísticas tendrán un nombre, estas asignadas a un personaje también podrán tener un valor. 
+Los objetos tendrán un tipo, un nombre y una descripción, estos asignados a un personaje también tendrán una cantidad.
+Un personaje tendrá un nombre, un capítulo (Nombre  de la partida), una serie de estadísticas definida por el modo de juego seleccionado, una descripción y un inventario de objetos.
+Tipo de aplicación:
+Ocio
