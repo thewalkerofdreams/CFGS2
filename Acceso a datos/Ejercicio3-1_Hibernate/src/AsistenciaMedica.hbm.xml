@@ -5,11 +5,10 @@
         <id name="idAsistenciaMedica" column="idAsistenciaMedica" type="integer">
             <generator class="identity"></generator>
         </id>
-        <property name="idSeguro" />
         <property name="breveDescripcion" />
         <property name="lugar" />
         <many-to-one name="seguro">
-            <column name="idSeguro"  />
+            <column name="idSeguro"/>
         </many-to-one>
     </class>
 </hibernate-mapping>

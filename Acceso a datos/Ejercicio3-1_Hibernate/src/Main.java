@@ -34,7 +34,8 @@ public class Main {
 
         session = ourSessionFactory.openSession();
 
-        persistenciaSeguro.insertSeguro(session, new Seguro("45652367G", "Iván", "Moreno", "Romero", 23, 33, new Date(1996, 6, 14)));
+        //Pruebas Asistencias Médicas
+        //persistenciaSeguro.insertSeguro(session, new Seguro("45652367G", "Iván", "Moreno", "Romero", 23, 33, new Date(1996, 6, 14)));
         //persistenciaSeguro.deleteSeguro(session,1);
         //persistenciaSeguro.updateSeguro(session, new Seguro(2, "87658799K", "IvánNo", "MorenoNo", "Romero", 23, 33, new Date(1996, 6, 14)));
         Seguro seguro = persistenciaSeguro.getSeguro(session, 1);
@@ -42,7 +43,20 @@ public class Main {
         //Pruebas Asistencias Médicas
         PersistenciaAsistenciaMedica persistenciaAsistenciaMedica = new PersistenciaAsistenciaMedica();
 
-        persistenciaAsistenciaMedica.insertAsistenciaMedica(session, new AsistenciaMedica(seguro, "Dolor de garganta", "Sevilla"));
-        System.out.println(persistenciaAsistenciaMedica.getAsistenciaMedica(session, 1));
+        //Insert
+        //persistenciaAsistenciaMedica.insertAsistenciaMedica(session, new AsistenciaMedica(seguro, "Posible caso de coronavirus", "Nzhdeh"));
+
+        //Get
+        AsistenciaMedica asistenciaMedica = persistenciaAsistenciaMedica.getAsistenciaMedica(session, 1);
+        System.out.println(asistenciaMedica);
+
+        //Update
+        asistenciaMedica.setLugar("Otro Nuevo.");
+        persistenciaAsistenciaMedica.updateAsistenciaMedica(session, asistenciaMedica);
+        System.out.println(asistenciaMedica);
+
+        //Delete
+        //persistenciaAsistenciaMedica.deleteAsistenciaMedica(session, 2);
+
     }
 }

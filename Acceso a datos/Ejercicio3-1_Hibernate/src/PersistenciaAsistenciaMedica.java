@@ -48,8 +48,8 @@ public class PersistenciaAsistenciaMedica {
     {
         Transaction transaction = session.beginTransaction();
 
-        Seguro seguro = session.get(Seguro.class, idAsistenciaMedica);
-        session.delete(seguro);
+        AsistenciaMedica asistenciaMedica = session.get(AsistenciaMedica.class, idAsistenciaMedica);
+        session.delete(asistenciaMedica);
 
         transaction.commit();
     }
