@@ -1,8 +1,10 @@
 package com.example.adventuremaps.Fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.Activities.SeeAndEditRouteActivity;
 import com.example.adventuremaps.Adapters.RouteListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.Management.OrderLists;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +42,7 @@ public class FragmentRoutes extends Fragment {
     private ArrayList<ClsRoute> itemsList = new ArrayList<>();
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteRoute;
+    SharedPreferences sharedpreferences;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -163,6 +167,12 @@ public class FragmentRoutes extends Fragment {
      * Postcondiciones: El método carga la lista rutas del usuario actual.
      */
     public void loadList(){
+        sharedpreferences = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);//Instanciamos el objeto SharedPreference
+        int field = sharedpreferences.getInt("OrderRouteListField", 1);
+        sharedpreferences = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);//Instanciamos el objeto SharedPreference
+        boolean favourite = sharedpreferences.getBoolean("OrderRouteListFav", false);
+        orderList(field, favourite);
+
         adapter = new RouteListAdapter(getActivity(), R.layout.route_list_item, itemsList);
         listView.setAdapter(adapter);
     }
@@ -189,6 +199,43 @@ public class FragmentRoutes extends Fragment {
         if(alertDialogDeleteRoute != null && alertDialogDeleteRoute.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
             alertDialogDeleteRoute.dismiss();// close dialog to prevent leaked window
             viewModel.set_dialogDeleteRouteShowing(true);
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderList
+     * Comentario: Este método nos permite ordenar la lista de rutas según un criterio
+     * en específico. La lista se ordenará según los parámetros de entrada.
+     * Field:
+     *  -1 (RouteName)
+     *  -2 (DateOfCreation)
+     * Favourite:
+     *  -true (Order by favourites routes)
+     *  -false (Does not take into account favorite routes)
+     * Cabecera: public void orderList(int field, boolean favourite)
+     * Entrada:
+     *  -int field
+     *  -boolean favourite
+     * Precondiciones:
+     *  -fields debe ser igual a 1 o 2.
+     * Postcondiciones: El método ordena la lista de rutas según los criterios introducidos
+     * por parámetros.
+     */
+    public void orderList(int field, boolean favourite){
+        if(favourite){//Si la lista se encuentra ordenada por favoritos
+            if(field == 1){
+                //Order list by name and fav
+            }else{
+                //Order list by date of creation and fav
+            }
+        }else{
+            if(field == 1){
+                //Order list by name
+                new OrderLists().orderRouteListByName(itemsList);
+            }else{
+                //Order list by date of creation
+            }
         }
     }
 }
