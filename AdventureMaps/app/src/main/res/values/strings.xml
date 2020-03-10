@@ -81,5 +81,6 @@
     <string name="route_deleted">Route deleted!</string>
     <string name="name">Name</string>
     <string name="date_of_creation">Date of creation</string>
+    <string name="select_a_filter">Select a filter</string>
 
 </resources>

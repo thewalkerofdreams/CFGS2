@@ -17,8 +17,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -50,7 +48,7 @@ public class FragmentRoutes extends Fragment {
     private Spinner spinner;
     private ArrayList<String> itemsSpinner = new ArrayList<>();
     private Button btnFav;
-    private boolean fragmentCreated = false;
+    private boolean selectDefaultPassed = false;
     SharedPreferences sharedpreferencesField;
     SharedPreferences sharedPreferencesFav;
 
@@ -95,18 +93,19 @@ public class FragmentRoutes extends Fragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, itemsSpinner);
         spinner.setAdapter(adapter);
+        spinner.setSelection(sharedpreferencesField.getInt("OrderRouteListField", 1)-1);//Ajustamos la selección según el filtro guardado
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(fragmentCreated){//Evitamos la primera llamada por defecto al primer elemento del spinner
+                if(selectDefaultPassed){//Evitamos la primera llamada por defecto al primer elemento del spinner
                     SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
                     editor01.putInt("OrderRouteListField", position+1);
                     editor01.commit();
 
                     loadList();//Recargamos la lista
                 }
-                fragmentCreated = true;
+                selectDefaultPassed = true;
             }
 
             @Override
@@ -138,9 +137,7 @@ public class FragmentRoutes extends Fragment {
             }
         });
 
-        loadList();//Cargamos la lista
-
-        if(sharedPreferencesFav.getBoolean("OrderRouteListFav", false))
+        if(sharedPreferencesFav.getBoolean("OrderRouteListFav", false))//Si el filtro de favoritos se encuentra activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
         if(savedInstanceState != null && viewModel.is_dialogDeleteRouteShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
@@ -176,6 +173,13 @@ public class FragmentRoutes extends Fragment {
                 // Failed to read value
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        selectDefaultPassed = false;
+        itemsSpinner.clear();
     }
 
     /**
@@ -227,7 +231,7 @@ public class FragmentRoutes extends Fragment {
      * Postcondiciones: El método carga la lista rutas del usuario actual.
      */
     public void loadList(){
-        //Instanciamos los SharedPreference
+        //Instanciamos los SharedPreference (Este método es llamado desde onStart, por lo que también debemos instanciarlos aquí también)
         sharedpreferencesField = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);
         sharedPreferencesFav = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);
 
@@ -287,19 +291,15 @@ public class FragmentRoutes extends Fragment {
     public void orderList(int field, boolean favourite){
         if(favourite){//Si la lista se encuentra ordenada por favoritos
             if(field == 1){
-                //Order list by name and fav
-                new OrderLists().orderRouteListAscByNameAndFavourite(itemsList);
+                new OrderLists().orderRouteListAscByNameAndFavourite(itemsList);//Order list by name and fav
             }else{
-                //Order list by date of creation and fav
-                new OrderLists().orderRouteListAscByDateAndFavourite(itemsList);
+                new OrderLists().orderRouteListAscByDateAndFavourite(itemsList);//Order list by date of creation and fav
             }
         }else{
             if(field == 1){
-                //Order list by name
-                new OrderLists().orderRouteListByName(itemsList);
+                new OrderLists().orderRouteListByName(itemsList);//Order list by name
             }else{
-                //Order list by date of creation
-                new OrderLists().orderRouteListAscByDate(itemsList);
+                new OrderLists().orderRouteListAscByDate(itemsList);//Order list by date of creation
             }
         }
     }
