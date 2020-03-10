@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -51,6 +53,7 @@ public class FragmentRoutes extends Fragment {
     private boolean selectDefaultPassed = false;
     SharedPreferences sharedpreferencesField;
     SharedPreferences sharedPreferencesFav;
+    LinearLayout linearLayout;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -144,6 +147,17 @@ public class FragmentRoutes extends Fragment {
             showDeleteRouteDialog();
         }
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
+            linearLayout = view.findViewById(R.id.LinearLayoutTabRoutes);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
+                    (float) 1.0
+            );
+            param.weight = 40;
+            linearLayout.setLayoutParams(param);
+        }
+
         return view;
     }
 
@@ -232,8 +246,10 @@ public class FragmentRoutes extends Fragment {
      */
     public void loadList(){
         //Instanciamos los SharedPreference (Este método es llamado desde onStart, por lo que también debemos instanciarlos aquí también)
-        sharedpreferencesField = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);
-        sharedPreferencesFav = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);
+        if(getActivity() != null){
+            sharedpreferencesField = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);
+            sharedPreferencesFav = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);
+        }
 
         int field = sharedpreferencesField.getInt("OrderRouteListField", 1);
         boolean favourite = sharedPreferencesFav.getBoolean("OrderRouteListFav", false);
