@@ -10,7 +10,13 @@ import android.location.LocationManager;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.json.JSONObject;
@@ -38,6 +44,13 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsRoute> _itemsRouteList;
     private ArrayList<ClsRoute> _selectedRoutes;
 
+    //Fragment Start
+    private LatLng _longClickPosition;
+    private Marker _markerToCreate;
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("ClsLocalizationPoints");
+    private ArrayList<ClsLocalizationPoint> _localizationPoints;
+    private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;
+
     public MainTabbetActivityVM(Application application){
         super(application);
         _actualEmailUser = "";
@@ -52,6 +65,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _dialogDeleteRouteShowing = false;
         _itemsRouteList = new ArrayList<>();
         _selectedRoutes = new ArrayList<>();
+
+        //Fragment Start
+        _longClickPosition = null;
+        _markerToCreate = null;
+        _localizationPointsWithMarker = new ArrayList<>();
+        _localizationPoints = new ArrayList<>();
     }
 
     //Get y Set
@@ -111,6 +130,39 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedRoutes(ArrayList<ClsRoute> _selectedRoutes) {
         this._selectedRoutes = _selectedRoutes;
+    }
+
+    //Gets y Sets Fragment Start
+    public LatLng get_longClickPosition() {
+        return _longClickPosition;
+    }
+
+    public void set_longClickPosition(LatLng _longClickPosition) {
+        this._longClickPosition = _longClickPosition;
+    }
+
+    public Marker get_markerToCreate() {
+        return _markerToCreate;
+    }
+
+    public void set_markerToCreate(Marker _markerToCreate) {
+        this._markerToCreate = _markerToCreate;
+    }
+
+    public ArrayList<ClsLocalizationPoint> get_localizationPoints() {
+        return _localizationPoints;
+    }
+
+    public void set_localizationPoints(ArrayList<ClsLocalizationPoint> _localizationPoints) {
+        this._localizationPoints = _localizationPoints;
+    }
+
+    public ArrayList<ClsMarkerWithLocalization> get_localizationPointsWithMarker() {
+        return _localizationPointsWithMarker;
+    }
+
+    public void set_localizationPointsWithMarker(ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker) {
+        this._localizationPointsWithMarker = _localizationPointsWithMarker;
     }
 
     //Functions Fragment Offline Maps Part
