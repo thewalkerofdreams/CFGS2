@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -245,10 +246,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Postcondiciones:
      */
     public void eliminarPuntoDeLocalizacionSeleccionado(){
-        Marker marker = get_localizationPointClicked();
         //TODO Intentar eliminar por Query en un futuro
         DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-        ClsLocalizationPoint localizationPoint = getLocalizationPoint(marker);
+        ClsLocalizationPoint localizationPoint = getLocalizationPoint();
         if(localizationPoint != null){
             drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
             //marker.remove();//TODO Aquí no funciona
@@ -268,14 +268,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Postcondiciones: El método devuelve un punto de localización asociado al nombre o null si
      * no exite ninguno con la misma posición que el marcador introducido por parámetros.
      */
-    public ClsLocalizationPoint getLocalizationPoint(Marker marcador){
+    public ClsLocalizationPoint getLocalizationPoint(){
         ClsLocalizationPoint localization = null;
         boolean found = false;
 
         for(int i = 0; i < get_localizationPointsWithMarker().size() && !found; i++){
             ClsMarkerWithLocalization aux = get_localizationPointsWithMarker().get(i);
-            if(aux.getMarker().getPosition().latitude == marcador.getPosition().latitude &&
-                    aux.getMarker().getPosition().longitude == marcador.getPosition().longitude){
+            if(aux.getMarker().getPosition().latitude == get_localizationPointClicked().getPosition().latitude &&
+                    aux.getMarker().getPosition().longitude == get_localizationPointClicked().getPosition().longitude){
                 localization = aux.getLocalizationPoint();
                 found = true;
             }
@@ -307,7 +307,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 Toast.makeText(context, R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
                 //Eliminamos el punto de localización
                 eliminarPuntoDeLocalizacionSeleccionado();
-                ((MainTabbetActivity)context).removeYourFragment();//Removemos el fragmento actual
+                set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
+                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
             }
         });
 

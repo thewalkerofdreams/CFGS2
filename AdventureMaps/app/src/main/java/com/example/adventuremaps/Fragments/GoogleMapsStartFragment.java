@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,6 +40,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
+    private Marker blueMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +63,17 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
+        if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
+            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());
+
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
-        //((MainTabbetActivity)getActivity()).replaceFragment();//Hacemos que aparezca el fragmento en la actividad
+
+        //if(blueMarker != null)//Si ya existe un marcador seleccionado
+            //blueMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
+
+        //blueMarker = marker;//Almacenamos el marcador seleccionado para poder ir modificando su color
+
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
         return true;
     }
@@ -72,8 +83,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Mostramos las coordenadas con un Toast
         String format = String.format(Locale.getDefault(), "Lat/Lng = (%f,%f)", latLng.latitude, latLng.longitude);
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
-        //((MainTabbetActivity)getActivity()).removeYourFragment();//Eliminamos el fragment actual, si existe.
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
+
+        if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
+            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());
+
+        //if(blueMarker != null)
+            //blueMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
     }
 
     @Override
@@ -127,7 +143,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void colocarMarcador(ClsLocalizationPoint localizationPoint){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
-        markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
+        markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
         viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
     }
@@ -146,7 +162,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void insertarMarcador(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);//Indicamos la posición del marcador
-        markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
+        markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
         viewModel.set_markerToCreate(marker);//Almacenamos el marcador creado en el VM
     }
@@ -164,7 +180,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void saveLocalizationPoint(Marker marker){
         String localizationId = localizationReference.push().getKey();//Obtenemos una id para la localización
         //Almacenamos la nueva localización
-        ClsLocalizationPoint nuevaLocalizacion = new ClsLocalizationPoint(localizationId, "DEFAULT", "DEFAULT", marker.getPosition().latitude, marker.getPosition().longitude, System.currentTimeMillis());
+        ClsLocalizationPoint nuevaLocalizacion = new ClsLocalizationPoint(localizationId, "DEFAULT", "DEFAULT", marker.getPosition().latitude, marker.getPosition().longitude, System.currentTimeMillis(), viewModel.get_actualEmailUser());
         FirebaseDatabase.getInstance().getReference("Localizations").
                 child(localizationId)
                 .setValue(nuevaLocalizacion);

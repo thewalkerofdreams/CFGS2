@@ -9,21 +9,23 @@ public class ClsLocalizationPoint {
     private Double longitude;
     private Long dateOfCreation;//En FireBase no podemos almacenar el dato Int
     private String index;//Tengo que crear un index sintético debido a que FireBase DataBaseRealTime no permite ordenar una referencia por más de un hijo
+    private String emailCreator;
 
     public ClsLocalizationPoint(){
 
     }
 
-    public ClsLocalizationPoint(String name, String description, Double latitude, Double longitude, Long dateOfCreation){
+    public ClsLocalizationPoint(String name, String description, Double latitude, Double longitude, Long dateOfCreation, String emailCreator){
         this.name = name;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.dateOfCreation = dateOfCreation;
         index = latitude+"~"+longitude;
+        this.emailCreator = emailCreator;
     }
 
-    public ClsLocalizationPoint(String localizationPointId, String name, String description, Double latitude, Double longitude, Long dateOfCreation){
+    public ClsLocalizationPoint(String localizationPointId, String name, String description, Double latitude, Double longitude, Long dateOfCreation, String emailCreator){
         this.localizationPointId = localizationPointId;
         this.name = name;
         this.description = description;
@@ -31,6 +33,7 @@ public class ClsLocalizationPoint {
         this.longitude = longitude;
         this.dateOfCreation = dateOfCreation;
         index = latitude+"~"+longitude;
+        this.emailCreator = emailCreator;
     }
 
     //Gets y Sets
@@ -88,5 +91,13 @@ public class ClsLocalizationPoint {
 
     public void setIndex(String index) {
         this.index = index;
+    }
+
+    public String getEmailCreator() {
+        return emailCreator;
+    }
+
+    public void setEmailCreator(String emailCreator) {
+        this.emailCreator = emailCreator;
     }
 }

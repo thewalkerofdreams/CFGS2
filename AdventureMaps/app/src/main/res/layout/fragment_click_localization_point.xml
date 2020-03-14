@@ -31,7 +31,7 @@
             android:layout_width="60sp"
             android:layout_height="60sp"
             android:layout_gravity="center"
-            android:background="@drawable/marker"></Button>
+            android:background="@drawable/localization_point_datas"></Button>
 
     </LinearLayout>
 

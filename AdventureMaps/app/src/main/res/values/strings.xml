@@ -90,4 +90,5 @@
     <string name="confirm_insert">Confirm insertion</string>
     <string name="localization_point_created">Localization point created!</string>
     <string name="question_create_localization_point">Do you really want create an route in this coordenates?</string>
+    <string name="cant_delete_localization_owner">You are not the owner, you cannot delete it.</string>
 </resources>
