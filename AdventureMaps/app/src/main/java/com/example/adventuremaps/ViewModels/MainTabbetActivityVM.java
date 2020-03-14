@@ -47,9 +47,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     //Fragment Start
     private LatLng _longClickPosition;
     private Marker _markerToCreate;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("ClsLocalizationPoints");
     private ArrayList<ClsLocalizationPoint> _localizationPoints;
     private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;
+    private Marker _localizationPointToDelete;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -71,6 +71,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _markerToCreate = null;
         _localizationPointsWithMarker = new ArrayList<>();
         _localizationPoints = new ArrayList<>();
+        _localizationPointToDelete = null;
     }
 
     //Get y Set
@@ -163,6 +164,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_localizationPointsWithMarker(ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker) {
         this._localizationPointsWithMarker = _localizationPointsWithMarker;
+    }
+
+    public Marker get_localizationPointToDelete() {
+        return _localizationPointToDelete;
+    }
+
+    public void set_localizationPointToDelete(Marker _localizationPointToDelete) {
+        this._localizationPointToDelete = _localizationPointToDelete;
     }
 
     //Functions Fragment Offline Maps Part

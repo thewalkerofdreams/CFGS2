@@ -84,4 +84,7 @@
     <string name="select_a_filter">Select a filter</string>
     <string name="no_exist_selected_route">There is no selected route!</string>
 
+    <string name="question_delete_localization_point">Do you really want delete this localization point?</string>
+    <string name="localization_point_deleted">Localization point deleted!</string>
+    <string name="error_owner_localization_point">You do not own this location point. You can"'t delete it!</string>
 </resources>
