@@ -87,4 +87,7 @@
     <string name="question_delete_localization_point">Do you really want delete this localization point?</string>
     <string name="localization_point_deleted">Localization point deleted!</string>
     <string name="error_owner_localization_point">You do not own this location point. You can"'t delete it!</string>
+    <string name="confirm_insert">Confirm insertion</string>
+    <string name="localization_point_created">Localization point created!</string>
+    <string name="question_create_localization_point">Do you really want create an route in this coordenates?</string>
 </resources>

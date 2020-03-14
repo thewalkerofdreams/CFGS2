@@ -202,12 +202,12 @@ public class RouteActivitiesVM extends AndroidViewModel {
 
     /**
      * Interfaz
-     * Nombre: eliminarMarcador
+     * Nombre: eliminarPuntoDeLocalizacionSeleccionado
      * Comentario: Este método nos permite eliminar un punto de localización
      * según un marcador dado por parámetro, es decir, si pasamos un marcador que tiene
      * la misma localización que uno de los puntos de localización almacenamos en este
      * ViewModel, se eliminará ese punto de localización.
-     * Cabecera:public boolean eliminarMarcador(Marker marcador)
+     * Cabecera:public boolean eliminarPuntoDeLocalizacionSeleccionado(Marker marcador)
      * Entrada:
      *   -Marker marcador
      * Salida:

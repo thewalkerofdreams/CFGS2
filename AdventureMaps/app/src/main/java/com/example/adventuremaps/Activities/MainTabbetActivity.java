@@ -20,13 +20,17 @@ import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
 import com.example.adventuremaps.Fragments.FragmentStart;
+import com.example.adventuremaps.Fragments.FragmentStartLocalizationPointClick;
 import com.example.adventuremaps.Fragments.FragmentUser;
+import com.example.adventuremaps.Fragments.GoogleMapsStartFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +47,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
 
     private MainTabbetActivityVM viewModel;
+    private FragmentStartLocalizationPointClick fragment = new FragmentStartLocalizationPointClick();
     SharedPreferences sharedpreferences;
 
     @Override
@@ -171,6 +176,38 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 PlaceholderFragment.newInstance(4);//Recargamos el fragment
             }
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: replaceFragment
+     * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
+     * FrameLayout por ese mismo fragmento.
+     * Cabecera: public void replaceFragment()
+     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
+     * */
+    public void replaceFragment(){
+        fragment = new FragmentStartLocalizationPointClick();
+        FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
+        transation.replace(R.id.FrameLayout02, fragment);
+        transation.commit();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: removeYourFragment
+     * Comentario: Este método nos permite eliminar el fragmento de la actividad actual.
+     * Cabecera: public void removeYourFragment()
+     * Postcondiciones: El método elimina el fragmento de la actividad actual.
+     * */
+    public void removeYourFragment(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (fragment != null) {
+            transaction.remove(fragment);
+            transaction.commit();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            fragment = null;
         }
     }
 }

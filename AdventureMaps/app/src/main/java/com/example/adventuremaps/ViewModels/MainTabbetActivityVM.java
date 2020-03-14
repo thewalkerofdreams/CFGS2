@@ -1,18 +1,25 @@
 package com.example.adventuremaps.ViewModels;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.example.adventuremaps.Activities.MainTabbetActivity;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.R;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.DatabaseReference;
@@ -45,11 +52,11 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsRoute> _selectedRoutes;
 
     //Fragment Start
-    private LatLng _longClickPosition;
+    private LatLng _longClickPosition;//Para crear un nuevo punto de localización
     private Marker _markerToCreate;
-    private ArrayList<ClsLocalizationPoint> _localizationPoints;
-    private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;
-    private Marker _localizationPointToDelete;
+    private ArrayList<ClsLocalizationPoint> _localizationPoints;//Los puntos de localización que obtendremos de la plataforma FireBase
+    private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
+    private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -71,7 +78,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _markerToCreate = null;
         _localizationPointsWithMarker = new ArrayList<>();
         _localizationPoints = new ArrayList<>();
-        _localizationPointToDelete = null;
+        _localizationPointClicked = null;
     }
 
     //Get y Set
@@ -166,12 +173,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointsWithMarker = _localizationPointsWithMarker;
     }
 
-    public Marker get_localizationPointToDelete() {
-        return _localizationPointToDelete;
+    public Marker get_localizationPointClicked() {
+        return _localizationPointClicked;
     }
 
-    public void set_localizationPointToDelete(Marker _localizationPointToDelete) {
-        this._localizationPointToDelete = _localizationPointToDelete;
+    public void set_localizationPointClicked(Marker _localizationPointClicked) {
+        this._localizationPointClicked = _localizationPointClicked;
     }
 
     //Functions Fragment Offline Maps Part
@@ -226,5 +233,91 @@ public class MainTabbetActivityVM extends AndroidViewModel {
             regionName = "DEFAULT";
         }
         return regionName;
+    }
+
+    //Funciones Fragment Start
+
+    /**
+     * Interfaz
+     * Nombre: eliminarPuntoDeLocalizacionSeleccionado
+     * Comentario: Este método nos permite eliminar el punto de localización clicado actualmente.
+     * Cabecera: public void eliminarPuntoDeLocalizacionSeleccionado()
+     * Postcondiciones:
+     */
+    public void eliminarPuntoDeLocalizacionSeleccionado(){
+        Marker marker = get_localizationPointClicked();
+        //TODO Intentar eliminar por Query en un futuro
+        DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
+        ClsLocalizationPoint localizationPoint = getLocalizationPoint(marker);
+        if(localizationPoint != null){
+            drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
+            //marker.remove();//TODO Aquí no funciona
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getLocalizationPoint
+     * Comentario: Este método nos permite obtener un punto de localización por si latitud y longitud.
+     * Si el punto de localización no existe en la base de datos, el método devuelve null.
+     * Cabecera: public ClsLocalizationPoint getLocalizationPoint(LatLng latlng)
+     * Entrada:
+     *  -LatLng latlng
+     * Salida:
+     *  -ClsLocalizationPoint localization
+     * Postcondiciones: El método devuelve un punto de localización asociado al nombre o null si
+     * no exite ninguno con la misma posición que el marcador introducido por parámetros.
+     */
+    public ClsLocalizationPoint getLocalizationPoint(Marker marcador){
+        ClsLocalizationPoint localization = null;
+        boolean found = false;
+
+        for(int i = 0; i < get_localizationPointsWithMarker().size() && !found; i++){
+            ClsMarkerWithLocalization aux = get_localizationPointsWithMarker().get(i);
+            if(aux.getMarker().getPosition().latitude == marcador.getPosition().latitude &&
+                    aux.getMarker().getPosition().longitude == marcador.getPosition().longitude){
+                localization = aux.getLocalizationPoint();
+                found = true;
+            }
+        }
+
+        return localization;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: deleteLocalizationDialog
+     * Comentario: Este método muestra un dialogo por pantalla para eliminar un punto de localización seleccionado.
+     * Si el usuario confirma la eliminación, se eliminará la localización de la plataforma FireBase, en caso
+     * contrario no sucederá nada. Un usuario solo podrá eliminar las localizaciones que el haya creado, si intenta
+     * eliminar una que no es suya el método mostrará un mensaje de error por pantalla.
+     * Cabecera: public void deleteLocalizationDialog()
+     * Postcondiciones: Si el usuario es propietario de ese punto de localización, el método muestra un dialogo por pantalla
+     * , si el usuario lo confirma eliminará el punto de localización seleccionado, en caso contrario no sucederá nada.
+     */
+    public void deleteLocalizationDialog(final Context context){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(context, R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
+                //Eliminamos el punto de localización
+                eliminarPuntoDeLocalizacionSeleccionado();
+                ((MainTabbetActivity)context).removeYourFragment();//Removemos el fragmento actual
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
     }
 }

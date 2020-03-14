@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Activities.MainTabbetActivity;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
@@ -23,7 +26,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Locale;
 
-public class GoogleMapsStartFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
+public class GoogleMapsStartFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
@@ -45,6 +47,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
+        //Cargamos el fragmento inferior
+        ((MainTabbetActivity)getActivity()).replaceFragment();
+
         return view;
     }
 
@@ -55,63 +60,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
-        viewModel.set_localizationPointToDelete(marker);
-        deleteLocalizationDialog();
-    }
-
-    public void eliminarMarcador(Marker marcador){
-        //TODO Intentar eliminar por Query en un futuro
-        //String index = marcador.getPosition().latitude+""+marcador.getPosition().longitude;
-        //Query qLocalization = FirebaseDatabase.getInstance().getReference("Localizations").orderByChild("index").equalTo(index);
-        //DatabaseReference drLocalization = qLocalization.getRef();
-        //drLocalization.child().removeValue();
-
-        DatabaseReference drLocalization =FirebaseDatabase.getInstance().getReference("Localizations");
-        ClsLocalizationPoint localizationPoint = getLocalizationPoint(marcador);
-        if(localizationPoint != null){
-            drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
-            marcador.remove();
-        }
-
-    }
-
-    /**
-     * Interfaz
-     * Nombre: getLocalizationPoint
-     * Comentario: Este método nos permite obtener un punto de localización por si latitud y longitud.
-     * Si el punto de localización no existe en la base de datos, el método devuelve null.
-     * Cabecera: public ClsLocalizationPoint getLocalizationPoint(LatLng latlng)
-     * Entrada:
-     *  -LatLng latlng
-     * Salida:
-     *  -ClsLocalizationPoint localization
-     * Postcondiciones:
-     */
-    public ClsLocalizationPoint getLocalizationPoint(Marker marcador){
-        ClsLocalizationPoint localization = null;
-        boolean found = false;
-
-        for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size() && !found; i++){
-            ClsMarkerWithLocalization aux = viewModel.get_localizationPointsWithMarker().get(i);
-            if(aux.getMarker().getPosition().latitude == marcador.getPosition().latitude &&
-                    aux.getMarker().getPosition().longitude == marcador.getPosition().longitude){
-                localization = aux.getLocalizationPoint();
-                found = true;
-            }
-        }
-
-        return localization;
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-        //Mientras se esta moviendo el marcador
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        //Al finalizar el moviento del marcador
+    public boolean onMarkerClick(final Marker marker) {
+        viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
+        //((MainTabbetActivity)getActivity()).replaceFragment();//Hacemos que aparezca el fragmento en la actividad
+        (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
+        return true;
     }
 
     @Override
@@ -119,6 +72,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Mostramos las coordenadas con un Toast
         String format = String.format(Locale.getDefault(), "Lat/Lng = (%f,%f)", latLng.latitude, latLng.longitude);
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
+        //((MainTabbetActivity)getActivity()).removeYourFragment();//Eliminamos el fragment actual, si existe.
+        (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
     }
 
     @Override
@@ -137,15 +92,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         //Declaramos los eventos
         map.setOnMapClickListener(this);
-        map.setOnMarkerDragListener(this);
         map.setOnMapLongClickListener(this);
+        map.setOnMarkerClickListener(this);
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        viewModel.set_longClickPosition(latLng);
-        insertarMarcador(latLng);//TODO Por ahora lo insertamos
-        saveLocalizationPoint(viewModel.get_markerToCreate());//TODO Por ahora lo guardamos
+        viewModel.set_longClickPosition(latLng);//Almacenamos la posición seleccionada en el mapa en el VM
+        insertLocalizationDialog();//Comenzamos un dialogo de inserción
     }
 
     /**
@@ -156,9 +110,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método carga los puntos de localización en el mapa actual.
      */
     public void loadLocalizationPoints(){
-        LatLng latLng;
         for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-            //latLng = new LatLng(viewModel.get_localizationPoints().get(i).getLatitude(), viewModel.get_localizationPoints().get(i).getLongitude());
             colocarMarcador(viewModel.get_localizationPoints().get(i)); //Comenzamos a marcar los puntos de la ruta almacenada
         }
     }
@@ -227,6 +179,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
+                cleanAllLocalizations();
                 viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de rutas que contienen los marcadores
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
@@ -243,34 +196,46 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     /**
      * Interfaz
-     * Nombre: deleteLocalizationDialog
-     * Comentario: Este método muestra un dialogo por pantalla para eliminar un punto de localización seleccionado.
-     * Si el usuario confirma la eliminación, se eliminará la localización de la plataforma FireBase, en caso
-     * contrario no sucederá nada. Un usuario solo podrá eliminar las localizaciones que el haya creado, si intenta
-     * eliminar una que no es suya el método mostrará un mensaje de error por pantalla.
-     * Cabecera: public void deleteLocalizationDialog()
-     * Postcondiciones: Si el usuario es propietario de ese punto de localización, el método muestra un dialogo por pantalla
-     * , si el usuario lo confirma eliminará el punto de localización seleccionado, en caso contrario no sucederá nada.
+     * Nombre: cleanAllLocalizations
+     * Comentario: Este método nos permite limpiar todos los marcadores sobre el mapa.
+     * Cabecera: public void cleanAllLocalizations()
+     * Postcondiciones: El método elimina todos los marcadores que se encuentran sobre
+     * el mapa actual.
      */
-    public void deleteLocalizationDialog(){
+    public void cleanAllLocalizations(){
+        for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size(); i++){
+            viewModel.get_localizationPointsWithMarker().get(i).getMarker().remove();
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: insertLocalizationDialog
+     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en el mapa.
+     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
+     * Cabecera: public void insertLocalizationDialog()
+     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
+     * creación del nuevo punto de localización.
+     */
+    public void insertLocalizationDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage(R.string.question_delete_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
 
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(getActivity(), R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
-                //Eliminamos el punto de localización
-                eliminarMarcador(viewModel.get_localizationPointToDelete());
+                Toast.makeText(getActivity(), R.string.localization_point_created, Toast.LENGTH_SHORT).show();
+                //Insertamos el nuevo punto de localización
+                insertarMarcador(viewModel.get_longClickPosition());//TODO Por ahora lo insertamos
+                saveLocalizationPoint(viewModel.get_markerToCreate());//TODO Por ahora lo guardamos
             }
         });
 
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                viewModel.set_dialogDeleteRouteShowing(false);
             }
         });
 

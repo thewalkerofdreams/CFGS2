@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.R;
@@ -20,6 +23,7 @@ public class FragmentStart extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private MainTabbetActivityVM viewModel;
+    private FrameLayout frameLayout;
 
     public FragmentStart() {
         // Required empty public constructor
