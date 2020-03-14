@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.MainTabbetActivity;
@@ -40,7 +38,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
-    private Marker blueMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,11 +66,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
-        //if(blueMarker != null)//Si ya existe un marcador seleccionado
-            //blueMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
-
-        //blueMarker = marker;//Almacenamos el marcador seleccionado para poder ir modificando su color
-
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
         return true;
     }
@@ -87,9 +79,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
             viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());
-
-        //if(blueMarker != null)
-            //blueMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
     }
 
     @Override
