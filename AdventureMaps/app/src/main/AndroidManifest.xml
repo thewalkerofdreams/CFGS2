@@ -30,6 +30,7 @@
         <activity android:name=".Activities.CreateRouteActivity"></activity>
         <activity android:name=".Activities.SeeAndEditRouteActivity"></activity>
         <activity android:name=".Activities.CreateLocalizationPointActivity"></activity>
+        <activity android:name=".Activities.DetailsLocalizationPointActivity"></activity>
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class LocalizationPointActivitiesVM extends ViewModel {

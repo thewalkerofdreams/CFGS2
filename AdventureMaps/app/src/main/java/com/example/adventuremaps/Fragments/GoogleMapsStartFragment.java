@@ -141,6 +141,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
         viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
+
+        //Si el marcador colocado es igual al mecador clicado del VM
+        if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == marker.getPosition().latitude &&
+            viewModel.get_localizationPointClicked().getPosition().longitude == marker.getPosition().longitude){
+            viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
+            onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a clicar en el marcador
+        }
+
     }
 
     /**
@@ -198,7 +206,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
                 cleanAllLocalizations();
-                viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de rutas que contienen los marcadores
+                viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
                     viewModel.get_localizationPoints().add(localizationPoint);

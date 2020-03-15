@@ -12,11 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
-import com.example.adventuremaps.FireBaseEntities.ClsRoute;
-import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.LocalizationPointActivitiesVM;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

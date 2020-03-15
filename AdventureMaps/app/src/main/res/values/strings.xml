@@ -93,7 +93,7 @@
     <string name="cant_delete_localization_owner">You are not the owner, you cannot delete it.</string>
 
     <string name="description">Description</string>
-    <string name="localization_type">Localization Type</string>
+    <string name="localization_types">Localization Types</string>
     <string name="potable_water">Potable Water</string>
     <string name="food">Food</string>
     <string name="rest_area">Rest Area</string>
@@ -107,5 +107,9 @@
     <string name="create_localization_point">Create Localization Point</string>
     <string name="name_and_description_required">The name and description are required!</string>
     <string name="min_one_type_required">You must select at least one type!</string>
+
+    <string name="name_form">Name: </string>
+    <string name="description_form">Description: </string>
+    <string name="edit_localization_point">Edit Locallization Point</string>
 
 </resources>
