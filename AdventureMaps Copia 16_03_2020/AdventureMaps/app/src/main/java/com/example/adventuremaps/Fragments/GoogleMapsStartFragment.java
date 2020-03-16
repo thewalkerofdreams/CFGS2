@@ -18,6 +18,7 @@ import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
 import com.example.adventuremaps.Activities.MainTabbetActivity;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,9 +67,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public boolean onMarkerClick(final Marker marker) {
         if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
-            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());//Volvemos a darle su color por defecto
+            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());
 
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
@@ -81,8 +83,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
 
-        if(viewModel.get_localizationPointClicked() != null)//Si existe un marcador seleccionado
-            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());//Volvemos a darle su color por defecto
+        if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
+            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());
     }
 
     @Override
@@ -140,12 +142,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
         viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
 
-        //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
+        //Si el marcador colocado es igual al mecador clicado del VM
         if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == marker.getPosition().latitude &&
             viewModel.get_localizationPointClicked().getPosition().longitude == marker.getPosition().longitude){
             viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
-            onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
+            onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a clicar en el marcador
         }
+
     }
 
     /**
@@ -273,11 +276,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         if (requestCode == 0) {
             if (resultCode == Activity.RESULT_OK) {
-                viewModel.set_localizationToSave((ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
-                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
+                ClsLocalizationPoint localizationPoint = (ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave");
+                viewModel.set_localizationToSave(localizationPoint);//Guardamos la localización a guardar en el VM
+                ArrayList<String> localizationTypes = (ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave");
+                viewModel.set_localizationTypesToSave(localizationTypes);
 
-                insertarMarcador(viewModel.get_longClickPosition());//Insertamos el marcador en el mapa actual
-                saveLocalizationPoint(viewModel.get_markerToCreate());//Almacenamos el punto de localización en FireBase
+                insertarMarcador(viewModel.get_longClickPosition());
+                saveLocalizationPoint(viewModel.get_markerToCreate());
                 Toast.makeText(getActivity(), R.string.localization_point_created, Toast.LENGTH_SHORT).show();
             }
         }

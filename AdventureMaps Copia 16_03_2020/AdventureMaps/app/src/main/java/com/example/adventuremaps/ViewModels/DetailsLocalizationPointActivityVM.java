@@ -52,4 +52,19 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
     public void set_favourite(boolean _favourite) {
         this._favourite = _favourite;
     }
+
+    //Funciones añadidas
+
+    /**
+     * Interfaz
+     * Nombre: getAllTypesOfTheLocalizationPoint
+     * Comentario: Este método nos permite obtener todos los tipos del punto de localización actual.
+     * Los tipos se almacenarán en la variable _localizationTypes del ViewModel actual.
+     * Caebcera: public void getAllTypesOfTheLocalizationPoint()
+     * Postcondiciones: El método obtiene y almacena todos los tipos de la localización actual en el
+     * atributo _localizationTypes del VM actual.
+     */
+    public void getAllTypesOfTheLocalizationPoint(){
+
+    }
 }

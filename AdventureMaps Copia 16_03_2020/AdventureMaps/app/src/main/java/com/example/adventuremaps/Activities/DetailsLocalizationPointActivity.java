@@ -2,6 +2,7 @@ package com.example.adventuremaps.Activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Adapters.TypeLocalizationPointsAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.DetailsLocalizationPointActivityVM;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +47,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
         descriptionLocalizationPoint = findViewById(R.id.TextViewDescriptionLocalizationPointDetailsActivity);
         descriptionLocalizationPoint.setText(viewModel.get_actualLocalizationPoint().getDescription());
+
         localizationTypesList = findViewById(R.id.ListViewLocalizationTypes);
 
         btnEditLocalizationPoint = findViewById(R.id.btnEditLocalizationPoint);

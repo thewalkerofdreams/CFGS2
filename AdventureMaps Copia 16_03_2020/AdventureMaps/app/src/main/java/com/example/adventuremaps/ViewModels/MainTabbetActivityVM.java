@@ -39,6 +39,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private String _actualEmailUser;
 
     //Fragment Offline Maps Part
+    //JSON encoding/decoding
     private final String JSON_CHARSET = "UTF-8";
     private final String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
     private LocationManager _locManager; //This class provides access to the system location services
@@ -327,7 +328,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 //Eliminamos el punto de localización
                 eliminarPuntoDeLocalizacionSeleccionado();
                 set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
-                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
             }
         });
 

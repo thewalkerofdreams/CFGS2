@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public class CreateLocalizationPointActivity extends AppCompatActivity {
 
-    private LocalizationPointActivitiesVM viewModel;
-    private EditText name, description;
-    private Button btnSave;
-    private CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
-    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    LocalizationPointActivitiesVM viewModel;
+    EditText name, description;
+    Button btnSave;
+    CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
+    ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private DatabaseReference localizationPointReference = FirebaseDatabase.getInstance().getReference("ClsLocalizationPoint");
 
     @Override
@@ -36,9 +36,10 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(LocalizationPointActivitiesVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));//TODO Aún por pasar el dato
         viewModel.set_latitude(getIntent().getDoubleExtra("ActualLatitude", 0));
         viewModel.set_longitude(getIntent().getDoubleExtra("ActualLongitude", 0));
+
 
         //Instanciamos los elementos de la UI
         name = findViewById(R.id.EditTextLocalizationName);
@@ -108,13 +109,13 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         if(!viewModel.get_name().isEmpty() && !viewModel.get_description().isEmpty()){
             if(!viewModel.get_localizationTypes().isEmpty()){
                 String localizationPointId = localizationPointReference.push().getKey();//Obtenemos una id para el punto de localización
-                //Creamos el punto de localización
+                //Almacenamos el punto de localización
                 ClsLocalizationPoint newLocalizationPoint = new ClsLocalizationPoint(localizationPointId, viewModel.get_name(), viewModel.get_description(), viewModel.get_latitude(), viewModel.get_longitude(),
                         System.currentTimeMillis(), viewModel.get_actualEmailUser());
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("LocalizationToSave", newLocalizationPoint);
-                resultIntent.putExtra("LocalizationTypesToSave", viewModel.get_localizationTypes());
+                resultIntent.putExtra("LocalizationTypesToSave", (Serializable) viewModel.get_localizationTypes());
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }else{
