@@ -112,4 +112,7 @@
     <string name="description_form">Description: </string>
     <string name="edit_localization_point">Edit Locallization Point</string>
 
+    <string name="save_datas">Save Datas</string>
+    <string name="localization_point_saved">Localization Point Saved!</string>
+
 </resources>

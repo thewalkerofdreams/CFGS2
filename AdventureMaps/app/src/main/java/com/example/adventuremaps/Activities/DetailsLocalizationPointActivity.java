@@ -1,5 +1,7 @@
 package com.example.adventuremaps.Activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -50,7 +53,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         btnEditLocalizationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Aquí iriamos a la actividad de edición
+                Intent intent = new Intent(getApplication(), EditLocalizationPointActivity.class);
+                intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+                intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
+                intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
+                startActivityForResult(intent, 0);
             }
         });
     }
@@ -93,5 +100,16 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     public void loadList(){
         TypeLocalizationPointsAdapter adapter = new TypeLocalizationPointsAdapter(this, R.layout.localization_type_item_list, viewModel.get_localizationTypes());
         localizationTypesList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0){
+            if(resultCode == Activity.RESULT_OK){
+                nameLocalizationPoint.setText(data.getStringExtra("NameUpdated"));
+                descriptionLocalizationPoint.setText(data.getStringExtra("DescriptionUpdated"));
+            }
+        }
     }
 }
