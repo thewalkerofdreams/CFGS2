@@ -79,6 +79,7 @@
             android:layout_weight="50">
 
             <Button
+                android:id="@+id/btnFavouriteLocalizationPointDetails"
                 android:layout_width="90sp"
                 android:layout_height="90sp"
                 android:background="@drawable/empty_star"></Button>

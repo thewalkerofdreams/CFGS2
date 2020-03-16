@@ -13,6 +13,7 @@ public class LocalizationPointActivitiesVM extends ViewModel {
     private ArrayList<String> _localizationTypes;
     private double _latitude;
     private double _longitude;
+    private boolean _favourite;
 
     public LocalizationPointActivitiesVM(){
         _actualEmailUser = "";
@@ -21,6 +22,7 @@ public class LocalizationPointActivitiesVM extends ViewModel {
         _localizationTypes = new ArrayList<>();
         _latitude = 0.0;
         _longitude = 0.0;
+        _favourite = false;
     }
 
     //Get y Set
@@ -70,5 +72,13 @@ public class LocalizationPointActivitiesVM extends ViewModel {
 
     public void set_longitude(double _longitude) {
         this._longitude = _longitude;
+    }
+
+    public boolean is_favourite() {
+        return _favourite;
+    }
+
+    public void set_favourite(boolean _favourite) {
+        this._favourite = _favourite;
     }
 }

@@ -17,6 +17,7 @@ import com.example.adventuremaps.Adapters.TypeLocalizationPointsAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.DetailsLocalizationPointActivityVM;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,9 +28,10 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
     private TextView nameLocalizationPoint, descriptionLocalizationPoint;
     private ListView localizationTypesList;
-    private Button btnEditLocalizationPoint;
+    private Button btnEditLocalizationPoint, btnFavourite;
     private DetailsLocalizationPointActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,25 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
                 intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
                 intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
+                intent.putStringArrayListExtra("LocationsIdActualUser", viewModel.get_localizationsIdActualUser());
                 startActivityForResult(intent, 0);
+            }
+        });
+
+        btnFavourite = findViewById(R.id.btnFavouriteLocalizationPointDetails);
+        btnFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnFavourite.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
+                    btnFavourite.setBackgroundResource(R.drawable.empty_star);
+                    userReference.child(FirebaseAuth.getInstance().
+                            getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
+                }else{
+                    btnFavourite.setBackgroundResource(R.drawable.fill_star);
+                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(
+                            viewModel.get_actualLocalizationPoint().getLocalizationPointId())
+                            .setValue(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
+                }
             }
         });
     }
@@ -86,6 +106,29 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewModel.get_localizationsIdActualUser().clear();//Limpiamos la lista de puntos de localización favoritos
+                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){
+                        String localizationId = booksSnapshot.getValue(String.class);
+                        viewModel.get_localizationsIdActualUser().add(localizationId);
+                    }
+                }
+                if(viewModel.get_localizationsIdActualUser().contains(viewModel.get_actualLocalizationPoint().getLocalizationPointId())){//Si el punto de localización estaba en favoritos
+                    btnFavourite.setBackgroundResource(R.drawable.fill_star);//Modificamos el icono
+                }else{
+                    btnFavourite.setBackgroundResource(R.drawable.empty_star);//Modificamos el icono
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
             }
         });
     }

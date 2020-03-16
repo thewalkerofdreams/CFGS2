@@ -23,6 +23,7 @@ import com.example.adventuremaps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -267,8 +268,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     public void eliminarPuntoDeLocalizacionSeleccionado(){
         //TODO Intentar eliminar por Query en un futuro
         DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
+        DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
         ClsLocalizationPoint localizationPoint = getLocalizationPoint();
         if(localizationPoint != null){
+            //Eliminamos el id del punto de localización asignado a la lista de favoritos del usuario si este lo tuviera asignado como favorito
+            drUser.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationPoint.getLocalizationPointId()).removeValue();
+            //Eliminamos el punto de localización
             drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
             //marker.remove();//TODO Aquí no funciona
         }
