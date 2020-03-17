@@ -1,6 +1,8 @@
 package com.example.adventuremaps.FireBaseEntities;
 
-public class ClsLocalizationPoint {
+import java.io.Serializable;
+
+public class ClsLocalizationPoint implements Serializable {
 
     private String localizationPointId;
     private String name;

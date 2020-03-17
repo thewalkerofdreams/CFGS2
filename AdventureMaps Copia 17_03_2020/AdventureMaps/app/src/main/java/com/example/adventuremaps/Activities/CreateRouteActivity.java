@@ -125,7 +125,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
 
                                 //Almacenamos los puntos de la ruta
                                 for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-                                    String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta
+                                    String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
                                     ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
                                             routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
 

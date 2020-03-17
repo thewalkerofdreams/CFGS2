@@ -23,6 +23,7 @@ import com.example.adventuremaps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -39,7 +40,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private String _actualEmailUser;
 
     //Fragment Offline Maps Part
-    //JSON encoding/decoding
     private final String JSON_CHARSET = "UTF-8";
     private final String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
     private LocationManager _locManager; //This class provides access to the system location services
@@ -58,6 +58,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsLocalizationPoint> _localizationPoints;//Los puntos de localización que obtendremos de la plataforma FireBase
     private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
     private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
+    private ClsLocalizationPoint _localizationToSave;
+    private ArrayList<String> _localizationTypesToSave;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -80,6 +82,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationPointsWithMarker = new ArrayList<>();
         _localizationPoints = new ArrayList<>();
         _localizationPointClicked = null;
+        _localizationToSave = null;
+        _localizationTypesToSave = new ArrayList<>();
     }
 
     //Get y Set
@@ -182,6 +186,22 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointClicked = _localizationPointClicked;
     }
 
+    public ClsLocalizationPoint get_localizationToSave() {
+        return _localizationToSave;
+    }
+
+    public void set_localizationToSave(ClsLocalizationPoint _localizationToSave) {
+        this._localizationToSave = _localizationToSave;
+    }
+
+    public ArrayList<String> get_localizationTypesToSave() {
+        return _localizationTypesToSave;
+    }
+
+    public void set_localizationTypesToSave(ArrayList<String> _localizationTypesToSave) {
+        this._localizationTypesToSave = _localizationTypesToSave;
+    }
+
     //Functions Fragment Offline Maps Part
     /**
      * Interfaz
@@ -248,8 +268,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     public void eliminarPuntoDeLocalizacionSeleccionado(){
         //TODO Intentar eliminar por Query en un futuro
         DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
+        DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
         ClsLocalizationPoint localizationPoint = getLocalizationPoint();
         if(localizationPoint != null){
+            //Eliminamos el id del punto de localización asignado a la lista de favoritos del usuario si este lo tuviera asignado como favorito
+            drUser.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationPoint.getLocalizationPointId()).removeValue();
+            //Eliminamos el punto de localización
             drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
             //marker.remove();//TODO Aquí no funciona
         }
@@ -308,7 +332,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 //Eliminamos el punto de localización
                 eliminarPuntoDeLocalizacionSeleccionado();
                 set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
-                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
+                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
             }
         });
 
