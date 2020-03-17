@@ -11,6 +11,8 @@
         android:numColumns="3"
         android:horizontalSpacing="5sp"
         android:verticalSpacing="5sp"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5sp"
         android:gravity="center"
         android:stretchMode="columnWidth"></GridView>
 

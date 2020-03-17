@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -78,7 +79,6 @@ public class ImageGalleryActivity extends AppCompatActivity {
         for(int i = 0 ; i < 100; i++){
             viewModel.get_imagesToLoad().add(new ClsImageWithId(bitmap));
         }
-
         loadGallery();//Cargamos la galería de imagenes
 
         btnAddImage = findViewById(R.id.btnAddImagesActivityImageGallery);
@@ -95,7 +95,11 @@ public class ImageGalleryActivity extends AppCompatActivity {
         btnDeleteImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteImagesDialog();
+                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay imagenes seleccionadas
+                    Toast.makeText(getApplication(), R.string.no_exist_selected_image, Toast.LENGTH_LONG).show();
+                }else{
+                    deleteImagesDialog();
+                }
             }
         });
 
@@ -108,21 +112,21 @@ public class ImageGalleryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
                 try {
-                    final Uri imageUri = data.getData();
+                    final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
                     final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    viewModel.get_imagesToLoad().add(new ClsImageWithId(selectedImage));
+                    viewModel.get_imagesToLoad().add(new ClsImageWithId(selectedImage));//Almacenamos la imagen en el VM
 
                     loadGallery();//Volvemos a cargar la galería
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
                 }
 
             } else {
-                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -135,13 +139,28 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Postcondiciones: El método carga la galería de imagenes.
      */
     public void loadGallery(){
-        gridView.setAdapter(new ImageAdapter(this, viewModel.get_imagesToLoad()));
+        ImageAdapter adapter = new ImageAdapter(this, viewModel.get_imagesToLoad()){
+            @Override
+            public View getView(int position, View convertView, ViewGroup viewGroup) {
+                View view = super.getView(position, convertView, viewGroup);
+
+                if(viewModel.get_imagesSelected().contains(viewModel.get_imagesToLoad().get(position))){//Si la ruta se encuentra en la lista de seleccionadas
+                    view.setBackgroundResource(R.color.BlueItem);
+                }else{
+                    view.setBackgroundResource(R.color.WhiteItem);
+                }
+
+                return view;
+            }
+        };
+        gridView.setAdapter(adapter);
     }
 
     /**
      * Interfaz
      * Nombre: deleteImagesDialog
-     * Comentario: Este método muestra un dialogo por pantalla para eliminar unas imagenes seleccionadas.
+     * Comentario: Este método muestra un dialogo por pantalla para eliminar las imagenes seleccionadas del
+     * punto de localización actual.
      * Si el usuario confirma la eliminación, se eliminará las imagenes de la plataforma FireBase, en caso
      * contrario no sucederá nada.
      * Cabecera: public void deleteImagesDialog()
@@ -181,7 +200,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteImages != null && alertDialogDeleteImages.isShowing()) {//Si se encuentra abierto el dialogo de eliminación

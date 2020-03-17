@@ -117,4 +117,7 @@
 
     <string name="images_deleted">Images Deleted!</string>
     <string name="question_delete_images">Do you really want delete this images?</string>
+    <string name="no_exist_selected_image">There is no selected images!</string>
+    <string name="you_havent_picked_image">You haven"'t picked Image!</string>
+    <string name="something_went_wrong">Something went wrong!</string>
 </resources>

@@ -1,13 +1,14 @@
 package com.example.adventuremaps.Adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.R;
 
 import java.util.ArrayList;
 
@@ -38,17 +39,35 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         ImageView imageView;
-        if (convertView == null) {
-            imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(200, 200));
-            imageView.setPadding(8, 8, 8, 8);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        View v = convertView;
+
+        if (v == null) {
+            LayoutInflater layoutInflater = LayoutInflater.from(context);//Inflamos la vista con nuestro propio layout
+            v = layoutInflater.inflate(R.layout.item_image_gallery, null);
+
+            imageView = v.findViewById(R.id.ImageViewItem);
+
+            holder = new ViewHolder(imageView);
+            v.setTag(holder);//Metemos el objeto en el tag de la vista
         } else {
-            imageView = (ImageView) convertView;
+            holder = (ViewHolder) v.getTag();
+        }
+        holder.get_imageView().setImageBitmap(items.get(position).get_bitmap());
+
+        return v;
+    }
+
+    public class ViewHolder{
+        ImageView _imageView;
+
+        public ViewHolder(ImageView imageView) {
+            this._imageView = imageView;
         }
 
-        imageView.setImageBitmap(items.get(position).get_bitmap());
-        return imageView;
+        public ImageView get_imageView() {
+            return _imageView;
+        }
     }
 }
