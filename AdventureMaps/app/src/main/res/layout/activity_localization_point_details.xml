@@ -93,6 +93,7 @@
             android:layout_weight="50">
 
             <Button
+                android:id="@+id/btnImageGalleryLocalizationPointDetails"
                 android:layout_width="90sp"
                 android:layout_height="90sp"
                 android:background="@drawable/image_gallery"></Button>

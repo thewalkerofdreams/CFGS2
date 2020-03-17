@@ -28,7 +28,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
     private TextView nameLocalizationPoint, descriptionLocalizationPoint;
     private ListView localizationTypesList;
-    private Button btnEditLocalizationPoint, btnFavourite;
+    private Button btnEditLocalizationPoint, btnFavourite, btnImageGallery;
     private DetailsLocalizationPointActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -78,6 +78,17 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                             viewModel.get_actualLocalizationPoint().getLocalizationPointId())
                             .setValue(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
                 }
+            }
+        });
+
+        btnImageGallery = findViewById(R.id.btnImageGalleryLocalizationPointDetails);
+        btnImageGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), ImageGalleryActivity.class);
+                intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+                intent.putExtra("ActualLocalizationPointId", viewModel.get_actualLocalizationPoint().getLocalizationPointId());
+                startActivity(intent);
             }
         });
     }

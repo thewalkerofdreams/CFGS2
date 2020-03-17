@@ -115,4 +115,6 @@
     <string name="save_datas">Save Datas</string>
     <string name="localization_point_saved">Localization Point Saved!</string>
 
+    <string name="images_deleted">Images Deleted!</string>
+    <string name="question_delete_images">Do you really want delete this images?</string>
 </resources>
