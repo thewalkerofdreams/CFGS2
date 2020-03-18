@@ -120,4 +120,6 @@
     <string name="no_exist_selected_image">There is no selected images!</string>
     <string name="you_havent_picked_image">You haven"'t picked Image!</string>
     <string name="something_went_wrong">Something went wrong!</string>
+    <string name="image_uploaded">Image uploaded!</string>
+    <string name="error_upload_image">Error to upload the image!</string>
 </resources>

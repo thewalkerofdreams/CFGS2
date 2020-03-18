@@ -1,6 +1,8 @@
 package com.example.adventuremaps.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -54,7 +57,9 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) v.getTag();
         }
-        holder.get_imageView().setImageBitmap(items.get(position).get_bitmap());
+        //holder.get_imageView().setImageBitmap(items.get(position).get_uri());
+        Picasso.with(context).load(items.get(position).get_uri()).into(holder.get_imageView());
+        //holder.get_imageView().setImageURI(items.get(position).get_uri());
 
         return v;
     }

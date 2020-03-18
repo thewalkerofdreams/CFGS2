@@ -1,27 +1,43 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.ImageAdapter;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.ImageGalleryActivityVM;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -32,6 +48,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private GridView gridView;
     private AlertDialog alertDialogDeleteImages;
     private ImageGalleryActivityVM viewModel;
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +58,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(ImageGalleryActivityVM.class);
+        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
+        viewModel.set_actualLocalizationPointId(getIntent().getStringExtra("ActualLocalizationPointId"));
 
         //Instanciamos los elementos de la UI
         gridView = findViewById(R.id.GridViewGalleryImageActivity);
@@ -74,12 +94,12 @@ public class ImageGalleryActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.get_imagesToLoad().add(new ClsImageWithId(BitmapFactory.decodeResource(getResources(), R.drawable.isla)));//TODO Pruebas luego lo sacaremos de FireBase
+        /*viewModel.get_imagesToLoad().add(new ClsImageWithId(BitmapFactory.decodeResource(getResources(), R.drawable.isla)));//TODO Pruebas luego lo sacaremos de FireBase
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.save);
         for(int i = 0 ; i < 100; i++){
             viewModel.get_imagesToLoad().add(new ClsImageWithId(bitmap));
         }
-        loadGallery();//Cargamos la galería de imagenes
+        loadGallery();//Cargamos la galería de imagenes*/
 
         btnAddImage = findViewById(R.id.btnAddImagesActivityImageGallery);
         btnAddImage.setOnClickListener(new View.OnClickListener() {
@@ -113,17 +133,28 @@ public class ImageGalleryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
-                try {
+                //try {
                     final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
-                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    viewModel.get_imagesToLoad().add(new ClsImageWithId(selectedImage));//Almacenamos la imagen en el VM
+                    //final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
+                    insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
+
+                    Bitmap selectedImage = null;
+                    try {
+
+                        selectedImage = MediaStore.Images.Media.getBitmap(getContentResolver() , imageUri);
+
+                    }
+                    catch (Exception e) {
+                        //handle exception
+                    }
+                    viewModel.get_imagesToLoad().add(new ClsImageWithId(imageUri));//Almacenamos la imagen en el VM
                     loadGallery();//Volvemos a cargar la galería
-                } catch (FileNotFoundException e) {
+                /*} catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
-                }
+                }*/
 
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
@@ -207,5 +238,117 @@ public class ImageGalleryActivity extends AppCompatActivity {
             alertDialogDeleteImages.dismiss();// close dialog to prevent leaked window
             viewModel.set_dialogDeleteImagesShowing(true);
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: insertImageToFireBase
+     * Comentario: Este método nos permite subir una imagen a la plataforma FireBase.
+     * Cabecera: public void insertImageToFireBase(Uri image)
+     * Entrada:
+     *  -Uri image
+     * Postcondiciones: El método sube una imagen a la plataforma FireBase.
+     */
+    public void insertImageToFireBase(Uri image){
+        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPointId()).child(viewModel.get_actualEmailUser()).child(System.currentTimeMillis()+""+getExtension(image));
+
+        riversRef.putFile(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String imageUrl = uri.toString();
+                                        String imageId = localizationReference.push().getKey();
+                                        //Insertamos la dirección de la imagen en la base de datos
+                                        localizationReference.child(viewModel.get_actualLocalizationPointId()).child("gmailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", "")).child("LocalizationImages")
+                                                .child(imageId).setValue(imageUrl);
+                                    }
+                                });
+                            }
+                        }
+
+                        Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getExtension
+     * Comentario: Este método nos permite obtener la extensión de una dirección Uri.
+     * Cabecera: public String getExtension(Uri uri)
+     * Entrada:
+     *  -Uri uri
+     * Postcondiciones: El método devuelve la extensión de la dirección uri asociada al nombre.
+     */
+    public String getExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Read from the database
+        localizationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewModel.get_imagesToLoad().clear();
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
+                    if (localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPointId())) {
+
+                        for (DataSnapshot userEmailImages : datas.child("gmailImages").getChildren()) {
+                            for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
+
+                                    String imageAddress = String.valueOf(images.getValue());
+                                    Uri myUri = Uri.parse(imageAddress);
+                                    //final InputStream imageStream = getContentResolver().openInputStream(myUri);
+                                    //final Bitmap image = BitmapFactory.decodeStream(imageStream);
+                                    Bitmap image = null;
+                                    try {
+
+                                        image = MediaStore.Images.Media.getBitmap(getContentResolver() , myUri);
+
+                                    }
+                                    catch (Exception e) {
+                                        //handle exception
+                                    }
+                                    /*try{
+                                        image = BitmapFactory.decodeStream(getContentResolver().openInputStream(myUri));
+                                    }catch (FileNotFoundException e){
+                                        e.printStackTrace();
+                                    }*/
+
+                                    //TODO Aquí cargamos las uir de string en una lista del VM
+                                    viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri));
+
+                            }
+                        }
+
+                        loadGallery();
+
+                        break;//TODO No me puedo creer que lo este solucionando así
+                    }
+                }
+                loadGallery();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }
