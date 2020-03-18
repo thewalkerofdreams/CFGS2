@@ -1,22 +1,27 @@
 package com.example.adventuremaps.Activities.Models;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class ClsImageWithId {
 
     private int _id;
     private Uri _uri;
+    private String _imageId;
+    private String _userEmailCreator;
     private static int counter = 0;
 
     public ClsImageWithId(){
         _id = ++counter;
         _uri = null;
+        _userEmailCreator = "";
+        _imageId = "";
     }
 
-    public ClsImageWithId(Uri uri){
+    public ClsImageWithId(Uri uri, String userEmailCreator, String imageId){
         _id = ++counter;
         _uri = uri;
+        _userEmailCreator = userEmailCreator;
+        this._imageId = imageId;
     }
 
     //Get y Set
@@ -30,6 +35,22 @@ public class ClsImageWithId {
 
     public void set_uri(Uri _uri) {
         this._uri = _uri;
+    }
+
+    public String get_userEmailCreator() {
+        return _userEmailCreator;
+    }
+
+    public void set_userEmailCreator(String _userEmailCreator) {
+        this._userEmailCreator = _userEmailCreator;
+    }
+
+    public String get_imageId() {
+        return _imageId;
+    }
+
+    public void set_imageId(String _imageId) {
+        this._imageId = _imageId;
     }
 
     //Funciones sobreescritas

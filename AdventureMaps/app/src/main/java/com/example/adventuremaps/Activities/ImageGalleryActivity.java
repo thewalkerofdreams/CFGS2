@@ -4,11 +4,8 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -30,6 +27,7 @@ import com.example.adventuremaps.ViewModels.ImageGalleryActivityVM;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,9 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class ImageGalleryActivity extends AppCompatActivity {
 
@@ -94,13 +89,6 @@ public class ImageGalleryActivity extends AppCompatActivity {
             }
         });
 
-        /*viewModel.get_imagesToLoad().add(new ClsImageWithId(BitmapFactory.decodeResource(getResources(), R.drawable.isla)));//TODO Pruebas luego lo sacaremos de FireBase
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.save);
-        for(int i = 0 ; i < 100; i++){
-            viewModel.get_imagesToLoad().add(new ClsImageWithId(bitmap));
-        }
-        loadGallery();//Cargamos la galería de imagenes*/
-
         btnAddImage = findViewById(R.id.btnAddImagesActivityImageGallery);
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,29 +121,11 @@ public class ImageGalleryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
-                //try {
-                    final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
-                    //final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                    //final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
 
-                    insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
-
-                    Bitmap selectedImage = null;
-                    try {
-
-                        selectedImage = MediaStore.Images.Media.getBitmap(getContentResolver() , imageUri);
-
-                    }
-                    catch (Exception e) {
-                        //handle exception
-                    }
-                    viewModel.get_imagesToLoad().add(new ClsImageWithId(imageUri));//Almacenamos la imagen en el VM
-                    loadGallery();//Volvemos a cargar la galería
-                /*} catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
-                }*/
-
+                insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
+                //viewModel.get_imagesToLoad().add(new ClsImageWithId(imageUri, viewModel.get_actualEmailUser()));//Almacenamos la imagen en el VM
+                loadGallery();//Volvemos a cargar la galería
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
             }
@@ -208,9 +178,14 @@ public class ImageGalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getApplication(), R.string.images_deleted, Toast.LENGTH_SHORT).show();
+
                 //Eliminamos las rutas seleccionadas
+                DatabaseReference drImages;
+
                 for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
-                    viewModel.get_imagesToLoad().remove(viewModel.get_imagesSelected().get(i));
+                    drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPointId()).child("emailImages").
+                            child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child("LocalizationImages").child(viewModel.get_imagesSelected().get(i).get_imageId());
+                    drImages.removeValue();
                 }
 
                 viewModel.set_dialogDeleteImagesShowing(false);//Indicamos que el dialogo ha finalizado
@@ -250,7 +225,9 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Postcondiciones: El método sube una imagen a la plataforma FireBase.
      */
     public void insertImageToFireBase(Uri image){
-        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPointId()).child(viewModel.get_actualEmailUser()).child(System.currentTimeMillis()+""+getExtension(image));
+        //String imageId = localizationReference.push().getKey();
+        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPointId()).child(viewModel.get_actualEmailUser()).
+                child(System.currentTimeMillis()+""+getExtension(image));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
         riversRef.putFile(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -262,11 +239,13 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        String imageUrl = uri.toString();
+                                        String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                         String imageId = localizationReference.push().getKey();
                                         //Insertamos la dirección de la imagen en la base de datos
-                                        localizationReference.child(viewModel.get_actualLocalizationPointId()).child("gmailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", "")).child("LocalizationImages")
+                                        localizationReference.child(viewModel.get_actualLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
                                                 .child(imageId).setValue(imageUrl);
+
+                                        viewModel.get_imagesToLoad().add(new ClsImageWithId(uri, viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
                                     }
                                 });
                             }
@@ -310,34 +289,16 @@ public class ImageGalleryActivity extends AppCompatActivity {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
                     if (localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPointId())) {
 
-                        for (DataSnapshot userEmailImages : datas.child("gmailImages").getChildren()) {
+                        for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
+                            String emailImage = userEmailImages.getKey();
                             for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
-
-                                    String imageAddress = String.valueOf(images.getValue());
-                                    Uri myUri = Uri.parse(imageAddress);
-                                    //final InputStream imageStream = getContentResolver().openInputStream(myUri);
-                                    //final Bitmap image = BitmapFactory.decodeStream(imageStream);
-                                    Bitmap image = null;
-                                    try {
-
-                                        image = MediaStore.Images.Media.getBitmap(getContentResolver() , myUri);
-
-                                    }
-                                    catch (Exception e) {
-                                        //handle exception
-                                    }
-                                    /*try{
-                                        image = BitmapFactory.decodeStream(getContentResolver().openInputStream(myUri));
-                                    }catch (FileNotFoundException e){
-                                        e.printStackTrace();
-                                    }*/
-
-                                    //TODO Aquí cargamos las uir de string en una lista del VM
-                                    viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri));
-
+                                String imageId = images.getKey();
+                                String imageAddress = String.valueOf(images.getValue());//Obtenemos la dirección de la imagen
+                                Uri myUri = Uri.parse(imageAddress);//La convertimos al tipo Uri
+                                //Comenzamos a cargar los imagenes con su uri en una lista del VM
+                                viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri, emailImage.replace("[' ']", "."), imageId));
                             }
                         }
-
                         loadGallery();
 
                         break;//TODO No me puedo creer que lo este solucionando así

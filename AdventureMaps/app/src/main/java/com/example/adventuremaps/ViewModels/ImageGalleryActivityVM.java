@@ -13,7 +13,6 @@ public class ImageGalleryActivityVM extends ViewModel {
     private ArrayList<ClsImageWithId> _imagesToLoad;
     private ArrayList<ClsImageWithId> _imagesSelected;
     private boolean _dialogDeleteImagesShowing;
-    private ArrayList<String> _urlImagesFromFireBase;
 
     public ImageGalleryActivityVM(){
         _actualEmailUser = "";
