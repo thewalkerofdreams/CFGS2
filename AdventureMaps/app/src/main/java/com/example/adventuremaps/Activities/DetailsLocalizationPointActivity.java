@@ -87,7 +87,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), ImageGalleryActivity.class);
                 intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-                intent.putExtra("ActualLocalizationPointId", viewModel.get_actualLocalizationPoint().getLocalizationPointId());
+                intent.putExtra("ActualLocalizationPoint", viewModel.get_actualLocalizationPoint());
                 startActivity(intent);
             }
         });

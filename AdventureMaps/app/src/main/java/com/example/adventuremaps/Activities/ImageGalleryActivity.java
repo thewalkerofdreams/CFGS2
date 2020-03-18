@@ -27,7 +27,6 @@ import com.example.adventuremaps.ViewModels.ImageGalleryActivityVM;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +53,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(ImageGalleryActivityVM.class);
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
-        viewModel.set_actualLocalizationPointId(getIntent().getStringExtra("ActualLocalizationPointId"));
+        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalizationPoint"));
 
         //Instanciamos los elementos de la UI
         gridView = findViewById(R.id.GridViewGalleryImageActivity);
@@ -65,12 +64,18 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada
                     //TODO
                 }else{
+                    //TODO Código repetido intentar retocar
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
                         viewModel.get_imagesSelected().remove(item);//Eliminamos esa imagen de la lista de seleccionadas
                         view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
                     }else{
-                        viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+                        if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(item.get_userEmailCreator()) ||
+                                viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
+                            viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
+                            view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+                        }else{
+                            Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
@@ -79,10 +84,15 @@ public class ImageGalleryActivity extends AppCompatActivity {
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(viewModel.get_imagesSelected().isEmpty()){//Si aún no existe ninguna imagen seleccionada
-                    ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-                    viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
-                    view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+                ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
+                if(viewModel.get_imagesSelected().isEmpty()){//Si no existe ninguna imagen seleccionada
+                    if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(item.get_userEmailCreator()) ||
+                            viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
+                        viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
+                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+                    }else{
+                        Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 return true;
@@ -183,7 +193,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 DatabaseReference drImages;
 
                 for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
-                    drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPointId()).child("emailImages").
+                    drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").
                             child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child("LocalizationImages").child(viewModel.get_imagesSelected().get(i).get_imageId());
                     drImages.removeValue();
                 }
@@ -225,8 +235,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Postcondiciones: El método sube una imagen a la plataforma FireBase.
      */
     public void insertImageToFireBase(Uri image){
-        //String imageId = localizationReference.push().getKey();
-        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPointId()).child(viewModel.get_actualEmailUser()).
+        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
                 child(System.currentTimeMillis()+""+getExtension(image));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
         riversRef.putFile(image)
@@ -242,7 +251,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                         String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                         String imageId = localizationReference.push().getKey();
                                         //Insertamos la dirección de la imagen en la base de datos
-                                        localizationReference.child(viewModel.get_actualLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
+                                        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
                                                 .child(imageId).setValue(imageUrl);
 
                                         viewModel.get_imagesToLoad().add(new ClsImageWithId(uri, viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
@@ -287,7 +296,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if (localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPointId())) {
+                    if (localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPoint().getLocalizationPointId())) {
 
                         for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
                             String emailImage = userEmailImages.getKey();
@@ -304,7 +313,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                         break;//TODO No me puedo creer que lo este solucionando así
                     }
                 }
-                loadGallery();
+                //loadGallery();
             }
 
             @Override

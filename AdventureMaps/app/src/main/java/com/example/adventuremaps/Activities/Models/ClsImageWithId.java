@@ -4,31 +4,23 @@ import android.net.Uri;
 
 public class ClsImageWithId {
 
-    private int _id;
     private Uri _uri;
     private String _imageId;
     private String _userEmailCreator;
-    private static int counter = 0;
 
     public ClsImageWithId(){
-        _id = ++counter;
         _uri = null;
         _userEmailCreator = "";
         _imageId = "";
     }
 
     public ClsImageWithId(Uri uri, String userEmailCreator, String imageId){
-        _id = ++counter;
         _uri = uri;
         _userEmailCreator = userEmailCreator;
         this._imageId = imageId;
     }
 
     //Get y Set
-    public int get_id() {
-        return _id;
-    }
-
     public Uri get_uri() {
         return _uri;
     }
@@ -59,7 +51,7 @@ public class ClsImageWithId {
      * Interfaz
      * Nombre: equals
      * Comentario: Este método nos permite comprobar si dos objetos ClsImageWithId son iguales.
-     * Para que sean iguales deben tener un mismo id.
+     * Para que sean iguales deben tener la misma id y el mismo gmail del creador.
      * Cabecera: public boolean equals(Object obj)
      * @param obj
      * @return ret
@@ -75,7 +67,8 @@ public class ClsImageWithId {
         }else{
             if(obj != null && obj instanceof ClsImageWithId){
                 ClsImageWithId aux = (ClsImageWithId) obj;
-                if(aux.get_id() == this.get_id()){
+                if(aux.get_imageId().equals(this.get_imageId()) &&
+                        aux.get_userEmailCreator().equals(this.get_userEmailCreator())){
                     ret = true;
                 }
             }
