@@ -2,9 +2,11 @@ package com.example.adventuremaps.Activities.Models;
 
 import android.net.Uri;
 
-public class ClsImageWithId {
+import java.io.Serializable;
 
-    private Uri _uri;
+public class ClsImageWithId implements Serializable {
+
+    private String _uri;
     private String _imageId;
     private String _userEmailCreator;
 
@@ -14,18 +16,18 @@ public class ClsImageWithId {
         _imageId = "";
     }
 
-    public ClsImageWithId(Uri uri, String userEmailCreator, String imageId){
+    public ClsImageWithId(String uri, String userEmailCreator, String imageId){
         _uri = uri;
         _userEmailCreator = userEmailCreator;
         this._imageId = imageId;
     }
 
     //Get y Set
-    public Uri get_uri() {
+    public String get_uri() {
         return _uri;
     }
 
-    public void set_uri(Uri _uri) {
+    public void set_uri(String _uri) {
         this._uri = _uri;
     }
 

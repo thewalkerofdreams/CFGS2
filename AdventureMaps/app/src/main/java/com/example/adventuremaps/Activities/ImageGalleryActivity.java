@@ -36,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+
 public class ImageGalleryActivity extends AppCompatActivity {
 
     private Button btnAddImage, btnDeleteImages;
@@ -62,7 +64,12 @@ public class ImageGalleryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada
-                    //TODO
+                    Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());
+                    intent.putExtras(bundle);
+                    intent.putExtra("PositionImageSelected", position);
+                    startActivity(intent);
                 }else{
                     //TODO Código repetido intentar retocar
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
@@ -134,7 +141,6 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
 
                 insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
-                //viewModel.get_imagesToLoad().add(new ClsImageWithId(imageUri, viewModel.get_actualEmailUser()));//Almacenamos la imagen en el VM
                 loadGallery();//Volvemos a cargar la galería
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
@@ -254,7 +260,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
                                                 .child(imageId).setValue(imageUrl);
 
-                                        viewModel.get_imagesToLoad().add(new ClsImageWithId(uri, viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
+                                        viewModel.get_imagesToLoad().add(new ClsImageWithId(uri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
                                     }
                                 });
                             }
@@ -305,7 +311,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                 String imageAddress = String.valueOf(images.getValue());//Obtenemos la dirección de la imagen
                                 Uri myUri = Uri.parse(imageAddress);//La convertimos al tipo Uri
                                 //Comenzamos a cargar los imagenes con su uri en una lista del VM
-                                viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri, emailImage.replace("[' ']", "."), imageId));
+                                viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri.toString(), emailImage.replace("[' ']", "."), imageId));
                             }
                         }
                         loadGallery();
