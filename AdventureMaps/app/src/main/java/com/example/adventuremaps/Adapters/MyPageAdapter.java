@@ -1,7 +1,6 @@
 package com.example.adventuremaps.Adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.adventuremaps.Activities.Models.ImageRecycle;
+import com.example.adventuremaps.Activities.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
 
@@ -20,10 +19,10 @@ import java.util.ArrayList;
 public class MyPageAdapter extends PagerAdapter
 {
     private Context context;
-    private ArrayList<ImageRecycle> images;
+    private ArrayList<ClsImageWithId> images;
     private LinearLayout itemImage;
 
-    public MyPageAdapter(Context context, ArrayList<ImageRecycle> images){
+    public MyPageAdapter(Context context, ArrayList<ClsImageWithId> images){
         this.context = context;
         this.images = images;
     }
@@ -53,9 +52,7 @@ public class MyPageAdapter extends PagerAdapter
     private void loadImage(int position){
         itemImage = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_image_view_pager, null);
         ImageView image = itemImage.findViewById(R.id.itemImage);
-        //image.setImageBitmap(images.get(position).getImage());
-        //image.setImageURI(images.get(position).getImage());
-        Picasso.with(context).load(images.get(position).getImage()).fit().centerCrop().into(image);
+        Picasso.with(context).load(images.get(position).get_uri()).fit().centerCrop().into(image);
     }
 
     @Override

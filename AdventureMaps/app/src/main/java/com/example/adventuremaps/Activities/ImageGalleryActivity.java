@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,16 +34,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.util.ArrayList;
 
 public class ImageGalleryActivity extends AppCompatActivity {
 
     private Button btnAddImage, btnDeleteImages;
     private GridView gridView;
     private AlertDialog alertDialogDeleteImages;
+    private ProgressDialog progressDialog;
     private ImageGalleryActivityVM viewModel;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
@@ -63,26 +64,19 @@ public class ImageGalleryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada
+                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada, lanzamos la actividad ImageGalleryViewPagerActivity
                     Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());
+                    bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());//Pasamos las imagenes a cargar
                     intent.putExtras(bundle);
-                    intent.putExtra("PositionImageSelected", position);
+                    intent.putExtra("PositionImageSelected", position);//Indicamos la posición de la imagen clicada
                     startActivity(intent);
                 }else{
-                    //TODO Código repetido intentar retocar
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
                         viewModel.get_imagesSelected().remove(item);//Eliminamos esa imagen de la lista de seleccionadas
                         view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
                     }else{
-                        if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(item.get_userEmailCreator()) ||
-                                viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
-                            viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
-                            view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
-                        }else{
-                            Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
-                        }
+                        selectImage(item, view);
                     }
                 }
             }
@@ -92,14 +86,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-                if(viewModel.get_imagesSelected().isEmpty()){//Si no existe ninguna imagen seleccionada
-                    if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(item.get_userEmailCreator()) ||
-                            viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
-                        viewModel.get_imagesSelected().add(item);//Añadimos la imagen a la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
-                    }else{
-                        Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
-                    }
+                if(viewModel.get_imagesSelected().isEmpty()) {//Si no existe ninguna imagen seleccionada
+                    selectImage(item, view);
                 }
 
                 return true;
@@ -123,7 +111,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 if(viewModel.get_imagesSelected().isEmpty()){//Si no hay imagenes seleccionadas
                     Toast.makeText(getApplication(), R.string.no_exist_selected_image, Toast.LENGTH_LONG).show();
                 }else{
-                    deleteImagesDialog();
+                    deleteImagesDialog();//Lanzamos un dialogo de eliminación
                 }
             }
         });
@@ -133,12 +121,38 @@ public class ImageGalleryActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Interfaz
+     * Nombre: selectImage
+     * Comentario: Este método nos permite seleccionar una imagen de la galería,
+     * si se intenta seleccionar una imagen sobre la que el usuario actual no tiene
+     * permisos de eliminación, el método muestra un mensaje por pantalla indicandolo.
+     * Este método se realizó sobre todo para evitar repetir código.
+     * Cabecera: private void selectImage(ClsImageWithId image)
+     * Entrada:
+     *  -ClsImageWithId image
+     * Postcondiciones: El método selecciona la imagen de la galería si el usuario tenía permiso
+     * para ello, es decir si la imagen la subió él o es el creador del punto de localización actual,
+     * en caso contrario el método muestra un mensaje por pantralla indicandole que no tiene el permiso
+     * para eliminarla.
+     */
+    private void selectImage(ClsImageWithId image, View view){
+            if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(image.get_userEmailCreator()) ||
+                    viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
+                viewModel.get_imagesSelected().add(image);//Añadimos la imagen a la lista de seleccionadas
+                view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+            }else{
+                Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
+            }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
-                final Uri imageUri = data.getData();//Pasaremos la imagen a Bitmap
+                final Uri imageUri = data.getData();
 
                 insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
                 loadGallery();//Volvemos a cargar la galería
@@ -194,8 +208,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getApplication(), R.string.images_deleted, Toast.LENGTH_SHORT).show();
-
-                //Eliminamos las rutas seleccionadas
+                //Eliminamos las imagenes seleccionadas
                 DatabaseReference drImages;
 
                 for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
@@ -205,8 +218,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 }
 
                 viewModel.set_dialogDeleteImagesShowing(false);//Indicamos que el dialogo ha finalizado
-                viewModel.get_imagesSelected().clear();//Vaciamos la lista de selecionadas
-                loadGallery();//Recargamos la lista de rutas
+                viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
+                loadGallery();//Recargamos la galería
             }
         });
 
@@ -244,10 +257,14 @@ public class ImageGalleryActivity extends AppCompatActivity {
         final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
                 child(System.currentTimeMillis()+""+getExtension(image));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
+        progressDialog = new ProgressDialog(this);//Isntanciamos el progressDialog
+        showProgressDialogWithTitle("Uploading the image", "Wait a moment please...");
+
         riversRef.putFile(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        hideProgressDialogWithTitle();
                         if (taskSnapshot.getMetadata() != null) {
                             if (taskSnapshot.getMetadata().getReference() != null) {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
@@ -255,7 +272,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
-                                        String imageId = localizationReference.push().getKey();
+                                        String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
                                         //Insertamos la dirección de la imagen en la base de datos
                                         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
                                                 .child(imageId).setValue(imageUrl);
@@ -265,14 +282,21 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                 });
                             }
                         }
-
-                        Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+                        hideProgressDialogWithTitle();
                         Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressDialog.setProgress((int) progress);
                     }
                 });
     }
@@ -319,12 +343,43 @@ public class ImageGalleryActivity extends AppCompatActivity {
                         break;//TODO No me puedo creer que lo este solucionando así
                     }
                 }
-                //loadGallery();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    //Metodos para el progressDialog
+
+    /**
+     * Interfaz
+     * Nombre: showProgressDialogWithTitle
+     * Comentario: Este método nos permite mostrar el dialogo de progreso que hemos instanciado en
+     * el método OnCreate de la actividad.
+     * Cabecera: private void showProgressDialogWithTitle(String title, String substring)
+     * @param title
+     * @param substring
+     */
+    private void showProgressDialogWithTitle(String title,String substring) {
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(substring);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+        progressDialog.setMax(100);
+        progressDialog.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: hideProgressDialogWithTitle
+     * Comentario: Este método nos permite ocultar el dialogo de progreso.
+     * Cabecera: private void hideProgressDialogWithTitle()
+     * Postcondiciones: El método oculta el dialogo de proceso de la actividad.
+     */
+    private void hideProgressDialogWithTitle() {
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.dismiss();
     }
 }

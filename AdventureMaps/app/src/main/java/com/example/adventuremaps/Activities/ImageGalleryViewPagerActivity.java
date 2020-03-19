@@ -1,16 +1,12 @@
 package com.example.adventuremaps.Activities;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.ViewParent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
-import com.example.adventuremaps.Activities.Models.ImageRecycle;
 import com.example.adventuremaps.Adapters.MyPageAdapter;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.ImageGalleryViewPagerActivityVM;
@@ -36,13 +32,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
         //Instanciamos los elementos de la UI
         viewPager = findViewById(R.id.viewPager);
 
-        ArrayList<ImageRecycle> imageRecycles = new ArrayList<>();
-        for(int i = 0; i < viewModel.get_imagesToLoad().size(); i++){
-            imageRecycles.add(new ImageRecycle(Uri.parse(viewModel.get_imagesToLoad().get(i).get_uri())));
-        }
-
-        MyPageAdapter myAdminPageAdapter = new MyPageAdapter(this, imageRecycles);
+        //Cargamos el viewPager
+        MyPageAdapter myAdminPageAdapter = new MyPageAdapter(this, viewModel.get_imagesToLoad());
         viewPager.setAdapter(myAdminPageAdapter);
-        viewPager.setCurrentItem(viewModel.get_positionSelectedImage());
+        viewPager.setCurrentItem(viewModel.get_positionSelectedImage());//Mostramos la imagen que se seleccionó en la actividad anterior
     }
 }

@@ -1,7 +1,5 @@
 package com.example.adventuremaps.Activities.Models;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 public class ClsImageWithId implements Serializable {
@@ -11,7 +9,7 @@ public class ClsImageWithId implements Serializable {
     private String _userEmailCreator;
 
     public ClsImageWithId(){
-        _uri = null;
+        _uri = "";
         _userEmailCreator = "";
         _imageId = "";
     }
