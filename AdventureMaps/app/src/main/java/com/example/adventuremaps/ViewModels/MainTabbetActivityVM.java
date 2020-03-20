@@ -32,7 +32,9 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -50,6 +52,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
+    private boolean _dialogShareLocalizationShowing;
     private ArrayList<String> _localizationsIdActualUser;
     private ArrayList<ClsLocalizationPoint> _localizationsActualUser;
     private ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList;
@@ -81,6 +84,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
+        _dialogShareLocalizationShowing = false;
         _localizationsActualUser = new ArrayList<>();
         _localizationsIdActualUser = new ArrayList<>();
         _itemsLocalizationList = new ArrayList<>();
@@ -142,6 +146,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_localizationsActualUser(ArrayList<ClsLocalizationPoint> _localizationsActualUser) {
         this._localizationsActualUser = _localizationsActualUser;
+    }
+
+    public boolean is_dialogShareLocalizationShowing() {
+        return _dialogShareLocalizationShowing;
+    }
+
+    public void set_dialogShareLocalizationShowing(boolean _dialogShareLocalizationShowing) {
+        this._dialogShareLocalizationShowing = _dialogShareLocalizationShowing;
     }
 
     public boolean is_dialogDeleteLocalizationShowing() {
@@ -400,5 +412,25 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
         alertDialogDeleteRoute.show();
+    }
+
+    //Fragment Localizations
+
+    /**
+     * Interfaz
+     * Nombre: shareLocalizationPoint
+     * Comentario: Este método nos permite compartir un punto de localización con la plataforma.
+     * Cabecera: public void shareLocalizationPoint()
+     * Precondiciones:
+     *  -El atributo _selectedLocalizations del VM debe contener una sola localización (Por razones de seguridad solo le dejamos compartir de una en una)
+     * Postcondiciones: El método hace visible para todos los usuarios un punto de localización
+     * seleccionado, la localización seleccionada se almacena en el atributo _selectedLocalizations
+     * del VM.
+     */
+    public void shareLocalizationPoint(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
+        Map<String, Object> hopperUpdates = new HashMap<>();
+        hopperUpdates.put("shared", true);
+        databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
     }
 }

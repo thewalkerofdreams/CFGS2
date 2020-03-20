@@ -31,6 +31,7 @@ import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.OrderLists;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,16 +46,16 @@ public class FragmentLocalizations extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ListView listView;
     private MainTabbetActivityVM viewModel;
-    private AlertDialog alertDialogDeleteLocalization;
+    private AlertDialog alertDialogDeleteLocalization, alertDialogShareLocalization;
     private Spinner spinner;
     private ArrayList<String> itemsSpinner = new ArrayList<>();
-    private Button btnFav, btnDelete;
+    private Button btnFav, btnDelete, btnShare;
     private boolean selectDefaultPassed = false;
     private ArrayAdapter<String> adapter;
     private DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
     private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
-    SharedPreferences sharedpreferencesField;
-    SharedPreferences sharedPreferencesFav;
+    private SharedPreferences sharedpreferencesField;
+    private SharedPreferences sharedPreferencesFav;
 
     public FragmentLocalizations() {
         // Required empty public constructor
@@ -68,13 +69,12 @@ public class FragmentLocalizations extends Fragment {
 
         //Instanciamos los SharedPreference
         sharedpreferencesField = getActivity().getSharedPreferences("OrderLocalizationListField", Context.MODE_PRIVATE);
-        sharedPreferencesFav = getActivity().getSharedPreferences("OrderLocalizationsListFav", Context.MODE_PRIVATE);
+        sharedPreferencesFav = getActivity().getSharedPreferences("OrderLocalizationListFav", Context.MODE_PRIVATE);
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
-
-        viewModel.set_localizationsActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cargar el listado de la plataforma
-        viewModel.set_localizationsIdActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cargar el listado de la plataforma
+        viewModel.set_localizationsActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cargar la lista de localizaciones
+        viewModel.set_localizationsIdActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cagar la lista de localizaciones
 
         //Instanciamos los elementos de la UI
         btnFav = view.findViewById(R.id.btnFavFragmentLocaliaztions);
@@ -98,7 +98,7 @@ public class FragmentLocalizations extends Fragment {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!viewModel.get_selectedLocalizations().isEmpty()){
+                if(!viewModel.get_selectedLocalizations().isEmpty()){//Si hay alguna localización seleccionada
                     showDeleteLocalizationDialog();
                 }else{
                     Toast.makeText(getActivity(), R.string.no_exist_selected_localization, Toast.LENGTH_SHORT).show();
@@ -110,7 +110,7 @@ public class FragmentLocalizations extends Fragment {
         itemsSpinner.add(getActivity().getResources().getString(R.string.name));
         itemsSpinner.add(getActivity().getResources().getString(R.string.date_of_creation));
 
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, itemsSpinner);
+        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, itemsSpinner);
         spinner.setAdapter(adapter);
         spinner.setSelection(sharedpreferencesField.getInt("OrderLocalizationListField", 1)-1);//Ajustamos la selección según el filtro guardado
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -137,7 +137,7 @@ public class FragmentLocalizations extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsLocalizationPointWithFav item = (ClsLocalizationPointWithFav) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-                if(viewModel.get_selectedLocalizations().isEmpty()){//Si no hay ninguna localización seleccionada
+                if(viewModel.get_selectedLocalizations().isEmpty()){//Si no hay ninguna localización seleccionada, entramos en los detalles de la localización
                     Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
                     intent.putExtra("ActualLocalization", item.get_localizationPoint());
                     intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
@@ -145,7 +145,15 @@ public class FragmentLocalizations extends Fragment {
                 }else{
                     if(viewModel.get_selectedLocalizations().contains(item)){//Si la ruta ya estaba seleccionada, la deselecciona
                         viewModel.get_selectedLocalizations().remove(item);//Eliminamos esa ruta de la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la ruta deseleccionada
+                        if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
+                            view.setBackgroundResource(R.drawable.background_localization_no_owner);
+                        }else{
+                            if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
+                                view.setBackgroundResource(R.drawable.background_localization_shared);
+                            }else{
+                                view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la ruta deseleccionada
+                            }
+                        }
                     }else{
                         viewModel.get_selectedLocalizations().add(item);//Añadimos la ruta a la lista de seleccionadas
                         view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
@@ -162,8 +170,31 @@ public class FragmentLocalizations extends Fragment {
                     viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
                     view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
                 }
-
                 return true;
+            }
+        });
+
+        btnShare = view.findViewById(R.id.btnShareFragmentLocalizations);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(viewModel.get_selectedLocalizations().isEmpty()){//Si no hay ninguna localización seleccionada
+                    Toast.makeText(getActivity(), R.string.error_selected_localizations_empty, Toast.LENGTH_SHORT).show();
+                }else{
+                    if(viewModel.get_selectedLocalizations().size() > 1){//Si hay más de una localización seleccionada
+                        Toast.makeText(getActivity(), R.string.error_selected_localizations_overflowed, Toast.LENGTH_SHORT).show();
+                    }else{
+                        if(!viewModel.get_selectedLocalizations().get(0).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){
+                            Toast.makeText(getActivity(), R.string.error_selected_localizations_no_owner, Toast.LENGTH_SHORT).show();
+                        }else{
+                            if(viewModel.get_selectedLocalizations().get(0).get_localizationPoint().isShared()){
+                                Toast.makeText(getActivity(), R.string.error_selected_localizations_already_shared, Toast.LENGTH_SHORT).show();
+                            }else{
+                                openShareDialog();//Abrimos el dialogo
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -172,7 +203,11 @@ public class FragmentLocalizations extends Fragment {
 
         if(savedInstanceState != null && viewModel.is_dialogDeleteLocalizationShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
             showDeleteLocalizationDialog();
+        }else{
+            if(savedInstanceState != null && viewModel.is_dialogShareLocalizationShowing())//Si el dialogo para compartir una localización estaba abierto lo recargamos
+                openShareDialog();
         }
+
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
             LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutTabLocalizations);
@@ -192,24 +227,6 @@ public class FragmentLocalizations extends Fragment {
     public void onStart() {
         super.onStart();
         // Read from the database
-        drLocalization.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización favoritos
-                for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){
-                        viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
-                    }
-                }
-                loadList();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
         drUser.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -220,7 +237,25 @@ public class FragmentLocalizations extends Fragment {
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
                 }
-                loadList();
+
+                drLocalization.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización favorito
+                        for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                            ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
+                            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
+                                    viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){
+                                viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
+                            }
+                        }
+                        loadList();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
             }
 
             @Override
@@ -251,8 +286,6 @@ public class FragmentLocalizations extends Fragment {
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getActivity(), R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
                 //Eliminamos las localizaciones seleccionadas
-                DatabaseReference drRoutePoint;
-
                 for(int i = 0; i < viewModel.get_selectedLocalizations().size(); i++){
                     //Eliminamos el id del punto de localización asignado a la lista de favoritos del usuario si este lo tuviera asignado como favorito
                     drUser.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_selectedLocalizations()
@@ -287,10 +320,9 @@ public class FragmentLocalizations extends Fragment {
      */
     public void loadList(){
 
-        if(viewModel.get_localizationsActualUser() != null && viewModel.get_localizationsIdActualUser() != null){
-            if(viewModel.get_selectedLocalizations().isEmpty()){//Si la lista se seleccionadas se encuentra vacía
-                loadLocalizationModelList();
-            }
+        if(viewModel.get_localizationsActualUser() != null && viewModel.get_localizationsIdActualUser() != null){//Si se han cargado las dos búsquedas necesarias desde FireBase
+            if(viewModel.get_selectedLocalizations().isEmpty())//Si la lista se seleccionadas se encuentra vacía
+                loadLocalizationModelList();//Asignamos los items de la lista
 
             Parcelable state = listView.onSaveInstanceState();//Guardamos el estado actual del listview (Nos interesa la posición actual del scroll)
 
@@ -312,7 +344,15 @@ public class FragmentLocalizations extends Fragment {
                     if(viewModel.get_selectedLocalizations().contains(viewModel.get_itemsLocalizationList().get(position))){//Si la ruta se encuentra en la lista de seleccionadas
                         view.setBackgroundResource(R.color.BlueItem);
                     }else{
-                        view.setBackgroundResource(R.color.WhiteItem);
+                        if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
+                            view.setBackgroundResource(R.drawable.background_localization_no_owner);
+                        }else{
+                            if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
+                                view.setBackgroundResource(R.drawable.background_localization_shared);
+                            }else{
+                                view.setBackgroundResource(R.color.WhiteItem);
+                            }
+                        }
                     }
 
                     return view;
@@ -320,7 +360,7 @@ public class FragmentLocalizations extends Fragment {
             };
             listView.setAdapter(adapter);
 
-            listView.onRestoreInstanceState(state);//Le asignamos el estado que almacenamos
+            listView.onRestoreInstanceState(state);//Le asignamos el estado que almacenamos anteriormente
         }
     }
 
@@ -339,11 +379,7 @@ public class FragmentLocalizations extends Fragment {
         boolean fav;
         viewModel.get_itemsLocalizationList().clear();//Limpiamos los items de la lista
         for(int i = 0; i < viewModel.get_localizationsActualUser().size(); i++){
-            if(viewModel.get_localizationsIdActualUser().contains(viewModel.get_localizationsActualUser().get(i).getLocalizationPointId())){//Si el usuario la tiene marcada como favorita
-                fav = true;
-            }else{
-                fav = false;
-            }
+            fav = viewModel.get_localizationsIdActualUser().contains(viewModel.get_localizationsActualUser().get(i).getLocalizationPointId());
             viewModel.get_itemsLocalizationList().add(new ClsLocalizationPointWithFav(viewModel.get_localizationsActualUser().get(i) , fav));//Almacenamos la clase modelo en la lista de items
         }
     }
@@ -364,24 +400,39 @@ public class FragmentLocalizations extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(alertDialogDeleteLocalization != null && alertDialogDeleteLocalization.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
+            alertDialogDeleteLocalization.dismiss();// close dialog to prevent leaked window
+            viewModel.set_dialogDeleteLocalizationShowing(true);
+        }else{
+            if(alertDialogShareLocalization != null && alertDialogShareLocalization.isShowing()){
+                alertDialogShareLocalization.dismiss();// close dialog to prevent leaked window
+                viewModel.set_dialogShareLocalizationShowing(true);
+            }
+        }
+    }
+
     /**
      * Interfaz
      * Nombre: orderList
-     * Comentario: Este método nos permite ordenar la lista de rutas según un criterio
+     * Comentario: Este método nos permite ordenar la lista de localizaciones según un criterio
      * en específico. La lista se ordenará según los parámetros de entrada.
      * Field:
-     *  -1 (RouteName)
+     *  -1 (LocalizationName)
      *  -2 (DateOfCreation)
      * Favourite:
-     *  -true (Order by favourites routes)
-     *  -false (Does not take into account favorite routes)
+     *  -true (Order by favourite localizations)
+     *  -false (Does not take into account favorite localizations)
      * Cabecera: public void orderList(int field, boolean favourite)
      * Entrada:
      *  -int field
      *  -boolean favourite
      * Precondiciones:
      *  -fields debe ser igual a 1 o 2.
-     * Postcondiciones: El método ordena la lista de rutas según los criterios introducidos
+     * Postcondiciones: El método ordena la lista de localizaciones según los criterios introducidos
      * por parámetros.
      */
     public void orderList(int field, boolean favourite){
@@ -404,5 +455,46 @@ public class FragmentLocalizations extends Fragment {
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: openShareDialog
+     * Comentario: Este método muestra por pantalla un dialogo para compartir una localización seleccionada
+     * con la plataforma. Si el usuario confirma la acción, se comparte el punto de localización y en caso
+     * contrario no sucede nada.
+     * Cabecera: public void openShareDialog()
+     * Precondiciones:
+     *  -Solo debe haber una ruta seleccionada almacenada en el VM.
+     * Postcondiciones: Si el usuario confirma el dialogo, se compartirá la ruta seleccionada y en caso contrario
+     * no sucede nada.
+     */
+    public void openShareDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(R.string.confirm_share);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_share_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getActivity(), R.string.localization_point_shared, Toast.LENGTH_SHORT).show();
+
+                viewModel.shareLocalizationPoint();//Compartimos el punto de localización
+                viewModel.set_dialogShareLocalizationShowing(false);//Indicamos que el dialogo ha finalizado
+                viewModel.get_selectedLocalizations().clear();//Vaciamos la lista de selecionadas
+                loadList();//Recargamos la lista de rutas
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_dialogShareLocalizationShowing(false);
+            }
+        });
+
+        alertDialogShareLocalization = alertDialogBuilder.create();
+        alertDialogShareLocalization.show();
     }
 }

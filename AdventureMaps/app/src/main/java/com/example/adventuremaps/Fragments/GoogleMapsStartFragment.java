@@ -206,7 +206,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    viewModel.get_localizationPoints().add(localizationPoint);
+                    if(localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))//Si la localización esta compartida o es del usuario actual
+                        viewModel.get_localizationPoints().add(localizationPoint);
                 }
                 loadLocalizationPoints();
             }

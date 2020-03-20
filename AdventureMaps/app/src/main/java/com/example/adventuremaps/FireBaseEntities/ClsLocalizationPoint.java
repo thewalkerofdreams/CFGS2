@@ -12,6 +12,7 @@ public class ClsLocalizationPoint implements Serializable {
     private Long dateOfCreation;//En FireBase no podemos almacenar el dato Int
     private String index;//Tengo que crear un index sintético debido a que FireBase DataBaseRealTime no permite ordenar una referencia por más de un hijo
     private String emailCreator;
+    private boolean shared;
 
     public ClsLocalizationPoint(){
 
@@ -25,6 +26,7 @@ public class ClsLocalizationPoint implements Serializable {
         this.dateOfCreation = dateOfCreation;
         index = latitude+"~"+longitude;
         this.emailCreator = emailCreator;
+        shared = false;
     }
 
     public ClsLocalizationPoint(String localizationPointId, String name, String description, Double latitude, Double longitude, Long dateOfCreation, String emailCreator){
@@ -36,6 +38,7 @@ public class ClsLocalizationPoint implements Serializable {
         this.dateOfCreation = dateOfCreation;
         index = latitude+"~"+longitude;
         this.emailCreator = emailCreator;
+        shared = false;
     }
 
     //Gets y Sets
@@ -101,5 +104,13 @@ public class ClsLocalizationPoint implements Serializable {
 
     public void setEmailCreator(String emailCreator) {
         this.emailCreator = emailCreator;
+    }
+
+    public boolean isShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 }

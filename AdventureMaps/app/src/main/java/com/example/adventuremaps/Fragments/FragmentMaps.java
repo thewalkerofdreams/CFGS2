@@ -110,12 +110,14 @@ public class FragmentMaps extends Fragment {
 
                             //Instanciamos los botones de la actividad
                             downloadButton = getActivity().findViewById(R.id.download_button);
-                            downloadButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    downloadRegionDialog();
-                                }
-                            });
+                            if(downloadButton != null){//TODO por alguna razón si vas muy rápido aquí peta, mirar si recicla como debe
+                                downloadButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        downloadRegionDialog();
+                                    }
+                                });
+                            }
 
                             listButton = getActivity().findViewById(R.id.list_button);
                             listButton.setOnClickListener(new View.OnClickListener() {
