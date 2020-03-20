@@ -33,6 +33,7 @@
         <activity android:name=".Activities.DetailsLocalizationPointActivity"></activity>
         <activity android:name=".Activities.EditLocalizationPointActivity"></activity>
         <activity android:name=".Activities.ImageGalleryActivity"></activity>
+        <activity android:name=".Activities.ImageGalleryViewPagerActivity"></activity>
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

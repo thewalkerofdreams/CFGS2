@@ -3,20 +3,21 @@ package com.example.adventuremaps.ViewModels;
 import androidx.lifecycle.ViewModel;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 
 import java.util.ArrayList;
 
 public class ImageGalleryActivityVM extends ViewModel {
 
     private String _actualEmailUser;
-    private String _actualLocalizationPointId;
+    private ClsLocalizationPoint _actualLocalizationPoint;
     private ArrayList<ClsImageWithId> _imagesToLoad;
     private ArrayList<ClsImageWithId> _imagesSelected;
     private boolean _dialogDeleteImagesShowing;
 
     public ImageGalleryActivityVM(){
         _actualEmailUser = "";
-        _actualLocalizationPointId = "";
+        _actualLocalizationPoint = null;
         _imagesToLoad = new ArrayList<>();
         _imagesSelected = new ArrayList<>();
         _dialogDeleteImagesShowing = false;
@@ -31,12 +32,12 @@ public class ImageGalleryActivityVM extends ViewModel {
         this._actualEmailUser = _actualEmailUser;
     }
 
-    public String get_actualLocalizationPointId() {
-        return _actualLocalizationPointId;
+    public ClsLocalizationPoint get_actualLocalizationPoint() {
+        return _actualLocalizationPoint;
     }
 
-    public void set_actualLocalizationPointId(String _actualLocalizationPointId) {
-        this._actualLocalizationPointId = _actualLocalizationPointId;
+    public void set_actualLocalizationPoint(ClsLocalizationPoint _actualLocalizationPoint) {
+        this._actualLocalizationPoint = _actualLocalizationPoint;
     }
 
     public ArrayList<ClsImageWithId> get_imagesToLoad() {
