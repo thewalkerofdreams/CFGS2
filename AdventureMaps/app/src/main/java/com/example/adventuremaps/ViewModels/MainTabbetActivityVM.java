@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.adventuremaps.Activities.MainTabbetActivity;
+import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
@@ -47,6 +48,13 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Context _context;
     private int _regionSelected;
 
+    //Fragment Localizations
+    private boolean _dialogDeleteLocalizationShowing;
+    private ArrayList<String> _localizationsIdActualUser;
+    private ArrayList<ClsLocalizationPoint> _localizationsActualUser;
+    private ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList;
+    private ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations;
+
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
     private ArrayList<ClsRoute> _itemsRouteList;
@@ -70,6 +78,13 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
+
+        //Fragment Localizations
+        _dialogDeleteLocalizationShowing = false;
+        _localizationsActualUser = new ArrayList<>();
+        _localizationsIdActualUser = new ArrayList<>();
+        _itemsLocalizationList = new ArrayList<>();
+        _selectedLocalizations = new ArrayList<>();
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
@@ -118,6 +133,47 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public String getJsonFieldRegionName() {
         return JSON_FIELD_REGION_NAME;
+    }
+
+    //Gets y Sets Fragment Localizations
+    public ArrayList<ClsLocalizationPoint> get_localizationsActualUser() {
+        return _localizationsActualUser;
+    }
+
+    public void set_localizationsActualUser(ArrayList<ClsLocalizationPoint> _localizationsActualUser) {
+        this._localizationsActualUser = _localizationsActualUser;
+    }
+
+    public boolean is_dialogDeleteLocalizationShowing() {
+        return _dialogDeleteLocalizationShowing;
+    }
+
+    public void set_dialogDeleteLocalizationShowing(boolean _dialogDeleteLocalizationShowing) {
+        this._dialogDeleteLocalizationShowing = _dialogDeleteLocalizationShowing;
+    }
+
+    public ArrayList<String> get_localizationsIdActualUser() {
+        return _localizationsIdActualUser;
+    }
+
+    public void set_localizationsIdActualUser(ArrayList<String> _localizationsIdActualUser) {
+        this._localizationsIdActualUser = _localizationsIdActualUser;
+    }
+
+    public ArrayList<ClsLocalizationPointWithFav> get_itemsLocalizationList() {
+        return _itemsLocalizationList;
+    }
+
+    public void set_itemsLocalizationList(ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList) {
+        this._itemsLocalizationList = _itemsLocalizationList;
+    }
+
+    public ArrayList<ClsLocalizationPointWithFav> get_selectedLocalizations() {
+        return _selectedLocalizations;
+    }
+
+    public void set_selectedLocalizations(ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations) {
+        this._selectedLocalizations = _selectedLocalizations;
     }
 
     //Gets y Sets Fragment Routes

@@ -123,4 +123,7 @@
     <string name="image_uploaded">Image uploaded!</string>
     <string name="error_upload_image">Error to upload the image!</string>
     <string name="no_permisission_to_delete_image">You don"'t have permission to delete this image!</string>
+
+    <string name="share">Share</string>
+    <string name="no_exist_selected_localization">There is no selected localization!</string>
 </resources>

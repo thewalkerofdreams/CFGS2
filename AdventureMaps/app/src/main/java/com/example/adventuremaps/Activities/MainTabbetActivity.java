@@ -170,6 +170,35 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);
     }
 
+    /**
+     * Interfaz
+     * Nombre: onClickLocalizationFav
+     * Comentario: Este método nos permite modificar el estado de favorito de una localización del usuario actual.
+     * Cabecera: public void onClickLocalizationFav(View v)
+     * @param v
+     * Postcondiciones: El método guarda la localización como favorita para el usuario actual, realizando el cambio
+     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
+     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
+     */
+    public void onClickLocalizationFav(View v){
+        //get the row the clicked button is in
+        LinearLayout vwParentRow = (LinearLayout)v.getParent();
+        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+        String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
+            btnChild.setBackgroundResource(R.drawable.empty_star);
+            databaseReference.child(FirebaseAuth.getInstance().
+                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();
+        }else{
+            btnChild.setBackgroundResource(R.drawable.fill_star);
+            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId)
+                    .setValue(localizationId);
+        }
+    }
+
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1) {
