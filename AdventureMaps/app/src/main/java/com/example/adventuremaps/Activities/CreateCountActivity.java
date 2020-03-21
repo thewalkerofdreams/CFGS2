@@ -98,6 +98,7 @@ public class CreateCountActivity extends AppCompatActivity {
                                         FirebaseDatabase.getInstance().getReference("Users").
                                                 child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .setValue(nuevoUsuario);
+                                        finish();//Finalizamos la actividad
                                     }else{
                                         //Si el correo ya se encontraba registrado en la plataforma, es decir, si ocurre una colisión
                                         if(task.getException() instanceof FirebaseAuthUserCollisionException){

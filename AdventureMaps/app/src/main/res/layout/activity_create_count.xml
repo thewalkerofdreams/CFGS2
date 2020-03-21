@@ -40,6 +40,7 @@
         android:layout_marginTop="5sp"
         android:layout_marginStart="30sp"
         android:layout_marginEnd="30sp"
+        android:inputType="textPassword"
         android:hint="@string/hint_password"></EditText>
 
     <EditText
@@ -51,6 +52,7 @@
         android:layout_marginBottom="5sp"
         android:layout_marginStart="30sp"
         android:layout_marginEnd="30sp"
+        android:inputType="textPassword"
         android:hint="@string/hint_repeat_the_password"></EditText>
 
     <Button

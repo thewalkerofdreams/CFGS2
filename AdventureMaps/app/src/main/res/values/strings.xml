@@ -132,5 +132,5 @@
     <string name="question_share_localization_point">Are you sure you want to share the location? You can not stop sharing it!</string>
     <string name="localization_point_shared">Localization point shared!</string>
     <string name="error_selected_localizations_already_shared">The location is already shared</string>
-    <string name="error_selected_localizations_no_owner">You cannot share a location that is not yours!</string>
+    <string name="error_selected_localizations_no_owner">You cannot select a location that is not yours!</string>
 </resources>
