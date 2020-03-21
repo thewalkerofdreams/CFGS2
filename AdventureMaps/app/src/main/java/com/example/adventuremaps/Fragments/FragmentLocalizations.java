@@ -143,20 +143,12 @@ public class FragmentLocalizations extends Fragment {
                     intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
                     startActivity(intent);
                 }else{
-                    if(viewModel.get_selectedLocalizations().contains(item)){//Si la ruta ya estaba seleccionada, la deselecciona
-                        viewModel.get_selectedLocalizations().remove(item);//Eliminamos esa ruta de la lista de seleccionadas
-                        if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
-                            view.setBackgroundResource(R.drawable.background_localization_no_owner);
-                        }else{
-                            if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
-                                view.setBackgroundResource(R.drawable.background_localization_shared);
-                            }else{
-                                view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la ruta deseleccionada
-                            }
-                        }
+                    if(viewModel.get_selectedLocalizations().contains(item)){//Si la localización ya estaba seleccionada, la deselecciona
+                        viewModel.get_selectedLocalizations().remove(item);//Eliminamos esa localización de la lista de seleccionadas
+                        changeBackgroundColorItemView(view, position);//Cambiamos el color de la localización
                     }else{
-                        viewModel.get_selectedLocalizations().add(item);//Añadimos la ruta a la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
+                        viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
+                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la localización seleccionada
                     }
                 }
             }
@@ -341,18 +333,10 @@ public class FragmentLocalizations extends Fragment {
                 public View getView(int position, View convertView, ViewGroup viewGroup) {
                     View view = super.getView(position, convertView, viewGroup);
 
-                    if(viewModel.get_selectedLocalizations().contains(viewModel.get_itemsLocalizationList().get(position))){//Si la ruta se encuentra en la lista de seleccionadas
+                    if(viewModel.get_selectedLocalizations().contains(viewModel.get_itemsLocalizationList().get(position))){//Si la localización se encuentra en la lista de seleccionadas
                         view.setBackgroundResource(R.color.BlueItem);
                     }else{
-                        if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
-                            view.setBackgroundResource(R.drawable.background_localization_no_owner);
-                        }else{
-                            if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
-                                view.setBackgroundResource(R.drawable.background_localization_shared);
-                            }else{
-                                view.setBackgroundResource(R.color.WhiteItem);
-                            }
-                        }
+                        changeBackgroundColorItemView(view, position);
                     }
 
                     return view;
@@ -361,6 +345,33 @@ public class FragmentLocalizations extends Fragment {
             listView.setAdapter(adapter);
 
             listView.onRestoreInstanceState(state);//Le asignamos el estado que almacenamos anteriormente
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: changeBackgroundColorItemView
+     * Comentario: Este método nos permite cambiar el color de fondo de un item
+     * de la lista de localizaciones. El item tomará un color diferente según el siguiente
+     * criterio:
+     * -Azul si la localización no pertenece al usuario actual.
+     * -Amarillo si el usuario ya compartió la localizacióon.
+     * -Blanco si no cumple ninguno de los tres criterios anteriores.
+     * Realizamos este método para evitar repetir código.
+     * Cabecera: public void changeBackgroundColorItemView(View view, int position)
+     *  -View view
+     *  -int position
+     * Postcondiciones: El método cambiar el color de un item según el estado de este.
+     */
+    public void changeBackgroundColorItemView(View view, int position){
+        if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
+                view.setBackgroundResource(R.drawable.background_localization_no_owner);
+        }else{
+            if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
+                view.setBackgroundResource(R.drawable.background_localization_shared);
+            }else{
+                view.setBackgroundResource(R.color.WhiteItem);
+            }
         }
     }
 
