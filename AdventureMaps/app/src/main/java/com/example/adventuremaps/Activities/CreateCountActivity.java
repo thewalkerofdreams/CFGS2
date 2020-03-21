@@ -30,7 +30,6 @@ public class CreateCountActivity extends AppCompatActivity {
     private EditText textNickName, textEmail, textPassword01, textPassword02;
     private ImageView imageView;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference userReference;
     private CreateCountActivityVM viewModel;
     private ProgressDialog progressDialog;;
     @Override
@@ -94,10 +93,8 @@ public class CreateCountActivity extends AppCompatActivity {
                                     //Verificamos que se pudo registrar el usuario
                                     if(task.isSuccessful()){
                                         Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
-                                        userReference = FirebaseDatabase.getInstance().getReference("ClsUser");
-                                        String userId = userReference.push().getKey();//Obtenemos una id para el usuario
                                         //Almacenamos al nuevo usuario
-                                        ClsUser nuevoUsuario = new ClsUser(userId, viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
+                                        ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
                                         FirebaseDatabase.getInstance().getReference("Users").
                                                 child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .setValue(nuevoUsuario);

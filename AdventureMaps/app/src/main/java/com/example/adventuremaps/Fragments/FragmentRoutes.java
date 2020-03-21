@@ -46,7 +46,7 @@ public class FragmentRoutes extends Fragment {
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteRoute;
     private Spinner spinner;
-    private ArrayList<String> itemsSpinner = new ArrayList<>();
+    private ArrayList<String> itemsSpinner;
     private Button btnFav, btnDelete;
     private boolean selectDefaultPassed = false;
     private ArrayAdapter<String> adapter;
@@ -101,6 +101,7 @@ public class FragmentRoutes extends Fragment {
         });
 
         spinner = view.findViewById(R.id.SpinnerFragmentRoutes);
+        itemsSpinner = new ArrayList<>();
         itemsSpinner.add(getActivity().getResources().getString(R.string.name));
         itemsSpinner.add(getActivity().getResources().getString(R.string.date_of_creation));
 

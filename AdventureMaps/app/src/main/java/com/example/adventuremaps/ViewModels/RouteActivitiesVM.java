@@ -35,7 +35,6 @@ public class RouteActivitiesVM extends AndroidViewModel {
     //Atributos específicamos para SeeAndEditRouteActivity
     private String _actualIdRoute;
     private String _actualRouteName;
-    private boolean _mostrarRuta;
     private ArrayList<ClsRoutePoint> _routePoints;
 
     public RouteActivitiesVM(Application application){
@@ -50,7 +49,6 @@ public class RouteActivitiesVM extends AndroidViewModel {
         _actualEmailUser = "";
         _actualIdRoute = "";
         _actualRouteName = "";
-        _mostrarRuta = true;
         _routePoints = new ArrayList<>();
     }
 
@@ -134,14 +132,6 @@ public class RouteActivitiesVM extends AndroidViewModel {
 
     public void set_actualRouteName(String _actualRouteName) {
         this._actualRouteName = _actualRouteName;
-    }
-
-    public boolean is_mostrarRuta() {
-        return _mostrarRuta;
-    }
-
-    public void set_mostrarRuta(boolean _mostrarRuta) {
-        this._mostrarRuta = _mostrarRuta;
     }
 
     public ArrayList<ClsRoutePoint> get_routePoints() {

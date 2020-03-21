@@ -320,28 +320,22 @@ public class ImageGalleryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.addValueEventListener(new ValueEventListener() {
+        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if (localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPoint().getLocalizationPointId())) {
-
-                        for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
-                            String emailImage = userEmailImages.getKey();
-                            for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
-                                String imageId = images.getKey();
-                                String imageAddress = String.valueOf(images.getValue());//Obtenemos la dirección de la imagen
-                                Uri myUri = Uri.parse(imageAddress);//La convertimos al tipo Uri
-                                //Comenzamos a cargar los imagenes con su uri en una lista del VM
-                                viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri.toString(), emailImage.replace("[' ']", "."), imageId));
-                            }
+                    for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
+                        String emailImage = userEmailImages.getKey();
+                        for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
+                            String imageId = images.getKey();
+                            String imageAddress = String.valueOf(images.getValue());//Obtenemos la dirección de la imagen
+                            Uri myUri = Uri.parse(imageAddress);//La convertimos al tipo Uri
+                            //Comenzamos a cargar los imagenes con su uri en una lista del VM
+                            viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri.toString(), emailImage.replace("[' ']", "."), imageId));
                         }
-                        loadGallery();
-
-                        break;//TODO No me puedo creer que lo este solucionando así
                     }
+                    loadGallery();
                 }
             }
 

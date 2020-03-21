@@ -97,19 +97,13 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.addValueEventListener(new ValueEventListener() {
+        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_localizationTypes().clear();
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint.getLocalizationPointId().equals(viewModel.get_actualLocalizationPoint().getLocalizationPointId())){
-
-                        for(DataSnapshot types : datas.child("types").getChildren()){
-                            viewModel.get_localizationTypes().add(String.valueOf(types.getValue()));
-                        }
-
-                        break;//TODO No me puedo creer que lo este solucionando así
+                    for(DataSnapshot types : datas.child("types").getChildren()){
+                        viewModel.get_localizationTypes().add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización
                     }
                 }
                 loadList();

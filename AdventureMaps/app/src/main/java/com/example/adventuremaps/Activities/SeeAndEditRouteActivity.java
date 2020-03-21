@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
+import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
@@ -125,8 +126,6 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                             if (routeName.isEmpty()) {//Si el nombre de la ruta se encuentra vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                viewModel.set_mostrarRuta(false);//Con esto indicamos que vamor a guardar datos en FireBase, para evitar recargar el mapa
-
                                 //Cambiamos el nombre de la ruta si ha cambiado
                                 if(!viewModel.get_actualRouteName().equals(nameEdit.getText().toString())){
                                     Map<String, Object> hopperUpdates = new HashMap<>();
@@ -183,32 +182,29 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.set_mostrarRuta(true);
-
         // Read from the database
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {//Los datos del usuario actual
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 viewModel.get_routePoints().clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot routes : datas.child("routes").getChildren()){
-                        //loop 2 to go through all the child nodes of routes node
-                        ClsRoute route = routes.getValue(ClsRoute.class);
-                        if(route.getRouteId().equals(viewModel.get_actualIdRoute())){//Si es la ruta que queremos mostrar
+                    ClsUser user = datas.getValue(ClsUser.class);
+                        FirebaseDatabase.getInstance().getReference("Users").child(user.getUserId()).child("routes").child(viewModel.get_actualIdRoute()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                                for(DataSnapshot points : dataSnapshot2.child("routePoints").getChildren()){
+                                    ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
+                                    viewModel.get_routePoints().add(routePoint);
+                                }
 
-                            for(DataSnapshot points : routes.child("routePoints").getChildren()){
-                                ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
-                                viewModel.get_routePoints().add(routePoint);
+                                cargarRuta();//Cargamos la ruta
                             }
 
-                            break;//TODO No me puedo creer que lo este solucionando así
-                        }
-                    }
-                }
-                if(viewModel.is_mostrarRuta()) {//Si queremos mostrar la ruta
-                    cargarRuta();//Cargamos la ruta
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                 }
             }
 
