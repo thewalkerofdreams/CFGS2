@@ -1,6 +1,10 @@
 package com.example.adventuremaps.ViewModels;
 
+import android.net.Uri;
+
 import androidx.lifecycle.ViewModel;
+
+import com.example.adventuremaps.Activities.Models.ClsImageWithId;
 
 import java.util.ArrayList;
 
@@ -14,6 +18,7 @@ public class LocalizationPointActivitiesVM extends ViewModel {
     private double _latitude;
     private double _longitude;
     private boolean _favourite;
+    private ArrayList<ClsImageWithId> _imagesToSave;
 
     public LocalizationPointActivitiesVM(){
         _actualEmailUser = "";
@@ -23,6 +28,7 @@ public class LocalizationPointActivitiesVM extends ViewModel {
         _latitude = 0.0;
         _longitude = 0.0;
         _favourite = false;
+        _imagesToSave = new ArrayList<>();
     }
 
     //Get y Set
@@ -80,5 +86,13 @@ public class LocalizationPointActivitiesVM extends ViewModel {
 
     public void set_favourite(boolean _favourite) {
         this._favourite = _favourite;
+    }
+
+    public ArrayList<ClsImageWithId> get_imagesToSave() {
+        return _imagesToSave;
+    }
+
+    public void set_imagesToSave(ArrayList<ClsImageWithId> _imagesToSave) {
+        this._imagesToSave = _imagesToSave;
     }
 }

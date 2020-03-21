@@ -1,22 +1,42 @@
 package com.example.adventuremaps.Activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.LocalizationPointActivitiesVM;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
@@ -24,7 +44,9 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
     private LocalizationPointActivitiesVM viewModel;
     private EditText name, description;
-    private Button btnSave, btnFavourite;
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private Button btnSave, btnFavourite, btnImageGallery;
     private CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private DatabaseReference localizationPointReference = FirebaseDatabase.getInstance().getReference("ClsLocalizationPoint");
@@ -40,6 +62,11 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
         viewModel.set_latitude(getIntent().getDoubleExtra("ActualLatitude", 0));
         viewModel.set_longitude(getIntent().getDoubleExtra("ActualLongitude", 0));
+
+        //Si la aplicación no tiene los permisos de lectura externa los pide
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
 
         //Instanciamos los elementos de la UI
         name = findViewById(R.id.EditTextLocalizationName);
@@ -96,6 +123,18 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btnImageGallery = findViewById(R.id.btnImageGalleryCreateLocalizationPoint);
+        btnImageGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), 2);
+                }else{
+                    Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     /**
@@ -133,6 +172,10 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                             .setValue(localizationPointId);
                 }
 
+                //Almacenamos las imagenes del punto de localización
+                insertImagesToFireBase(localizationPointId, newLocalizationPoint);
+
+                //Cerramos la actividad actual
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("LocalizationToSave", newLocalizationPoint);
                 resultIntent.putExtra("LocalizationTypesToSave", viewModel.get_localizationTypes());
@@ -143,6 +186,87 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
             }
         }else{
             Toast.makeText(this, R.string.name_and_description_required, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getExtension
+     * Comentario: Este método nos permite obtener la extensión de una dirección Uri.
+     * Cabecera: public String getExtension(Uri uri)
+     * Entrada:
+     *  -Uri uri
+     * Postcondiciones: El método devuelve la extensión de la dirección uri asociada al nombre.
+     */
+    public String getExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    /**
+     * Interfaz
+     * Nombre: insertImagesToFireBase
+     * Comentario: Este método nos permite insertar las imagenes asigandas al nuevo punto de localización
+     * en la plataforma Firebase.
+     * Cabecera: public void insertImagesToFireBase()
+     * Postcondiciones: El método inserta las imagenes asignadas al nuevo punto de localización en la
+     * plataforma Firebase.
+     */
+    public void insertImagesToFireBase(final String localizationPointId, final ClsLocalizationPoint newLocalizationPoint){
+        for(int i = 0; i < viewModel.get_imagesToSave().size(); i++){
+            final StorageReference riversRef = mStorageRef.child("Images").child(localizationPointId).child(viewModel.get_actualEmailUser()).
+                    child(System.currentTimeMillis()+""+getExtension(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri())));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
+
+            riversRef.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            if (taskSnapshot.getMetadata() != null) {
+                                if (taskSnapshot.getMetadata().getReference() != null) {
+                                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
+                                            String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
+                                            //Insertamos la dirección de la imagen en la base de datos
+                                            localizationReference.child(localizationPointId).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
+                                                    .child(imageId).setValue(imageUrl);
+                                        }
+                                    });
+                                }
+                            }
+                            Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 2) {
+            if (resultCode == 3) {//Si el usuario seleccionó una imagen de la galería
+                ArrayList<ClsImageWithId> images = (ArrayList<ClsImageWithId>) data.getSerializableExtra("ImagesToSave");
+                viewModel.set_imagesToSave(images);//Almacenamos las imagenes en el VM
+            }
+        }
+    }
+
+    @Override//Controlamos la respuesta a los permisos
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Nothig for the moment
+            }
         }
     }
 }
