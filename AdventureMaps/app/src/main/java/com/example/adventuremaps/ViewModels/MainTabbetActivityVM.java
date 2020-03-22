@@ -71,6 +71,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
     private ClsLocalizationPoint _localizationToSave;
     private ArrayList<String> _localizationTypesToSave;
+    private ArrayList<String> _checkedFilters;
+    private boolean[] _dialogPostisionsChecked;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -103,6 +105,11 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationPointClicked = null;
         _localizationToSave = null;
         _localizationTypesToSave = new ArrayList<>();
+        _checkedFilters = new ArrayList<>();
+        _dialogPostisionsChecked = new boolean[8];
+        for(int i = 0; i < _dialogPostisionsChecked.length; i++){//Inicializamos el filtrado sobr el mapa
+            _dialogPostisionsChecked[i] = true;
+        }
     }
 
     //Get y Set
@@ -268,6 +275,22 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_localizationTypesToSave(ArrayList<String> _localizationTypesToSave) {
         this._localizationTypesToSave = _localizationTypesToSave;
+    }
+
+    public ArrayList<String> get_checkedFilters() {
+        return _checkedFilters;
+    }
+
+    public void set_checkedFilters(ArrayList<String> _checkedFilters) {
+        this._checkedFilters = _checkedFilters;
+    }
+
+    public boolean[] get_dialogPostisionsChecked() {
+        return _dialogPostisionsChecked;
+    }
+
+    public void set_dialogPostisionsChecked(boolean[] _dialogPostisionsChecked) {
+        this._dialogPostisionsChecked = _dialogPostisionsChecked;
     }
 
     //Functions Fragment Offline Maps Part

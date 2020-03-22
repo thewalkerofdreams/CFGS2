@@ -206,7 +206,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))//Si la localización esta compartida o es del usuario actual
+
+                    ArrayList<String> actualTypes = new ArrayList<>();
+                    for(DataSnapshot types : datas.child("types").getChildren()){
+                        actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
+                    }
+
+                    if((localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))
+                    && contieneDatoIdentico(actualTypes, viewModel.get_checkedFilters()))//Si la localización esta compartida o es del usuario actual y si cumple los filtros
                         viewModel.get_localizationPoints().add(localizationPoint);
                 }
                 loadLocalizationPoints();
@@ -216,6 +223,34 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: contieneDatoIdentico
+     * Comentario: Este método nos permite verificar si entros dos arraylist de cadenas
+     * contienen al menos algún dato identico.
+     * Cabecera: public boolean contieneDatoIdentico(ArrayList<String> array01, ArrayList<String> array02)
+     * Entrada:
+     *  -ArrayList<String> array01
+     *  -ArrayList<String> array02
+     * Salida:
+     *  -boolean containSameData
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si las listas
+     * compartían al menos un dato o false en caso contrario.
+     */
+    public boolean contieneDatoIdentico(ArrayList<String> array01, ArrayList<String> array02){//TODO Nuevo nombre y en una clase de utilidad
+        boolean containSameData = false;
+
+        if(!array01.isEmpty() && !array02.isEmpty()){//Si ninguna de las listaas se encuentra vacía
+            for(int i = 0; i < array01.size() && !containSameData; i++){
+                if(array02.contains(array01.get(i))){
+                    containSameData = true;
+                }
+            }
+        }
+
+        return containSameData;
     }
 
     /**

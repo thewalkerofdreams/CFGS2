@@ -135,4 +135,7 @@
     <string name="error_selected_localizations_no_owner">You cannot select a location that is not yours!</string>
 
     <string name="error_read_external_storage">You must accept write permissions to store images!</string>
+    <string name="filter_title">Localizations Filters</string>
+    <string name="apply_changes">Apply Changes</string>
+    <string name="filters">Filters</string>
 </resources>

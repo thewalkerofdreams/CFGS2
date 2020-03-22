@@ -40,6 +40,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +65,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
+
+        final String[] filterItems = {getResources().getString(R.string.potable_water),
+                getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
+                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
+                getResources().getString(R.string.vivac)};
+        viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems))); //Al principio todos los filtros se encuentran check
 
         String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
         if(!email.isEmpty()){
@@ -238,5 +246,50 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             fragment = null;
         }
+    }
+
+    //Fragment Star
+
+    /**
+     * Interfaz
+     * Nombre: showFilterDialog
+     * Comentario: Este método muestra por pantalla un dialogo con los diferentes filtros, aplicados
+     * sobre el mapa, si el usuario confirma el dialogo se aplicará la configuración actual dependiendo
+     * de los filtro que haya seleccionado.
+     * Cabecera:
+     */
+    public void showFilterDialog(View view){
+        final String[] filterItems = {getResources().getString(R.string.potable_water),
+                getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
+                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
+                getResources().getString(R.string.vivac)};
+
+        AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle(R.string.filter_title);
+        builder.setMultiChoiceItems(filterItems, viewModel.get_dialogPostisionsChecked(), new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                // user checked or unchecked a box
+                if(isChecked){//Si se ha chequeado un filtro
+                    viewModel.get_checkedFilters().add(filterItems[which]);//Añadimos el filtro en la lista del VM
+                }else{
+                    viewModel.get_checkedFilters().remove(filterItems[which]);//Eliminamos el filtro en la lista del VM
+                }
+            }
+        });
+        builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // user clicked OK
+                //TODO Aquí recargariamos el mapa según los filtros
+                GoogleMapsStartFragment fragment = new GoogleMapsStartFragment();
+                FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
+                transation.replace(R.id.fragmentGoogleMapsStart, fragment);
+                transation.commit();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
