@@ -459,9 +459,9 @@ public class FragmentLocalizations extends Fragment {
             }
         }else{
             if(field == 1){
-                new OrderLists().orderLocalizationListByName(viewModel.get_itemsLocalizationList());//Order list by name
+                viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListByName(viewModel.get_itemsLocalizationList()));//Order list by name
             }else{
-                new OrderLists().orderLocalizationListAscByDate(viewModel.get_itemsLocalizationList());//Order list by date of creation
+                viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListAscByDate(viewModel.get_itemsLocalizationList()));//Order list by date of creation
             }
         }
     }

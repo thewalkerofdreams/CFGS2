@@ -1,7 +1,5 @@
 package com.example.adventuremaps.ViewModels;
 
-import android.net.Uri;
-
 import androidx.lifecycle.ViewModel;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;

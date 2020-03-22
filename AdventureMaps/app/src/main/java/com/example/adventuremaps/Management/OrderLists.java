@@ -1,7 +1,6 @@
 package com.example.adventuremaps.Management;
 
 import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
-import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 
 import java.util.ArrayList;
@@ -43,32 +42,47 @@ public class OrderLists {
     /**
      * Interfaz
      * Nombre: orderLocalizationListByName
-     * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre.
-     * Internamente este método realiza el método de ordenación por selección directa,//TODO Change to quicksort
-     * debido a que el número de rutas dudosamente será muy elevado.
-     * Cabecera: public void orderLocalizationListByName(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Comentario: Este método nos permite obtener una lista de localizaciones ordenada por nombre ascendentemente,
+     * dada otra lista de localizaciones.
+     * Debido a que el número de elemento de la lista de localizaciones sea bastante superior al de la lista
+     * de rutas, se ha implementado el método QuickSort para su ordenación.
+     * Cabecera: public ArrayList<ClsLocalizationPointWithFav> orderLocalizationListByName(ArrayList<ClsLocalizationPointWithFav> localizationList)
      * Entrada:
      *  -ArrayList<ClsLocalizationPointWithFav> localizationList
-     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre.
+     * Salida:
+     *  -ArrayList<ClsLocalizationPointWithFav> sortedList
+     * Postcondiciones: El método devuelve una lista de localizaciones ordenadas por nombre ascendentemente, dada otra lista
+     * por parámetros.
      */
-    public void orderLocalizationListByName(ArrayList<ClsLocalizationPointWithFav> localizationList){//TODO Change to quicksort
-        for (int i = 0; i < localizationList.size() - 1; i++)
-        {
-            int min = i;
-            for (int j = i + 1; j < localizationList.size(); j++)
+    public ArrayList<ClsLocalizationPointWithFav> orderLocalizationListByName(ArrayList<ClsLocalizationPointWithFav> localizationList){
+        ArrayList<ClsLocalizationPointWithFav> sortedList;  //La lista ordenada que se devolverá
+        ArrayList<ClsLocalizationPointWithFav> smaller = new ArrayList<>(); //Localizaciones menores que el pivote
+        ArrayList<ClsLocalizationPointWithFav> greater = new ArrayList<>(); //Localizaciones mayores que el pivote
+        ClsLocalizationPointWithFav pivot;
+
+        if (!localizationList.isEmpty()){//Si la lista se encuentra vacía
+            pivot = localizationList.get(0);  //La primera localización será utilizada como pivote
+
+            int i;
+            ClsLocalizationPointWithFav aux;
+            for (i=1;i<localizationList.size();i++)
             {
-                if (localizationList.get(j).get_localizationPoint().getName().compareTo(localizationList.get(min).get_localizationPoint().getName()) < 0)
-                {
-                    min = j;
-                }
+                aux=localizationList.get(i);//Almacenamos la localización actual
+                if (aux.get_localizationPoint().getName().compareTo(pivot.get_localizationPoint().getName()) < 0)   //Si la localización auxiliar es menor lexicograficamente
+                    smaller.add(aux);
+                else
+                    greater.add(aux);
             }
-            if (i != min)
-            {
-                ClsLocalizationPointWithFav aux= localizationList.get(i);
-                localizationList.set(i, localizationList.get(min));
-                localizationList.set(min, aux);
-            }
+            smaller=orderLocalizationListByName(smaller);  //Ordenamos la lista de localizaciones a la izquierda del pivote
+            greater=orderLocalizationListByName(greater);  //Ordenamos la lista de localizaciones a la derecha del pivote
+            smaller.add(pivot);          //Añadimos el pivote al final de la lista de la izquierda(menores) ya ordenada
+            smaller.addAll(greater);     //Añadimos el resto de elementos de la lista de la derecha (mayores) ya ordenada
+            sortedList = smaller;            //Asiganamos la lista completa a la lista de ordenadas
+        }else{
+            sortedList = localizationList;
         }
+
+        return sortedList;
     }
 
     /**
@@ -111,38 +125,52 @@ public class OrderLists {
     /**
      * Interfaz
      * Nombre: orderLocalizationListAscByDate
-     * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación.
-     * Internamente este método realiza el método de ordenación por selección directa,//TODO Change to quicksort
+     * Comentario: Este método nos permite obtener una lista de localizaciones ordenadas por fecha de creación
+     * ascendentemente, dada otra lista de localizaciones.
+     * Debido a que el número de elemento de la lista de localizaciones sea bastante superior al de la lista
+     * de rutas, se ha implementado el método QuickSort para su ordenación.
      * debido a que el número de rutas dudosamente será muy elevado.
-     * Cabecera: public void orderLocalizationListAscByDate(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Cabecera: public ArrayList<ClsLocalizationPointWithFav> orderLocalizationListAscByDate(ArrayList<ClsLocalizationPointWithFav> localizationList)
      * Entrada:
      *  -ArrayList<ClsLocalizationPointWithFav> localizationList
-     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su fecha de creación.
+     * Salida:
+     *  -ArrayList<ClsLocalizationPointWithFav> sortedList
+     * Postcondiciones: El método devuelve una lista de localizaciones ordenadas por fecha de creación ascendentemente, dada otra lista
+     * por parámetros.
      */
-    public void orderLocalizationListAscByDate(ArrayList<ClsLocalizationPointWithFav> localizationList){//TODO Change to quicksort
-
+    public ArrayList<ClsLocalizationPointWithFav> orderLocalizationListAscByDate(ArrayList<ClsLocalizationPointWithFav> localizationList){
         Date dateActualComparator;
-        Date dateActualMin;
+        Date dateActualPivot;
+        ArrayList<ClsLocalizationPointWithFav> sortedList;  //La lista ordenada que se devolverá
+        ArrayList<ClsLocalizationPointWithFav> smaller = new ArrayList<>(); //Localizaciones menores que el pivote
+        ArrayList<ClsLocalizationPointWithFav> greater = new ArrayList<>(); //Localizaciones mayores que el pivote
+        ClsLocalizationPointWithFav pivot;
 
-        for (int i = 0; i < localizationList.size() - 1; i++)
-        {
-            int min = i;
-            for (int j = i + 1; j < localizationList.size(); j++)
+        if (!localizationList.isEmpty()){//Si la lista se encuentra vacía
+            pivot = localizationList.get(0);  //La primera localización será utilizada como pivote
+
+            int i;
+            ClsLocalizationPointWithFav aux;
+            dateActualPivot = new Date(pivot.get_localizationPoint().getDateOfCreation());//Fecha de creación del pivote actual
+            for (i=1;i<localizationList.size();i++)
             {
-                dateActualComparator = new Date(localizationList.get(j).get_localizationPoint().getDateOfCreation());
-                dateActualMin = new Date(localizationList.get(min).get_localizationPoint().getDateOfCreation());
-                if (dateActualComparator.compareTo(dateActualMin) < 0)
-                {
-                    min = j;
-                }
+                aux=localizationList.get(i);//Almacenamos la localización actual
+                dateActualComparator = new Date(aux.get_localizationPoint().getDateOfCreation());//La fecha de la localización actual
+                if (dateActualComparator.compareTo(dateActualPivot) < 0)   //Si la localización auxiliar tiene una fecha de creación menor a la del pivote
+                    smaller.add(aux);
+                else
+                    greater.add(aux);
             }
-            if (i != min)
-            {
-                ClsLocalizationPointWithFav aux= localizationList.get(i);
-                localizationList.set(i, localizationList.get(min));
-                localizationList.set(min, aux);
-            }
+            smaller=orderLocalizationListAscByDate(smaller);  //Ordenamos la lista de localizaciones a la izquierda del pivote
+            greater=orderLocalizationListAscByDate(greater);  //Ordenamos la lista de localizaciones a la derecha del pivote
+            smaller.add(pivot);          //Añadimos el pivote al final de la lista de la izquierda(menores) ya ordenada
+            smaller.addAll(greater);     //Añadimos el resto de elementos de la lista de la derecha (mayores) ya ordenada
+            sortedList = smaller;            //Asiganamos la lista completa a la lista de ordenadas
+        }else{
+            sortedList = localizationList;
         }
+
+        return sortedList;
     }
 
     /**
@@ -150,8 +178,6 @@ public class OrderLists {
      * Nombre: orderRouteListAscByNameAndFavourite
      * Comentario: Este método nos permite ordenar una lista de rutas por su nombre y por la sección
      * de favoritos, primero se mostrarán los elementos favoritos.
-     * Internamente este método realiza el método de ordenación por selección directa,
-     * debido a que el número de rutas dudosamente será muy elevado.
      * Cabecera: public void orderRouteListAscByNameAndFavourite(ArrayList<ClsRoute> routeList)
      * Entrada:
      *  -ArrayList<ClsRoute> routeList
@@ -175,13 +201,8 @@ public class OrderLists {
         this.orderRouteListByName(listadoNoFavoritos);//Ordenamos la lista de no favoritos
 
         routeList.clear();
-        for(int i = 0; i < listadoFavoritos.size(); i++){//Añadimos las rutas favoritas
-            routeList.add(listadoFavoritos.get(i));
-        }
-
-        for(int i = 0; i < listadoNoFavoritos.size(); i++){//Añadimos el resto de rutas no favoritas
-            routeList.add(listadoNoFavoritos.get(i));
-        }
+        routeList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        routeList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
     }
 
     /**
@@ -189,15 +210,13 @@ public class OrderLists {
      * Nombre: orderLocalizationListAscByNameAndFavourite
      * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre y por la sección
      * de favoritos, primero se mostrarán los elementos favoritos.
-     * Internamente este método realiza el método de ordenación por selección directa,//TODO Change to quicksort
-     * debido a que el número de rutas dudosamente será muy elevado.
      * Cabecera: public void orderLocalizationListAscByNameAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList)
      * Entrada:
      *  -ArrayList<ClsLocalizationPointWithFav> localizationList
      * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre y priorizando
      * las rutas favoritas.
      */
-    public void orderLocalizationListAscByNameAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList){//TODO Change to quicksort
+    public void orderLocalizationListAscByNameAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList){
         ArrayList<ClsLocalizationPointWithFav> listadoFavoritos = new ArrayList<>();
         ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
 
@@ -210,17 +229,12 @@ public class OrderLists {
             }
         }
 
-        this.orderLocalizationListByName(listadoFavoritos);//Ordenamos la lista de favoritos
-        this.orderLocalizationListByName(listadoNoFavoritos);//Ordenamos la lista de no favoritos
+        listadoFavoritos = orderLocalizationListByName(listadoFavoritos);//Ordenamos la lista de favoritos
+        listadoNoFavoritos = orderLocalizationListByName(listadoNoFavoritos);//Ordenamos la lista de no favoritos
 
-        localizationList.clear();
-        for(int i = 0; i < listadoFavoritos.size(); i++){//Añadimos las rutas favoritas
-            localizationList.add(listadoFavoritos.get(i));
-        }
-
-        for(int i = 0; i < listadoNoFavoritos.size(); i++){//Añadimos el resto de rutas no favoritas
-            localizationList.add(listadoNoFavoritos.get(i));
-        }
+        localizationList.clear();//Limpiamos la lista
+        localizationList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
     }
 
     /**
@@ -228,8 +242,6 @@ public class OrderLists {
      * Nombre: orderRouteListAscByDateAndFavourite
      * Comentario: Este método nos permite ordenar una lista de rutas por su fecha de creación y por
      * la sección de favoritos, primero se mostrarán los elementos favoritos.
-     * Internamente este método realiza el método de ordenación por selección directa,
-     * debido a que el número de rutas dudosamente será muy elevado.
      * Cabecera: public void orderRouteListAscByDateAndFavourite(ArrayList<ClsRoute> routeList)
      * Entrada:
      *  -ArrayList<ClsRoute> routeList
@@ -253,13 +265,8 @@ public class OrderLists {
         this.orderRouteListAscByDate(listadoNoFavoritos);//Ordenamos la lista de no favoritos
 
         routeList.clear();
-        for(int i = 0; i < listadoFavoritos.size(); i++){//Añadimos las rutas favoritas
-            routeList.add(listadoFavoritos.get(i));
-        }
-
-        for(int i = 0; i < listadoNoFavoritos.size(); i++){//Añadimos el resto de rutas no favoritas
-            routeList.add(listadoNoFavoritos.get(i));
-        }
+        routeList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        routeList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
     }
 
     /**
@@ -267,15 +274,13 @@ public class OrderLists {
      * Nombre: orderLocalizationListAscByDateAndFavourite
      * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación y por
      * la sección de favoritos, primero se mostrarán los elementos favoritos.
-     * Internamente este método realiza el método de ordenación por selección directa, //TODO Change to quicksort
-     * debido a que el número de rutas dudosamente será muy elevado.
      * Cabecera: public void orderLocalizationListAscByDateAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList)
      * Entrada:
      *  -ArrayList<ClsLocalizationPointWithFav> localizationList
      * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su fecha de creación
      * y priorizando las rutas favoritas.
      */
-    public void orderLocalizationListAscByDateAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList){//TODO Change to quicksort
+    public void orderLocalizationListAscByDateAndFavourite(ArrayList<ClsLocalizationPointWithFav> localizationList){
         ArrayList<ClsLocalizationPointWithFav> listadoFavoritos = new ArrayList<>();
         ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
 
@@ -292,12 +297,7 @@ public class OrderLists {
         this.orderLocalizationListAscByDate(listadoNoFavoritos);//Ordenamos la lista de no favoritos
 
         localizationList.clear();
-        for(int i = 0; i < listadoFavoritos.size(); i++){//Añadimos las rutas favoritas
-            localizationList.add(listadoFavoritos.get(i));
-        }
-
-        for(int i = 0; i < listadoNoFavoritos.size(); i++){//Añadimos el resto de rutas no favoritas
-            localizationList.add(listadoNoFavoritos.get(i));
-        }
+        localizationList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
     }
 }
