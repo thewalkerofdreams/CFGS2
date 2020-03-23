@@ -138,4 +138,5 @@
     <string name="filter_title">Localizations Filters</string>
     <string name="apply_changes">Apply Changes</string>
     <string name="filters">Filters</string>
+    <string name="error_localization_no_exist">The location no longer exists!</string>
 </resources>

@@ -254,9 +254,13 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Interfaz
      * Nombre: showFilterDialog
      * Comentario: Este método muestra por pantalla un dialogo con los diferentes filtros, aplicados
-     * sobre el mapa, si el usuario confirma el dialogo se aplicará la configuración actual dependiendo
-     * de los filtro que haya seleccionado.
-     * Cabecera:
+     * sobre el mapa, si el usuario confirma el dialogo, se aplicará la configuración actual dependiendo
+     * de los filtros que haya seleccionado.
+     * Cabecera: public void showFilterDialog(View view)
+     * Entrada:
+     *  -View view
+     * Postcondiciones: El método abre un dialogo de filtros, si el usuario confirma el dialogo se
+     * realizara un filtrado sobre el mapa actual.
      */
     public void showFilterDialog(View view){
         final String[] filterItems = {getResources().getString(R.string.potable_water),
@@ -269,7 +273,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         builder.setMultiChoiceItems(filterItems, viewModel.get_dialogPostisionsChecked(), new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                // user checked or unchecked a box
                 if(isChecked){//Si se ha chequeado un filtro
                     viewModel.get_checkedFilters().add(filterItems[which]);//Añadimos el filtro en la lista del VM
                 }else{
@@ -280,8 +283,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // user clicked OK
-                //TODO Aquí recargariamos el mapa según los filtros
+                //Volvemos a cargar el fragmento del mapa con el nuevo filtrado
                 GoogleMapsStartFragment fragment = new GoogleMapsStartFragment();
                 FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
                 transation.replace(R.id.fragmentGoogleMapsStart, fragment);
