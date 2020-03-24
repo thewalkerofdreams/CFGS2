@@ -70,6 +70,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
                     bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());//Pasamos las imagenes a cargar
                     intent.putExtras(bundle);
                     intent.putExtra("PositionImageSelected", position);//Indicamos la posición de la imagen clicada
+                    intent.putExtra("ActualUserEmail", viewModel.get_actualEmailUser());
+                    intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
                     startActivity(intent);
                 }else{
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
@@ -275,7 +277,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                         String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
                                         //Insertamos la dirección de la imagen en la base de datos
                                         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
-                                                .child(imageId).setValue(imageUrl);
+                                                .child(imageId).child("Uri").setValue(imageUrl);
 
                                         viewModel.get_imagesToLoad().add(new ClsImageWithId(uri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
                                     }
@@ -329,10 +331,10 @@ public class ImageGalleryActivity extends AppCompatActivity {
                         String emailImage = userEmailImages.getKey();
                         for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
                             String imageId = images.getKey();
-                            String imageAddress = String.valueOf(images.getValue());//Obtenemos la dirección de la imagen
-                            Uri myUri = Uri.parse(imageAddress);//La convertimos al tipo Uri
+                            String imageAddress = String.valueOf(images.child("Uri").getValue());//Obtenemos la dirección de la imagen
                             //Comenzamos a cargar los imagenes con su uri en una lista del VM
-                            viewModel.get_imagesToLoad().add(new ClsImageWithId(myUri.toString(), emailImage.replace("[' ']", "."), imageId));
+                            if(!imageAddress.equals("null"))//Si la dirección no es nula
+                                viewModel.get_imagesToLoad().add(new ClsImageWithId(imageAddress, emailImage.replace("[' ']", "."), imageId));
                         }
                     }
                     loadGallery();

@@ -71,7 +71,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
-        (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
+        if(getActivity() != null)//Por si no le diera tiempo a la actividad
+            (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
         return true;
     }
 

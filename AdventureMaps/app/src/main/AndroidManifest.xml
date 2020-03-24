@@ -33,9 +33,9 @@
         <activity android:name=".Activities.CreateLocalizationPointActivity"></activity>
         <activity android:name=".Activities.DetailsLocalizationPointActivity"></activity>
         <activity android:name=".Activities.EditLocalizationPointActivity"></activity>
-        <activity android:name=".Activities.ImageGalleryActivity"></activity>
-        <activity android:name=".Activities.ImageGalleryViewPagerActivity"></activity>
-        <activity android:name=".Activities.CreateLocalizationPointImageGalleryActivity"></activity>
+        <activity android:name=".Activities.ImageGalleryActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.ImageGalleryViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.CreateLocalizationPointImageGalleryActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

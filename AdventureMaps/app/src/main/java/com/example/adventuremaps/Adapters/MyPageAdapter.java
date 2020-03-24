@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.adventuremaps.Activities.ImageGalleryViewPagerActivity;
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
@@ -39,6 +40,22 @@ public class MyPageAdapter extends PagerAdapter
         loadImage(position);
 
         ViewPager vp=(ViewPager) collection;//Generamos un ViewPager con el ViewGroup collection
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                ((ImageGalleryViewPagerActivity)context).changeRatingBarToGone();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         vp.addView(itemImage, 0);//Le agregamos la página actual con indice 0.
         return itemImage;
     }
