@@ -11,8 +11,8 @@ import android.location.LocationManager;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.adventuremaps.Activities.MainTabbetActivity;
@@ -20,13 +20,15 @@ import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.R;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.json.JSONObject;
@@ -71,6 +73,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
     private ClsLocalizationPoint _localizationToSave;
     private ArrayList<String> _localizationTypesToSave;
+    private ArrayList<String> _checkedFilters;
+    private boolean[] _dialogPostisionsChecked;
+    private ClsLocalizationPoint _selectedLocalizationPoint;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -103,6 +108,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationPointClicked = null;
         _localizationToSave = null;
         _localizationTypesToSave = new ArrayList<>();
+        _checkedFilters = new ArrayList<>();
+        _dialogPostisionsChecked = new boolean[8];
+        for(int i = 0; i < _dialogPostisionsChecked.length; i++){//Inicializamos el filtrado sobr el mapa
+            _dialogPostisionsChecked[i] = true;
+        }
+        _selectedLocalizationPoint = null;
     }
 
     //Get y Set
@@ -270,6 +281,30 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationTypesToSave = _localizationTypesToSave;
     }
 
+    public ArrayList<String> get_checkedFilters() {
+        return _checkedFilters;
+    }
+
+    public void set_checkedFilters(ArrayList<String> _checkedFilters) {
+        this._checkedFilters = _checkedFilters;
+    }
+
+    public boolean[] get_dialogPostisionsChecked() {
+        return _dialogPostisionsChecked;
+    }
+
+    public void set_dialogPostisionsChecked(boolean[] _dialogPostisionsChecked) {
+        this._dialogPostisionsChecked = _dialogPostisionsChecked;
+    }
+
+    public ClsLocalizationPoint get_selectedLocalizationPoint() {
+        return _selectedLocalizationPoint;
+    }
+
+    public void set_selectedLocalizationPoint(ClsLocalizationPoint _selectedLocalizationPoint) {
+        this._selectedLocalizationPoint = _selectedLocalizationPoint;
+    }
+
     //Functions Fragment Offline Maps Part
     /**
      * Interfaz
@@ -331,49 +366,31 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Nombre: eliminarPuntoDeLocalizacionSeleccionado
      * Comentario: Este método nos permite eliminar el punto de localización clicado actualmente.
      * Cabecera: public void eliminarPuntoDeLocalizacionSeleccionado()
-     * Postcondiciones:
+     * Postcondiciones: El método elimina el punto de localización seleccionado.
      */
     public void eliminarPuntoDeLocalizacionSeleccionado(){
-        //TODO Intentar eliminar por Query en un futuro
-        DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-        DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
-        ClsLocalizationPoint localizationPoint = getLocalizationPoint();
-        if(localizationPoint != null){
-            //Eliminamos el id del punto de localización asignado a la lista de favoritos del usuario si este lo tuviera asignado como favorito
-            drUser.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationPoint.getLocalizationPointId()).removeValue();
-            //Eliminamos el punto de localización
-            drLocalization.child(localizationPoint.getLocalizationPointId()).removeValue();
-            //marker.remove();//TODO Aquí no funciona
+        final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
+        final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
+
+        if(get_selectedLocalizationPoint() != null){
+            drUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ClsUser user = null;
+                    for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo habrá como máximo uno
+                        user = datas.getValue(ClsUser.class);
+                        //Eliminamos el id del punto de localización asignado a la lista de favoritos de los usuarios que lo tengan asignado como favorito
+                        drUser.child(user.getUserId()).child("localizationsId").child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
+                    }
+                    //Eliminamos el punto de localización
+                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
         }
-    }
-
-    /**
-     * Interfaz
-     * Nombre: getLocalizationPoint
-     * Comentario: Este método nos permite obtener un punto de localización por si latitud y longitud.
-     * Si el punto de localización no existe en la base de datos, el método devuelve null.
-     * Cabecera: public ClsLocalizationPoint getLocalizationPoint(LatLng latlng)
-     * Entrada:
-     *  -LatLng latlng
-     * Salida:
-     *  -ClsLocalizationPoint localization
-     * Postcondiciones: El método devuelve un punto de localización asociado al nombre o null si
-     * no exite ninguno con la misma posición que el marcador introducido por parámetros.
-     */
-    public ClsLocalizationPoint getLocalizationPoint(){
-        ClsLocalizationPoint localization = null;
-        boolean found = false;
-
-        for(int i = 0; i < get_localizationPointsWithMarker().size() && !found; i++){
-            ClsMarkerWithLocalization aux = get_localizationPointsWithMarker().get(i);
-            if(aux.getMarker().getPosition().latitude == get_localizationPointClicked().getPosition().latitude &&
-                    aux.getMarker().getPosition().longitude == get_localizationPointClicked().getPosition().longitude){
-                localization = aux.getLocalizationPoint();
-                found = true;
-            }
-        }
-
-        return localization;
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.example.adventuremaps.Activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +40,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointImageGalleryActivityVM.class);
-        viewModel.set_imagesToSave((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra("ImagesToSave"));
+        viewModel.set_imagesToSave((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra("ImagesToSave"));//Ontenemos las imagenes que se seleccionaron anteriormente
 
         //Instanciamos los elementos de la UI
         gridView = findViewById(R.id.GridViewGalleryImageActivity);

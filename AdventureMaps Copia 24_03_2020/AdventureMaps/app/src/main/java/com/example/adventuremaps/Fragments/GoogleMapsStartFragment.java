@@ -18,6 +18,7 @@ import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
 import com.example.adventuremaps.Activities.MainTabbetActivity;
 import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.Management.UtilStrings;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -206,7 +207,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))//Si la localización esta compartida o es del usuario actual
+
+                    ArrayList<String> actualTypes = new ArrayList<>();
+                    for(DataSnapshot types : datas.child("types").getChildren()){
+                        actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
+                    }
+
+                    if((localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))
+                    && UtilStrings.arraysWithSameData(actualTypes, viewModel.get_checkedFilters()))//Si la localización esta compartida o es del usuario actual y si cumple los filtros
                         viewModel.get_localizationPoints().add(localizationPoint);
                 }
                 loadLocalizationPoints();
