@@ -292,7 +292,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      */
     public void sendValorationToFirebase(boolean valoracion){
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("Valoration").setValue(valoracion);
-        if(!valoracion)//Si la valoración es negativa
+        if(!valoracion && viewModel.get_actualLocalizationPoint().isShared())//Si la valoración es negativa y el punto de localización esta compartido
             tryToStopSharingLocalizationPoint();
     }
 
@@ -319,7 +319,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                     }
                 }
 
-                if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas
+                if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas //TODO Falta tener en cuenta el numero de votos pero lo dejo para las pruebas
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Eliminamos el punto de localización actual
                     desmarcarLocalizacionDeFavoritos(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
                     setResult(1);

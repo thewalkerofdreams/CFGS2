@@ -49,7 +49,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada, lanzamos la actividad ImageGalleryViewPagerActivity
-                    Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
+                    Intent intent = new Intent(getApplication(), CreateLocalizationPointImageGalleryViewPagerActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToSave());//Pasamos las imagenes a cargar
                     intent.putExtras(bundle);

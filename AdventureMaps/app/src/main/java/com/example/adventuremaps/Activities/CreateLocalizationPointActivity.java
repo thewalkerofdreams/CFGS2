@@ -227,7 +227,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                                             String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
                                             //Insertamos la dirección de la imagen en la base de datos
                                             localizationReference.child(localizationPointId).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
-                                                    .child(imageId).setValue(imageUrl);
+                                                    .child(imageId).child("Uri").setValue(imageUrl);
                                         }
                                     });
                                 }
