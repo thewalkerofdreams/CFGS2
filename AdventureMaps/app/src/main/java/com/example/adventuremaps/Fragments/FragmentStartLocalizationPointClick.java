@@ -1,7 +1,9 @@
 package com.example.adventuremaps.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -122,7 +125,17 @@ public class FragmentStartLocalizationPointClick extends Fragment {
             Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
             intent.putExtra("ActualLocalization", viewModel.get_selectedLocalizationPoint());
             intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-            startActivity(intent);
+            startActivityForResult(intent, 0);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0){
+            if(resultCode == 1){//Si el punto de localización se ha dejado de compartir
+                viewModel.set_localizationPointClicked(null);//Indicamos que la localización seleccionada pasa a null
+            }
         }
     }
 }

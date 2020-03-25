@@ -293,19 +293,19 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     public void sendValorationToFirebase(boolean valoracion){
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("Valoration").setValue(valoracion);
         if(!valoracion)//Si la valoración es negativa
-            tryToDeleteLocalizationPoint();
+            tryToStopSharingLocalizationPoint();
     }
 
     /**
      * Interfaz
-     * Nombre: tryToDeleteLocalizationPoint
-     * Comentario: Este método eliminará el punto de localización si el 80 por ciento de sus valoraciones
+     * Nombre: tryToStopSharingLocalizationPoint
+     * Comentario: Este método deja de compartir el punto de localización si el 80 por ciento de sus valoraciones
      * son negativas, además debe tiener como mínimo 30 valoraciones.
-     * Cabecera: public void tryToDeleteLocalizationPoint()
-     * Postcondiciones: El método elimina el punto de localización actual si tiene más de 30 valoraciones y el
+     * Cabecera: public void tryToStopSharingLocalizationPoint()
+     * Postcondiciones: El método deja de compartir el punto de localización actual si tiene más de 30 valoraciones y el
      * 80 porciento de estas son negativas.
      */
-    public void tryToDeleteLocalizationPoint(){
+    public void tryToStopSharingLocalizationPoint(){
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -320,8 +320,42 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 }
 
                 if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas
-                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();//Eliminamos el punto de localización actual
+                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Eliminamos el punto de localización actual
+                    desmarcarLocalizacionDeFavoritos(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
+                    setResult(1);
                     finish();//Finalizamos la actividad actual
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: desmarcarLocalizacionDeFavoritos
+     * Comentario: Este método nos permite descamar los enlaces de favoritos a una localización
+     * en específico, es decir, destruye el enlace entre los usuarios y la localización. A excepción
+     * del usuario que creó la localización.
+     * Cabecera: public void desmarcarLocalizacionDeFavoritos(String localizationPointId)
+     * Entrada:
+     *  -String localizationPointId
+     * Postcondiciones: El método desvincula a los usuarios no propietarios del punto de localización.
+     */
+    public void desmarcarLocalizacionDeFavoritos(final String localizationPointId){
+        userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot users: dataSnapshot.getChildren()){//Obtenemos los diferentes usuarios
+                    String userId = users.getKey();
+                    String email = (String)users.child("email").getValue();
+                    for(DataSnapshot booksSnapshot : users.child("localizationsId").getChildren()){
+                        if(viewModel.get_actualLocalizationPoint().getLocalizationPointId().equals(booksSnapshot.getValue(String.class)) &&
+                            !viewModel.get_actualLocalizationPoint().getEmailCreator().equals(email))
+                            userReference.child(userId).child("localizationsId").child(booksSnapshot.getValue(String.class)).removeValue();
+                    }
                 }
             }
 
