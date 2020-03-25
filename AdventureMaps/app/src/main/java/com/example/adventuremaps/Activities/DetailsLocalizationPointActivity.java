@@ -1,12 +1,16 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +28,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.EventListener;
+
 public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
     private TextView nameLocalizationPoint, descriptionLocalizationPoint;
     private ListView localizationTypesList;
     private Button btnEditLocalizationPoint, btnFavourite, btnImageGallery;
+    private ImageButton goodValoration, badValoration;
+    private AlertDialog goodValorationDialog, badValorationDialog;
     private DetailsLocalizationPointActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -91,6 +99,29 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        goodValoration = findViewById(R.id.ImageButtonGoodDescription);
+        goodValoration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showGoodDescriptionDialog();
+            }
+        });
+
+        badValoration = findViewById(R.id.ImageButtonBadDescription);
+        badValoration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBadDescriptionDialog();
+            }
+        });
+
+        if(savedInstanceState != null && viewModel.is_goodValorationDialogShowing()) {//Si algún dialogo de valoración se encuentra abierto, lo recarga
+            showGoodDescriptionDialog();
+        }else{
+            if(savedInstanceState != null && viewModel.is_badValorationDialogShowing())
+                showBadDescriptionDialog();
+        }
     }
 
     @Override
@@ -159,5 +190,144 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 descriptionLocalizationPoint.setText(data.getStringExtra("DescriptionUpdated"));
             }
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showGoodDescriptionDialog
+     * Comentario: Este método muestra por pantalla un dialogo para indicar que un punto de localización
+     * es válido, es decir, describe adecuadamente lo que es.
+     * Cabecera: public void showGoodDescriptionDialog()
+     * Postconidiciones: El método muestra un dialogo por pantalla, si el usuario confirma el dialogo
+     * se valorará positivamente el punto de localización.
+     */
+    public void showGoodDescriptionDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.confirm_valoration);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_good_valoration);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getApplication(), R.string.valoration_saved, Toast.LENGTH_SHORT).show();
+                sendValorationToFirebase(true);//Enviamos una valoración positiva
+                viewModel.set_goodValorationDialogShowing(false);
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_goodValorationDialogShowing(false);
+            }
+        });
+
+        goodValorationDialog = alertDialogBuilder.create();
+        goodValorationDialog.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showBadDescriptionDialog
+     * Comentario: Este método muestra por pantalla un dialogo para indicar que un punto de localización
+     * no es válido, es decir, no describe adecuadamente lo que es.
+     * Cabecera: public void showBadDescriptionDialog()
+     * Postconidiciones: El método muestra un dialogo por pantalla, si el usuario confirma el dialogo
+     * se valorará negativamente el punto de localización.
+     */
+    public void showBadDescriptionDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.confirm_valoration);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_bad_valoration);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(getApplication(), R.string.valoration_saved, Toast.LENGTH_SHORT).show();
+                sendValorationToFirebase(false);//Enviamos una valoración negativa
+                viewModel.set_badValorationDialogShowing(false);
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_badValorationDialogShowing(false);
+            }
+        });
+
+        badValorationDialog = alertDialogBuilder.create();
+        badValorationDialog.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
+        super.onSaveInstanceState(outState);
+
+        if(goodValorationDialog != null && goodValorationDialog.isShowing()) {//Si se encuentra abierto el dialogo de valoración positiva
+            goodValorationDialog.dismiss();// close dialog to prevent leaked window
+            viewModel.set_goodValorationDialogShowing(true);
+        }else{
+            if(badValorationDialog != null && badValorationDialog.isShowing()){//Si se encuentra abierto el dialogo de valoración negativa
+                badValorationDialog.dismiss();// close dialog to prevent leaked window
+                viewModel.set_badValorationDialogShowing(true);
+            }
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: sendValorationToFirebase
+     * Comentario: Este método nos permite enviar la valoración a la plataforma Firebase.
+     * El método recibe un parámetro de entrada booleano, true si la valoración es positiva y
+     * false en caso contrario. Al enviar la valoración, se llamará al método tryToDeleteLocalizationPoint
+     * por si se debe eliminar la localización actual, debido a que se ha superado el 80% de las valoraciones
+     * negativas.
+     * Cabecera: public void sendValorationToFirebase(boolean valoracion)
+     * Entrada:
+     *  -boolean valoracion
+     * Postcondiciones: El método envia la valoración a la plataforma Firebase.
+     */
+    public void sendValorationToFirebase(boolean valoracion){
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("Valoration").setValue(valoracion);
+        if(!valoracion)//Si la valoración es negativa
+            tryToDeleteLocalizationPoint();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryToDeleteLocalizationPoint
+     * Comentario: Este método eliminará el punto de localización si el 80 por ciento de sus valoraciones
+     * son negativas, además debe tiener como mínimo 30 valoraciones.
+     * Cabecera: public void tryToDeleteLocalizationPoint()
+     * Postcondiciones: El método elimina el punto de localización actual si tiene más de 30 valoraciones y el
+     * 80 porciento de estas son negativas.
+     */
+    public void tryToDeleteLocalizationPoint(){
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int goodValorationCounter = 0;
+                int badValorationCounter = 0;
+                for(DataSnapshot emails: dataSnapshot.getChildren()){//Obtenemos la valoración de todos los usuarios
+                    if(emails.child("Valoration").getValue(Boolean.class)){
+                        goodValorationCounter++;
+                    }else{
+                        badValorationCounter++;
+                    }
+                }
+
+                if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas
+                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();//Eliminamos el punto de localización actual
+                    finish();//Finalizamos la actividad actual
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

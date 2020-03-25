@@ -139,4 +139,10 @@
     <string name="apply_changes">Apply Changes</string>
     <string name="filters">Filters</string>
     <string name="error_localization_no_exist">The location no longer exists!</string>
+
+    <string name="validate_location">Validate location</string>
+    <string name="confirm_valoration">Confirm valoration</string>
+    <string name="question_good_valoration">Do you want to value this location positively?</string>
+    <string name="question_bad_valoration">Do you want to value this location negatively?</string>
+    <string name="valoration_saved">Valoration Saved!</string>
 </resources>

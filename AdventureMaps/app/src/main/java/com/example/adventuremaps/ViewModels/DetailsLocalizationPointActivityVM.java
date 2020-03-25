@@ -13,6 +13,8 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
     private ArrayList<String> _localizationTypes;
     private ArrayList<String> _localizationsIdActualUser;
     private boolean _favourite;
+    private boolean _goodValorationDialogShowing;
+    private boolean _badValorationDialogShowing;
 
     public DetailsLocalizationPointActivityVM(){
         _actualEmailUser = "";
@@ -20,6 +22,8 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
         _localizationTypes = new ArrayList<>();
         _localizationsIdActualUser = new ArrayList<>();
         _favourite = false;
+        _goodValorationDialogShowing = false;
+        _badValorationDialogShowing = false;
     }
 
     //Get y Set
@@ -61,5 +65,21 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
 
     public void set_localizationsIdActualUser(ArrayList<String> _localizationsIdActualUser) {
         this._localizationsIdActualUser = _localizationsIdActualUser;
+    }
+
+    public boolean is_goodValorationDialogShowing() {
+        return _goodValorationDialogShowing;
+    }
+
+    public void set_goodValorationDialogShowing(boolean _goodValorationDialogShowing) {
+        this._goodValorationDialogShowing = _goodValorationDialogShowing;
+    }
+
+    public boolean is_badValorationDialogShowing() {
+        return _badValorationDialogShowing;
+    }
+
+    public void set_badValorationDialogShowing(boolean _badValorationDialogShowing) {
+        this._badValorationDialogShowing = _badValorationDialogShowing;
     }
 }
