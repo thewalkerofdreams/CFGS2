@@ -120,12 +120,14 @@ public class FragmentMaps extends Fragment {
                             }
 
                             listButton = getActivity().findViewById(R.id.list_button);
-                            listButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    downloadedRegionList();
-                                }
-                            });
+                            if(listButton != null){//TODO por alguna razón si vas muy rápido aquí peta, mirar si recicla como debe
+                                listButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        downloadedRegionList();
+                                    }
+                                });
+                            }
                         }
                     });
                 }

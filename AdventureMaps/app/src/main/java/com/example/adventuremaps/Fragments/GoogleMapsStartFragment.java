@@ -72,7 +72,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
         if(getActivity() != null)//Por si no le diera tiempo a la actividad
-            (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
+            (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos invisible el fragmento inferior
         return true;
     }
 
@@ -81,7 +81,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Mostramos las coordenadas con un Toast
         String format = String.format(Locale.getDefault(), "Lat/Lng = (%f,%f)", latLng.latitude, latLng.longitude);
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
-        (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
+        ocultarFragmentoInferior();
 
         if(viewModel.get_localizationPointClicked() != null)//Si existe un marcador seleccionado
             viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());//Volvemos a darle su color por defecto
@@ -292,4 +292,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             }
         }
     }
+
+    /**
+     * Interfaz
+     * Nombre: ocultarFragmentoInferior
+     * Comentario: Este método nos permite ocultar el fragmento inferior del fragmento actual.
+     * Cabecera: public void ocultarFragmentoInferior()
+     * Postcondiciones: El método oculta el fragmento inferior del fragmento actual.
+     */
+    public void ocultarFragmentoInferior(){
+        (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
+    }
+
 }

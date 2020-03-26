@@ -117,6 +117,10 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             @Override
             public void onPageSelected(int position) {
                 viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
+                if(position == 0){//Para deshabilitar el fragment inferior //TODO por ahora se queda así
+                    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getApplication(), getSupportFragmentManager());
+                    viewPager.setAdapter(sectionsPagerAdapter);
+                }
             }
 
             @Override
