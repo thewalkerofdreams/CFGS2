@@ -49,6 +49,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
 
     private MainTabbetActivityVM viewModel;
+    private ViewPager viewPager;
     private FragmentStartLocalizationPointClick fragment = new FragmentStartLocalizationPointClick();
     SharedPreferences sharedpreferences;
 
@@ -56,9 +57,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbet);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager = findViewById(R.id.view_pager);
+        loadViewPager();
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);//Instanciamos el objeto SharedPreference
@@ -99,6 +99,32 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      */
     public void throwChangePasswordActivity(View v){
         startActivity(new Intent(this, ChangePasswordActivity.class));
+    }
+
+    /**
+     * Interfaz
+     * Nombre: loadViewPager
+     * Comentario: Este método nos permite cargar el viewPager de la actividad actual.
+     * Cabecera: public void loadViewPager()
+     * Postcondiciones: El método carga el viewPager de la actividad actual.
+     */
+    public void loadViewPager(){
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(sectionsPagerAdapter);
     }
 
     /**
