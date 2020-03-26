@@ -28,6 +28,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     private RatingBar ratingBar, ratingBarGeneral;
     private ImageGalleryViewPagerActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con poca valoración
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +52,16 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(int position) {//Cuando se pase de una imagen a otra
                 viewModel.set_positionSelectedImage(position);//Guardamos la posición de la imagen seleccionada en el VM
-                setGeneralRatingOfActualImage();//Obtenemos el nuevo valor en el ratingBarGeneral
-                reloadRatingBar(0);//Recargamos el ratingBar inferior
-                loadValoration();//Cargamos la valoración de la imagen que tiene el usuario actual en el ratingBar inferior
+                setGeneralRatingOfActualImage();//Obtenemos el nuevo valor del ratingBarGeneral
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -104,12 +101,15 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      * Interfaz
      * Nombre: loadValoration
      * Comentario: Este método nos permite cargar la valoración, de una imagen si el usuario
-     * ya la valoró con anterioridad.
+     * ya la valoró con anterioridad. Carga el ratingBar del usuario con la nueva valoración
+     * obtenida de la plataforma Firebase.
      * Cabecera: public void loadValoration()
      * Postcondiciones: El método carga la valoración de la imagen actual, si esta fue valorada por
      * el usuario.
      */
     public void loadValoration(){
+        reloadRatingBar(0);//Recargamos el ratingBar inferior
+
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
                 child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
                 child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").addValueEventListener(new ValueEventListener() {
@@ -141,8 +141,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
                 child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
                 child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").setValue(valoration);
-
-        //tryToDeleteImageFromFireBase();//Se comprueba si se debe eliminar la imagen de la plataforma
+        checkedImageToDelete = false;
     }
 
     /**
@@ -183,7 +182,10 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      * Nombre: setGeneralRatingOfActualImage
      * Comentario: Este método nos permite obtener la valoración general de la imagen actual, almacenandola
      * en el atributo _generalRatingOfActualImag del VM e inserta el nuevo valor en el ratingBarGeneral de
-     * la actividad.
+     * la actividad. Dentro de este método se realiza una llamada al método loadValoration y tryToDeleteImageFromFireBase
+     * una vez se hayan obtenido los datos de la plataforma, esto es así para mantener la consistencia de
+     * los datos obtenidos por la plataforma. Realizamos las llamadas a esta de una en una para evitar errores
+     * de llegada (Es decir, se esperaba un dato necesario para la segunda llamada y llega primero los de la segunda llamada).
      * Cabecera: public void setGeneralRatingOfActualImage()
      * Postcondiciones: El método devuelve un float asociado al nombre, que es el rating general
      * de la imagen actual.
@@ -202,9 +204,14 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
                                 auxCounter++;
                             }
 
-                            viewModel.set_generalRatingOfActualImage(totalValoration / auxCounter);//Almacenamos la valoración general en el VM
+                            float generalRating = auxCounter == 0 ? 0: (totalValoration / auxCounter);
+                            viewModel.set_generalRatingOfActualImage(generalRating);//Almacenamos la valoración general en el VM
                             viewModel.set_numberOfValorations(auxCounter);//Obtenemos el número de valoraciones, útil para la eliminación de una imagen
                             ratingBarGeneral.setRating(viewModel.get_generalRatingOfActualImage());//Insertamos la valoración en el ratingBarGeneral
+
+                            loadValoration();//Cargamos la valoración dada por el usuario actual, si tiene una
+                            if(!checkedImageToDelete)//Si aún no se ha comprobado si se debe eliminar la imagen
+                            tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
                         }
 
                         @Override
@@ -233,6 +240,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
                 //Modificamos la posición de la imagen seleccionada
                 viewModel.set_positionSelectedImage(viewModel.get_positionSelectedImage() > 0 ? (viewModel.get_positionSelectedImage() - 1): 0);
                 loadViewPager();//Recargamos el ViewPager
+                checkedImageToDelete = true;
             }else{
                 finish();//Finalizamos la actividad actual
             }
@@ -261,8 +269,6 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
                     changeRatingBarToGone();//TODO Actualmente para ajustar la imagen, ver como arreglarlo en un futuro
                     setGeneralRatingOfActualImage();//Obtemos la valoración general de la imagen
                     loadViewPager(); //Recargamos la gelería de imagenes
-                    loadValoration();//Cargamos la valoración del usuario, si este ya valoró la imagen
-                    tryToDeleteImageFromFireBase();//Se comprueba si se debe eliminar la imagen actual de la plataforma
                 }
             }
 

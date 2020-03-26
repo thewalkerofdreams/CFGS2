@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
-            finish();
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
+            finish();
         }
     }
 
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
+                                    finish();//Finalizamos la actividad actual
                                 }else{
                                     Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
                                 }

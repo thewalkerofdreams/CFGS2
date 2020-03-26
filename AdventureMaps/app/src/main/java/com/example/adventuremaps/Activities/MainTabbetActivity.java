@@ -294,15 +294,4 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         androidx.appcompat.app.AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    /**
-     * Interfaz
-     * Nombre: localizationPointClickedToNull
-     * Comentario: Este método nos permite dar un valor nulo al atributo _localizationPointClicked del VM.
-     * Cabecera: public void localizationPointClickedToNull()
-     * Postcondiciones: El método da un valor nulo al atributo _localizationPointClicked del VM.
-     */
-    public void localizationPointClickedToNull(){
-        viewModel.set_localizationPointClicked(null);
-    }
 }

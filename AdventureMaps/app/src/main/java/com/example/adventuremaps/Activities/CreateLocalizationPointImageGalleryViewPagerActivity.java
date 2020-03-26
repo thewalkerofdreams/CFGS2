@@ -7,18 +7,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.adventuremaps.Activities.Models.ClsImageWithId;
-import com.example.adventuremaps.Adapters.MyPageAdapter;
 import com.example.adventuremaps.Adapters.MyPageAdapterCreationLocalizationPoint;
-import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
-import com.example.adventuremaps.ViewModels.ImageGalleryViewPagerActivityVM;
+import com.example.adventuremaps.ViewModels.CreateLocalizationPointViewPagerActivityVM;
 
 import java.util.ArrayList;
 
 public class CreateLocalizationPointImageGalleryViewPagerActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
-    private ImageGalleryViewPagerActivityVM viewModel;
+    private CreateLocalizationPointViewPagerActivityVM viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +24,7 @@ public class CreateLocalizationPointImageGalleryViewPagerActivity extends AppCom
         setContentView(R.layout.item_image_gallery_view_pager_simple);
 
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(this).get(ImageGalleryViewPagerActivityVM.class);
-        //viewModel.set_actualUserEmail(getIntent().getStringExtra("ActualUserEmail"));
-        //viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalization"));
+        viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointViewPagerActivityVM.class);
         viewModel.set_positionSelectedImage(getIntent().getIntExtra("PositionImageSelected",0));
         viewModel.set_imagesToLoad((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra("ImagesToLoad"));
 
