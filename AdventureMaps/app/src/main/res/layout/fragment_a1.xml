@@ -3,14 +3,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:layout_margin="5sp"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragmento A1"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:textSize="36sp"/>
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/click">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/startMap_description_simple_click"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/long_click">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/startMap_description_long_click"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/marker">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/startMap_description_click_marker"></TextView>
+
+    </LinearLayout>
 
 </LinearLayout>

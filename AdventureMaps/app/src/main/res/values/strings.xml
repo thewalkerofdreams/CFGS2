@@ -146,9 +146,33 @@
     <string name="question_bad_valoration">Do you want to value this location negatively?</string>
     <string name="valoration_saved">Valoration Saved!</string>
 
-    <string name="page_1">Page 1</string>
-    <string name="page_2">Page 2</string>
-    <string name="page_3">Page 3</string>
+    <string name="page_1">Start Map</string>
+    <string name="page_2">Markers</string>
+    <string name="page_3">Localizations</string>
+    <string name="page_4">Routes</string>
+    <string name="page_5">Offline Maps</string>
     <string name="next_fragment">Next Fragment</string>
     <string name="last_fragment">Last Fragment</string>
+    <string name="startMap_description_simple_click">You can click anywhere on the map to get the click position</string>
+    <string name="startMap_description_long_click">You can keep anywhere on the map that does not contain a marker to open a dialog for creating a new location point.</string>
+    <string name="startMap_description_click_marker">If you click on a marker, a small lower tab will open with which you can try to delete it or see its details.</string>
+    <string name="startMap_description_filter">By clicking on the filter button you can filter the location points shown on the map.</string>
+    <string name="marker_general_description">The name and description will be shown on the details screen of a location. In addition to the ambient types that characterize it and a link to its image gallery.</string>
+    <string name="marker_description_validate_location">You can click on the hit like o dislike icons to check if the location is valid.</string>
+    <string name="marker_image_gallery_multiple_selection">With a long click on an image you can activate multiple selection on them. You can only select the images you inserted or all if you created the location point.</string>
+    <string name="marker_image_gallery_delete_images">To delete one or more images, they must be selected.</string>
+    <string name="marker_image_gallery_upload_image">Press this icon to upload an image from the device gallery.</string>
+    <string name="marker_image_gallery_show_image">Click on an image without having multiple selection activated to see it up close. Now if you click on the image a rating icon will appear so you can rate it.</string>
+    <string name="localizations_description_simple_click">You can click on one of the locations in the list to enter the details of the clicked item.</string>
+    <string name="localizations_description_multiple_selection">With a long click on an element you can activate multiple selection on them. You can only select the locations you created.</string>
+    <string name="localizations_description_fav">You can save and stop saving location points that are not yours by adding them to favorites.</string>
+    <string name="localizations_description_multiple_delete">You can delete the selected locations.</string>
+    <string name="lists_description_order_by">You can sort the list by properties and/or favorites.</string>
+    <string name="localizations_description_share_location">You can share a selected location with the application. All users will be able to see it.</string>
+    <string name="routes_description_multiple_selection">With a long click on an element you can activate multiple selection on them.</string>
+    <string name="routes_description_new_route">You can create a new custom route.</string>
+    <string name="routes_description_multiple_delete">You can delete the selected routes.</string>
+    <string name="maps_description_download_region">Scroll through the map and click on "Download Map" to save the current region.</string>
+    <string name="maps_description_maps_list">Click on "Map List" to show a list with all the regions downloaded, you can navigate to each of them.</string>
+    <string name="info_general_description">In this window you can find information such as the email of the current user, his nickname and the location points and routes created by him. You could also access this tutorial and you have the possibility to log out.</string>
 </resources>
