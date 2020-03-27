@@ -37,6 +37,7 @@
         <activity android:name=".Activities.ImageGalleryViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.CreateLocalizationPointImageGalleryActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.CreateLocalizationPointImageGalleryViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.Tutorial.TutorialViewPagerActivity"></activity>
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

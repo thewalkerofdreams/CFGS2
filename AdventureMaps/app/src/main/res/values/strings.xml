@@ -145,4 +145,10 @@
     <string name="question_good_valoration">Do you want to value this location positively?</string>
     <string name="question_bad_valoration">Do you want to value this location negatively?</string>
     <string name="valoration_saved">Valoration Saved!</string>
+
+    <string name="page_1">Page 1</string>
+    <string name="page_2">Page 2</string>
+    <string name="page_3">Page 3</string>
+    <string name="next_fragment">Next Fragment</string>
+    <string name="last_fragment">Last Fragment</string>
 </resources>
