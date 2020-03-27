@@ -57,7 +57,7 @@ public class CarouselFragment extends Fragment {
      * Cabecera: public boolean onBackPressed()
      * @return true = Si este fragmento y/o uno de sus fragmentos asociados puede soportar backPress
      */
-    public boolean onBackPressed() {//TODO Revisar en la última revisión del proyecto
+    /*public boolean onBackPressed() {//TODO Revisar en la última revisión del proyecto
         //El fragment tab visible actual
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(pager.getCurrentItem());
 
@@ -68,6 +68,6 @@ public class CarouselFragment extends Fragment {
 
         //Este fragmento nos puede soportar la llamada a onBackPressed
         return false;
-    }
+    }*/
 
 }

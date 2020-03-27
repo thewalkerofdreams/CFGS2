@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 
 import com.example.adventuremaps.R;
 
-public class A2Fragment extends RootFragment {
+public class RoutesSectionFragment extends RootFragment {
 
-
-    public A2Fragment() {
+    public RoutesSectionFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Inflamos el layout del fragmento
-        View rootView = inflater.inflate(R.layout.fragment_a2, container, false);
+        //Inflamos el layout del fragment
+        View rootView = inflater.inflate(R.layout.fragment_routes_section, container, false);
 
         return rootView;
     }
+
 }

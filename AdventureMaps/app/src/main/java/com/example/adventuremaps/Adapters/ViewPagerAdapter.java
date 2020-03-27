@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection01;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection02;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection03;
+import com.example.adventuremaps.Fragments.Tutorial.OfflineMapsSectionFragment;
+import com.example.adventuremaps.Fragments.Tutorial.RoutesSectionFragment;
 import com.example.adventuremaps.R;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -28,16 +30,19 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         final Fragment result;
         switch (position) {
             case 0:
-                //Primera sección del tutorial
-                result = new CommonFragmentSection01();
+                result = new CommonFragmentSection01();//Primera sección del tutorial
                 break;
             case 1:
-                //Segunda sección del tutorial
-                result = new CommonFragmentSection02();
+                result = new CommonFragmentSection02();//Segunda sección del tutorial
                 break;
             case 2:
-                //Tercera sección del tutorial
-                result = new CommonFragmentSection03();
+                result = new CommonFragmentSection03();//Tercera sección del tutorial
+                break;
+            case 3:
+                result = new RoutesSectionFragment();//Cuarta sección del tutorial
+                break;
+            case 4:
+                result = new OfflineMapsSectionFragment();//Quinta sección del tutorial
                 break;
             default:
                 result = null;
@@ -49,7 +54,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 5;
     }
 
     @Override
@@ -61,6 +66,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return resources.getString(R.string.page_2);
             case 2:
                 return resources.getString(R.string.page_3);
+            case 3:
+                return resources.getString(R.string.page_4);
+            case 4:
+                return resources.getString(R.string.page_5);
             default:
                 return null;
         }

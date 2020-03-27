@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import com.example.adventuremaps.R;
 
-public class B1Fragment extends RootFragment {
+public class StartSection02Fragment extends RootFragment {
 
 
-    public B1Fragment() {
+    public StartSection02Fragment() {
     }
 
 
@@ -18,9 +18,8 @@ public class B1Fragment extends RootFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Inflamos el layout del fragmento
-        View rootView = inflater.inflate(R.layout.fragment_b1, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_start_section_02, container, false);
 
         return rootView;
     }
-
 }

@@ -14,7 +14,7 @@ import com.example.adventuremaps.ViewModels.TutorialViewPagerActivityVM;
 
 public class CommonFragmentSection03 extends RootFragment {
 
-    //private Button btnLastFragment, btnNextFragment;
+    private Button btnLastFragment, btnNextFragment;
     private TutorialViewPagerActivityVM viewModel;
 
     public CommonFragmentSection03() {
@@ -32,9 +32,9 @@ public class CommonFragmentSection03 extends RootFragment {
         //Instanciamos el fragmento de inicio de la sección
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment_mainLayout, new C1Fragment()).commit();
+        transaction.replace(R.id.fragment_mainLayout, new LocalizationSection01Fragment()).commit();
 
-        /*
+
         //Instanciamos los elementos de la UI
         btnLastFragment = rootView.findViewById(R.id.last_button);
         btnLastFragment.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +50,7 @@ public class CommonFragmentSection03 extends RootFragment {
             public void onClick(View v) {
                 enterNextFragment();
             }
-        });*/
+        });
 
         return rootView;
     }
@@ -65,23 +65,17 @@ public class CommonFragmentSection03 extends RootFragment {
      * Postcondiciones: El método reemplaza el fragmento actual por el siguiente a este, si existe algún
      * fragmento posterior.
      */
-    /*private void enterNextFragment() {
+    private void enterNextFragment() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
 
-        btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
-        switch (viewModel.get_actualSubPageSection1()){
-            case 0://Si estamos en el fragmento inicial pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new B2Fragment()).commit();
-                break;
-            case 1://Si estamos en el segundo pasamos al tercero
-                transaction.replace(R.id.fragment_mainLayout, new B3Fragment()).commit();
-                btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
-                break;
+        btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back
+        if(viewModel.get_actualSubPageSection3() == 0){//Si estamos la primera página de la sección
+            transaction.replace(R.id.fragment_mainLayout, new LocalizationSection02Fragment()).commit();
+            btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
+            viewModel.set_actualSubPageSection3(viewModel.get_actualSubPageSection3()+1);//Indicamos hacia que fragmento nos hemos movido
         }
-
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()+1);//Indicamos hacia que fragmento nos hemos movido
-    }*/
+    }
 
     /**
      * Interfaz
@@ -92,22 +86,16 @@ public class CommonFragmentSection03 extends RootFragment {
      * Postcondiciones: El método reemplaza el fragmento actual por el anterior a este, si existe algún
      * fragmento anterior.
      */
-    /*private void backToLasFragment(){
+    private void backToLasFragment(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
 
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
-        switch (viewModel.get_actualSubPageSection1()){
-            case 1://Si estamos en el segundo fragmento pasamos el primero
-                transaction.replace(R.id.fragment_mainLayout, new B1Fragment()).commit();
-                btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
-                break;
-            case 2://Si estamos en el tercero pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new B2Fragment()).commit();
-                break;
+        if(viewModel.get_actualSubPageSection3() == 1){//Si nos encontrabamos en la última página de la sección
+            transaction.replace(R.id.fragment_mainLayout, new LocalizationSection01Fragment()).commit();
+            btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
+            viewModel.set_actualSubPageSection3(viewModel.get_actualSubPageSection3()-1);//Indicamos hacia que fragmento nos hemos movido
         }
-
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()-1);//Indicamos hacia que fragmento nos hemos movido
-    }*/
+    }
 
 }

@@ -32,7 +32,7 @@ public class CommonFragmentSection01 extends RootFragment {
         //Instanciamos el fragmento de inicio de la sección
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment_mainLayout, new A1Fragment()).commit();
+        transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();
 
         //Instanciamos los elementos de la UI
         btnLastFragment = rootView.findViewById(R.id.last_button);
@@ -70,10 +70,10 @@ public class CommonFragmentSection01 extends RootFragment {
         btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
         switch (viewModel.get_actualSubPageSection1()){
             case 0://Si estamos en el fragmento inicial pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new A2Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();
                 break;
             case 1://Si estamos en el segundo pasamos al tercero
-                transaction.replace(R.id.fragment_mainLayout, new A3Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new StartSection03Fragment()).commit();
                 btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
                 break;
         }
@@ -97,11 +97,11 @@ public class CommonFragmentSection01 extends RootFragment {
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
         switch (viewModel.get_actualSubPageSection1()){
             case 1://Si estamos en el segundo fragmento pasamos el primero
-                transaction.replace(R.id.fragment_mainLayout, new A1Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();
                 btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
                 break;
             case 2://Si estamos en el tercero pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new A2Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();
                 break;
         }
 

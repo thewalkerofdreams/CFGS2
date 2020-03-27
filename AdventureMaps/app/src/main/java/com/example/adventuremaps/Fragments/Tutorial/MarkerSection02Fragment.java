@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import com.example.adventuremaps.R;
 
-public class B2Fragment extends RootFragment {
+public class MarkerSection02Fragment extends RootFragment {
 
 
-    public B2Fragment() {
+    public MarkerSection02Fragment() {
     }
 
 
@@ -18,7 +18,7 @@ public class B2Fragment extends RootFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Inflamos el layout del fragmento
-        View rootView = inflater.inflate(R.layout.fragment_b2, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_marker_section_02, container, false);
 
         return rootView;
     }

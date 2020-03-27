@@ -1,6 +1,5 @@
 package com.example.adventuremaps.Activities.Tutorial;
 
-
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -37,8 +36,13 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Interfaz
+     * Nombre: initScreen
+     * Comentario: Este método crea el contendor del ViewPager.
+     * Cabecera: private void initScreen()
+     */
     private void initScreen() {
-        // Creating the ViewPager container fragment once
         carouselFragment = new CarouselFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -47,30 +51,8 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
                 .commit();
     }
 
-    /**
-     * Only Activity has this special callback method
-     * Fragment doesn't have any onBackPressed callback
-     *
-     * Logic:
-     * Each time when the back button is pressed, this Activity will propagate the call to the
-     * container Fragment and that Fragment will propagate the call to its each tab Fragment
-     * those Fragments will propagate this method call to their child Fragments and
-     * eventually all the propagated calls will get back to this initial method
-     *
-     * If the container Fragment or any of its Tab Fragments and/or Tab child Fragments couldn't
-     * handle the onBackPressed propagated call then this Activity will handle the callback itself
-     */
     @Override
     public void onBackPressed() {
-
-        if (!carouselFragment.onBackPressed()) {
-            // container Fragment or its associates couldn't handle the back pressed task
-            // delegating the task to super class
-            super.onBackPressed();
-
-        } else {
-            // carousel handled the back pressed task
-            // do not call super
-        }
+        finish();//Finalizamos la actividad actual
     }
 }

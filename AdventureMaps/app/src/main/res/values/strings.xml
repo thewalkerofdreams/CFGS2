@@ -148,11 +148,11 @@
 
     <string name="page_1">Start Map</string>
     <string name="page_2">Markers</string>
-    <string name="page_3">Localizations</string>
+    <string name="page_3">Locations</string>
     <string name="page_4">Routes</string>
     <string name="page_5">Offline Maps</string>
-    <string name="next_fragment">Next Fragment</string>
-    <string name="last_fragment">Last Fragment</string>
+    <string name="next_fragment">Next Page</string>
+    <string name="last_fragment">Last Page</string>
     <string name="startMap_description_simple_click">You can click anywhere on the map to get the click position</string>
     <string name="startMap_description_long_click">You can keep anywhere on the map that does not contain a marker to open a dialog for creating a new location point.</string>
     <string name="startMap_description_click_marker">If you click on a marker, a small lower tab will open with which you can try to delete it or see its details.</string>
@@ -174,5 +174,4 @@
     <string name="routes_description_multiple_delete">You can delete the selected routes.</string>
     <string name="maps_description_download_region">Scroll through the map and click on "Download Map" to save the current region.</string>
     <string name="maps_description_maps_list">Click on "Map List" to show a list with all the regions downloaded, you can navigate to each of them.</string>
-    <string name="info_general_description">In this window you can find information such as the email of the current user, his nickname and the location points and routes created by him. You could also access this tutorial and you have the possibility to log out.</string>
 </resources>

@@ -32,7 +32,7 @@ public class CommonFragmentSection02 extends RootFragment {
         //Instanciamos el fragmento de inicio de la sección
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment_mainLayout, new B1Fragment()).commit();
+        transaction.replace(R.id.fragment_mainLayout, new MarkerSection01Fragment()).commit();
 
         //Instanciamos los elementos de la UI
         btnLastFragment = rootView.findViewById(R.id.last_button);
@@ -68,17 +68,17 @@ public class CommonFragmentSection02 extends RootFragment {
         transaction.addToBackStack(null);
 
         btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
-        switch (viewModel.get_actualSubPageSection1()){
+        switch (viewModel.get_actualSubPageSection2()){
             case 0://Si estamos en el fragmento inicial pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new B2Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new MarkerSection02Fragment()).commit();
                 break;
             case 1://Si estamos en el segundo pasamos al tercero
-                transaction.replace(R.id.fragment_mainLayout, new B3Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new MarkerSection03Fragment()).commit();
                 btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
                 break;
         }
 
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()+1);//Indicamos hacia que fragmento nos hemos movido
+        viewModel.set_actualSubPageSection2(viewModel.get_actualSubPageSection2()+1);//Indicamos hacia que fragmento nos hemos movido
     }
 
     /**
@@ -95,16 +95,16 @@ public class CommonFragmentSection02 extends RootFragment {
         transaction.addToBackStack(null);
 
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
-        switch (viewModel.get_actualSubPageSection1()){
+        switch (viewModel.get_actualSubPageSection2()){
             case 1://Si estamos en el segundo fragmento pasamos el primero
-                transaction.replace(R.id.fragment_mainLayout, new B1Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new MarkerSection01Fragment()).commit();
                 btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
                 break;
             case 2://Si estamos en el tercero pasamos al segundo
-                transaction.replace(R.id.fragment_mainLayout, new B2Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new MarkerSection02Fragment()).commit();
                 break;
         }
 
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()-1);//Indicamos hacia que fragmento nos hemos movido
+        viewModel.set_actualSubPageSection2(viewModel.get_actualSubPageSection2()-1);//Indicamos hacia que fragmento nos hemos movido
     }
 }
