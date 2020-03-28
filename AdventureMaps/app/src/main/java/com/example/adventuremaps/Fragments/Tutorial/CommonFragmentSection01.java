@@ -29,11 +29,6 @@ public class CommonFragmentSection01 extends RootFragment {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(TutorialViewPagerActivityVM.class);
 
-        //Instanciamos el fragmento de inicio de la sección
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();
-
         //Instanciamos los elementos de la UI
         btnLastFragment = rootView.findViewById(R.id.last_button);
         btnLastFragment.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +45,9 @@ public class CommonFragmentSection01 extends RootFragment {
                 enterNextFragment();
             }
         });
+
+        //Instanciamos el fragmento de inicio de la sección
+        loadActualPage();
 
         return rootView;
     }
@@ -106,5 +104,32 @@ public class CommonFragmentSection01 extends RootFragment {
         }
 
         viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()-1);//Indicamos hacia que fragmento nos hemos movido
+    }
+
+    /**
+     * Interfaz
+     * Nombre: loadActualPage
+     * Comentario: Este método nos permite cargar la primera página por defecto de la sección,
+     * según el valor que tenga actualmente el atributo _actualSubPageSection1 del VM.
+     * Cabecera: public void loadActualPage()
+     * Postcondiciones: El método carga la página actual de la sección.
+     */
+    public void loadActualPage(){
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        switch (viewModel.get_actualSubPageSection1()){
+            case 0:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();
+                break;
+            case 1:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();
+                btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection03Fragment()).commit();
+                btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
+                btnNextFragment.setVisibility(View.INVISIBLE);//Volvemos invisible el botón next
+                break;
+        }
     }
 }

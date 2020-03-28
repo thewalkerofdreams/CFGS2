@@ -83,7 +83,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/marker">
+                android:background="@drawable/favourite_tutorial">
             </ImageView>
 
         </LinearLayout>

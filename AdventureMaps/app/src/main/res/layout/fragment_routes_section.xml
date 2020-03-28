@@ -20,7 +20,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/click">
+                android:background="@drawable/new_route">
             </ImageView>
 
         </LinearLayout>
@@ -80,7 +80,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/marker">
+                android:background="@drawable/delete_route_tutorial">
             </ImageView>
 
         </LinearLayout>

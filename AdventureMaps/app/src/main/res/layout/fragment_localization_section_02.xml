@@ -20,7 +20,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/click">
+                android:background="@drawable/delete_location_tutorial">
             </ImageView>
 
         </LinearLayout>
@@ -50,7 +50,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/long_click">
+                android:background="@drawable/share_location_tutorial">
             </ImageView>
 
         </LinearLayout>
@@ -80,7 +80,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/marker">
+                android:background="@drawable/sort_locations_tutorial">
             </ImageView>
 
         </LinearLayout>

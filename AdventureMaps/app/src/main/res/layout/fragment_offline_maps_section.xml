@@ -20,7 +20,7 @@
             <ImageView
                 android:layout_width="80sp"
                 android:layout_height="80sp"
-                android:background="@drawable/image_gallery_tutorial">
+                android:background="@drawable/download_region_tutorial">
             </ImageView>
 
         </LinearLayout>
@@ -50,7 +50,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/image_selected_tutorial">
+                android:background="@drawable/map_list_tutorial">
             </ImageView>
 
         </LinearLayout>
