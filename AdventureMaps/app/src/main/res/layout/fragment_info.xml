@@ -93,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/number_user_localizations_form"
+                android:text="@string/number_user_routes_form"
                 android:layout_marginRight="5sp"></TextView>
 
             <TextView

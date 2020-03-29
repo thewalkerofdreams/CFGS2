@@ -22,8 +22,9 @@ public class FragmentUser extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference localiationReference = FirebaseDatabase.getInstance().getReference("Localizations");
     private MainTabbetActivityVM viewModel;
-    TextView txtEmail, txtNickName;
+    TextView txtEmail, txtNickName, numberOfRoutes, numberOfLocalizations;
 
     public FragmentUser() {
         // Required empty public constructor
@@ -39,6 +40,8 @@ public class FragmentUser extends Fragment {
         //Instanciamos los elementos del View
         txtEmail = view.findViewById(R.id.TextViewEmailInfoActivity);
         txtNickName = view.findViewById(R.id.TextViewNickNameInfoActivity);
+        numberOfRoutes = view.findViewById(R.id.TextViewNumberRoutesInfoActivity);
+        numberOfLocalizations = view.findViewById(R.id.TextViewNumberLocalizationsInfoActivity);
 
         return view;
     }
@@ -50,20 +53,38 @@ public class FragmentUser extends Fragment {
         myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 String email = "", nickName = "";
-                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                int routesCreated = 0;
+                for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
                     email=datas.child("email").getValue().toString();
                     nickName = datas.child("nickName").getValue().toString();
+
+                    for(DataSnapshot routes: datas.child("routes").getChildren()){//Se repetirá por cada ruta que haya creado el usuario
+                        routesCreated++;
+                    }
                 }
-                txtEmail.setText(email);
-                txtNickName.setText(nickName);
+                txtEmail.setText(email);//Introducimos el email del usuario actual
+                txtNickName.setText(nickName);//Introducimos el nickName
+                numberOfRoutes.setText(String.valueOf(routesCreated));//Introducimos el número de rutas creadas
+                //Ahora obtendremos el número de localizaciones creadas por el usuario
+                localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int localizationsCreated = 0;
+                        for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
+                            localizationsCreated++;
+                        }
+                        numberOfLocalizations.setText(String.valueOf(localizationsCreated));//Introducimos el número de puntos de localización creados
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
             }
         });
     }
