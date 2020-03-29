@@ -6,13 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.TutorialViewPagerActivityVM;
 
-public class CommonFragmentSection03 extends RootFragment {
+public class CommonFragmentSection03 extends Fragment {//Contendrá las páginas de la sección de localizaciones
 
     private Button btnLastFragment, btnNextFragment;
     private TutorialViewPagerActivityVM viewModel;

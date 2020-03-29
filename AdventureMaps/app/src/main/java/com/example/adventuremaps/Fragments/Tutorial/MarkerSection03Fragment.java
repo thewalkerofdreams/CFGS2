@@ -5,14 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.adventuremaps.R;
 
-public class MarkerSection03Fragment extends RootFragment {
+public class MarkerSection03Fragment extends Fragment {
 
 
     public MarkerSection03Fragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

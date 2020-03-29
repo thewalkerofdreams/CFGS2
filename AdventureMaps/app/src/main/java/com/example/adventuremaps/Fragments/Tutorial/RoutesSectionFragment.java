@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.adventuremaps.R;
 
-public class RoutesSectionFragment extends RootFragment {
+public class RoutesSectionFragment extends Fragment {
 
     public RoutesSectionFragment() {
     }

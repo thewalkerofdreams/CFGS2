@@ -2,54 +2,39 @@ package com.example.adventuremaps.Activities.Tutorial;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
-import com.example.adventuremaps.Fragments.Tutorial.CarouselFragment;
 import com.example.adventuremaps.R;
+import com.google.android.material.tabs.TabLayout;
 
 public class TutorialViewPagerActivity extends AppCompatActivity {
 
-    private CarouselFragment carouselFragment;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutorial_view_pager);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-
-        if (savedInstanceState == null) {
-
-            // withholding the previously created fragment from being created again
-            // On orientation change, it will prevent fragment recreation
-            // its necessary to reserve the fragment stack inside each tab
-            initScreen();
-
-        } else {
-            // restoring the previously created fragment
-            // and getting the reference
-            carouselFragment = (CarouselFragment) getSupportFragmentManager().getFragments().get(0);
-        }
+        setContentView(R.layout.activity_main_tabbet);
+        viewPager = findViewById(R.id.view_pager);
+        loadViewPager();
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
     }
+
 
     /**
      * Interfaz
-     * Nombre: initScreen
-     * Comentario: Este método crea el contendor del ViewPager.
-     * Cabecera: private void initScreen()
+     * Nombre: loadViewPager
+     * Comentario: Este método nos permite cargar el viewPager de la actividad actual.
+     * Cabecera: public void loadViewPager()
+     * Postcondiciones: El método carga el viewPager de la actividad actual.
      */
-    private void initScreen() {
-        carouselFragment = new CarouselFragment();
-
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, carouselFragment)
-                .commit();
+    public void loadViewPager(){
+        SectionsPagerAdapterTutorial sectionsPagerAdapterTutorial = new SectionsPagerAdapterTutorial(this, getSupportFragmentManager());
+        viewPager.setAdapter(sectionsPagerAdapterTutorial);
     }
+
 
     @Override
     public void onBackPressed() {

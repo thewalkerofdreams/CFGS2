@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.adventuremaps.R;
 
-public class LocalizationSection02Fragment extends RootFragment {
+public class LocalizationSection02Fragment extends Fragment {
 
     public LocalizationSection02Fragment() {
     }
