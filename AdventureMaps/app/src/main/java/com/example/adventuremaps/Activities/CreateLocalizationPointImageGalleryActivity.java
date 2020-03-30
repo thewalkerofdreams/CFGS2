@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.ImageAdapter;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateLocalizationPointImageGalleryActivityVM;

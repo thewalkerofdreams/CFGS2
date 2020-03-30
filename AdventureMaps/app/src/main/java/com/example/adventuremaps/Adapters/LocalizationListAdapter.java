@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
+import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.R;
 
 import java.text.SimpleDateFormat;

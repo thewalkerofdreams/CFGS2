@@ -16,10 +16,10 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbet);
-        viewPager = findViewById(R.id.view_pager);
-        loadViewPager();
+        viewPager = findViewById(R.id.view_pager);//Instanciamos el ViewPager
+        loadViewPager();//Lo cargamos con los datos
         TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        tabs.setupWithViewPager(viewPager);//Le introducimos los titulos de sección
     }
 
 
@@ -30,7 +30,7 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
      * Cabecera: public void loadViewPager()
      * Postcondiciones: El método carga el viewPager de la actividad actual.
      */
-    public void loadViewPager(){
+    private void loadViewPager(){
         SectionsPagerAdapterTutorial sectionsPagerAdapterTutorial = new SectionsPagerAdapterTutorial(this, getSupportFragmentManager());
         viewPager.setAdapter(sectionsPagerAdapterTutorial);
     }

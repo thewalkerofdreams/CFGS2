@@ -1,4 +1,4 @@
-package com.example.adventuremaps.Activities.Models;
+package com.example.adventuremaps.Models;
 
 import java.io.Serializable;
 

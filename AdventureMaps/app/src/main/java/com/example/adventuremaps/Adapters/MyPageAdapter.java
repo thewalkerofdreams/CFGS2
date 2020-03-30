@@ -11,7 +11,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.adventuremaps.Activities.ImageGalleryViewPagerActivity;
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
 

@@ -1,4 +1,4 @@
-package com.example.adventuremaps.Activities;
+package com.example.adventuremaps.Activities.ui.MainTabbet;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.example.adventuremaps.Activities.ChangePasswordActivity;
+import com.example.adventuremaps.Activities.CreateRouteActivity;
+import com.example.adventuremaps.Activities.MainActivity;
 import com.example.adventuremaps.Activities.Tutorial.TutorialViewPagerActivity;
-import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
-import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.Activities.ui.MainTabbet.PlaceholderFragment;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -25,14 +27,15 @@ import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.adventuremaps.Activities.ui.main.SectionsPagerAdapter;
+import com.example.adventuremaps.Activities.ui.MainTabbet.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,28 +60,33 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbet);
-        viewPager = findViewById(R.id.view_pager);
-        loadViewPager();
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);//Instanciamos el objeto SharedPreference
 
-        //Instanciamos el VM
+        //Instanciamos el objeto SharedPreference
+        sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);
+
+        //Instanciamos el ViewModel
         viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
 
+        //Instanciamos el VM
+        viewPager = findViewById(R.id.view_pager);//Instanciamos el ViewPager
+        loadViewPager();//Lo cargamos con los datos
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+
+        //Cargamos los filtros chequeados, al principio todos los filtros se encuentran check
         final String[] filterItems = {getResources().getString(R.string.potable_water),
                 getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
                 getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
                 getResources().getString(R.string.vivac)};
-        viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems))); //Al principio todos los filtros se encuentran check
+        viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
         String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
-        if(!email.isEmpty()){
-            viewModel.set_actualEmailUser(email);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
+        if(!email.isEmpty()){//Si no hay ninguna cuenta iniciada
+            viewModel.set_actualEmailUser(email);//Almacenamos en el VM el email del usuario actual
+            SharedPreferences.Editor editor = sharedpreferences.edit();//Además guardamos este email con el objeto SharedPreferences
             editor.putString("UserActualEmail", email);
             editor.commit();
-        }else{
+        }else{//Si la cuenta ya estaba abierta, almacenamos en el VM el email del usuario actual
             viewModel.set_actualEmailUser(sharedpreferences.getString("UserActualEmail", ""));
         }
     }
@@ -116,36 +124,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     /**
      * Interfaz
-     * Nombre: loadViewPager
-     * Comentario: Este método nos permite cargar el viewPager de la actividad actual.
-     * Cabecera: public void loadViewPager()
-     * Postcondiciones: El método carga el viewPager de la actividad actual.
-     */
-    public void loadViewPager(){
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
-                if(position == 0){//Para deshabilitar el fragment inferior //TODO por ahora se queda así
-                    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getApplication(), getSupportFragmentManager());
-                    viewPager.setAdapter(sectionsPagerAdapter);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(sectionsPagerAdapter);
-    }
-
-    /**
-     * Interfaz
      * Nombre: throwCreateRouteActivity
      * Comentario: Este método lanza la actividad CreateRouteActivity
      * Cabecera: public void throwCreateRouteActivity(View v)
@@ -159,16 +137,48 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     /**
      * Interfaz
-     * Nombre: logoutDialog
-     * Comentario: Este método nos carga un dialogo por pantalla para cerrar la sesión del usuario actual.
-     * Cabecera: public void logoutDialog(View v)
+     * Nombre: loadViewPager
+     * Comentario: Este método nos permite cargar el viewPager de la actividad actual.
+     * Cabecera: public void loadViewPager()
+     * Postcondiciones: El método carga el viewPager de la actividad actual.
+     */
+    public void loadViewPager(){
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0 && viewModel.get_localizationPointClicked() != null){//Si se pasa a la sección de inicio y había un un punto de localización seleccionado
+                    viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
+                    viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(sectionsPagerAdapter);
+    }
+
+    //Methods Fragment Information
+
+    /**
+     * Interfaz
+     * Nombre: showLogoutDialog
+     * Comentario: Este método carga un dialogo por pantalla para cerrar la sesión del usuario actual.
+     * Cabecera: public void showLogoutDialog(View v)
      * Entrada:
      *  -View v
      * Postcondiciones: El método cierra la sesión del usuario actual, si el usuario confirma el dialogo o
      * no hace nada si el usuario cancela el dialogo.
      */
-    public void logoutDialog(View v){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    public void showLogoutDialog(View v){
+        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.title_logout);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_logout);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
@@ -177,7 +187,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));//Lanzamos la actividad MainActivity
                 finish();//Cerramos la actividad actual
             }
         });
@@ -188,10 +198,11 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             }
         });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
+    //Fragment Routes
     /**
      * Interfaz
      * Nombre: onClickRouteFav
@@ -220,6 +231,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         }
         databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);
     }
+
+    //Fragment Localizations
 
     /**
      * Interfaz
@@ -259,6 +272,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         }
     }
 
+    //Fragment Star
+
     /**
      * Interfaz
      * Nombre: replaceFragment
@@ -291,8 +306,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         }
     }
 
-    //Fragment Star
-
     /**
      * Interfaz
      * Nombre: showFilterDialog
@@ -311,7 +324,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
                 getResources().getString(R.string.vivac)};
 
-        AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.filter_title);
         builder.setMultiChoiceItems(filterItems, viewModel.get_dialogPostisionsChecked(), new DialogInterface.OnMultiChoiceClickListener() {
             @Override
@@ -369,7 +382,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
             }
         });
     }

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
+import com.example.adventuremaps.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 

@@ -25,13 +25,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.DetailsLocalizationPointActivity;
-import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
+import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Adapters.LocalizationListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.OrderLists;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

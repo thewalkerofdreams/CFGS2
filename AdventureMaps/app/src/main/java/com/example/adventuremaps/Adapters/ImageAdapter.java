@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
 

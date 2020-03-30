@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -102,25 +101,24 @@ public class FragmentMaps extends Fragment {
                                     .build();
                             map.setCameraPosition(position);
 
-                            //Instanciamos el progressBar
-                            progressBar = getActivity().findViewById(R.id.progress_bar);
+                            if(getActivity() != null){//Si se ha cargado correctamente la actividad actual
+                                //Instanciamos el progressBar
+                                progressBar = getActivity().findViewById(R.id.progress_bar);
 
-                            //Instanciamos la variable offlineManager
-                            offlineManager = OfflineManager.getInstance(getActivity());
+                                //Instanciamos la variable offlineManager
+                                offlineManager = OfflineManager.getInstance(getActivity());
 
-                            //Instanciamos los botones de la actividad
-                            downloadButton = getActivity().findViewById(R.id.download_button);
-                            if(downloadButton != null){//TODO por alguna razón si vas muy rápido aquí peta, mirar si recicla como debe
+                                //Instanciamos los botones de la actividad
+                                downloadButton = getActivity().findViewById(R.id.download_button);
                                 downloadButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         downloadRegionDialog();
                                     }
                                 });
-                            }
 
-                            listButton = getActivity().findViewById(R.id.list_button);
-                            if(listButton != null){//TODO por alguna razón si vas muy rápido aquí peta, mirar si recicla como debe
+
+                                listButton = getActivity().findViewById(R.id.list_button);
                                 listButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

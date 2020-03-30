@@ -1,8 +1,6 @@
 package com.example.adventuremaps.Activities;
 
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,14 +17,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
     private EditText textEmail, textOldPassword, textNewPassword01, textNewPassword02;
-    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
-    private FirebaseAuth myFireBaseAuth = FirebaseAuth.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private ChangePasswordActivityVM viewModel;
 
@@ -37,7 +31,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(ChangePasswordActivityVM.class);
 
-        //Instanciamos los Views
+        //Instanciamos las Views
         textEmail = findViewById(R.id.EditTextEmailActivityChangePassword);
         textOldPassword = findViewById(R.id.EditTextOldPasswordActivityChangePassword);
         textNewPassword01 = findViewById(R.id.EditTextNewPasswor01dActivityChangePassword);
@@ -46,23 +40,23 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     /**
      * Interfaz
-     * Nombre: changePassword
+     * Nombre: tryChangePassword
      * Comentario: Este método intentará cambiar la contraseña de una cuenta, si la cuenta existía
      * anteriormente en la plataforma y si todos los campos se rellenarón adecuadamente, en caso contrario
      * el método mostrará por pantalla mensajes de error.
-     * Cabecera: public void changePassword(View v)
+     * Cabecera: public void tryChangePassword(View v)
      * Entrada:
      *  -View v
      * Postcondiciones: El método cambia la contraseña de una cuenta o muestra por pantalla un mensaje de
      * error si alguno de los campos no es válido.
      */
-    public void changePassword(View v){
+    public void tryChangePassword(View v){
         viewModel.set_email(textEmail.getText().toString().trim());
         viewModel.set_oldPassword(textOldPassword.getText().toString().trim());
         viewModel.set_newPassword01(textNewPassword01.getText().toString().trim());
         viewModel.set_newPassword02(textNewPassword02.getText().toString().trim());
 
-        if(!viewModel.get_email().isEmpty() && !viewModel.get_oldPassword().isEmpty() && !viewModel.get_newPassword01().isEmpty() && !viewModel.get_newPassword02().isEmpty()){
+        if(!viewModel.get_email().isEmpty() && !viewModel.get_oldPassword().isEmpty() && !viewModel.get_newPassword01().isEmpty() && !viewModel.get_newPassword02().isEmpty()){//Si se rellenaron todos los campos
             // Get auth credentials from the user for re-authentication. The example below shows
             // email and password credentials but there are multiple possible providers,
             // such as GoogleAuthProvider or FacebookAuthProvider.
@@ -74,13 +68,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                if(viewModel.get_newPassword01().equals(viewModel.get_newPassword02())){
-                                    if(viewModel.get_newPassword01().length() >= 6){
+                            if (task.isSuccessful()) {//Si el email y la vieja contraseña son correctos
+                                if(viewModel.get_newPassword01().equals(viewModel.get_newPassword02())){//Si la repetición de la nueva contraseña es correcta
+                                    if(viewModel.get_newPassword01().length() >= 6){//Si supera el número mínimo de carácteres obligatorios
                                         user.updatePassword(viewModel.get_newPassword01()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
+                                            public void onComplete(@NonNull Task<Void> task) {//Se realiza el cambio de contraseña
+                                                if (task.isSuccessful()) {//Si se modificó satisfactoriamente
                                                     Toast.makeText(getApplication(), R.string.password_updated, Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(getApplication(), R.string.error_password_updated, Toast.LENGTH_SHORT).show();
@@ -102,5 +96,4 @@ public class ChangePasswordActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.all_fields_required, Toast.LENGTH_SHORT).show();
         }
     }
-
 }

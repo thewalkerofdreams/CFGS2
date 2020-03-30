@@ -228,7 +228,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         LatLng latLng;
         viewModel.get_localizationPoints().clear();
 
-        if(fragment != null){//TODO Porque se mete a veces en esta función???
+        if(fragment != null){//Si el fragmento se ha cargado correctamente
             for(int i = 0; i < viewModel.get_routePoints().size(); i++){
                 latLng = new LatLng(viewModel.get_routePoints().get(i).getLatitude(), viewModel.get_routePoints().get(i).getLongitude());
                 fragment.colocarMarcador(latLng); //Comenzamos a marcar los puntos de la ruta almacenada

@@ -15,8 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
-import com.example.adventuremaps.Activities.MainTabbetActivity;
-import com.example.adventuremaps.Activities.Models.ClsMarkerWithLocalization;
+import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
+import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.UtilStrings;
 import com.example.adventuremaps.R;
@@ -144,14 +144,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
-        Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-        viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
+        if(map != null){//Si se ha cargado la referencia al mapa de inicio
+            Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
+            viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
 
-        //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
-        if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == marker.getPosition().latitude &&
-            viewModel.get_localizationPointClicked().getPosition().longitude == marker.getPosition().longitude){
-            viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
-            onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
+            //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
+            if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == marker.getPosition().latitude &&
+                    viewModel.get_localizationPointClicked().getPosition().longitude == marker.getPosition().longitude){
+                viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
+                onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
+            }
         }
     }
 

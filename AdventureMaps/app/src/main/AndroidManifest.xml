@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.MainTabbetActivity"
+            android:name=".Activities.ui.MainTabbet.MainTabbetActivity"
             android:label="@string/title_activity_main_tabbet"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.MainActivity">

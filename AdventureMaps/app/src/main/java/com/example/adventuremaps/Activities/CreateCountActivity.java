@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +21,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateCountActivity extends AppCompatActivity {
@@ -43,14 +41,13 @@ public class CreateCountActivity extends AppCompatActivity {
         //Inicializamos el objeto FireBaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //Instanciamos los Views
+        //Instanciamos las Views
         textNickName = findViewById(R.id.EditTextNickNameActivityCreateCount);
         textEmail = findViewById(R.id.EditTextEmailActivityCreateCount);
         textPassword01 = findViewById(R.id.EditTextPasswor01dActivityCreateCount);
         textPassword02 = findViewById(R.id.EditTextPasswor02dActivityCreateCount);
-        progressDialog = new ProgressDialog(this);
-
-        progressDialog.setMessage("Performing online registration");
+        progressDialog = new ProgressDialog(this);//Instanciamos la barra de carga
+        progressDialog.setMessage("Performing online registration");//Le damos un mensaje
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//En landscape eliminamos el icono de la aplicación
             imageView = findViewById(R.id.ImageViewCreateCountActivity);

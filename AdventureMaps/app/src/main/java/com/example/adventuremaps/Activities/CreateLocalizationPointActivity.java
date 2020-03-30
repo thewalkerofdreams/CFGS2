@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.LocalizationPointActivitiesVM;
@@ -123,7 +123,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         btnImageGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {//Si el usuario aceptó los permisos necesarios
                     startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), 2);
                 }else{
                     Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();

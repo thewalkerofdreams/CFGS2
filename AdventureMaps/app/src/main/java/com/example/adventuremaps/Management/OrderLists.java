@@ -1,6 +1,6 @@
 package com.example.adventuremaps.Management;
 
-import com.example.adventuremaps.Activities.Models.ClsLocalizationPointWithFav;
+import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 
 import java.util.ArrayList;

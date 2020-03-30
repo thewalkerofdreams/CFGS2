@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.MyPageAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;

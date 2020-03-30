@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.MyPageAdapterCreationLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateLocalizationPointViewPagerActivityVM;

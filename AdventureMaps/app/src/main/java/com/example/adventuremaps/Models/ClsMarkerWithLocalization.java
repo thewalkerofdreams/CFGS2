@@ -1,4 +1,4 @@
-package com.example.adventuremaps.Activities.Models;
+package com.example.adventuremaps.Models;
 
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.google.android.gms.maps.model.Marker;

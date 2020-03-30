@@ -2,7 +2,7 @@ package com.example.adventuremaps.ViewModels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.adventuremaps.Activities.Models.ClsImageWithId;
+import com.example.adventuremaps.Models.ClsImageWithId;
 
 import java.util.ArrayList;
 

@@ -10,12 +10,10 @@ import android.location.LocationManager;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.adventuremaps.Activities.Models.ClsMarkerWithPriority;
+import com.example.adventuremaps.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.google.android.gms.maps.model.Marker;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
