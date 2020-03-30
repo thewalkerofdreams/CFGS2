@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.example.adventuremaps.Activities.Tutorial.TutorialViewPagerActivity;
 import com.example.adventuremaps.Activities.ui.main.PlaceholderFragment;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -21,8 +22,10 @@ import com.example.adventuremaps.Fragments.FragmentUser;
 import com.example.adventuremaps.Fragments.GoogleMapsStartFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,8 +34,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adventuremaps.Activities.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -330,5 +336,41 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         builder.setNegativeButton(R.string.cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: navigateToLocalization
+     * Comentario: Este método nos permite navegar a una localización seleccionada.
+     * Cabecera: public void navigateToLocalization(View v)
+     * Entrada:
+     *  -View v
+     * Postcondiciones: El método carga en el mapa principal la localización seleccionada.
+     */
+    public void navigateToLocalization(View v){
+        //get the row the clicked button is in
+        LinearLayout vwParentRow = (LinearLayout)v.getParent();
+        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+        String id = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+
+        DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference("Localizations");
+
+        localizationference.orderByChild("localizationPointId").equalTo(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                double latitude = 0, longitude = 0;
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    latitude = data.child("latitude").getValue(Double.class);
+                    longitude = data.child("longitude").getValue(Double.class);
+                }
+                viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));
+                viewPager.setCurrentItem(0);//Lanzamos el fragmento principal
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
     }
 }

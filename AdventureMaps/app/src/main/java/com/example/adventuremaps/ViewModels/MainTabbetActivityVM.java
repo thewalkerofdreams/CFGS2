@@ -59,6 +59,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsLocalizationPoint> _localizationsActualUser;
     private ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList;
     private ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations;
+    private LatLng _latLngToNavigate;
 
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
@@ -94,6 +95,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationsIdActualUser = new ArrayList<>();
         _itemsLocalizationList = new ArrayList<>();
         _selectedLocalizations = new ArrayList<>();
+        _latLngToNavigate = null;
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
@@ -197,6 +199,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedLocalizations(ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations) {
         this._selectedLocalizations = _selectedLocalizations;
+    }
+
+    public LatLng get_latLngToNavigate() {
+        return _latLngToNavigate;
+    }
+
+    public void set_latLngToNavigate(LatLng _latLngToNavigate) {
+        this._latLngToNavigate = _latLngToNavigate;
     }
 
     //Gets y Sets Fragment Routes

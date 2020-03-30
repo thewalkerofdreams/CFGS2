@@ -93,10 +93,15 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         LatLng latLng;
         float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
 
-        if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actusal del usuario
-            latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
+        if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
+            if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actusal del usuario
+                latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
+            }else{
+                latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+            }
         }else{
-            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+            latLng = viewModel.get_latLngToNavigate();
+            viewModel.set_latLngToNavigate(null);//Indicamos que ya se ha desplazado hacia el punto de navegación
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));//Movemos la camara según los valores definidos

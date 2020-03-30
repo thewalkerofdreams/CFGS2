@@ -46,7 +46,7 @@ public class LocalizationListAdapter extends BaseAdapter {
         View v = convertView;
         ViewHolder holder;
         TextView localizationName, localizationDateOfCreation;
-        ImageButton localizationFav;
+        ImageButton localizationFav, localizationNavigate;
         ClsLocalizationPointWithFav _item = getItem(position);
 
         if(v == null){
@@ -56,8 +56,9 @@ public class LocalizationListAdapter extends BaseAdapter {
             localizationName = v.findViewById(R.id.LocalizationName);
             localizationDateOfCreation = v.findViewById(R.id.LocalizationDateOfCreation);
             localizationFav = v.findViewById(R.id.ImageButtonLocalizationFav);
+            localizationNavigate = v.findViewById(R.id.ImageButtonNavigateLocalization);
 
-            holder = new ViewHolder(localizationName, localizationDateOfCreation, localizationFav);//Almacenamos los datos en el holder
+            holder = new ViewHolder(localizationName, localizationDateOfCreation, localizationFav, localizationNavigate);//Almacenamos los datos en el holder
             v.setTag(holder);//Metemos el objeto en el tag de la vista
         }else{
             holder = (ViewHolder) v.getTag();
@@ -76,17 +77,20 @@ public class LocalizationListAdapter extends BaseAdapter {
             holder.get_localizationFav().setBackgroundResource(R.drawable.empty_star);
         }
 
+        holder.get_localizationNavigate().setTag(_item.get_localizationPoint().getLocalizationPointId());//Almacenamos el id en un tag para una posterior navegación
+
         return v;
     }
 
     public class ViewHolder{
         TextView _localizationName, _localizationDateOfCreation;
-        ImageButton _localizationFav;
+        ImageButton _localizationFav, _localizationNavigate;
 
-        public ViewHolder(TextView localizationName, TextView localizationDateOfCreation, ImageButton localizationFav) {
+        public ViewHolder(TextView localizationName, TextView localizationDateOfCreation, ImageButton localizationFav, ImageButton localizationNavigate) {
             this._localizationName = localizationName;
             this._localizationDateOfCreation = localizationDateOfCreation;
             this._localizationFav = localizationFav;
+            this._localizationNavigate = localizationNavigate;
         }
 
         public TextView get_localizationName() {
@@ -99,6 +103,10 @@ public class LocalizationListAdapter extends BaseAdapter {
 
         public ImageButton get_localizationFav() {
             return _localizationFav;
+        }
+
+        public ImageButton get_localizationNavigate() {
+            return _localizationNavigate;
         }
     }
 }
