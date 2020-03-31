@@ -48,4 +48,5 @@ public class ChangePasswordActivityVM extends ViewModel {
     public void set_newPassword02(String _newPassword02) {
         this._newPassword02 = _newPassword02;
     }
+
 }

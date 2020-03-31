@@ -93,4 +93,5 @@ public class LocalizationPointActivitiesVM extends ViewModel {
     public void set_imagesToSave(ArrayList<ClsImageWithId> _imagesToSave) {
         this._imagesToSave = _imagesToSave;
     }
+
 }

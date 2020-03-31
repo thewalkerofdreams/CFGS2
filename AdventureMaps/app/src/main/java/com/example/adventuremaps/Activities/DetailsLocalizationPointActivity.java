@@ -322,7 +322,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
                 if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas //TODO Falta tener en cuenta el numero de votos pero lo dejo para las pruebas
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Dejamos de compartir el punto de localización actual
-                    desmarcarLocalizacionDeFavoritos(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
+                    desmarcarLocalizacionDeFavoritos();
 
                     if(!viewModel.get_actualLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no pertenece al usuario actual
                         setResult(Activity.RESULT_OK);
@@ -348,7 +348,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      *  -String localizationPointId
      * Postcondiciones: El método desvincula a los usuarios no propietarios del punto de localización.
      */
-    public void desmarcarLocalizacionDeFavoritos(final String localizationPointId){
+    public void desmarcarLocalizacionDeFavoritos(){
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
