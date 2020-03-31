@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
@@ -60,7 +62,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
         //Si la aplicación no tiene los permisos de lectura externa los pide
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE);
         }
 
         //Instanciamos los elementos de la UI
@@ -124,7 +126,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {//Si el usuario aceptó los permisos necesarios
-                    startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), 2);
+                    startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY);
                 }else{
                     Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();
                 }
@@ -248,8 +250,8 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 2) {
-            if (resultCode == 3) {//Si el usuario seleccionó una imagen de la galería
+        if (requestCode == ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY) {
+            if (resultCode == Activity.RESULT_OK) {//Si la operación se realizó correctamente
                 ArrayList<ClsImageWithId> images = (ArrayList<ClsImageWithId>) data.getSerializableExtra("ImagesToSave");
                 viewModel.set_imagesToSave(images);//Almacenamos las imagenes en el VM
             }
@@ -258,9 +260,9 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 1) {
+        if (requestCode == ApplicationConstants.REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Nothig for the moment
+                Toast.makeText(getApplication(), R.string.read_external_storage_permission_granted, Toast.LENGTH_SHORT).show();//Indicamos que se concedió el permiso
             }
         }
     }

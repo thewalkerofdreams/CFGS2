@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.UtilStrings;
@@ -270,7 +271,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
                 intent.putExtra("ActualLatitude", viewModel.get_longClickPosition().latitude);
                 intent.putExtra("ActualLongitude", viewModel.get_longClickPosition().longitude);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
             }
         });
 
@@ -288,8 +289,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT) {
+            if (resultCode == Activity.RESULT_OK) {//Si se confirmó el guardado del nuevo punto de localización
                 viewModel.set_localizationToSave((ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
                 viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
 

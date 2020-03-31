@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.ImageAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -102,7 +103,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
                 photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, 0);
+                startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
             }
         });
 
@@ -152,7 +153,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
+        if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
                 final Uri imageUri = data.getData();
 

@@ -1,10 +1,12 @@
 package com.example.adventuremaps.Fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -133,11 +136,16 @@ public class FragmentRoutes extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsRoute item = (ClsRoute) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_selectedRoutes().isEmpty()){//Si no hay ninguna ruta seleccionada
-                    Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
-                    intent.putExtra("ActualIdRoute", item.getRouteId());
-                    intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
-                    intent.putExtra("ActualRouteName", item.getName());
-                    startActivity(intent);
+                    if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){//Si el usuario concedió los permisos de localización
+                        Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
+                        intent.putExtra("ActualIdRoute", item.getRouteId());
+                        intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
+                        intent.putExtra("ActualRouteName", item.getName());
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(getActivity(), R.string.error_location_permission, Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     if(viewModel.get_selectedRoutes().contains(item)){//Si la ruta ya estaba seleccionada, la deselecciona
                         viewModel.get_selectedRoutes().remove(item);//Eliminamos esa ruta de la lista de seleccionadas

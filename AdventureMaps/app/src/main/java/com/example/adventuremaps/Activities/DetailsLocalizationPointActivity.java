@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Adapters.TypeLocalizationPointsAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.DetailsLocalizationPointActivityVM;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,7 +69,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
                 intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
                 intent.putStringArrayListExtra("LocationsIdActualUser", viewModel.get_localizationsIdActualUser());
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT);
             }
         });
 
@@ -184,7 +185,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
+        if(requestCode == ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT){
             if(resultCode == Activity.RESULT_OK){
                 nameLocalizationPoint.setText(data.getStringExtra("NameUpdated"));
                 descriptionLocalizationPoint.setText(data.getStringExtra("DescriptionUpdated"));
@@ -320,10 +321,13 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 }
 
                 if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas //TODO Falta tener en cuenta el numero de votos pero lo dejo para las pruebas
-                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Eliminamos el punto de localización actual
+                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Dejamos de compartir el punto de localización actual
                     desmarcarLocalizacionDeFavoritos(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
-                    setResult(1);
-                    finish();//Finalizamos la actividad actual
+
+                    if(!viewModel.get_actualLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no pertenece al usuario actual
+                        setResult(Activity.RESULT_OK);
+                        finish();//Finalizamos la actividad actual
+                    }
                 }
             }
 

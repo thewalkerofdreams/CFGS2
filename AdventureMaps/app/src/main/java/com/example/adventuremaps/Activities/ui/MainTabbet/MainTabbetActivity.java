@@ -14,7 +14,6 @@ import com.example.adventuremaps.Activities.ChangePasswordActivity;
 import com.example.adventuremaps.Activities.CreateRouteActivity;
 import com.example.adventuremaps.Activities.MainActivity;
 import com.example.adventuremaps.Activities.Tutorial.TutorialViewPagerActivity;
-import com.example.adventuremaps.Activities.ui.MainTabbet.PlaceholderFragment;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -22,20 +21,17 @@ import com.example.adventuremaps.Fragments.FragmentStart;
 import com.example.adventuremaps.Fragments.FragmentStartLocalizationPointClick;
 import com.example.adventuremaps.Fragments.FragmentUser;
 import com.example.adventuremaps.Fragments.GoogleMapsStartFragment;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.adventuremaps.Activities.ui.MainTabbet.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -152,7 +148,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             public void onPageSelected(int position) {
                 if(position == 0 && viewModel.get_localizationPointClicked() != null){//Si se pasa a la sección de inicio y había un un punto de localización seleccionado
                     viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
-                    viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+                    reloadInitialFragment();//Recargamos el fragmento
                 }
             }
 
@@ -265,10 +261,17 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PlaceholderFragment.newInstance(4);//Recargamos el fragment
-            }
+        switch (requestCode){
+            case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos
+                    PlaceholderFragment.newInstance(1);//Recargamos el fragment
+                }
+                break;
+            case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos
+                    PlaceholderFragment.newInstance(4);//Recargamos el fragment
+                }
+                break;
         }
     }
 
@@ -384,5 +387,16 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             public void onCancelled(DatabaseError error) {
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: reloadInitialFragment
+     * Comentario: Este método nos permite recargar el fragmento inicial de la aplicación.
+     * Cabecera: public void reloadInitialFragment()
+     * Postcondiciones: El método recarga el fragmento inicial de la aplicación.
+     */
+    public void reloadInitialFragment(){
+        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
     }
 }

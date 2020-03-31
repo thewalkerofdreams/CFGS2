@@ -1,5 +1,6 @@
 package com.example.adventuremaps.Activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.ImageAdapter;
 import com.example.adventuremaps.R;
@@ -87,7 +89,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
                 viewModel.set_searchingImage(true);//Indicamos en el VM que el usuario está buscando una imagen en la galería
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
                 photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, 0);
+                startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
             }
         });
 
@@ -128,7 +130,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
+        if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
                 final Uri imageUri = data.getData();
                 String imageId = localizationReference.push().getKey();
@@ -212,7 +214,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     public void onBackPressed() {
         Intent intent=new Intent();
         intent.putExtra("ImagesToSave", viewModel.get_imagesToSave());
-        setResult(3, intent);//Enviamos el resultado antes de llamar al método onBackPressed de la clase padre
+        setResult(Activity.RESULT_OK, intent);//Enviamos el resultado antes de llamar al método onBackPressed de la clase padre
 
         super.onBackPressed();
 

@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
@@ -39,7 +40,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_FINE_AND_COARSE_LOCATION);
         }
 
         //Si la aplicación tiene los permisos de localización se instancia el VM
@@ -55,7 +56,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         String mensaje = "";
 
-        if(requestCode == 1){
+        if(requestCode == ApplicationConstants.REQUEST_CODE_PERMISSIONS_FINE_AND_COARSE_LOCATION){
             mensaje = "Coarse Location and Fine Location";
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(CreateRouteActivity.this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();

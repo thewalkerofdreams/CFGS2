@@ -1,9 +1,7 @@
 package com.example.adventuremaps.Activities;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,11 +9,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
@@ -43,36 +39,11 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_route);
 
-        //Si la aplicación no tiene los permisos necesarios, muestra por pantalla un dialogo para obtenerlos
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-
-        //Si la aplicación tiene los permisos de localización se instancia el VM
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
-            viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
-            viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
-            viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {//Resultado de repuesta de un permiso
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        String mensaje = "";
-
-        if(requestCode == 1){
-            mensaje = "Coarse Location and Fine Location";
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, mensaje+" Permission Granted", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(this, mensaje+" Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
+        //Instanciamos el VM
+        viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
+        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
+        viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
+        viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.adventuremaps.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.DetailsLocalizationPointActivity;
+import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.database.DataSnapshot;
@@ -123,16 +126,17 @@ public class FragmentStartLocalizationPointClick extends Fragment {
             Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
             intent.putExtra("ActualLocalization", viewModel.get_selectedLocalizationPoint());
             intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_DETAILS_LOCALIZATION_POINT);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
-            if(resultCode == 1){//Si el punto de localización se ha dejado de compartir
+        if(requestCode == ApplicationConstants.REQUEST_CODE_DETAILS_LOCALIZATION_POINT){
+            if(resultCode == Activity.RESULT_OK){//Si el punto de localización se ha dejado de compartir
                 viewModel.set_localizationPointClicked(null);//Indicamos que la localización seleccionada pasa a null
+                ((MainTabbetActivity)getActivity()).reloadInitialFragment();//Recargamos el mapa de inicio
             }
         }
     }

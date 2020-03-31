@@ -135,6 +135,7 @@
     <string name="error_selected_localizations_no_owner">You cannot select a location that is not yours!</string>
 
     <string name="error_read_external_storage">You must accept write permissions to store images!</string>
+    <string name="read_external_storage_permission_granted">Read external storage permission granted!</string>
     <string name="filter_title">Localizations Filters</string>
     <string name="apply_changes">Apply Changes</string>
     <string name="filters">Filters</string>
@@ -174,4 +175,6 @@
     <string name="routes_description_multiple_delete">You can delete the selected routes.</string>
     <string name="maps_description_download_region">Scroll through the map and click on "Download Map" to save the current region.</string>
     <string name="maps_description_maps_list">Click on "Map List" to show a list with all the regions downloaded, you can navigate to each of them.</string>
+
+    <string name="error_location_permission">You cannot enter the route without granting location permissions!</string>
 </resources>
