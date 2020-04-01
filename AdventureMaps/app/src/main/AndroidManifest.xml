@@ -25,19 +25,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.CreateCountActivity" />
-        <activity android:name=".Activities.ChangePasswordActivity"></activity>
-        <activity android:name=".Activities.SendNewPasswordActivity"></activity>
-        <activity android:name=".Activities.CreateRouteActivity"></activity>
-        <activity android:name=".Activities.SeeAndEditRouteActivity"></activity>
-        <activity android:name=".Activities.CreateLocalizationPointActivity"></activity>
-        <activity android:name=".Activities.DetailsLocalizationPointActivity"></activity>
-        <activity android:name=".Activities.EditLocalizationPointActivity"></activity>
+        <activity android:name=".Activities.CreateCountActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Activities.ChangePasswordActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.SendNewPasswordActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.CreateRouteActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.SeeAndEditRouteActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.CreateLocalizationPointActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.DetailsLocalizationPointActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.EditLocalizationPointActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.ImageGalleryActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.ImageGalleryViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.CreateLocalizationPointImageGalleryActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activities.CreateLocalizationPointImageGalleryViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Activities.Tutorial.TutorialViewPagerActivity"></activity>
+        <activity android:name=".Activities.Tutorial.TutorialViewPagerActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
