@@ -7,11 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ui.MainTabbet.MainTabbetActivity">
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -20,8 +15,6 @@
         mapbox:mapbox_cameraTargetLng="-95.342"
         mapbox:mapbox_cameraZoom="15.27"
         mapbox:mapbox_cameraZoomMin="10"/>
-
-    </android.support.v4.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/progress_bar"

@@ -55,7 +55,6 @@ public class FragmentMaps extends Fragment {
     private ProgressBar progressBar;
     private Button downloadButton;
     private Button listButton;
-    private AlertDialog downloadRegionDialog;
     //Offline objects
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
