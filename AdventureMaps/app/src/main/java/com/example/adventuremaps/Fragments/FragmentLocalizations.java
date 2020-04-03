@@ -1,10 +1,12 @@
 package com.example.adventuremaps.Fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -510,5 +512,15 @@ public class FragmentLocalizations extends Fragment {
 
         alertDialogShareLocalization = alertDialogBuilder.create();
         alertDialogShareLocalization.show();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación permitida en cada página del ViewPager
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            Activity actualActivity = getActivity();
+            if(actualActivity != null)
+                actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
     }
 }

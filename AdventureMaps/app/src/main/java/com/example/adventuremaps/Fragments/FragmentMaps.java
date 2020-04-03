@@ -1,7 +1,9 @@
 package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,6 +55,7 @@ public class FragmentMaps extends Fragment {
     private ProgressBar progressBar;
     private Button downloadButton;
     private Button listButton;
+    private AlertDialog downloadRegionDialog;
     //Offline objects
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
@@ -114,7 +117,7 @@ public class FragmentMaps extends Fragment {
                                 downloadButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        downloadRegionDialog();
+                                        showDownloadRegionDialog();
                                     }
                                 });
 
@@ -138,28 +141,28 @@ public class FragmentMaps extends Fragment {
 
     /**
      * Interfaz
-     * Nombre: downloadRegionDialog
+     * Nombre: showDownloadRegionDialog
      * Comentario: Este método muestra un dialogo por pantalla para descargar la región actual.
-     * Cabecera: private void downloadRegionDialog()
+     * Cabecera: private void showDownloadRegionDialog()
      * Postcondiciones: Si el usuario ha introducido un nombre para la región y ha confirmado guardarlo,
      * se almacenará esa nueva región. En caso de falta de memoria o de conexión el método informa de ello
      * al usuario.
      * */
-    private void downloadRegionDialog() {
+    private void showDownloadRegionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//Declaramos un dialogo
 
         //Declaramos un editText temporal
-        final EditText regionNameEdit = new EditText(getActivity());
-        regionNameEdit.setHint(getString(R.string.set_region_name_hint));//Le insertamos una pista
+        final EditText nameEdit = new EditText(getActivity());
+        nameEdit.setHint(getString(R.string.set_region_name_hint));//Le insertamos una pista
 
         //Contruimos el dialogo
         builder.setTitle(getString(R.string.dialog_title))
-                .setView(regionNameEdit)
+                .setView(nameEdit)
                 .setMessage(getString(R.string.dialog_message))
                 .setPositiveButton(getString(R.string.dialog_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String regionName = regionNameEdit.getText().toString();
+                        String regionName = nameEdit.getText().toString();
                         //Es necesario el nombre de la región, si esta vacío se mostrará un mensaje de error por pantalla y no se realizará la descarga.
                         if (regionName.length() == 0) {
                             Toast.makeText(getActivity(), getString(R.string.dialog_toast), Toast.LENGTH_SHORT).show();
@@ -248,6 +251,7 @@ public class FragmentMaps extends Fragment {
 
                 if (status.isComplete()) {//Se ha completado la descarga
                     endProgress();//Deshabilitamos el progressbar y habilitamos los botones de la interfaz
+                    if(getActivity() != null)
                     Toast.makeText(getActivity(), R.string.end_progress_success, Toast.LENGTH_LONG).show();//Mensaje de descarga completada
                 } else if (status.isRequiredResourceCountPrecise()) {
                     setPercentage((int) Math.round(percentage));//Modificamos el porcentaje de descarga en la barra
@@ -447,5 +451,15 @@ public class FragmentMaps extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación de la página actual
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            Activity actualActivity = getActivity();
+            if(actualActivity != null)
+                actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 }
