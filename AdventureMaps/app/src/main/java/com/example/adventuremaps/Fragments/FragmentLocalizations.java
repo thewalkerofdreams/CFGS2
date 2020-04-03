@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -370,14 +371,36 @@ public class FragmentLocalizations extends Fragment {
      */
     public void changeBackgroundColorItemView(View view, int position){
         if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
-                view.setBackgroundResource(R.drawable.background_localization_no_owner);
+            setBackgroundAnimation(view, R.drawable.gradient_no_owner_list);
         }else{
             if(viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().isShared()){//Si la localización esta compartida
-                view.setBackgroundResource(R.drawable.background_localization_shared);
+                setBackgroundAnimation(view, R.drawable.gradient_shared_list);
             }else{
                 view.setBackgroundResource(R.color.WhiteItem);
             }
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: setBackgroundAnimation
+     * Comentario: Este método nos permite insertar un background animado a una vista,
+     * a través de un elemento xml animation list.
+     * Cabecera: private void setBackgroundAnimation(View view, int animationList)
+     * Entrada:
+     *  -View view
+     *  -int animtionList //Dirección del fichero xml
+     * Precondiciones:
+     *  -animtionList debe apuntar a un fichero xml que contenga un tag de animationList.
+     * Postcondiciones: El método inserta una animación de fondo a la vista, a partir del
+     * animatioList introducido por parámetros.
+     */
+    private void setBackgroundAnimation(View view, int animationList){
+        view.setBackgroundResource(animationList);
+        AnimationDrawable animationDrawable = (AnimationDrawable) view.getBackground();
+        animationDrawable.setEnterFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(4000);
+        animationDrawable.start();
     }
 
     /**

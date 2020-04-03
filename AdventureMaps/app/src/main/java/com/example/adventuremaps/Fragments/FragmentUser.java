@@ -2,11 +2,13 @@ package com.example.adventuremaps.Fragments;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -44,6 +46,17 @@ public class FragmentUser extends Fragment {
         txtNickName = view.findViewById(R.id.TextViewNickNameInfoActivity);
         numberOfRoutes = view.findViewById(R.id.TextViewNumberRoutesInfoActivity);
         numberOfLocalizations = view.findViewById(R.id.TextViewNumberLocalizationsInfoActivity);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
+            LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutInfo01);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
+                    (float) 1.0
+            );
+            param.weight = 50;
+            linearLayout.setLayoutParams(param);
+        }
 
         return view;
     }
