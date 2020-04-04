@@ -84,9 +84,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Mostramos las coordenadas con un Toast
         String format = String.format(Locale.getDefault(), "Lat/Lng = (%f,%f)", latLng.latitude, latLng.longitude);
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
-        ocultarFragmentoInferior();
+        ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
-        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
+        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado, cambiamos su icono
             setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
         }
     }
@@ -150,7 +150,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         if(map != null){//Si se ha cargado la referencia al mapa de inicio
             Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-            setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
+                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+            }else{
+                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+            }
             viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
 
             //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
@@ -166,7 +170,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Interfaz
      * Nombre: insertarMarcador
      * Comentario: Este método nos permite insertar un marcador en el mapa.
-     * Además se guarda ese marcador en el VM MainTabbetActicityVM.
+     * Además guarda ese marcador en el VM MainTabbetActicityVM.
      * Cabecera: public void insertarMarcador(LatLng latLng)
      * Entrada:
      *   -LatLng latLng

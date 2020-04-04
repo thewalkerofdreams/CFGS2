@@ -450,13 +450,12 @@ public class FragmentLocalizations extends Fragment {
      *  -int field
      *  -boolean favourite
      * Precondiciones:
-     *  -fields debe ser igual a 1 o 2.
+     *  -fields debe ser un número entre 1 y 6.
      * Postcondiciones: El método ordena la lista de localizaciones según los criterios introducidos
      * por parámetros.
      */
     public void orderList(int field, boolean favourite){
         if(favourite){//Si la lista se encuentra ordenada por favoritos
-
             switch (field){
                 case 1:
                     new OrderLists().orderLocalizationListAscByNameAndFavourite(viewModel.get_itemsLocalizationList());//Order list by name and fav
@@ -480,7 +479,7 @@ public class FragmentLocalizations extends Fragment {
         }else{
             switch (field){
                 case 1:
-                    viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListByName(viewModel.get_itemsLocalizationList()));//Order list by name
+                    viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListAscByName(viewModel.get_itemsLocalizationList()));//Order list by name
                     break;
                 case 2:
                     viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListAscByDate(viewModel.get_itemsLocalizationList()));//Order list by date of creation
