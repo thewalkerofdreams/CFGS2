@@ -77,7 +77,7 @@ public class OrderLists {
             greater=orderLocalizationListByName(greater);  //Ordenamos la lista de localizaciones a la derecha del pivote
             smaller.add(pivot);          //Añadimos el pivote al final de la lista de la izquierda(menores) ya ordenada
             smaller.addAll(greater);     //Añadimos el resto de elementos de la lista de la derecha (mayores) ya ordenada
-            sortedList = smaller;            //Asiganamos la lista completa a la lista de ordenadas
+            sortedList = smaller;            //Asignamos la lista completa a la lista de ordenadas
         }else{
             sortedList = localizationList;
         }
@@ -165,7 +165,7 @@ public class OrderLists {
             greater=orderLocalizationListAscByDate(greater);  //Ordenamos la lista de localizaciones a la derecha del pivote
             smaller.add(pivot);          //Añadimos el pivote al final de la lista de la izquierda(menores) ya ordenada
             smaller.addAll(greater);     //Añadimos el resto de elementos de la lista de la derecha (mayores) ya ordenada
-            sortedList = smaller;            //Asiganamos la lista completa a la lista de ordenadas
+            sortedList = smaller;            //Asignamos la lista completa a la lista de ordenadas
         }else{
             sortedList = localizationList;
         }
@@ -317,10 +317,10 @@ public class OrderLists {
         ArrayList<ClsLocalizationPointWithFav> listadoCompartidas= new ArrayList<>();
         ArrayList<ClsLocalizationPointWithFav> listadoNoCompartidas = new ArrayList<>();
 
-        for (int i = 0; i < localizationList.size(); i++)//Separamos los localizaciones en compartidas y no compartidas
+        for (int i = 0; i < localizationList.size(); i++)//Separamos las localizaciones en compartidas y no compartidas
         {
             if(localizationList.get(i).get_localizationPoint().isShared() && localizationList.get(i).get_localizationPoint().getEmailCreator().equals(actualUserEmail)){
-                listadoCompartidas.add(localizationList.get(i));
+                listadoCompartidas.add(localizationList.get(i));//Si la localización se encuentra compartida y pertenece al usuario
             }else{
                 listadoNoCompartidas.add(localizationList.get(i));
             }
@@ -338,13 +338,17 @@ public class OrderLists {
      * Interfaz
      * Nombre: orderLocalizationListAscBySharedAndDateAndFav
      * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
-     * las favoritas que han sido compartidas con la aplicación. Luego le seguirén el resto de localizaciones favoritas, cuando
-     * no queden más se encontrarán las localizaciones compartidas no favoritas y por último las no favoritas y no compartidas.
+     * las favoritas que han sido compartidas con la aplicación. Criterio de prioridad en la ordenación:
+     * -Localizaciones favoritas compartidas por el usuario
+     * -Localizaciones favoritas no compartidas por el usuario
+     * -Localizaciones no favoritas compartidas por el usuario
+     * -Localizaciones no favoritas no compartidas por el usuario
      * Cabecera: public void orderLocalizationListAscBySharedAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
-     * Entrada:
+     * Entrada/Salida:
      *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     * Entrada:
      *  -String actualUserEmail
-     * Postcondiciones: El método ordena la lista de localizaciones por fecha, mostrando primero las localizaciones
+     * Postcondiciones: El método ordena la lista de localizaciones por fecha, priorizando primero las localizaciones
      * compartidas.
      */
     public void orderLocalizationListAscBySharedAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
@@ -476,8 +480,8 @@ public class OrderLists {
      * Nombre: orderLocalizationListAscByNoOwnerAndDateAndFav
      * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
      * las que no pertenecen al usuario actual. Criterio de prioridad en la ordenación:
-     * -Localizaciones que no pertenecen al usuario
-     * -Localizaciones favoritas que pertenecen al usuario //Todas son favoritas
+     * -Localizaciones que no pertenecen al usuario //Todas son favoritas
+     * -Localizaciones favoritas que pertenecen al usuario
      * -Localizaciones no favoritas que pertenecen al usuario
      * Cabecera: public void orderLocalizationListAscByNoOwnerAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
      * Entrada:

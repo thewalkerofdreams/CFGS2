@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,9 +68,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(viewModel.get_localizationPointClicked() != null)//Si ya existe un marcador seleccionado
-            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());//Volvemos a darle su color por defecto
-
+        if(viewModel.get_localizationPointClicked() != null) {//Si ya existe un marcador seleccionado
+            setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
+        }
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
@@ -84,8 +86,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         ocultarFragmentoInferior();
 
-        if(viewModel.get_localizationPointClicked() != null)//Si existe un marcador seleccionado
-            viewModel.get_localizationPointClicked().setIcon(BitmapDescriptorFactory.defaultMarker());//Volvemos a darle su color por defecto
+        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
+            setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
+        }
     }
 
     @Override
@@ -147,6 +150,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         if(map != null){//Si se ha cargado la referencia al mapa de inicio
             Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
+            setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
             viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
 
             //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
@@ -174,6 +178,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         markerOptions.position(latLng);//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
+        setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
         viewModel.set_markerToCreate(marker);//Almacenamos el marcador creado en el VM
     }
 
@@ -312,4 +317,24 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
     }
 
+    /**
+     * Interfaz
+     * Nombre: setIconToMarker
+     * Comentario: Este método nos permite insertar un icono en un marcador.
+     * Cabecera: private void setIconToMarker(String addressIcon)
+     * Entrada:
+     *  -String addressIcon
+     * Precondiciones:
+     *  -addressIcon debe apuntar a una imagen existente.
+     * Postcondiciones: El método agrega un icono a un marcador.
+     */
+    private void setIconToMarker(Marker marker, String addressIcon){
+        //Ajustamos el tamaño que tendrá el marcador
+        int height = 120;
+        int width = 120;
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(Integer.valueOf(addressIcon));
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+    }
 }
