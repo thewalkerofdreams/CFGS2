@@ -42,10 +42,12 @@
                     android:layout_marginBottom="5sp"
                     android:text="@string/order_by_form"></TextView>
 
-                <Spinner
-                    android:id="@+id/SpinnerFragmentLocalizations"
+                <Button
+                    android:id="@+id/btnOrderLocalizations"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></Spinner>
+                    android:layout_height="wrap_content"
+                    android:text="Order by"
+                    android:onClick="showOrderLocalizationListDialog"></Button>
 
             </LinearLayout>
 

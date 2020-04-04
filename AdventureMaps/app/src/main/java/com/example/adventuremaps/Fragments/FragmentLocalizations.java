@@ -16,11 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,11 +47,7 @@ public class FragmentLocalizations extends Fragment {
     private ListView listView;
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteLocalization, alertDialogShareLocalization;
-    private Spinner spinner;
-    private ArrayList<String> itemsSpinner = new ArrayList<>();
-    private Button btnFav, btnDelete, btnShare;
-    private boolean selectDefaultPassed = false;
-    private ArrayAdapter<String> adapter;
+    private Button btnFav, btnDelete, btnShare, btnOrderLocalizations;
     private DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
     private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
     private SharedPreferences sharedpreferencesField;
@@ -108,31 +102,13 @@ public class FragmentLocalizations extends Fragment {
             }
         });
 
-        spinner = view.findViewById(R.id.SpinnerFragmentLocalizations);
-        itemsSpinner.add(getActivity().getResources().getString(R.string.name));
-        itemsSpinner.add(getActivity().getResources().getString(R.string.date_of_creation));
-
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, itemsSpinner);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(sharedpreferencesField.getInt("OrderLocalizationListField", 1)-1);//Ajustamos la selección según el filtro guardado
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnOrderLocalizations = view.findViewById(R.id.btnOrderLocalizations);
+        btnOrderLocalizations.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if(selectDefaultPassed){//Evitamos la primera llamada por defecto al primer elemento del spinner
-                    SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
-                    editor01.putInt("OrderLocalizationListField", position+1);
-                    editor01.commit();
-                    loadList();//Recargamos la lista
-                }
-                selectDefaultPassed = true;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onClick(View v) {
+                showOrderLocalizationListDialog();
             }
         });
-
         listView = view.findViewById(R.id.LocalizationList);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -462,6 +438,10 @@ public class FragmentLocalizations extends Fragment {
      * Field:
      *  -1 (LocalizationName)
      *  -2 (DateOfCreation)
+     *  -3 (Shared and LocalizationName)
+     *  -4 (Shared and DateOfCreation)
+     *  -5 (NoOwner and LocalizationName)
+     *  -6 (NoOwner and DateOfCreation)
      * Favourite:
      *  -true (Order by favourite localizations)
      *  -false (Does not take into account favorite localizations)
@@ -476,24 +456,49 @@ public class FragmentLocalizations extends Fragment {
      */
     public void orderList(int field, boolean favourite){
         if(favourite){//Si la lista se encuentra ordenada por favoritos
-            if(field == 1){
-                new OrderLists().orderLocalizationListAscByNameAndFavourite(viewModel.get_itemsLocalizationList());//Order list by name and fav
-            }else{
-                new OrderLists().orderLocalizationListAscByDateAndFavourite(viewModel.get_itemsLocalizationList());//Order list by date of creation and fav
+
+            switch (field){
+                case 1:
+                    new OrderLists().orderLocalizationListAscByNameAndFavourite(viewModel.get_itemsLocalizationList());//Order list by name and fav
+                    break;
+                case 2:
+                    new OrderLists().orderLocalizationListAscByDateAndFavourite(viewModel.get_itemsLocalizationList());//Order list by date of creation and fav
+                    break;
+                case 3:
+                    new OrderLists().orderLocalizationListAscBySharedAndNameAndFav(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by shared and name and fav
+                    break;
+                case 4:
+                    new OrderLists().orderLocalizationListAscBySharedAndDateAndFav(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by shared and date and fav
+                    break;
+                case 5:
+                    new OrderLists().orderLocalizationListAscByNoOwnerAndNameAndFav(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by no owner and name and fav
+                    break;
+                case 6:
+                    new OrderLists().orderLocalizationListAscByNoOwnerAndDateAndFav(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by no owner and date and fav
+                    break;
             }
         }else{
-            if(field == 1){
-                viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListByName(viewModel.get_itemsLocalizationList()));//Order list by name
-            }else{
-                viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListAscByDate(viewModel.get_itemsLocalizationList()));//Order list by date of creation
+            switch (field){
+                case 1:
+                    viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListByName(viewModel.get_itemsLocalizationList()));//Order list by name
+                    break;
+                case 2:
+                    viewModel.set_itemsLocalizationList(new OrderLists().orderLocalizationListAscByDate(viewModel.get_itemsLocalizationList()));//Order list by date of creation
+                    break;
+                case 3:
+                    new OrderLists().orderLocalizationListAscBySharedAndName(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by shared and name
+                    break;
+                case 4:
+                    new OrderLists().orderLocalizationListAscBySharedAndDate(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by shared and date
+                    break;
+                case 5:
+                    new OrderLists().orderLocalizationListAscByNoOwnerAndName(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by no owner and name
+                    break;
+                case 6:
+                    new OrderLists().orderLocalizationListAscByNoOwnerAndDate(viewModel.get_itemsLocalizationList(), viewModel.get_actualEmailUser());//Order list by no owner and date
+                    break;
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -545,5 +550,44 @@ public class FragmentLocalizations extends Fragment {
             if(actualActivity != null)
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showOrderLocalizationListDialog
+     * Comentario: Este método muestra por pantalla un dialogo con los diferentes tipos de ordenación, que se puede aplicar
+     * sobre la lista de localizaciones, si el usuario confirma el dialogo, se ordenará la lista actual dependiendo
+     * del tipo seleccionado.
+     * Cabecera: public void showOrderLocalizationListDialog()
+     * Postcondiciones: El método abre un dialogo de ordenación, si el usuario confirma el dialogo se
+     * ordena ls lista de localizaciones por el criterio seleccionado.
+     */
+    public void showOrderLocalizationListDialog() {
+        final CharSequence [] orderTypes = {getResources().getString(R.string.name),
+                getResources().getString(R.string.date_of_creation), getResources().getString(R.string.shared_by_name), getResources().getString(R.string.shared_by_date_of_creaction),
+                getResources().getString(R.string.no_owner_by_name), getResources().getString(R.string.no_owner_by_date_of_creation)};
+
+        int actualTypeSelected = sharedpreferencesField.getInt("OrderLocalizationListField", 1) -1;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.order_types);
+        builder.setSingleChoiceItems(orderTypes, actualTypeSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_positionSelectedOrderTypesLocations(which);
+            }
+        });
+        builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
+                editor01.putInt("OrderLocalizationListField", viewModel.get_positionSelectedOrderTypesLocations()+1);
+                editor01.commit();
+                loadList();//Recargamos la lista
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

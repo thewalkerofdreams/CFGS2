@@ -177,4 +177,10 @@
     <string name="maps_description_maps_list">Click on "Map List" to show a list with all the regions downloaded, you can navigate to each of them.</string>
 
     <string name="error_location_permission">You cannot enter the route without granting location permissions!</string>
+
+    <string name="order_types">Order types</string>
+    <string name="shared_by_name">Shared by name</string>
+    <string name="shared_by_date_of_creaction">Shared by date of creation</string>
+    <string name="no_owner_by_name">No owner by name</string>
+    <string name="no_owner_by_date_of_creation">No owner by date of creation</string>
 </resources>

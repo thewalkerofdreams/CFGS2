@@ -380,6 +380,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                     longitude = data.child("longitude").getValue(Double.class);
                 }
                 viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));
+                reloadInitialFragment();//Recargamos el fragmento inicial
                 viewPager.setCurrentItem(0);//Lanzamos el fragmento principal
             }
 

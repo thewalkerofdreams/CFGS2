@@ -300,4 +300,279 @@ public class OrderLists {
         localizationList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
         localizationList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
     }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscBySharedAndDate
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
+     * las que han sido compartidas con la aplicación.
+     * Cabecera: public void orderLocalizationListAscBySharedAndDate(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordena la lista de localizaciones por fecha, mostrando primero las localizaciones
+     * compartidas.
+     */
+    public void orderLocalizationListAscBySharedAndDate(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoCompartidas= new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoCompartidas = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)//Separamos los localizaciones en compartidas y no compartidas
+        {
+            if(localizationList.get(i).get_localizationPoint().isShared() && localizationList.get(i).get_localizationPoint().getEmailCreator().equals(actualUserEmail)){
+                listadoCompartidas.add(localizationList.get(i));
+            }else{
+                listadoNoCompartidas.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscByDate(listadoCompartidas);//Ordenamos la lista de compartidas
+        this.orderLocalizationListAscByDate(listadoNoCompartidas);//Ordenamos la lista de no compartidas
+
+        localizationList.clear();
+        localizationList.addAll(listadoCompartidas);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoCompartidas);//Añadimos el resto de rutas no favoritas
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscBySharedAndDateAndFav
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
+     * las favoritas que han sido compartidas con la aplicación. Luego le seguirén el resto de localizaciones favoritas, cuando
+     * no queden más se encontrarán las localizaciones compartidas no favoritas y por último las no favoritas y no compartidas.
+     * Cabecera: public void orderLocalizationListAscBySharedAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordena la lista de localizaciones por fecha, mostrando primero las localizaciones
+     * compartidas.
+     */
+    public void orderLocalizationListAscBySharedAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoFavoritos= new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)//Separamos los localizaciones favoritas y no favoritas
+        {
+            if(localizationList.get(i).is_favourite()){
+                listadoFavoritos.add(localizationList.get(i));
+            }else{
+                listadoNoFavoritos.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscBySharedAndDate(listadoFavoritos, actualUserEmail);//Ordenamos la lista de favoritas
+        this.orderLocalizationListAscBySharedAndDate(listadoNoFavoritos, actualUserEmail);//Ordenamos la lista de no favoritas
+
+        localizationList.clear();
+        localizationList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscBySharedAndName
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre, mostrando primero las que han
+     * sido compartidas con la aplicación.
+     * Cabecera: public void orderLocalizationListAscBySharedAndName(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre y priorizando
+     * las localizaciones compartidas.
+     */
+    public void orderLocalizationListAscBySharedAndName(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoCompartidos = new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoCompartidos = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)
+        {
+            if(localizationList.get(i).get_localizationPoint().isShared() && localizationList.get(i).get_localizationPoint().getEmailCreator().equals(actualUserEmail)){
+                listadoCompartidos.add(localizationList.get(i));
+            }else{
+                listadoNoCompartidos.add(localizationList.get(i));
+            }
+        }
+
+        listadoCompartidos = orderLocalizationListByName(listadoCompartidos);//Ordenamos la lista de favoritos
+        listadoNoCompartidos = orderLocalizationListByName(listadoNoCompartidos);//Ordenamos la lista de no favoritos
+
+        localizationList.clear();//Limpiamos la lista
+        localizationList.addAll(listadoCompartidos);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoCompartidos);//Añadimos el resto de rutas no favoritas
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscBySharedAndNameAndFav
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre, mostrando primero las
+     * favoritas y que han sido compartidas con la aplicación. Criterio de prioridad en la ordenación:
+     *  -Favorita y compartida
+     *  -Favorita y no compartida
+     *  -No favorita y compartida
+     *  -No favorita y no compartida
+     * Cabecera: public void orderLocalizationListAscBySharedAndNameAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre y priorizando
+     * las favoritas compartidas.
+     */
+    public void orderLocalizationListAscBySharedAndNameAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoFavoritos = new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)
+        {
+            if(localizationList.get(i).is_favourite()){
+                listadoFavoritos.add(localizationList.get(i));
+            }else{
+                listadoNoFavoritos.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscBySharedAndName(listadoFavoritos, actualUserEmail);//Ordenamos la lista de favoritos
+        this.orderLocalizationListAscBySharedAndName(listadoNoFavoritos, actualUserEmail);//Ordenamos la lista de no favoritos
+
+        localizationList.clear();//Limpiamos la lista
+        localizationList.addAll(listadoFavoritos);//Añadimos las rutas favoritas
+        localizationList.addAll(listadoNoFavoritos);//Añadimos el resto de rutas no favoritas
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscByNoOwnerAndDate
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
+     * las que no pertenecen al usuario actual.
+     * Cabecera: public void orderLocalizationListAscByNoOwnerAndDate(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordena la lista de localizaciones por fecha, mostrando primero las localizaciones
+     * que no pertenecen al usuario.
+     */
+    public void orderLocalizationListAscByNoOwnerAndDate(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoPropias= new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoPropias = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)//Separamos los localizaciones en compartidas y no compartidas
+        {
+            if(localizationList.get(i).get_localizationPoint().getEmailCreator().equals(actualUserEmail)){
+                listadoPropias.add(localizationList.get(i));
+            }else{
+                listadoNoPropias.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscByDate(listadoPropias);//Ordenamos la lista de localizaciones del usuario actual
+        this.orderLocalizationListAscByDate(listadoNoPropias);//Ordenamos la lista de localizaciones que no creó ell usuario
+
+        localizationList.clear();
+        localizationList.addAll(listadoNoPropias);//Añadimos las localizaciones no propias
+        localizationList.addAll(listadoPropias);//Añadimos las localizaciones creadas por el usuario
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscByNoOwnerAndDateAndFav
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su fecha de creación, mostrando primero
+     * las que no pertenecen al usuario actual. Criterio de prioridad en la ordenación:
+     * -Localizaciones que no pertenecen al usuario
+     * -Localizaciones favoritas que pertenecen al usuario //Todas son favoritas
+     * -Localizaciones no favoritas que pertenecen al usuario
+     * Cabecera: public void orderLocalizationListAscByNoOwnerAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordena la lista de localizaciones por fecha, mostrando primero las localizaciones
+     * que no pertenecen al usuario.
+     */
+    public void orderLocalizationListAscByNoOwnerAndDateAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoFavoritos= new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)//Separamos los localizaciones en favoritas y no favoritas
+        {
+            if(localizationList.get(i).is_favourite()){
+                listadoFavoritos.add(localizationList.get(i));//Aquí se encontrarán todas las localizaciones favoritas y/o no propias
+            }else{
+                listadoNoFavoritos.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscByNoOwnerAndDate(listadoFavoritos, actualUserEmail);//Ordenamos la lista de localizaciones favoritas
+        this.orderLocalizationListAscByDate(listadoNoFavoritos);//Ordenamos la lista de localizaciones no favoritas
+
+        localizationList.clear();
+        localizationList.addAll(listadoFavoritos);//Añadimos las localizaciones no propias
+        localizationList.addAll(listadoNoFavoritos);//Añadimos las localizaciones creadas por el usuario
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscByNoOwnerAndName
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre, mostrando primero las que
+     * no pertenecen al usuario actual.
+     * Cabecera: public void orderLocalizationListAscByNoOwnerAndName(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre y priorizando
+     * las localizaciones no propias.
+     */
+    public void orderLocalizationListAscByNoOwnerAndName(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoPropias = new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoPropias = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)
+        {
+            if(localizationList.get(i).get_localizationPoint().getEmailCreator().equals(actualUserEmail)){
+                listadoPropias.add(localizationList.get(i));
+            }else{
+                listadoNoPropias.add(localizationList.get(i));
+            }
+        }
+
+        listadoPropias = orderLocalizationListByName(listadoPropias);//Ordenamos la lista de propias
+        listadoNoPropias = orderLocalizationListByName(listadoNoPropias);//Ordenamos la lista de no propias
+
+        localizationList.clear();//Limpiamos la lista
+        localizationList.addAll(listadoNoPropias);//Añadimos las localizaciones no propias
+        localizationList.addAll(listadoPropias);//Añadimos las localizaciones propias
+    }
+
+    /**
+     * Interfaz
+     * Nombre: orderLocalizationListAscByNoOwnerAndNameAndFav
+     * Comentario: Este método nos permite ordenar una lista de localizaciones por su nombre, mostrando primero las
+     * que no pertenecen al usuario actual. Criterio de prioridad en la ordenación:
+     * -Localizaciones que no pertenecen al usuario
+     * -Localizaciones favoritas que pertenecen al usuario
+     * -Localizaciones no favoritas que pertenecen al usuario
+     * Cabecera: public void orderLocalizationListAscByNoOwnerAndNameAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList)
+     * Entrada:
+     *  -ArrayList<ClsLocalizationPointWithFav> localizationList
+     *  -String actualUserEmail
+     * Postcondiciones: El método ordená la lista de localizaciones ascendentemente según su nombre y priorizando
+     * las localizaciones no propias.
+     */
+    public void orderLocalizationListAscByNoOwnerAndNameAndFav(ArrayList<ClsLocalizationPointWithFav> localizationList, String actualUserEmail){
+        ArrayList<ClsLocalizationPointWithFav> listadoFavoritos = new ArrayList<>();
+        ArrayList<ClsLocalizationPointWithFav> listadoNoFavoritos = new ArrayList<>();
+
+        for (int i = 0; i < localizationList.size(); i++)
+        {
+            if(localizationList.get(i).is_favourite()){
+                listadoFavoritos.add(localizationList.get(i));//Aquí se encuntran todas las localiazciones favoritas y/o no propias
+            }else{
+                listadoNoFavoritos.add(localizationList.get(i));
+            }
+        }
+
+        this.orderLocalizationListAscByNoOwnerAndName(listadoFavoritos, actualUserEmail);//Ordenamos la lista de favoritas
+        this.orderLocalizationListAscByNoOwnerAndName(listadoNoFavoritos, actualUserEmail);//Ordenamos la lista de no favoritas
+
+        localizationList.clear();//Limpiamos la lista
+        localizationList.addAll(listadoFavoritos);//Añadimos las localizaciones favoritas
+        localizationList.addAll(listadoNoFavoritos);//Añadimos las localizaciones no favoritas
+    }
 }
