@@ -257,6 +257,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId)
                     .setValue(localizationId);
         }
+
+        reloadInitialFragment();//Recargamos el mapa principal
     }
 
     @Override//Controlamos la respuesta a los permisos

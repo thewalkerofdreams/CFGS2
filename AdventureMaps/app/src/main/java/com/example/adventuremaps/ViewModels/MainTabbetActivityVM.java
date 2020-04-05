@@ -85,6 +85,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<String> _checkedFilters;
     private boolean[] _dialogPostisionsChecked;
     private ClsLocalizationPoint _selectedLocalizationPoint;
+    private ArrayList<String> _localizationsIdFavourites;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -125,6 +126,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
             _dialogPostisionsChecked[i] = true;
         }
         _selectedLocalizationPoint = null;
+        _localizationsIdFavourites = new ArrayList<>();
     }
 
     //Get y Set
@@ -330,6 +332,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedLocalizationPoint(ClsLocalizationPoint _selectedLocalizationPoint) {
         this._selectedLocalizationPoint = _selectedLocalizationPoint;
+    }
+
+    public ArrayList<String> get_localizationsIdFavourites() {
+        return _localizationsIdFavourites;
+    }
+
+    public void set_localizationsIdFavourites(ArrayList<String> _localizationsIdFavourites) {
+        this._localizationsIdFavourites = _localizationsIdFavourites;
     }
 
     //Functions Fragment Offline Maps Part

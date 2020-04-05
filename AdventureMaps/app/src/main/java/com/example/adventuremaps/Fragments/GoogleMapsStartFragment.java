@@ -46,6 +46,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public boolean onMarkerClick(final Marker marker) {
         if(viewModel.get_localizationPointClicked() != null) {//Si ya existe un marcador seleccionado
-            setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
+            restoreIcomMarker(viewModel.get_localizationPointClicked());//Restablecemos el icono por defecto del marcador seleccionado
         }
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
@@ -87,7 +88,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
         if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado, cambiamos su icono
-            setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
+            //setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
+            restoreIcomMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
         }
     }
 
@@ -150,11 +152,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         if(map != null){//Si se ha cargado la referencia al mapa de inicio
             Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
-                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
-            }else{
-                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
-            }
+            adjustMarkerType(marker, localizationPoint);//Ajustamos el marcador actual
             viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
 
             //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
@@ -163,6 +161,56 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
                 onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
             }
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: adjustMarkerType
+     * Comentario: Este método nos permite ajustar un marcador en específico, insertandole un icono
+     * y un tag, que lo permita distindguir del resto de marcadores que no son del mismo tipo. Este
+     * método es llamado desde dentro del método "colocarMarcador".
+     * Cabecera: public void private(Marker marker, ClsLocalizationPoint localizationPoint)
+     * Entrada:
+     *  -Marker marker
+     *  -ClsLocalizationPoint localizationPoint
+     * Postcondciones: El método inserta un icono y un tag al marcador pasado por parámetros.
+     */
+    private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
+        if(viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
+            setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
+            marker.setTag("Fav");
+        }else{
+            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
+                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+                marker.setTag("Owner");
+            }else{//Si la loclización no es del usuario actual
+                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+                marker.setTag("NoOwner");
+            }
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: restoreIcomMarker
+     * Comentario: Este método nos permite restablecer el icono por defecto de un marcador específico.
+     * Cabecera: private void restoreIcomMarker(Marker marker)
+     * Entrada:
+     *  -Marker marker
+     * Postcondiciones: El método restablece el icono por defecto de un macador.
+     */
+    private void restoreIcomMarker(Marker marker){
+        switch (marker.getTag().toString()){
+            case "Fav":
+                setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
+                break;
+            case "Owner":
+                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+                break;
+            case "NoOwner":
+                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+                break;
         }
     }
 
@@ -240,6 +288,24 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewModel.set_localizationsIdFavourites(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
+                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id de la puntos de localización favoritos
+                        String localizationId = booksSnapshot.getValue(String.class);
+                        viewModel.get_localizationsIdFavourites().add(localizationId);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
             }
         });
     }
