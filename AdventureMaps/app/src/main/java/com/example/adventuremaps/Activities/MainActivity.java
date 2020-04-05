@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.adventuremaps.Activities.AutoRestartApp.MyExceptionHandler;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));//Si la aplicación llegará a crasher por algún casual, la reiniciamos
+        if (getIntent().getBooleanExtra("crash", false)) {
+            Toast.makeText(this, "App restarted after crash", Toast.LENGTH_SHORT).show();
+        }
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(MainActivityVM.class);

@@ -47,6 +47,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private BitmapDrawable bitmapdraw;
+    private Bitmap b, smallMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -177,7 +179,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondciones: El método inserta un icono y un tag al marcador pasado por parámetros.
      */
     private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
-        if(viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
+        if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
             setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
             marker.setTag("Fav");
         }else{
@@ -402,9 +404,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         //Ajustamos el tamaño que tendrá el marcador
         int height = 120;
         int width = 120;
-        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(Integer.valueOf(addressIcon));
-        Bitmap b = bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        bitmapdraw = (BitmapDrawable) this.getResources().getDrawable(Integer.valueOf(addressIcon));
+        b = bitmapdraw.getBitmap();
+        smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
     }
 }
