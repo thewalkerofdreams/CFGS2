@@ -1,5 +1,8 @@
 package com.example.adventuremaps.FireBaseEntities;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class ClsRoute {
 
     private String routeId;

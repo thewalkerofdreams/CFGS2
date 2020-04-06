@@ -1,7 +1,10 @@
 package com.example.adventuremaps.FireBaseEntities;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.io.Serializable;
 
+@IgnoreExtraProperties //Ignoramos el resto de atributos que se encuentren almacenados en el fragmento de Firebase que no se presenten en esta clase
 public class ClsLocalizationPoint implements Serializable {
 
     private String localizationPointId;
