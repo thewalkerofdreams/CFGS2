@@ -68,6 +68,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations;
     private LatLng _latLngToNavigate;
     private int _positionSelectedOrderTypesLocations;
+    private boolean _localizationDeleted;
 
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
@@ -106,6 +107,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _selectedLocalizations = new ArrayList<>();
         _latLngToNavigate = null;
         _positionSelectedOrderTypesLocations = 0;
+        _localizationDeleted = false;
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
@@ -226,6 +228,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_positionSelectedOrderTypesLocations(int _positionSelectedOrderTypesLocations) {
         this._positionSelectedOrderTypesLocations = _positionSelectedOrderTypesLocations;
+    }
+
+    public boolean is_localizationDeleted() {
+        return _localizationDeleted;
+    }
+
+    public void set_localizationDeleted(boolean _localizationDeleted) {
+        this._localizationDeleted = _localizationDeleted;
     }
 
     //Gets y Sets Fragment Routes

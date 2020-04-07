@@ -2,7 +2,6 @@ package com.example.adventuremaps.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +89,7 @@ public class FragmentStartLocalizationPointClick extends Fragment {
                 });
             }
         });
+
         return view;
     }
 

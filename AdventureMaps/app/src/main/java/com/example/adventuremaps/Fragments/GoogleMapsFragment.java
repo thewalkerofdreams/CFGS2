@@ -67,17 +67,6 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         //Al finalizar el moviento del marcador
     }
 
-    /*
-     * Interfaz
-     * Nombre: funcionActualizarMapa
-     * Comanterio: Esta función nos permite actualizar el mapa.
-     * Cabecera: public void funcionEngancheMapa()
-     * Postcondiciones: El método modifica la localización del mapa en el fragmento.
-     * */
-    public void funcionEngancheMapa() {
-        getMapAsync(this);
-    }
-
     @Override
     public void onMapClick(LatLng latLng) {
         //Mostramos las coordenadas con un Toast

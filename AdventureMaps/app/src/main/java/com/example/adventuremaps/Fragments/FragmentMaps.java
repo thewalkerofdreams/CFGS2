@@ -72,7 +72,7 @@ public class FragmentMaps extends Fragment {
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
-        HttpRequestUtil.setLogEnabled(true);//TODO a ver si cuela
+        HttpRequestUtil.setLogEnabled(true);//Habilita los logs
 
         //Inflamos el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -458,7 +458,7 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        HttpRequestUtil.setLogEnabled(false);//TODO a ver si cuela
+        HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
     }
 
     @Override

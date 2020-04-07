@@ -205,16 +205,18 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método restablece el icono por defecto de un macador.
      */
     private void restoreIcomMarker(Marker marker){
-        switch (marker.getTag().toString()){
-            case "Fav":
-                setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
-                break;
-            case "Owner":
-                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
-                break;
-            case "NoOwner":
-                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
-                break;
+        if(marker != null && marker.getTag() != null){
+            switch (marker.getTag().toString()){
+                case "Fav":
+                    setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
+                    break;
+                case "Owner":
+                    setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+                    break;
+                case "NoOwner":
+                    setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+                    break;
+            }
         }
     }
 
@@ -269,7 +271,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual, esto nos sirve para no actualizar datos de la actividad cuando no estemos en esta
