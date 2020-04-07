@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));//Si la aplicación llegará a crasher por algún casual, la reiniciamos
+        /*Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));//Si la aplicación llegará a crasher por algún casual, la reiniciamos
         if (getIntent().getBooleanExtra("crash", false)) {
             Toast.makeText(this, "App restarted after crash", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(MainActivityVM.class);

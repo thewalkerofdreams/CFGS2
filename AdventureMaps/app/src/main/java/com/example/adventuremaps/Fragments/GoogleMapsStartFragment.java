@@ -48,7 +48,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
     private BitmapDrawable bitmapdraw;
-    private Bitmap b, smallMarker;
+    private Bitmap smallMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -270,22 +270,24 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
-                cleanAllLocalizations();
-                viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
-                for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
+                if(getContext() != null){//Si se encuentra en el contexto actual, esto nos sirve para no actualizar datos de la actividad cuando no estemos en esta
+                    viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
+                    cleanAllLocalizations();
+                    viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
+                    for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                        ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
-                    ArrayList<String> actualTypes = new ArrayList<>();
-                    for(DataSnapshot types : datas.child("types").getChildren()){
-                        actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
+                        ArrayList<String> actualTypes = new ArrayList<>();
+                        for(DataSnapshot types : datas.child("types").getChildren()){
+                            actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
+                        }
+
+                        if((localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))
+                        && UtilStrings.arraysWithSameData(actualTypes, viewModel.get_checkedFilters()))//Si la localización esta compartida o es del usuario actual y si cumple los filtros
+                            viewModel.get_localizationPoints().add(localizationPoint);
                     }
-
-                    if((localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))
-                    && UtilStrings.arraysWithSameData(actualTypes, viewModel.get_checkedFilters()))//Si la localización esta compartida o es del usuario actual y si cumple los filtros
-                        viewModel.get_localizationPoints().add(localizationPoint);
+                    loadLocalizationPoints();
                 }
-                loadLocalizationPoints();
             }
 
             @Override
@@ -401,12 +403,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método agrega un icono a un marcador.
      */
     private void setIconToMarker(Marker marker, String addressIcon){
-        //Ajustamos el tamaño que tendrá el marcador
-        int height = 120;
-        int width = 120;
-        bitmapdraw = (BitmapDrawable) this.getResources().getDrawable(Integer.valueOf(addressIcon));
-        b = bitmapdraw.getBitmap();
-        smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
+        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
     }
 }

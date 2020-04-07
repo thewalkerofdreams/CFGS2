@@ -90,7 +90,6 @@ public class FragmentStartLocalizationPointClick extends Fragment {
                 });
             }
         });
-
         return view;
     }
 

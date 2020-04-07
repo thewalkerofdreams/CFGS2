@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Management;
 
 public class ApplicationConstants {
+    //Permissions
     public final static int REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS = 1;
     public final static int REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP = 2;
     public final static int REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE = 3;
@@ -10,4 +11,8 @@ public class ApplicationConstants {
     public final static int REQUEST_CODE_EDIT_LOCALIZATION_POINT = 7;
     public final static int REQUEST_CODE_DETAILS_LOCALIZATION_POINT = 8;
     public final static int REQUEST_CODE_CREATE_LOCALIZATION_POINT = 9;
+
+    //Icons Size
+    public final static int MARKER_WITH_SIZE = 120;
+    public final static int MARKER_HEIGHT_SIZE = 120;
 }

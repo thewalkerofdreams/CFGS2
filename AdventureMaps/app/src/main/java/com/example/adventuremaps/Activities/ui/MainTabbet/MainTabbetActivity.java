@@ -150,6 +150,10 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                     viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
                     reloadInitialFragment();//Recargamos el fragmento
                 }
+
+                /*if(position > 1 && viewModel.get_localizationPointClicked() != null){
+                    viewModel.set_localizationPointClicked(null);
+                }*/
             }
 
             @Override
@@ -373,11 +377,11 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference("Localizations");
 
-        localizationference.orderByChild("localizationPointId").equalTo(id).addValueEventListener(new ValueEventListener() {
+        localizationference.orderByChild("localizationPointId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 double latitude = 0, longitude = 0;
-                for(DataSnapshot data: dataSnapshot.getChildren()){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     latitude = data.child("latitude").getValue(Double.class);
                     longitude = data.child("longitude").getValue(Double.class);
                 }
