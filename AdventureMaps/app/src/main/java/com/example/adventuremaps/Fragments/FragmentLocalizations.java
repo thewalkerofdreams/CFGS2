@@ -212,7 +212,7 @@ public class FragmentLocalizations extends Fragment {
                     }
                 }
 
-                drLocalization.addValueEventListener(new ValueEventListener() {
+                drLocalization.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización favorito

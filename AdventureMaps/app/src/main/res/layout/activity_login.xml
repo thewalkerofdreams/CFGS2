@@ -41,7 +41,7 @@
         android:layout_weight="8"
         android:layout_marginStart="32sp"
         android:layout_marginEnd="30sp"
-        android:textColor="#590BFF"
+        android:textColor="@color/UnderlinedBlue"
         android:clickable="true"
         android:onClick="throwSendNewPasswordActivity"
         android:text="@string/forgotten_password"></TextView>

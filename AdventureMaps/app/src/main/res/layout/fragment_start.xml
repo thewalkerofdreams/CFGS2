@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="80">
+        android:layout_weight="100">
 
         <fragment
             android:id="@+id/fragmentGoogleMapsStart"
@@ -35,8 +35,7 @@
     <FrameLayout
         android:id="@+id/FrameLayout02"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="20"
+        android:layout_height="100sp"
         android:visibility="gone"></FrameLayout>
 
 </LinearLayout>

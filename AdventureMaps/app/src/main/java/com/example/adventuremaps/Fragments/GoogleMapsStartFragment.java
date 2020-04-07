@@ -54,11 +54,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+        if(getActivity() != null){//Si la actividad no es nula
+            //Instanciamos el VM
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
-        //Cargamos el fragmento inferior
-        ((MainTabbetActivity)getActivity()).replaceFragment();
+            //Cargamos el fragmento inferior
+            ((MainTabbetActivity)getActivity()).replaceFragment();
+        }
 
         return view;
     }
@@ -130,10 +132,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Interfaz
      * Nombre: loadLocalizationPoints
      * Comentario: Este método nos permite cargar en el mapa los puntos de localización almacenados en la plataforma.
-     * Cabecera: public void loadLocalizationPoints()
+     * Cabecera: private void loadLocalizationPoints()
      * Postcondiciones: El método carga los puntos de localización en el mapa actual.
      */
-    public void loadLocalizationPoints(){
+    private void loadLocalizationPoints(){
         for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
             colocarMarcador(viewModel.get_localizationPoints().get(i)); //Comenzamos a marcar los puntos de la ruta almacenada
         }
@@ -143,12 +145,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Interfaz
      * Nombre: colocarMarcador
      * Comentario: Este métdodo coloca un marcador en el mapa.
-     * Cabecera: public void colocarMarcador(ClsLocalizationPoint localizationPoint)
+     * Cabecera: private void colocarMarcador(ClsLocalizationPoint localizationPoint)
      * Entrada:
      *  -ClsLocalizationPoint localizationPoint
      * Postcondiciones: El método coloca un marcador en el mapa.
      */
-    public void colocarMarcador(ClsLocalizationPoint localizationPoint){
+    private void colocarMarcador(ClsLocalizationPoint localizationPoint){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
@@ -221,13 +223,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Nombre: insertarMarcador
      * Comentario: Este método nos permite insertar un marcador en el mapa.
      * Además guarda ese marcador en el VM MainTabbetActicityVM.
-     * Cabecera: public void insertarMarcador(LatLng latLng)
+     * Cabecera: private void insertarMarcador(LatLng latLng)
      * Entrada:
      *   -LatLng latLng
      * Postcondiciones: El método inserta un marcador en el mapa. Además se guarda
      * ese marcador en el VM MainTabbetActicityVM.
      * */
-    public void insertarMarcador(LatLng latLng){
+    private void insertarMarcador(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
@@ -241,12 +243,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Nombre: saveLocalizationPoint
      * Comentario: Este método nos permite guardar un punto de localización en la plataforma
      * FireBase a través de un Marcador.
-     * Cabecera: public void saveLocalizationPoint(Marker marker)
+     * Cabecera: private void saveLocalizationPoint(Marker marker)
      * Entrada:
      *  -Marker marker
      * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
      */
-    public void saveLocalizationPoint(Marker marker){
+    private void saveLocalizationPoint(Marker marker){
         //Almacenamos el punto de localización en la plataforma
         FirebaseDatabase.getInstance().getReference("Localizations").
                 child(viewModel.get_localizationToSave().getLocalizationPointId())
@@ -267,7 +269,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.addValueEventListener(new ValueEventListener() {
+        localizationReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual, esto nos sirve para no actualizar datos de la actividad cuando no estemos en esta
@@ -292,24 +294,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                viewModel.set_localizationsIdFavourites(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
-                for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id de la puntos de localización favoritos
-                        String localizationId = booksSnapshot.getValue(String.class);
-                        viewModel.get_localizationsIdFavourites().add(localizationId);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
             }
         });
     }
@@ -388,6 +372,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método oculta el fragmento inferior del fragmento actual.
      */
     public void ocultarFragmentoInferior(){
+        if(getActivity() != null)
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
     }
 

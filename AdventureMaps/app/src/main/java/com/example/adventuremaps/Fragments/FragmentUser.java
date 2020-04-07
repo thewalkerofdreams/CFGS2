@@ -65,7 +65,7 @@ public class FragmentUser extends Fragment {
     public void onStart() {
         super.onStart();
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String email = "", nickName = "";
@@ -82,7 +82,7 @@ public class FragmentUser extends Fragment {
                 txtNickName.setText(nickName);//Introducimos el nickName
                 numberOfRoutes.setText(String.valueOf(routesCreated));//Introducimos el número de rutas creadas
                 //Ahora obtendremos el número de localizaciones creadas por el usuario
-                localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+                localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         int localizationsCreated = 0;

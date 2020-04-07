@@ -7,4 +7,5 @@
     <color name="WhiteItem">#FFF</color>
     <color name="BlueItem">#2E86C1</color>
     <color name="Black">#000</color>
+    <color name="UnderlinedBlue">#590BFF</color>
 </resources>

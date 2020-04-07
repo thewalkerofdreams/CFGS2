@@ -33,6 +33,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.module.http.HttpRequestUtil;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
@@ -70,6 +71,8 @@ public class FragmentMaps extends Fragment {
 
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
+
+        HttpRequestUtil.setLogEnabled(true);//TODO a ver si cuela
 
         //Inflamos el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -450,6 +453,12 @@ public class FragmentMaps extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        HttpRequestUtil.setLogEnabled(false);//TODO a ver si cuela
     }
 
     @Override
