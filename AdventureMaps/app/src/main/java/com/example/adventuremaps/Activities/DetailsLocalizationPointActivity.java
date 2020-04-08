@@ -29,8 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.EventListener;
-
 public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
     private TextView nameLocalizationPoint, descriptionLocalizationPoint;
@@ -64,12 +62,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         btnEditLocalizationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), EditLocalizationPointActivity.class);
-                intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-                intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
-                intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
-                intent.putStringArrayListExtra("LocationsIdActualUser", viewModel.get_localizationsIdActualUser());
-                startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT);
+                throwEditLocalizationPointActivity();//Lanzamos la actividad de edición
             }
         });
 
@@ -78,11 +71,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(btnFavourite.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
-                    btnFavourite.setBackgroundResource(R.drawable.empty_star);
+                    btnFavourite.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
                     userReference.child(FirebaseAuth.getInstance().
                             getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
                 }else{
-                    btnFavourite.setBackgroundResource(R.drawable.fill_star);
+                    btnFavourite.setBackgroundResource(R.drawable.fill_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
                     userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(
                             viewModel.get_actualLocalizationPoint().getLocalizationPointId())
                             .setValue(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
@@ -94,10 +87,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         btnImageGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), ImageGalleryActivity.class);
-                intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-                intent.putExtra("ActualLocalizationPoint", viewModel.get_actualLocalizationPoint());
-                startActivity(intent);
+                throwImageGalleryActivity();//Lanzamos la galería de imágenes
             }
         });
 
@@ -125,11 +115,45 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Interfaz
+     * Nombre: throwEditLocalizationPointActivity
+     * Comentario: Este método lanza la actividad EditLocalizationPointActivity con los
+     * datos necesarios parar editar el punto de localización actual.
+     * Cabecera: private void throwEditLocalizationPointActivity()
+     * Postcondiciones: El método lanza la actividad EditLocalizationPointActivity, con los datos
+     * necesarios para actualizar el punto de localización actual.
+     */
+    private void throwEditLocalizationPointActivity(){
+        Intent intent = new Intent(getApplication(), EditLocalizationPointActivity.class);
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
+        intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
+        intent.putStringArrayListExtra("LocationsIdActualUser", viewModel.get_localizationsIdActualUser());
+        startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwImageGalleryActivity
+     * Comentario: Este método lanza la actividad ImageGalleryActivity con los
+     * datos necesarios parar mostrar las imagenes del punto de localización actual.
+     * Cabecera: private void throwImageGalleryActivity()
+     * Postcondiciones: El método lanza la actividad ImageGalleryActivity, con los datos
+     * necesarios para cargar las imagenes del punto de localización actual.
+     */
+    private void throwImageGalleryActivity(){
+        Intent intent = new Intent(getApplication(), ImageGalleryActivity.class);
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLocalizationPoint", viewModel.get_actualLocalizationPoint());
+        startActivity(intent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
+        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_localizationTypes().clear();
@@ -146,7 +170,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             }
         });
 
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_localizationsIdActualUser().clear();//Limpiamos la lista de puntos de localización favoritos
@@ -307,7 +331,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      * 80 porciento de estas son negativas.
      */
     public void tryToStopSharingLocalizationPoint(){
-        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").addValueEventListener(new ValueEventListener() {
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int goodValorationCounter = 0;
@@ -349,7 +373,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      * Postcondiciones: El método desvincula a los usuarios no propietarios del punto de localización.
      */
     public void desmarcarLocalizacionDeFavoritos(){
-        userReference.addValueEventListener(new ValueEventListener() {
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot users: dataSnapshot.getChildren()){//Obtenemos los diferentes usuarios

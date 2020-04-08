@@ -112,7 +112,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
 
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
                 child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
-                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").addValueEventListener(new ValueEventListener() {
+                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null){//Si el usuario ya ha valorado la imagen
@@ -251,7 +251,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
+        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();

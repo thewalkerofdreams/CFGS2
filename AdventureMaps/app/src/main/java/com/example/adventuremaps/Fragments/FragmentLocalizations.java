@@ -213,29 +213,41 @@ public class FragmentLocalizations extends Fragment {
                     }
                 }
 
-                drLocalization.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización favorito
-                        for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                            ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
-                                    viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){
-                                viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
-                            }
-                        }
-                        loadList();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
+                loadLocalizationsUserFromPlataform();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
+            }
+        });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: loadLocalizationsUserFromPlataform
+     * Comentario: Este método nos permite cargar las localizaciones del usuario actual desde
+     * la plataforma de Firebase.
+     * Cabecera: public void loadLocalizationsUserFromPlataform()
+     * Postcondiciones: El método carga las localizaciones del usuario actual.
+     */
+    public void loadLocalizationsUserFromPlataform(){
+        drLocalization.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
+                    if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
+                            viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){
+                        viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
+                    }
+                }
+                loadList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
@@ -301,7 +313,7 @@ public class FragmentLocalizations extends Fragment {
     public void loadList(){
 
         if(viewModel.get_localizationsActualUser() != null && viewModel.get_localizationsIdActualUser() != null){//Si se han cargado las dos búsquedas necesarias desde FireBase
-            if(viewModel.get_selectedLocalizations().isEmpty())//Si la lista se seleccionadas se encuentra vacía
+            if(viewModel.get_selectedLocalizations().isEmpty())//Si la lista de seleccionadas se encuentra vacía
                 loadLocalizationModelList();//Asignamos los items de la lista
 
             Parcelable state = listView.onSaveInstanceState();//Guardamos el estado actual del listview (Nos interesa la posición actual del scroll)
@@ -532,6 +544,7 @@ public class FragmentLocalizations extends Fragment {
                 viewModel.shareLocalizationPoint();//Compartimos el punto de localización
                 viewModel.set_dialogShareLocalizationShowing(false);//Indicamos que el dialogo ha finalizado
                 viewModel.get_selectedLocalizations().clear();//Vaciamos la lista de selecionadas
+                loadLocalizationsUserFromPlataform();//Recargamos la lista de rutas del usuario actual
                 loadList();//Recargamos la lista de rutas
             }
         });

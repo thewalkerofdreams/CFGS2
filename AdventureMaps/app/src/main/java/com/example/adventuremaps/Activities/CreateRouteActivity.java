@@ -98,7 +98,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
      * Cabecera: public void trySaveRouteDialog(View v)
      * Entrada:
      *  -View v
-     * Postcondiciones: El método inserta la ruta actual en la plataforma de FireBase o devuelve un mensaje
+     * Postcondiciones: El método almacena la ruta actual en la plataforma de FireBase o devuelve un mensaje
      * de error por pantalla si la ruta contiene menos de dos puntos de localización marcados en el mapa.
      */
     public void trySaveRouteDialog(View v){
