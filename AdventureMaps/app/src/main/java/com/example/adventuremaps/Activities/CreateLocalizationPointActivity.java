@@ -156,8 +156,8 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
             }
         }
 
-        if(!viewModel.get_name().isEmpty() && !viewModel.get_description().isEmpty()){
-            if(!viewModel.get_localizationTypes().isEmpty()){
+        if(!viewModel.get_name().isEmpty() && !viewModel.get_description().isEmpty()){//Si el nombre y la descripción son válidos
+            if(!viewModel.get_localizationTypes().isEmpty()){//Si existe al menos un tipo seleccionado para la localización
                 String localizationPointId = localizationPointReference.push().getKey();//Obtenemos una id para el punto de localización
                 //Creamos el punto de localización
                 ClsLocalizationPoint newLocalizationPoint = new ClsLocalizationPoint(localizationPointId, viewModel.get_name(), viewModel.get_description(), viewModel.get_latitude(), viewModel.get_longitude(),
@@ -170,7 +170,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                 }
 
                 //Almacenamos las imagenes del punto de localización
-                insertImagesToFireBase(localizationPointId, newLocalizationPoint);
+                insertImagesToFireBase(localizationPointId);
 
                 //Cerramos la actividad actual
                 Intent resultIntent = new Intent();
@@ -206,21 +206,23 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      * Nombre: insertImagesToFireBase
      * Comentario: Este método nos permite insertar las imagenes asigandas al nuevo punto de localización
      * en la plataforma Firebase.
-     * Cabecera: public void insertImagesToFireBase()
+     * Cabecera: public void insertImagesToFireBase(final String localizationPointId)
+     * Entrada:
+     *  -String localizationPointId
      * Postcondiciones: El método inserta las imagenes asignadas al nuevo punto de localización en la
      * plataforma Firebase.
      */
-    public void insertImagesToFireBase(final String localizationPointId, final ClsLocalizationPoint newLocalizationPoint){
+    public void insertImagesToFireBase(final String localizationPointId){
         for(int i = 0; i < viewModel.get_imagesToSave().size(); i++){
-            final StorageReference riversRef = mStorageRef.child("Images").child(localizationPointId).child(viewModel.get_actualEmailUser()).
+            final StorageReference storageReference = mStorageRef.child("Images").child(localizationPointId).child(viewModel.get_actualEmailUser()).
                     child(System.currentTimeMillis()+""+getExtension(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri())));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
-            riversRef.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
+            storageReference.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            if (taskSnapshot.getMetadata() != null) {
-                                if (taskSnapshot.getMetadata().getReference() != null) {
+                            if (taskSnapshot.getMetadata() != null) {//Si los metadatos no son nulos
+                                if (taskSnapshot.getMetadata().getReference() != null) {//Y podemos obtener una referencia al storage
                                     Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
@@ -230,11 +232,12 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                                             //Insertamos la dirección de la imagen en la base de datos
                                             localizationReference.child(localizationPointId).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
                                                     .child(imageId).child("Uri").setValue(imageUrl);
+
+                                            Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
                                         }
                                     });
                                 }
                             }
-                            Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

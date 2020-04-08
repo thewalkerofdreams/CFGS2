@@ -80,16 +80,13 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
             }
         });
 
-        loadGallery();
+        loadGallery();//Cargamos la galería de imágenes
 
         btnAddImage = findViewById(R.id.btnAddImagesActivityImageGallery);
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.set_searchingImage(true);//Indicamos en el VM que el usuario está buscando una imagen en la galería
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
+                searchImageIntoGallery();//El usuario busca una imagen almacenada en su dispositivo
             }
         });
 
@@ -112,20 +109,36 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
 
     /**
      * Interfaz
+     * Nombre: searchImageIntoGallery
+     * Comentario: Este método nos permite que el usuario busque una imagen almacenada
+     * en su dispositivo. Si el usuario selecciona alguna imagen, esta se guardará para
+     * la nueva localización.
+     * Cabecera: private void searchImageIntoGallery()
+     * Postcondiciones: El método permite al usuario buscar una imagen almacenada en el
+     * dispositivo actual.
+     */
+    private void searchImageIntoGallery(){
+        viewModel.set_searchingImage(true);//Indicamos en el VM que el usuario está buscando una imagen en la galería
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
+    }
+
+    /**
+     * Interfaz
      * Nombre: selectImage
      * Comentario: Este método nos permite seleccionar una imagen de la galería.
      * Cabecera: private void selectImage(ClsImageWithId image, View view)
      * Entrada:
      *  -ClsImageWithId image
      *  -View view
-     * Postcondiciones: El método selecciona la imagen de la galería, almacenando la imagen en la lista
+     * Postcondiciones: El método selecciona una imagen de la galería, almacenando la imagen en la lista
      * de seleccionadas y cambiando el color de fondo del item.
      */
     private void selectImage(ClsImageWithId image, View view){
         viewModel.get_imagesSelected().add(image);//Añadimos la imagen a la lista de seleccionadas
         view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
