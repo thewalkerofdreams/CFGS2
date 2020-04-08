@@ -37,7 +37,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     private ImageButton goodValoration, badValoration;
     private AlertDialog goodValorationDialog, badValorationDialog;
     private DetailsLocalizationPointActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos la referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
 
     @Override

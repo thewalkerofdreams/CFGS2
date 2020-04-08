@@ -66,14 +66,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada, lanzamos la actividad ImageGalleryViewPagerActivity
-                    Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());//Pasamos las imagenes a cargar
-                    intent.putExtras(bundle);
-                    intent.putExtra("PositionImageSelected", position);//Indicamos la posición de la imagen clicada
-                    intent.putExtra("ActualUserEmail", viewModel.get_actualEmailUser());
-                    intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
-                    startActivity(intent);
+                    throwImageGalleryViewPagerActivity(position);//Lanzamos la galería de imágenes inmersiva
                 }else{
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
                         viewModel.get_imagesSelected().remove(item);//Eliminamos esa imagen de la lista de seleccionadas
@@ -101,9 +94,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
+                getImageIntoGallery();//Permitimos que el usuario pueda seleccionar una imagen almacenada en el dispositivo actual
             }
         });
 
@@ -122,6 +113,47 @@ public class ImageGalleryActivity extends AppCompatActivity {
         if(savedInstanceState != null && viewModel.is_dialogDeleteImagesShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
             deleteImagesDialog();
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwImageGalleryViewPagerActivity
+     * Comentario: Este método nos permite lanzar la actividad ImageGalleryViewPagerActivity
+     * con los datos necesarios para cargar dentro las imágenes del punto de localización
+     * actual. La primera imagen en mostrarse será la que tenga una posición igual al parámetro
+     * de entrada "imagePosition".
+     * Cabecera: private void throwImageGalleryViewPagerActivity(int imagePosition)
+     * Entrada:
+     *  -int imagePosition
+     * Precondiciones:
+     *  -imagePosition debe ser un número entre 0 (que será la primera posición) y el número total de imágenes de la localización (menos el tamaño exacto).
+     * Postcondiciones: El método lanza la actividad ImageGalleryViewPagerActivity, con la información
+     * necesaria para cargar todas las imágenes de la localización actual, mostrando primero una en específico.
+     */
+    private void throwImageGalleryViewPagerActivity(int imagePosition){
+        Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());//Pasamos las imagenes a cargar
+        intent.putExtras(bundle);
+        intent.putExtra("PositionImageSelected", imagePosition);//Indicamos la posición de la imagen clicada
+        intent.putExtra("ActualUserEmail", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
+        startActivity(intent);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getImageIntoGallery
+     * Comentario: Este método permite que el usuario seleccione una imagen almacenada en el
+     * dispositivo actual.
+     * Cabecera: private void getImageIntoGallery()
+     * Postcondiciones: El método permite que el usuario seleccione una imagen de la galería
+     * de imágenes del dispositivo actual.
+     */
+    private void getImageIntoGallery(){
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
     }
 
     /**
