@@ -27,6 +27,7 @@ import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
@@ -38,7 +39,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mapbox.mapboxsdk.module.http.HttpRequestUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,17 +146,13 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             }
 
             @Override
-            public void onPageSelected(int position) {
-                /*if(position == 0 && viewModel.get_localizationPointClicked() != null){//Si se pasa a la sección de inicio y había un un punto de localización seleccionado
-                    viewModel.set_localizationPointClicked(null);//Deshabilitamos la posición clicada
-                    reloadInitialFragment();//Recargamos el fragmento
-                }*/
+            public void onPageSelected(int position) {//Cuando el usuario se desplace a una sección del viewPager
 
                 if(viewModel.is_localizationDeleted() && position == 0){//Si la localización seleccionada fue eliminada desde el listado y se intenta acceder al mapa de inicio
                     reloadInitialFragment();//Reiniciamos el fragmento de inicio
                     viewModel.set_localizationDeleted(false);//Indicamos que ya hemos tenido en cuenta la localización eliminada
                 }else{
-                    if(viewModel.get_localizationPointClicked() != null && position > 1){
+                    if(viewModel.get_localizationPointClicked() != null && position > 1){//Si existía una localización seleccionada y el fragmento de inicio se cerró
                         viewModel.set_localizationPointClicked(null);//Limpiamos la localización seleccionada
                     }
                 }
@@ -166,7 +162,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             public void onPageScrollStateChanged(int state) {
             }
         });
-
+        //Configuramos el adapter del viewPager
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(sectionsPagerAdapter);
     }
@@ -184,7 +180,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * no hace nada si el usuario cancela el dialogo.
      */
     public void showLogoutDialog(View v){
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.title_logout);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_logout);// Setting Alert Dialog Message
         alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
@@ -192,7 +188,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                FirebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();//Le indicamos a la plataforma el logout del usuario
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));//Lanzamos la actividad MainActivity
                 finish();//Cerramos la actividad actual
             }
@@ -200,15 +196,15 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) {//No hacemos nada
             }
         });
 
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();//Mostramos el dialogo
     }
 
-    //Fragment Routes
+    //Methods Fragment Routes
     /**
      * Interfaz
      * Nombre: onClickRouteFav
@@ -235,10 +231,10 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             btnChild.setBackgroundResource(R.drawable.fill_star);
             hopperUpdates.put("favourite", true);
         }
-        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);
+        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
     }
 
-    //Fragment Localizations
+    //Methods Fragment Localizations
 
     /**
      * Interfaz
@@ -261,11 +257,10 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
             btnChild.setBackgroundResource(R.drawable.empty_star);
             databaseReference.child(FirebaseAuth.getInstance().
-                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();
+                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
         }else{
             btnChild.setBackgroundResource(R.drawable.fill_star);
-            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId)
-                    .setValue(localizationId);
+            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
         }
 
         reloadInitialFragment();//Recargamos el mapa principal
@@ -275,25 +270,25 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode){
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos
-                    PlaceholderFragment.newInstance(1);//Recargamos el fragment
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos de localización
+                    PlaceholderFragment.newInstance(1);//Recargamos el fragment inicial
                 }
                 break;
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos
-                    PlaceholderFragment.newInstance(4);//Recargamos el fragment
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos para la descarga de mapas offline
+                    PlaceholderFragment.newInstance(4);//Recargamos el fragment del mapa offline
                 }
                 break;
         }
     }
 
-    //Fragment Star
+    //Methods Fragment Star
 
     /**
      * Interfaz
      * Nombre: replaceFragment
      * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
-     * FrameLayout por ese mismo fragmento.
+     * FrameLayout "FrameLayout02" por ese mismo fragmento.
      * Cabecera: public void replaceFragment()
      * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
      * */
@@ -331,7 +326,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Entrada:
      *  -View view
      * Postcondiciones: El método abre un dialogo de filtros, si el usuario confirma el dialogo se
-     * realizara un filtrado sobre el mapa actual.
+     * realizará un filtrado sobre el mapa actual.
      */
     public void showFilterDialog(View view){
         final String[] filterItems = {getResources().getString(R.string.potable_water),
@@ -339,7 +334,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
                 getResources().getString(R.string.vivac)};
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.filter_title);
         builder.setMultiChoiceItems(filterItems, viewModel.get_dialogPostisionsChecked(), new DialogInterface.OnMultiChoiceClickListener() {
             @Override
@@ -362,18 +357,19 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
-        androidx.appcompat.app.AlertDialog dialog = builder.create();
-        dialog.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();//Mostramos el dialogo por pantalla
     }
 
     /**
      * Interfaz
      * Nombre: navigateToLocalization
-     * Comentario: Este método nos permite navegar a una localización seleccionada.
+     * Comentario: Este método nos permite navegar a una localización específica.
      * Cabecera: public void navigateToLocalization(View v)
      * Entrada:
      *  -View v
-     * Postcondiciones: El método carga en el mapa principal la localización seleccionada.
+     * Postcondiciones: El método nos mueve a la sección del mapa principal, posicionando este
+     * sobre el punto de localización.
      */
     public void navigateToLocalization(View v){
         //get the row the clicked button is in
@@ -391,7 +387,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                     latitude = data.child("latitude").getValue(Double.class);
                     longitude = data.child("longitude").getValue(Double.class);
                 }
-                viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));
+                viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));//Almacenamos lo posición del punto de localización en el VM
                 reloadInitialFragment();//Recargamos el fragmento inicial
                 viewPager.setCurrentItem(0);//Lanzamos el fragmento principal
             }

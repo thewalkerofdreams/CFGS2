@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ChangePasswordActivity extends AppCompatActivity {
 
     private EditText textEmail, textOldPassword, textNewPassword01, textNewPassword02;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private ChangePasswordActivityVM viewModel;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             // Get auth credentials from the user for re-authentication. The example below shows
             // email and password credentials but there are multiple possible providers,
             // such as GoogleAuthProvider or FacebookAuthProvider.
-            AuthCredential credential = EmailAuthProvider
-                    .getCredential(viewModel.get_email(), viewModel.get_oldPassword());
+            AuthCredential credential = EmailAuthProvider.getCredential(viewModel.get_email(), viewModel.get_oldPassword());//Comprobamos si el usuario y la antigua contraseña son correctos
 
             // Prompt the user to re-provide their sign-in credentials
             user.reauthenticate(credential)
@@ -76,6 +75,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {//Se realiza el cambio de contraseña
                                                 if (task.isSuccessful()) {//Si se modificó satisfactoriamente
                                                     Toast.makeText(getApplication(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+                                                    finish();//Cerramos la actividad actual
                                                 } else {
                                                     Toast.makeText(getApplication(), R.string.error_password_updated, Toast.LENGTH_SHORT).show();
                                                 }

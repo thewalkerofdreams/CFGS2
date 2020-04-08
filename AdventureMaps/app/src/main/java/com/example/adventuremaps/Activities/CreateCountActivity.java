@@ -26,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CreateCountActivity extends AppCompatActivity {
 
     private EditText textNickName, textEmail, textPassword01, textPassword02;
-    private ImageView imageView;
     private FirebaseAuth firebaseAuth;
     private CreateCountActivityVM viewModel;
     private ProgressDialog progressDialog;;
@@ -49,8 +48,8 @@ public class CreateCountActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);//Instanciamos la barra de carga
         progressDialog.setMessage("Performing online registration");//Le damos un mensaje
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//En landscape eliminamos el icono de la aplicación
-            imageView = findViewById(R.id.ImageViewCreateCountActivity);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
+            ImageView imageView = findViewById(R.id.ImageViewCreateCountActivity);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     0,
                     0,
@@ -63,10 +62,10 @@ public class CreateCountActivity extends AppCompatActivity {
     /**
      * Interfaz
      * Nombre: trySaveCount
-     * Comentario: Este método intentará guardar una nueva cuenta en la plataforma FireBase anlazada
+     * Comentario: Este método intentará guardar una nueva cuenta en la plataforma FireBase enlazada
      * a esta aplicación. Si el correo a insertar no está aún almacenado en la plataforma y si la contraseña
      * es válida, el método creará y almacenará la nueva cuenta. En caso de error el método mostrará
-     * un mensaje de error por pantalla indicando lo sucedido.
+     * un mensaje por pantalla indicando lo sucedido.
      * Cabecera: public void trySaveCount(View v)
      * Entrada:
      *  -View v
