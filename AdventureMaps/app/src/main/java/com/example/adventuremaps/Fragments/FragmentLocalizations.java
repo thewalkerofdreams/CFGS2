@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.DetailsLocalizationPointActivity;
-import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Adapters.LocalizationListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;

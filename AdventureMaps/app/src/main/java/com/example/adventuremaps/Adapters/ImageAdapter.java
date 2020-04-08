@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.example.adventuremaps.Management.RoundedTransformation;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
@@ -57,8 +58,7 @@ public class ImageAdapter extends BaseAdapter {
             holder = (ViewHolder) v.getTag();
         }
 
-        Picasso.with(context).load(Uri.parse(items.get(position).get_uri())).into(holder.get_imageView());
-
+        Picasso.with(context).load(Uri.parse(items.get(position).get_uri())).transform(new RoundedTransformation(10, 0)).resize(260, 260).centerCrop().into(holder.get_imageView());
         return v;
     }
 
