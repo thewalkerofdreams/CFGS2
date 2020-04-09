@@ -17,11 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -41,8 +39,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 public class FragmentRoutes extends Fragment {
 
     private OnFragmentInteractionListener mListener;
@@ -50,11 +46,7 @@ public class FragmentRoutes extends Fragment {
     private ListView listView;
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteRoute;
-    private Spinner spinner;
-    private ArrayList<String> itemsSpinner;
-    private Button btnFav, btnDelete;
-    private boolean selectDefaultPassed = false;
-    private ArrayAdapter<String> adapter;
+    private Button btnFav, btnDelete, btnOrderRoutes;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
 
@@ -105,29 +97,11 @@ public class FragmentRoutes extends Fragment {
             }
         });
 
-        spinner = view.findViewById(R.id.SpinnerFragmentRoutes);
-        itemsSpinner = new ArrayList<>();
-        itemsSpinner.add(getActivity().getResources().getString(R.string.name));
-        itemsSpinner.add(getActivity().getResources().getString(R.string.date_of_creation));
-
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, itemsSpinner);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(sharedpreferencesField.getInt("OrderRouteListField", 1)-1);//Ajustamos la selección según el filtro guardado
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnOrderRoutes = view.findViewById(R.id.btnOrderFragmentRoutes);
+        btnOrderRoutes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if(selectDefaultPassed){//Evitamos la primera llamada por defecto al primer elemento del spinner
-                    SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
-                    editor01.putInt("OrderRouteListField", position+1);
-                    editor01.commit();
-                    loadList();//Recargamos la lista
-                }
-                selectDefaultPassed = true;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onClick(View v) {
+                showOrderRoutesListDialog();
             }
         });
 
@@ -376,12 +350,6 @@ public class FragmentRoutes extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación permitida en cada página del ViewPager
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
@@ -389,5 +357,43 @@ public class FragmentRoutes extends Fragment {
             if(actualActivity != null)
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showOrderRoutesListDialog
+     * Comentario: Este método muestra por pantalla un dialogo con los diferentes tipos de ordenación, que se puede aplicar
+     * sobre la lista de rutas, si el usuario confirma el dialogo, se ordenará la lista actual dependiendo
+     * del tipo seleccionado.
+     * Cabecera: public void showOrderRoutesListDialog()
+     * Postcondiciones: El método abre un dialogo de ordenación, si el usuario confirma el dialogo se
+     * ordena la lista de rutas por el criterio seleccionado.
+     */
+    public void showOrderRoutesListDialog() {
+        final CharSequence [] orderTypes = {getResources().getString(R.string.name),
+                getResources().getString(R.string.date_of_creation)};
+
+        int actualTypeSelected = sharedpreferencesField.getInt("OrderRouteListField", 1) -1;//Obtenemos el último tipo de selección, si lo hubiera
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.order_types);
+        builder.setSingleChoiceItems(orderTypes, actualTypeSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_positionSelectedOrderTypesLocations(which);
+            }
+        });
+        builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
+                editor01.putInt("OrderRouteListField", viewModel.get_positionSelectedOrderTypesLocations()+1);
+                editor01.commit();
+                loadList();//Recargamos la lista
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

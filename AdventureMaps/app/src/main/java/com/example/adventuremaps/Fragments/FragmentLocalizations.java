@@ -595,7 +595,7 @@ public class FragmentLocalizations extends Fragment {
      * del tipo seleccionado.
      * Cabecera: public void showOrderLocalizationListDialog()
      * Postcondiciones: El método abre un dialogo de ordenación, si el usuario confirma el dialogo se
-     * ordena ls lista de localizaciones por el criterio seleccionado.
+     * ordena la lista de localizaciones por el criterio seleccionado.
      */
     public void showOrderLocalizationListDialog() {
         final CharSequence [] orderTypes = {getResources().getString(R.string.name),

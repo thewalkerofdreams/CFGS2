@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".Activities.AutoRestartApp.MyApplication">
+        android:name=".Management.KeepPersistence">
         <activity
             android:name=".Activities.ui.MainTabbet.MainTabbetActivity"
             android:label="@string/title_activity_main_tabbet"

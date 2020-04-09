@@ -183,4 +183,6 @@
     <string name="shared_by_date_of_creaction">Shared by date of creation</string>
     <string name="no_owner_by_name">No owner by name</string>
     <string name="no_owner_by_date_of_creation">No owner by date of creation</string>
+
+    <string name="order_by">Order by</string>
 </resources>

@@ -43,10 +43,11 @@
                     android:layout_marginBottom="5sp"
                     android:text="@string/order_by_form"></TextView>
 
-                <Spinner
-                    android:id="@+id/SpinnerFragmentRoutes"
+                <Button
+                    android:id="@+id/btnOrderFragmentRoutes"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></Spinner>
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_by"></Button>
 
             </LinearLayout>
 
