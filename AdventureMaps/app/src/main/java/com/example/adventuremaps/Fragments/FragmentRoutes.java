@@ -198,7 +198,7 @@ public class FragmentRoutes extends Fragment {
     public void onStart() {
         super.onStart();
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_itemsRouteList().clear();//Limpiamos la lista de rutas

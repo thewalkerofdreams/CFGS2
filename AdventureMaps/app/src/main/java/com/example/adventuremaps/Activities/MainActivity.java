@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         //Inicializamos el objeto FireBaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //Instanciamos los views
+        //Instanciamos las views
         textEmail = findViewById(R.id.EditTextNickNameActivityLogin);
         textPassword = findViewById(R.id.EditTextPasswordActivityLogin);
         progressDialog = new ProgressDialog(this);
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage("Performing online consultation");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        if(user != null){//Si ya existe una sesión iniciada
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
             finish();
         }

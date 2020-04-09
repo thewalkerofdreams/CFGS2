@@ -11,7 +11,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.adventuremaps.Activities.ImageGalleryViewPagerActivity;
-import com.example.adventuremaps.Management.RoundedTransformation;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.R;
 import com.squareup.picasso.Picasso;
@@ -30,7 +29,7 @@ public class MyPageAdapter extends PagerAdapter
     }
 
     @Override
-    public int getCount()//Devuelve el número de imágenes que contiene nuestro ViewPage
+    public int getCount()
     {
         return images.size();
     }
@@ -61,11 +60,16 @@ public class MyPageAdapter extends PagerAdapter
         return itemImage;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: loadImage
-     * Comentario: Este método nos permite inflar un layout con su imagen.
+     * Comentario: Este método nos permite inflar el layout del item del PagerAdapter con la imagen de una posición específica.
      * Cebecera: private void loadImage(int position)
+     * Entrada:
+     *  -int position
+     * Precondiciones:
+     *  -position debe hacer referencia a una imagen existente de la lista obtenida por parámetros.
+     * Postcondiciones: El método infla el layout del item con una imagen de la lista, dada su posición.
      * */
     private void loadImage(int position){
         itemImage = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_image_view_pager, null);

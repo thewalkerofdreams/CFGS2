@@ -43,11 +43,17 @@ public class MyPageAdapterCreationLocalizationPoint extends PagerAdapter
         return itemImage;
     }
 
-    /*
+    /**
      * Interfaz
      * Nombre: loadImage
-     * Comentario: Este método nos permite inflar un layout con su imagen.
+     * Comentario: Este método nos permite inflar el layout del item del PageAdapter con una imagen de la lista, dada
+     * su posición.
      * Cebecera: private void loadImage(int position)
+     * Entrada:
+     *  -int position
+     * Precondiciones:
+     *  -position debe hacer referencia a una imagen existente de la lista obtenida por parámetros.
+     * Postcondiciones: El método infla el layout del item con una imagen de la lista.
      * */
     private void loadImage(int position){
         itemImage = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_image_view_pager_simple, null);

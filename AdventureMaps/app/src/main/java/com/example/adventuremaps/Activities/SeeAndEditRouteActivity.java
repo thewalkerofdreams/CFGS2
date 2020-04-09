@@ -71,8 +71,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     /**
      * Interfaz
      * Nombre: trySaveRouteDialog
-     * Comentario: Este método nos permite guardar la ruta actual rellenando un dialogo pudiendo editar
-     * el nombre actual de la ruta, si la ruta actual tiene menos de dos puntos de localizaciones, no
+     * Comentario: Este método nos permite guardar la ruta actual rellenando un dialogo, pudiendo editar
+     * el nombre actual de la ruta. Si la ruta actual tiene menos de dos puntos de localizaciones, no
      * se lanzará el dialogo, sino que se lanzará un mensaje de error informando al usuario que debe
      * marcar como mínimo dos puntos en el mapa.
      * Cabecera: public void trySaveRouteDialog(View v)
@@ -154,7 +154,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Read from the database
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {//Los datos del usuario actual
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {//Los datos del usuario actual
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_routePoints().clear();//Limpiamos la lista de rutas
@@ -165,7 +165,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
                                 for(DataSnapshot points : dataSnapshot2.child("routePoints").getChildren()){
                                     ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
-                                    viewModel.get_routePoints().add(routePoint);
+                                    viewModel.get_routePoints().add(routePoint);//Almacenamos los puntos de la ruta
                                 }
 
                                 cargarRuta();//Cargamos la ruta
