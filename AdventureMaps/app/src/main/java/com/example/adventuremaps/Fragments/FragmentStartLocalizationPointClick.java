@@ -99,11 +99,11 @@ public class FragmentStartLocalizationPointClick extends Fragment {
      * Comentario: Este método muestra por pantalla un dialogo para eliminar un punto de localización
      * seleccionado o muestra un mensaje de error por pantalla si el punto de localización seleccionado
      * no le perteenece al usuario actual.
-     * Cabecera: public void tryShowDeleteLocalizationPointDialog()
+     * Cabecera: private void tryShowDeleteLocalizationPointDialog()
      * Postcondiciones: El método muestra por pantalla un dialogo para eliminar un punto de localización o
      * un mensaje de error si el punto de localización seleccionado no le pertenece al usuario actual.
      */
-    public void tryShowDeleteLocalizationPointDialog(){
+    private void tryShowDeleteLocalizationPointDialog(){
         if(viewModel.get_selectedLocalizationPoint() != null && viewModel.get_selectedLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización existe y es del usuario actual
             viewModel.deleteLocalizationDialog(getActivity());
         }else{
@@ -115,11 +115,11 @@ public class FragmentStartLocalizationPointClick extends Fragment {
      * Interfaz
      * Nombre: throwDetailsLocalizationPointActivity
      * Comentario: Este método lanza la actividad DetailsLocalizationPointActivity.
-     * Cabecera: public void throwDetailsLocalizationPointActivity()
+     * Cabecera: private void throwDetailsLocalizationPointActivity()
      * Postcondiciones: El método lanza la actividad DetailsLocalizationPointActivity o
      * muestra un mensaje de error por pantalla si la ruta seleccionada ya no existe.
      */
-    public void throwDetailsLocalizationPointActivity(){
+    private void throwDetailsLocalizationPointActivity(){
         if(viewModel.get_selectedLocalizationPoint() == null){
             Toast.makeText(getContext(), R.string.error_localization_no_exist, Toast.LENGTH_LONG).show();
         }else{

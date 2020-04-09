@@ -55,8 +55,8 @@ public class FragmentRoutes extends Fragment {
     private Button btnFav, btnDelete;
     private boolean selectDefaultPassed = false;
     private ArrayAdapter<String> adapter;
-    SharedPreferences sharedpreferencesField;
-    SharedPreferences sharedPreferencesFav;
+    private SharedPreferences sharedpreferencesField;
+    private SharedPreferences sharedPreferencesFav;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -140,11 +140,7 @@ public class FragmentRoutes extends Fragment {
                 if(viewModel.get_selectedRoutes().isEmpty()){//Si no hay ninguna ruta seleccionada
                     if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                             ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){//Si el usuario concedió los permisos de localización
-                        Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
-                        intent.putExtra("ActualIdRoute", item.getRouteId());
-                        intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
-                        intent.putExtra("ActualRouteName", item.getName());
-                        startActivity(intent);
+                        throwSeeAndEditRouteActivity(item);//Lanzamos la actividad SeeAndEditRouteActivity, mostrando la ruta clicada
                     }else{
                         Toast.makeText(getActivity(), R.string.error_location_permission, Toast.LENGTH_SHORT).show();
                     }
@@ -163,7 +159,7 @@ public class FragmentRoutes extends Fragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(viewModel.get_selectedRoutes().isEmpty()){//Si aún no existe ninguna ruta seleccionada
+                if(viewModel.get_selectedRoutes().isEmpty()){//Si aún no se ha seleccionado una ruta
                     ClsRoute item = (ClsRoute) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                     viewModel.get_selectedRoutes().add(item);//Añadimos la ruta a la lista de seleccionadas
                     view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
@@ -192,6 +188,23 @@ public class FragmentRoutes extends Fragment {
         }
 
         return view;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwSeeAndEditRouteActivity
+     * Comentario: El método lanza la actividad SeeAndEditRouteActivity, que mostrará una ruta en
+     * específico.
+     * Cabecera: private void throwSeeAndEditRouteActivity(ClsRoute route)
+     *  -ClsRoute route
+     * Postcondiciones: El método lanza la actividad SeeAndEditRouteActivity, mostrando una ruta.
+     */
+    private void throwSeeAndEditRouteActivity(ClsRoute route){
+        Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
+        intent.putExtra("ActualIdRoute", route.getRouteId());
+        intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualRouteName", route.getName());
+        startActivity(intent);
     }
 
     @Override
@@ -248,7 +261,6 @@ public class FragmentRoutes extends Fragment {
 
                 viewModel.set_dialogDeleteRouteShowing(false);//Indicamos que el dialogo ha finalizado
                 viewModel.get_selectedRoutes().clear();//Vaciamos la lista de selecionadas
-                loadList();//Recargamos la lista de rutas
             }
         });
 

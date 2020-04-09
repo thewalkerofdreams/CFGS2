@@ -8,7 +8,7 @@ public class UtilStrings {
      * Interfaz
      * Nombre: arraysWithSameData
      * Comentario: Este método nos permite verificar si dos arraylist de cadenas
-     * contienen al menos algún dato identico, es decir, si comparten algún elemento de cadena igual.
+     * contienen al menos algún dato idéntico, es decir, si comparten alguna cadena que sea igual.
      * Cabecera: public static boolean arraysWithSameData(ArrayList<String> array01, ArrayList<String> array02)
      * Entrada:
      *  -ArrayList<String> array01

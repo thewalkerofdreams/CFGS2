@@ -148,13 +148,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             @Override
             public void onPageSelected(int position) {//Cuando el usuario se desplace a una sección del viewPager
 
-                if(viewModel.is_localizationDeleted() && position == 0){//Si la localización seleccionada fue eliminada desde el listado y se intenta acceder al mapa de inicio
-                    reloadInitialFragment();//Reiniciamos el fragmento de inicio
-                    viewModel.set_localizationDeleted(false);//Indicamos que ya hemos tenido en cuenta la localización eliminada
-                }else{
-                    if(viewModel.get_localizationPointClicked() != null && position > 1){//Si existía una localización seleccionada y el fragmento de inicio se cerró
-                        viewModel.set_localizationPointClicked(null);//Limpiamos la localización seleccionada
-                    }
+                if(viewModel.get_localizationPointClicked() != null && position > 1){//Si existía una localización seleccionada y el fragmento de inicio se cerró
+                    viewModel.set_localizationPointClicked(null);//Limpiamos la localización seleccionada
                 }
             }
 

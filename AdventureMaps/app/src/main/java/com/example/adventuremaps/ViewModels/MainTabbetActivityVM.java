@@ -5,23 +5,17 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.adventuremaps.Activities.MainActivity;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
-import com.example.adventuremaps.Fragments.GoogleMapsStartFragment;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -30,7 +24,6 @@ import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +61,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<ClsLocalizationPointWithFav> _selectedLocalizations;
     private LatLng _latLngToNavigate;
     private int _positionSelectedOrderTypesLocations;
-    private boolean _localizationDeleted;
 
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
@@ -86,7 +78,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<String> _checkedFilters;
     private boolean[] _dialogPostisionsChecked;
     private ClsLocalizationPoint _selectedLocalizationPoint;
-    private ArrayList<String> _localizationsIdFavourites;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -107,7 +98,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _selectedLocalizations = new ArrayList<>();
         _latLngToNavigate = null;
         _positionSelectedOrderTypesLocations = 0;
-        _localizationDeleted = false;
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
@@ -128,7 +118,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
             _dialogPostisionsChecked[i] = true;
         }
         _selectedLocalizationPoint = null;
-        _localizationsIdFavourites = new ArrayList<>();
     }
 
     //Get y Set
@@ -228,14 +217,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_positionSelectedOrderTypesLocations(int _positionSelectedOrderTypesLocations) {
         this._positionSelectedOrderTypesLocations = _positionSelectedOrderTypesLocations;
-    }
-
-    public boolean is_localizationDeleted() {
-        return _localizationDeleted;
-    }
-
-    public void set_localizationDeleted(boolean _localizationDeleted) {
-        this._localizationDeleted = _localizationDeleted;
     }
 
     //Gets y Sets Fragment Routes
@@ -342,14 +323,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedLocalizationPoint(ClsLocalizationPoint _selectedLocalizationPoint) {
         this._selectedLocalizationPoint = _selectedLocalizationPoint;
-    }
-
-    public ArrayList<String> get_localizationsIdFavourites() {
-        return _localizationsIdFavourites;
-    }
-
-    public void set_localizationsIdFavourites(ArrayList<String> _localizationsIdFavourites) {
-        this._localizationsIdFavourites = _localizationsIdFavourites;
     }
 
     //Functions Fragment Offline Maps Part

@@ -45,8 +45,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos eferencia de las Localizaciones
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private BitmapDrawable bitmapdraw;
     private Bitmap smallMarker;
 
@@ -92,7 +91,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
         if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado, cambiamos su icono
-            //setIconToMarker(viewModel.get_localizationPointClicked(), String.valueOf(R.drawable.simple_marker));
             restoreIcomMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
         }
     }
@@ -332,11 +330,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Intent intent = new Intent(getActivity(), CreateLocalizationPointActivity.class);
-                intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-                intent.putExtra("ActualLatitude", viewModel.get_longClickPosition().latitude);
-                intent.putExtra("ActualLongitude", viewModel.get_longClickPosition().longitude);
-                startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
+                throwCreateLocalizationPointActivity();//Lanzamos la actividad de creación
             }
         });
 
@@ -348,6 +342,23 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
         alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwCreateLocalizationPointActivity
+     * Comentario: Este método lanza la actividad CreateLocalizationPointActivity, para crear una localización
+     * en el mapa de inicio. Se le pasarán los datos necesarios para poder crear la nueva localización en el
+     * lugar seleccionado
+     * Cabecera: private void throwCreateLocalizationPointActivity()
+     * Postcondiciones: El método lanza la actividad CreateLocalizationPointActivity.
+     */
+    private void throwCreateLocalizationPointActivity(){
+        Intent intent = new Intent(getActivity(), CreateLocalizationPointActivity.class);
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLatitude", viewModel.get_longClickPosition().latitude);
+        intent.putExtra("ActualLongitude", viewModel.get_longClickPosition().longitude);
+        startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class FragmentUser extends Fragment {
     private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
     private DatabaseReference localiationReference = FirebaseDatabase.getInstance().getReference("Localizations");
     private MainTabbetActivityVM viewModel;
-    TextView txtEmail, txtNickName, numberOfRoutes, numberOfLocalizations;
+    private TextView txtEmail, txtNickName, numberOfRoutes, numberOfLocalizations;
 
     public FragmentUser() {
         // Required empty public constructor
@@ -41,7 +41,7 @@ public class FragmentUser extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
-        //Instanciamos los elementos del View
+        //Instanciamos los elementos de la vista
         txtEmail = view.findViewById(R.id.TextViewEmailInfoActivity);
         txtNickName = view.findViewById(R.id.TextViewNickNameInfoActivity);
         numberOfRoutes = view.findViewById(R.id.TextViewNumberRoutesInfoActivity);
@@ -82,20 +82,33 @@ public class FragmentUser extends Fragment {
                 txtNickName.setText(nickName);//Introducimos el nickName
                 numberOfRoutes.setText(String.valueOf(routesCreated));//Introducimos el número de rutas creadas
                 //Ahora obtendremos el número de localizaciones creadas por el usuario
-                localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        int localizationsCreated = 0;
-                        for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
-                            localizationsCreated++;
-                        }
-                        numberOfLocalizations.setText(String.valueOf(localizationsCreated));//Introducimos el número de puntos de localización creados
-                    }
+                getNumberOfLocalizationPointsCreated();
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getNumberOfLocalizationPointsCreated
+     * Comentario: Este método nos permite almacenar en el VM el número de puntos de localización creados por
+     * el usuario actual.
+     * Cabecera: private void getNumberOfLocalizationPointsCreated()
+     * Postcondiciones: El método almacena en el VM el número de puntos de localización creados por el
+     * usuario actual.
+     */
+    private void getNumberOfLocalizationPointsCreated(){
+        localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int localizationsCreated = 0;
+                for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
+                    localizationsCreated++;
+                }
+                numberOfLocalizations.setText(String.valueOf(localizationsCreated));//Introducimos el número de puntos de localización creados
             }
 
             @Override

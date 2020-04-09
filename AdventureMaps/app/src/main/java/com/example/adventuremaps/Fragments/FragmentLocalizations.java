@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.DetailsLocalizationPointActivity;
+import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Adapters.LocalizationListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -73,7 +74,7 @@ public class FragmentLocalizations extends Fragment {
         viewModel.set_localizationsIdActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cagar la lista de localizaciones
 
         //Instanciamos los elementos de la UI
-        btnFav = view.findViewById(R.id.btnFavFragmentLocaliaztions);
+        btnFav = view.findViewById(R.id.btnFavFragmentLocaliaztions);//Botón para ordenar la lista por favoritos
         btnFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +103,7 @@ public class FragmentLocalizations extends Fragment {
             }
         });
 
-        btnOrderLocalizations = view.findViewById(R.id.btnOrderLocalizations);
+        btnOrderLocalizations = view.findViewById(R.id.btnOrderLocalizations);//Botón para ordenar la lista por otros criterios
         btnOrderLocalizations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,10 +117,7 @@ public class FragmentLocalizations extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsLocalizationPointWithFav item = (ClsLocalizationPointWithFav) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_selectedLocalizations().isEmpty()){//Si no hay ninguna localización seleccionada, entramos en los detalles de la localización
-                    Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
-                    intent.putExtra("ActualLocalization", item.get_localizationPoint());
-                    intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-                    startActivity(intent);
+                    throwDetailsLocalizationPointActivity(item);//Lanzamos la actividad de detalles de la localización
                 }else{
                     if(!item.get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no le pertenece al usuario
                         Toast.makeText(getActivity(), R.string.error_selected_localizations_no_owner, Toast.LENGTH_SHORT).show();
@@ -172,7 +170,7 @@ public class FragmentLocalizations extends Fragment {
             }
         });
 
-        if(sharedPreferencesFav.getBoolean("OrderLocalizationListFav", false))//Si el filtro de favoritos se encuentra activo
+        if(sharedPreferencesFav.getBoolean("OrderLocalizationListFav", false))//Si el filtro de favoritos se encuentraba activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
         if(savedInstanceState != null && viewModel.is_dialogDeleteLocalizationShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
@@ -197,6 +195,24 @@ public class FragmentLocalizations extends Fragment {
         return view;
     }
 
+    /**
+     * Interfaz
+     * Nombre: throwDetailsLocalizationPointActivity
+     * Comentario: Este método lanza la actividad DetailsLocalizationPointActivity, con los
+     * datos necesarios para visualizar los detalles del punto de localización clicado.
+     * Cabecera: private void throwDetailsLocalizationPointActivity(ClsLocalizationPointWithFav localizationPoint)
+     * Entrada:
+     *  -ClsLocalizationPointWithFav localizationPoint
+     * Postcondiciones: El método lanza la actividad DetailsLocalizationPointActivity, con los datos
+     * suficientes para mostrar los detalles del punto de localización clicado.
+     */
+    private void throwDetailsLocalizationPointActivity(ClsLocalizationPointWithFav localizationPoint){
+        Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
+        intent.putExtra("ActualLocalization", localizationPoint.get_localizationPoint());
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        startActivity(intent);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -206,13 +222,13 @@ public class FragmentLocalizations extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
                         String localizationId = booksSnapshot.getValue(String.class);
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
                 }
 
-                loadLocalizationsUserFromPlataform();
+                loadLocalizationsUserFromPlataform();//Cargamos las localizaciones del usuario
             }
 
             @Override
@@ -238,7 +254,7 @@ public class FragmentLocalizations extends Fragment {
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
                     if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
-                            viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){
+                            viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si la localización pertenece al usuario o la tiene en favoritos
                         viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
                     }
                 }
@@ -279,15 +295,18 @@ public class FragmentLocalizations extends Fragment {
                     //Eliminamos el punto de localización
                     drLocalization.child(viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLocalizationPointId()).removeValue();
 
-                    if(viewModel.get_localizationPointClicked() != null && viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLatitude() == viewModel.get_localizationPointClicked().getPosition().latitude && //Si la localizacióna eliminar es la seleccionada
+                    loadLocalizationsUserFromPlataform();//Cargamos las localizaciones del usuario
+
+                    if(viewModel.get_localizationPointClicked() != null && getActivity() != null &&
+                            viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLatitude() == viewModel.get_localizationPointClicked().getPosition().latitude && //Si la localizacióna eliminar es la seleccionada
                             viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLongitude() == viewModel.get_localizationPointClicked().getPosition().longitude){
-                        viewModel.set_localizationDeleted(true);//Indicamos que la localización seleccionada se ha eliminado
+                        //viewModel.set_localizationDeleted(true);//Indicamos que la localización seleccionada se ha eliminado
+                        ((MainTabbetActivity) getActivity()).reloadInitialFragment();//Recargamos el fragmento inicial
                     }
                 }
 
                 viewModel.set_dialogDeleteLocalizationShowing(false);//Indicamos que el dialogo ha finalizado
                 viewModel.get_selectedLocalizations().clear();//Vaciamos la lista de selecionadas
-                loadList();//Recargamos la lista de rutas
             }
         });
 
@@ -544,7 +563,6 @@ public class FragmentLocalizations extends Fragment {
                 viewModel.set_dialogShareLocalizationShowing(false);//Indicamos que el dialogo ha finalizado
                 viewModel.get_selectedLocalizations().clear();//Vaciamos la lista de selecionadas
                 loadLocalizationsUserFromPlataform();//Recargamos la lista de rutas del usuario actual
-                loadList();//Recargamos la lista de rutas
             }
         });
 

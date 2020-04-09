@@ -72,7 +72,7 @@ public class FragmentMaps extends Fragment {
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
-        HttpRequestUtil.setLogEnabled(true);//Habilita los logs
+        HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs
 
         //Inflamos el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
