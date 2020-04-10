@@ -46,8 +46,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
     private BitmapDrawable bitmapdraw;
     private Bitmap smallMarker;
+    private ValueEventListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,13 +75,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public boolean onMarkerClick(final Marker marker) {
         if(viewModel.get_localizationPointClicked() != null) {//Si ya existe un marcador seleccionado
-            restoreIcomMarker(viewModel.get_localizationPointClicked());//Restablecemos el icono por defecto del marcador seleccionado
+            restoreIconMarker(viewModel.get_localizationPointClicked());//Restablecemos el icono por defecto del marcador seleccionado
         }
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
-        if(getActivity() != null)//Por si no le diera tiempo a la actividad
-            (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos invisible el fragmento inferior
+        if(getActivity() != null)//Si la referencia a la actividad no es nula
+            (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.VISIBLE);//Volvemos visible el fragmento inferior
         return true;
     }
 
@@ -90,8 +92,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
-        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado, cambiamos su icono
-            restoreIcomMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
+        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
+            restoreIconMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
         }
     }
 
@@ -102,7 +104,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
 
         if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
-            if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actusal del usuario
+            if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actual del usuario
                 latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
             }else{
                 latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
@@ -135,7 +137,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      */
     private void loadLocalizationPoints(){
         for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-            colocarMarcador(viewModel.get_localizationPoints().get(i)); //Comenzamos a marcar los puntos de la ruta almacenada
+            colocarMarcador(viewModel.get_localizationPoints().get(i)); //Comenzamos a marcar las localizaciones almacenadaa
         }
     }
 
@@ -195,14 +197,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     /**
      * Interfaz
-     * Nombre: restoreIcomMarker
+     * Nombre: restoreIconMarker
      * Comentario: Este método nos permite restablecer el icono por defecto de un marcador específico.
-     * Cabecera: private void restoreIcomMarker(Marker marker)
+     * Cabecera: private void restoreIconMarker(Marker marker)
      * Entrada:
      *  -Marker marker
      * Postcondiciones: El método restablece el icono por defecto de un macador.
      */
-    private void restoreIcomMarker(Marker marker){
+    private void restoreIconMarker(Marker marker){
         if(marker != null && marker.getTag() != null){
             switch (marker.getTag().toString()){
                 case "Fav":
@@ -229,31 +231,28 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método inserta un marcador en el mapa. Además se guarda
      * ese marcador en el VM MainTabbetActicityVM.
      * */
-    private void insertarMarcador(LatLng latLng){
+    /*private void insertarMarcador(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
         setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
         viewModel.set_markerToCreate(marker);//Almacenamos el marcador creado en el VM
-    }
+    }*/
 
     /**
      * Interfaz
      * Nombre: saveLocalizationPoint
-     * Comentario: Este método nos permite guardar un punto de localización en la plataforma
-     * FireBase a través de un Marcador.
-     * Cabecera: private void saveLocalizationPoint(Marker marker)
-     * Entrada:
-     *  -Marker marker
+     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
+     * "_localizationToSave" del VM en la plataforma FireBase.
+     * Cabecera: private void saveLocalizationPoint()
      * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
      */
-    private void saveLocalizationPoint(Marker marker){
+    private void saveLocalizationPoint(){
         //Almacenamos el punto de localización en la plataforma
         FirebaseDatabase.getInstance().getReference("Localizations").
                 child(viewModel.get_localizationToSave().getLocalizationPointId())
                 .setValue(viewModel.get_localizationToSave());
-        viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, viewModel.get_localizationToSave()));//Almacenamos el marcador en una clase modelo
 
         //Almacenamos los tipos del punto de localización
         String typeId;
@@ -269,26 +268,29 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.addValueEventListener(new ValueEventListener() {
+        listener = localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(getContext() != null){//Si se encuentra en el contexto actual, esto nos sirve para no actualizar datos de la actividad cuando no estemos en esta
+                if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
                     cleanAllLocalizations();
                     viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
-                        ArrayList<String> actualTypes = new ArrayList<>();
-                        for(DataSnapshot types : datas.child("types").getChildren()){
-                            actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
-                        }
+                        if(localizationPoint != null && ((localizationPoint.isShared() || (localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))))){ //Si la localización esta compartida o es del usuario actual
 
-                        if((localizationPoint.isShared() || localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))
-                        && UtilStrings.arraysWithSameData(actualTypes, viewModel.get_checkedFilters()))//Si la localización esta compartida o es del usuario actual y si cumple los filtros
-                            viewModel.get_localizationPoints().add(localizationPoint);
+                            ArrayList<String> actualTypes = new ArrayList<>();
+                            for(DataSnapshot types : datas.child("types").getChildren()){
+                                actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
+                            }
+
+                            if(UtilStrings.arraysWithSameData(actualTypes, viewModel.get_checkedFilters())){//Si cumple los filtros
+                                viewModel.get_localizationPoints().add(localizationPoint);
+                            }
+                        }
                     }
-                    loadLocalizationPoints();
+                    storeFavouriteLocalizationsId();//Almacenamos las localizaciones favoritas del usuario, para luego mostrarlas
                 }
             }
 
@@ -296,6 +298,41 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeFavouriteLocalizationsId
+     * Comentario: El método almacena las id's de las localizaciones favoritas del usuario actual en el VM.
+     * Cabecera: private void storeFavouriteLocalizationsId()
+     * Postcondiciones: El método almacena las id's de las localizaciones favoritas del usuario actual en el VM.
+     */
+    private void storeFavouriteLocalizationsId(){
+        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cleanAllLocalizations();
+                viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
+                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
+                        String localizationId = booksSnapshot.getValue(String.class);
+                        viewModel.get_localizationsIdActualUser().add(localizationId);
+                    }
+                }
+                loadLocalizationPoints();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
     }
 
     /**
@@ -370,8 +407,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.set_localizationToSave((ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
                 viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
 
-                insertarMarcador(viewModel.get_longClickPosition());//Insertamos el marcador en el mapa actual
-                saveLocalizationPoint(viewModel.get_markerToCreate());//Almacenamos el punto de localización en FireBase
+                saveLocalizationPoint();//Almacenamos el punto de localización en FireBase
                 Toast.makeText(getActivity(), R.string.localization_point_created, Toast.LENGTH_SHORT).show();
             }
         }

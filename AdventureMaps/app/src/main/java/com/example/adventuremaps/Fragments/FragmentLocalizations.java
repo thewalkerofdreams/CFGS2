@@ -53,6 +53,7 @@ public class FragmentLocalizations extends Fragment {
     private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
+    private ValueEventListener listener;
 
     public FragmentLocalizations() {
         // Required empty public constructor
@@ -217,7 +218,7 @@ public class FragmentLocalizations extends Fragment {
     public void onStart() {
         super.onStart();
         // Read from the database
-        drUser.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = drUser.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
@@ -267,6 +268,12 @@ public class FragmentLocalizations extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        drUser.removeEventListener(listener);
+    }
+
     /**
      * Interfaz
      * Nombre: showDeleteLocalizationDialog
@@ -300,7 +307,6 @@ public class FragmentLocalizations extends Fragment {
                     if(viewModel.get_localizationPointClicked() != null && getActivity() != null &&
                             viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLatitude() == viewModel.get_localizationPointClicked().getPosition().latitude && //Si la localizacióna eliminar es la seleccionada
                             viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLongitude() == viewModel.get_localizationPointClicked().getPosition().longitude){
-                        //viewModel.set_localizationDeleted(true);//Indicamos que la localización seleccionada se ha eliminado
                         ((MainTabbetActivity) getActivity()).reloadInitialFragment();//Recargamos el fragmento inicial
                     }
                 }
