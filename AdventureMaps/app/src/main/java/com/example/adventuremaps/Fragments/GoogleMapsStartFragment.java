@@ -220,7 +220,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
     }
 
-    /**
+    /*
      * Interfaz
      * Nombre: insertarMarcador
      * Comentario: Este método nos permite insertar un marcador en el mapa.
@@ -324,7 +324,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
             }
         });
     }
@@ -339,11 +338,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Interfaz
      * Nombre: cleanAllLocalizations
      * Comentario: Este método nos permite limpiar todos los marcadores sobre el mapa.
-     * Cabecera: public void cleanAllLocalizations()
+     * Cabecera: private void cleanAllLocalizations()
      * Postcondiciones: El método elimina todos los marcadores que se encuentran sobre
      * el mapa actual.
      */
-    public void cleanAllLocalizations(){
+    private void cleanAllLocalizations(){
         for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size(); i++){
             viewModel.get_localizationPointsWithMarker().get(i).getMarker().remove();
         }
@@ -354,11 +353,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Nombre: insertLocalizationDialog
      * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en el mapa.
      * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
-     * Cabecera: public void insertLocalizationDialog()
+     * Cabecera: private void insertLocalizationDialog()
      * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
      * creación del nuevo punto de localización.
      */
-    public void insertLocalizationDialog(){
+    private void insertLocalizationDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
@@ -417,10 +416,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Interfaz
      * Nombre: ocultarFragmentoInferior
      * Comentario: Este método nos permite ocultar el fragmento inferior del fragmento actual.
-     * Cabecera: public void ocultarFragmentoInferior()
+     * Cabecera: private void ocultarFragmentoInferior()
      * Postcondiciones: El método oculta el fragmento inferior del fragmento actual.
      */
-    public void ocultarFragmentoInferior(){
+    private void ocultarFragmentoInferior(){
         if(getActivity() != null)
         (getActivity().findViewById(R.id.FrameLayout02)).setVisibility(View.GONE);//Volvemos invisible el fragmento inferior
     }

@@ -41,8 +41,8 @@ public class FragmentStartLocalizationPointClick extends Fragment {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
-        btnDelete = view.findViewById(R.id.btnDeleteLocalizationPointFrgamentStart);
-        btnDetails = view.findViewById(R.id.btnDetailsLocalizationPointFrgamentStart);
+        btnDelete = view.findViewById(R.id.btnDeleteLocalizationPointFragmentStart);
+        btnDetails = view.findViewById(R.id.btnDetailsLocalizationPointFragmentStart);
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override

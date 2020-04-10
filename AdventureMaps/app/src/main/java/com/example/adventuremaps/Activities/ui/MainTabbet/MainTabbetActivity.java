@@ -291,6 +291,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         fragment = new FragmentStartLocalizationPointClick();
         FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
         transation.replace(R.id.FrameLayout02, fragment);
+        transation.addToBackStack(null);//add the transaction to the back stack so the user can navigate back
         transation.commit();
     }
 

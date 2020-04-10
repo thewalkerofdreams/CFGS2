@@ -12,7 +12,7 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/btnDeleteLocalizationPointFrgamentStart"
+            android:id="@+id/btnDeleteLocalizationPointFragmentStart"
             android:layout_width="60sp"
             android:layout_height="60sp"
             android:layout_gravity="center"
@@ -28,7 +28,7 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/btnDetailsLocalizationPointFrgamentStart"
+            android:id="@+id/btnDetailsLocalizationPointFragmentStart"
             android:layout_width="60sp"
             android:layout_height="60sp"
             android:layout_gravity="center"
