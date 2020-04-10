@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:name="com.example.adventuremaps.Fragments.GoogleMapsFragment"
+        android:id="@+id/fragmentGoogleMapsCreateRouteActivity"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="80"></fragment>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_margin="2sp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/colorTabList">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnSaveRouteCreateRouteActivity"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:layout_gravity="center"
+                android:onClick="trySaveRouteDialog"
+                android:background="@drawable/save"></Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnMarkPointCreateRouteActivity"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:layout_gravity="center"
+                android:onClick="intentarMarcarLocalizacion"
+                android:background="@drawable/marker"></Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
