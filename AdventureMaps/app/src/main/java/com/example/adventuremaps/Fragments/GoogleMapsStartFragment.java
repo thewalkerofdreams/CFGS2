@@ -435,9 +435,13 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      *  -addressIcon debe apuntar a una imagen existente.
      * Postcondiciones: El método agrega un icono a un marcador.
      */
-    private void setIconToMarker(Marker marker, String addressIcon){
-        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
-        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+    private void setIconToMarker(final Marker marker, final String addressIcon){
+        getActivity().runOnUiThread(new Runnable() {//TODO el icono de inserta en un hilo secundario
+            public void run() {
+                bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
+                smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+            }
+        });
     }
 }

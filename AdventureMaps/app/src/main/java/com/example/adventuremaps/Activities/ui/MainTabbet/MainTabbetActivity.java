@@ -14,6 +14,7 @@ import com.example.adventuremaps.Activities.ChangePasswordActivity;
 import com.example.adventuremaps.Activities.CreateRouteActivity;
 import com.example.adventuremaps.Activities.MainActivity;
 import com.example.adventuremaps.Activities.Tutorial.TutorialViewPagerActivity;
+import com.example.adventuremaps.Adapters.MapViewPager;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -49,7 +50,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         FragmentRoutes.OnFragmentInteractionListener, FragmentMaps.OnFragmentInteractionListener, FragmentUser.OnFragmentInteractionListener {
 
     private MainTabbetActivityVM viewModel;
-    private ViewPager viewPager;
+    private MapViewPager viewPager;//ViewPager adaptado para las secciones que contienen mapas
     private FragmentStartLocalizationPointClick fragment = new FragmentStartLocalizationPointClick();
     SharedPreferences sharedpreferences;
 
@@ -157,6 +158,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             public void onPageScrollStateChanged(int state) {
             }
         });
+
         //Configuramos el adapter del viewPager
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(sectionsPagerAdapter);
