@@ -185,4 +185,6 @@
     <string name="no_owner_by_date_of_creation">No owner by date of creation</string>
 
     <string name="order_by">Order by</string>
+    <string name="error_edit_non_own_localization">You cannot modify a location that does not belong to you!</string>
+    <string name="save_changes">Save changes</string>
 </resources>

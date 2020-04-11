@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.EditLocalizationPointActivityVM;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,18 +23,17 @@ import java.util.Map;
 
 public class EditLocalizationPointActivity extends AppCompatActivity {
 
-    private Button btnEdit, btnFavourite;
+    private Button btnEdit;
     private EditText name, description;
     private CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private EditLocalizationPointActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_localization_point);
+        setContentView(R.layout.activity_edit_localization_point);
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(EditLocalizationPointActivityVM.class);
@@ -51,8 +49,7 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         description = findViewById(R.id.EditTextLocalizationDescription);
         description.setText(viewModel.get_actualLocalizationPoint().getDescription());
 
-        btnEdit = findViewById(R.id.btnCreateLocalizationPoint);
-        btnEdit.setText(R.string.save_datas);
+        btnEdit = findViewById(R.id.btnSaveLocalizationPoint);
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,22 +106,6 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         if(viewModel.get_localizationTypes().contains(getString(R.string.camping)))
             camping.setChecked(true);
         checkBoxes.add(camping);
-
-        btnFavourite = findViewById(R.id.btnFavouriteLocalizationPointCreateAndEdit);
-        if(viewModel.get_localizationsIdActualUser().contains(viewModel.get_actualLocalizationPoint().getLocalizationPointId())){//Si el punto de localización estaba en favoritos
-            btnFavourite.setBackgroundResource(R.drawable.fill_star);//Modificamos el icono
-        }
-
-        btnFavourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(btnFavourite.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
-                    btnFavourite.setBackgroundResource(R.drawable.empty_star);
-                }else{
-                    btnFavourite.setBackgroundResource(R.drawable.fill_star);
-                }
-            }
-        });
     }
 
     /**
@@ -176,18 +157,10 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
                             .child(typeId).setValue(viewModel.get_localizationTypes().get(i));
                 }
 
-                //Actualizamos el estado de favorito del punto de localización respecto al usuario actual
-                if(btnFavourite.getBackground().getConstantState() != getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
-                    userReference.child(FirebaseAuth.getInstance().
-                            getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
-                }else{
-                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(
-                            viewModel.get_actualLocalizationPoint().getLocalizationPointId())
-                            .setValue(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
-                }
-
+                //Indicamos que se ha realizado la modificación
                 Toast.makeText(this, R.string.localization_point_saved, Toast.LENGTH_SHORT).show();
 
+                //Volvemos a la actividad de detalles
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("NameUpdated", viewModel.get_newName());
                 resultIntent.putExtra("DescriptionUpdated", viewModel.get_newDescription());

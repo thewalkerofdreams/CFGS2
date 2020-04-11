@@ -62,7 +62,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         btnEditLocalizationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                throwEditLocalizationPointActivity();//Lanzamos la actividad de edición
+                if(viewModel.get_actualLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización pertenece al usuario actual
+                    throwEditLocalizationPointActivity();//Lanzamos la actividad de edición
+                }else{
+                    Toast.makeText(getApplication(), R.string.error_edit_non_own_localization, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
