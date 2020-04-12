@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_weight="20"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"></ImageView>
+
+    <EditText
+        android:id="@+id/EditTextNickNameActivityLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="18"
+        android:layout_marginTop="5sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:hint="@string/hint_nickName"></EditText>
+
+    <EditText
+        android:id="@+id/EditTextPasswordActivityLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="18"
+        android:layout_marginTop="0sp"
+        android:layout_marginBottom="5sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:inputType="textPassword"
+        android:hint="@string/hint_password"></EditText>
+
+    <TextView
+        android:id="@+id/TextViewForgottenPasswordActivityLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="8"
+        android:layout_marginStart="32sp"
+        android:layout_marginEnd="30sp"
+        android:textColor="@color/UnderlinedBlue"
+        android:clickable="true"
+        android:onClick="throwSendNewPasswordActivity"
+        android:text="@string/forgotten_password"></TextView>
+
+    <Button
+        android:id="@+id/btnLoginActivityLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="18"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:text="@string/login"
+        android:onClick="tryLogUser"></Button>
+
+    <Button
+        android:id="@+id/btnCreateCountActivityLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="18"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginStart="30sp"
+        android:layout_marginEnd="30sp"
+        android:text="@string/create_count"
+        android:onClick="throwCreateCountActivity"></Button>
+
+</LinearLayout>
