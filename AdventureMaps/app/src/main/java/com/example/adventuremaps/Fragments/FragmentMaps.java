@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -60,6 +59,7 @@ public class FragmentMaps extends Fragment {
     //Offline objects
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
+
     private OnFragmentInteractionListener mListener;
 
     public FragmentMaps() {
@@ -69,11 +69,10 @@ public class FragmentMaps extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
-        HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs
+        HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs, para poder cargar zonas online
 
         //Inflamos el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -184,6 +183,18 @@ public class FragmentMaps extends Fragment {
         builder.show();//Lanzamos el dialogo
     }
 
+    /**
+     * Interfaz
+     * Nombre: downloadRegion
+     * Comentario: Este método nos permite descargar una región del mapa online. Si
+     * se supera el límite de descarga de la versión gratuita, el método informa de
+     * ello y no se descarga la región.
+     * Cabecera:  private void downloadRegion(final String regionName)
+     * Entrada:
+     * @param regionName
+     * Postcondiciones: El método descarga la región que cubre la pantalla actual o muestra
+     * un mensaje de error, si esta no se pudo descargar.
+     */
     private void downloadRegion(final String regionName) {
         startProgress();//Activamos e iniciamos el progressBar
 
@@ -220,7 +231,6 @@ public class FragmentMaps extends Fragment {
                 offlineManager.createOfflineRegion(definition, metadata, new OfflineManager.CreateOfflineRegionCallback() {
                     @Override
                     public void onCreate(OfflineRegion offlineRegion) {
-                        //Timber.d( "Offline region created: %s" , regionName);
                         FragmentMaps.this.offlineRegion = offlineRegion;
                         launchDownload();//Comenzamos la descarga de la región
                     }
@@ -269,7 +279,6 @@ public class FragmentMaps extends Fragment {
 
             @Override
             public void mapboxTileCountLimitExceeded(long limit) {//Si se supera el límite de descarga
-                //Timber.e("Mapbox tile count limit exceeded: %s", limit);
                 Toast.makeText(getActivity(), getString(R.string.exceeded_download_limit), Toast.LENGTH_SHORT).show();
             }
         });
@@ -281,7 +290,7 @@ public class FragmentMaps extends Fragment {
     /**
      * Interfaz
      * Nombre: downloadedRegionList
-     * Comentario: Este método carga una lista de las regiones offline descargadas.
+     * Comentario: Este método carga un dialogo con un listado de las regiones offline descargadas.
      * Cabecera: private void downloadedRegionList()
      * Postcondiciones: El método muestra una lista de la regiones descargadas, en una interfaz
      * donde se podrá viajar a estas regiones e incluso eliminarlas.
@@ -306,7 +315,7 @@ public class FragmentMaps extends Fragment {
                     //Para mostrar la lista de regiones en un dialogo, esta debe ser un array de CharSequence
                     final CharSequence[] items = offlineRegionsNames.toArray(new CharSequence[offlineRegionsNames.size()]);
 
-                    //Creamos un dialogo que contiene la lista de las regiones
+                    //Creamos el dialogo que contiene la lista de las regiones
                     AlertDialog dialog = new AlertDialog.Builder(getActivity())
                             .setTitle(getString(R.string.navigate_title))
                             .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
@@ -328,39 +337,7 @@ public class FragmentMaps extends Fragment {
                                     progressBar.setIndeterminate(true);
                                     progressBar.setVisibility(View.VISIBLE);
 
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                                            .setTitle(R.string.confirm_delete)// Setting Alert Dialog Title
-                                            .setMessage(R.string.question_delete_region)// Setting Alert Dialog Message
-                                            .setCancelable(false)//De esta manera no podemos quitar el dialogo sin contestarlo
-                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface arg0, int arg1) {
-                                                    //Comenzamos el proceso de eliminación
-                                                    offlineRegions[viewModel.get_regionSelected()].delete(new OfflineRegion.OfflineRegionDeleteCallback() {
-                                                        @Override
-                                                        public void onDelete() {
-                                                            //Cuando la región es eliminada inhabilitamos el progressbar e informamos al usuario
-                                                            progressBar.setVisibility(View.INVISIBLE);
-                                                            progressBar.setIndeterminate(false);
-                                                            Toast.makeText(getActivity(), getString(R.string.toast_region_deleted), Toast.LENGTH_LONG).show();
-                                                        }
-
-                                                        @Override
-                                                        public void onError(String error) {
-                                                            progressBar.setVisibility(View.INVISIBLE);
-                                                            progressBar.setIndeterminate(false);
-                                                            Timber.e( "Error: %s", error);
-                                                        }
-                                                    });
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            }).create();
-
-                                    alertDialog.show();
+                                    showDeleteDownloadRegionDialog(offlineRegions);//Lanzamos el dialogo de eliminación
                                 }
                             })
                             .setNegativeButton(getString(R.string.navigate_negative_button_title), new DialogInterface.OnClickListener() {
@@ -377,6 +354,54 @@ public class FragmentMaps extends Fragment {
                 Timber.e( "Error: %s", error);
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: showDeleteDownloadRegionDialog
+     * Comentario: El método muestra por pantalla un dialogo para eliminar la región seleccionada
+     * del listado de regiones descargadas que muestra la función "downloadedRegionList". Este método
+     * es llamado dentra de esa misma función.
+     * Cabecera: private void showDeleteDownloadRegionDialog(final OfflineRegion[] offlineRegions)
+     * Entrada:
+     *  -final OfflineRegion[] offlineRegions
+     * Postcondiciones: El método muestra un dialogo de eliminación por pantalla, si el usuario lo confirma
+     * se elimina la región seleccionada, en caso contrario no sucede nada.
+     */
+    private void showDeleteDownloadRegionDialog(final OfflineRegion[] offlineRegions){
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.confirm_delete)// Setting Alert Dialog Title
+                .setMessage(R.string.question_delete_region)// Setting Alert Dialog Message
+                .setCancelable(false)//De esta manera no podemos quitar el dialogo sin contestarlo
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        //Comenzamos el proceso de eliminación
+                        offlineRegions[viewModel.get_regionSelected()].delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+                            @Override
+                            public void onDelete() {
+                                //Cuando la región es eliminada inhabilitamos el progressbar e informamos al usuario
+                                progressBar.setVisibility(View.INVISIBLE);
+                                progressBar.setIndeterminate(false);
+                                Toast.makeText(getActivity(), getString(R.string.toast_region_deleted), Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                progressBar.setIndeterminate(false);
+                                Timber.e( "Error: %s", error);
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).create();
+
+        alertDialog.show();
     }
 
     /**
@@ -479,7 +504,6 @@ public class FragmentMaps extends Fragment {
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
-
 
     /**
      * Interfaz
