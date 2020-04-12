@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -317,18 +318,7 @@ public class FragmentMaps extends Fragment {
                             .setPositiveButton(getString(R.string.navigate_positive_button), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
-                                    Toast.makeText(getActivity(), items[viewModel.get_regionSelected()], Toast.LENGTH_LONG).show();
-
-                                    //Obtenemos los límites de la región y el zoom
-                                    LatLngBounds bounds = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getBounds();
-                                    double regionZoom = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getMinZoom();
-
-                                    //Modificamos la posición de la "camara" sobre el mapa, centrandola en el centro de la ragión a la que se ha navegado
-                                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                                            .target(bounds.getCenter())
-                                            .zoom(regionZoom)
-                                            .build();
-                                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));//Movemos la "camara"
+                                    navigateToSpecificRegion(offlineRegions, items);//Navegamos a la región seleccionada en la lista
                                 }
                             })
                             .setNeutralButton(getString(R.string.navigate_neutral_button_title), new DialogInterface.OnClickListener() {
@@ -387,6 +377,31 @@ public class FragmentMaps extends Fragment {
                 Timber.e( "Error: %s", error);
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: navigateToSpecificRegion
+     * Comentario: Este método nos permite navegar a una región descargada de la lista de regiones
+     * almacenamadas en el dispositivo actual.
+     * Cabecera: private void navigateToSpecificRegion(final CharSequence[] items)
+     * Entrada:
+     *  -final CharSequence[] items
+     * Postcondiciones: El método modifica la posición de la camara sobre el mapa actual.
+     */
+    private void navigateToSpecificRegion(OfflineRegion[] offlineRegions, CharSequence[] items){
+        Toast.makeText(getActivity(), items[viewModel.get_regionSelected()], Toast.LENGTH_LONG).show();
+
+        //Obtenemos los límites de la región y el zoom
+        LatLngBounds bounds = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getBounds();
+        double regionZoom = (offlineRegions[viewModel.get_regionSelected()].getDefinition()).getMinZoom();
+
+        //Modificamos la posición de la "camara" sobre el mapa, centrandola en el centro de la ragión a la que se ha navegado
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(bounds.getCenter())
+                .zoom(regionZoom)
+                .build();
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));//Movemos la "camara"
     }
 
     //Metodos sobre el funcionamiento de los elementos de la UI
@@ -456,12 +471,6 @@ public class FragmentMaps extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación de la página actual
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
@@ -469,5 +478,79 @@ public class FragmentMaps extends Fragment {
             if(actualActivity != null)
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+    }
+
+
+    /**
+     * Interfaz
+     * Nombre: clearAmbientCache
+     * Comentario: El método limpia la caché del mapa mostrado, sin eliminar las regiones descargadas.
+     * Cabecera: private void clearAmbientCache()
+     * Postcondiciones: El método limpia la caché de las regiones mostradas en el mapa actusal.
+     */
+    private void clearAmbientCache() {
+        OfflineManager fileSource = OfflineManager.getInstance(getActivity());
+        fileSource.clearAmbientCache(new OfflineManager.FileSourceCallback() {
+            @Override
+            public void onSuccess() {
+                //La limpieza se realizó correctamente
+            }
+
+            @Override
+            public void onError(@NonNull String message) {
+                //Error al limpiar la caché
+            }
+        });
+    }
+
+    //Metodos sobreescritos
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
+        clearAmbientCache();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mapView.onDestroy(); //after super call
     }
 }
