@@ -55,6 +55,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
     private boolean _dialogShareLocalizationShowing;
+    private boolean _dialogShortLocalizationListShowing;
     private ArrayList<String> _localizationsIdActualUser;
     private ArrayList<ClsLocalizationPoint> _localizationsActualUser;
     private ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList;
@@ -64,8 +65,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
+    private boolean _dialogShortRouteListShowing;
     private ArrayList<ClsRoute> _itemsRouteList;
     private ArrayList<ClsRoute> _selectedRoutes;
+    private int _positionSelectedOrderTypesRoutes;
 
     //Fragment Start
     private LatLng _longClickPosition;//Para crear un nuevo punto de localización
@@ -92,6 +95,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
         _dialogShareLocalizationShowing = false;
+        _dialogShortLocalizationListShowing = false;
         _localizationsActualUser = new ArrayList<>();
         _localizationsIdActualUser = new ArrayList<>();
         _itemsLocalizationList = new ArrayList<>();
@@ -101,8 +105,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
+        _dialogShortRouteListShowing = false;
         _itemsRouteList = new ArrayList<>();
         _selectedRoutes = new ArrayList<>();
+        _positionSelectedOrderTypesRoutes = 0;
 
         //Fragment Start
         _longClickPosition = null;
@@ -175,6 +181,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return _dialogDeleteLocalizationShowing;
     }
 
+    public boolean is_dialogShortLocalizationListShowing() {
+        return _dialogShortLocalizationListShowing;
+    }
+
+    public void set_dialogShortLocalizationListShowing(boolean _dialogShortLocalizationListShowing) {
+        this._dialogShortLocalizationListShowing = _dialogShortLocalizationListShowing;
+    }
+
     public void set_dialogDeleteLocalizationShowing(boolean _dialogDeleteLocalizationShowing) {
         this._dialogDeleteLocalizationShowing = _dialogDeleteLocalizationShowing;
     }
@@ -228,6 +242,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._dialogDeleteRouteShowing = _dialogDeleteRouteShowing;
     }
 
+    public boolean is_dialogShortRouteListShowing() {
+        return _dialogShortRouteListShowing;
+    }
+
+    public void set_dialogShortRouteListShowing(boolean _dialogShortRouteListShowing) {
+        this._dialogShortRouteListShowing = _dialogShortRouteListShowing;
+    }
+
     public ArrayList<ClsRoute> get_itemsRouteList() {
         return _itemsRouteList;
     }
@@ -242,6 +264,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedRoutes(ArrayList<ClsRoute> _selectedRoutes) {
         this._selectedRoutes = _selectedRoutes;
+    }
+
+    public int get_positionSelectedOrderTypesRoutes() {
+        return _positionSelectedOrderTypesRoutes;
+    }
+
+    public void set_positionSelectedOrderTypesRoutes(int _positionSelectedOrderTypesRoutes) {
+        this._positionSelectedOrderTypesRoutes = _positionSelectedOrderTypesRoutes;
     }
 
     //Gets y Sets Fragment Start

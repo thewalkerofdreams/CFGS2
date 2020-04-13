@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -116,6 +118,31 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         }else{
             if(savedInstanceState != null && viewModel.is_badValorationDialogShowing())
                 showBadDescriptionDialog();
+        }
+
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
+            //Modificamos el tamaño de los botones
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(200, 200, (float) 0.0);
+            btnFavourite.setLayoutParams(param);
+            btnImageGallery.setLayoutParams(param);
+
+            param = new LinearLayout.LayoutParams(100, 100, (float) 0.0);
+            param.setMarginStart(20);
+            param.setMarginEnd(20);
+            goodValoration.setLayoutParams(param);
+            badValoration.setLayoutParams(param);
+
+            //Ocultamos los textViews del nombre y la descripcción.
+            TextView textViewName = findViewById(R.id.TextViewNameDetailsLocalizationPointActivity);
+            textViewName.setVisibility(View.GONE);
+            String aux = getString(R.string.name_form) + " " + viewModel.get_actualLocalizationPoint().getName();
+            nameLocalizationPoint.setText(aux);
+
+            TextView textViewDescription = findViewById(R.id.TextViewDescriptionDetailsLocalizationPointActivity);
+            textViewDescription.setVisibility(View.GONE);
+            aux = getString(R.string.description_form) + " " + viewModel.get_actualLocalizationPoint().getDescription();
+            descriptionLocalizationPoint.setText(aux);
         }
     }
 

@@ -13,6 +13,7 @@
         android:layout_marginEnd="5sp">
 
         <TextView
+            android:id="@+id/TextViewNameDetailsLocalizationPointActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/name_form">
@@ -34,6 +35,7 @@
         android:layout_marginEnd="5sp">
 
         <TextView
+            android:id="@+id/TextViewDescriptionDetailsLocalizationPointActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/description_form">
