@@ -21,6 +21,7 @@ import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
+import com.example.adventuremaps.Models.ClsMarkerWithLocalizationMapbox;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -51,6 +52,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Location _actualLocation;
     private Context _context;
     private int _regionSelected;
+    private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
+    private ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
+    private com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -91,6 +95,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
+        _localizationPointsMapbox = new ArrayList<>();
+        _localizationPointsWithMarkerMapbox = new ArrayList<>();
+        _localizationPointClickedMapbox = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -158,6 +165,30 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public String getJsonFieldRegionName() {
         return JSON_FIELD_REGION_NAME;
+    }
+
+    public ArrayList<ClsLocalizationPoint> get_localizationPointsMapbox() {
+        return _localizationPointsMapbox;
+    }
+
+    public void set_localizationPointsMapbox(ArrayList<ClsLocalizationPoint> _localizationPointsMapbox) {
+        this._localizationPointsMapbox = _localizationPointsMapbox;
+    }
+
+    public ArrayList<ClsMarkerWithLocalizationMapbox> get_localizationPointsWithMarkerMapbox() {
+        return _localizationPointsWithMarkerMapbox;
+    }
+
+    public void set_localizationPointsWithMarkerMapbox(ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox) {
+        this._localizationPointsWithMarkerMapbox = _localizationPointsWithMarkerMapbox;
+    }
+
+    public com.mapbox.mapboxsdk.annotations.Marker get_localizationPointClickedMapbox() {
+        return _localizationPointClickedMapbox;
+    }
+
+    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox) {
+        this._localizationPointClickedMapbox = _localizationPointClickedMapbox;
     }
 
     //Gets y Sets Fragment Localizations
