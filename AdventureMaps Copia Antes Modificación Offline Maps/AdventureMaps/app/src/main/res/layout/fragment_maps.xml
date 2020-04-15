@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ui.MainTabbet.MainTabbetActivity">
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:mapbox_cameraTargetLat="29.720"
+        mapbox:mapbox_cameraTargetLng="-95.342"
+        mapbox:mapbox_cameraZoom="15.27"
+        mapbox:mapbox_cameraZoomMin="10"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorTabList"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0sp"
+        android:layout_height="match_parent"
+        android:layout_weight="50"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_button_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="8sp"></TextView>
+
+        <Button
+            android:id="@+id/download_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="60sp"
+            android:layout_height="60sp"
+            android:background="@drawable/download_map"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0sp"
+        android:layout_height="match_parent"
+        android:layout_weight="50"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/list_button_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="8sp"></TextView>
+
+        <Button
+            android:id="@+id/list_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="60sp"
+            android:layout_height="60sp"
+            android:background="@drawable/map_list_tutorial"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
