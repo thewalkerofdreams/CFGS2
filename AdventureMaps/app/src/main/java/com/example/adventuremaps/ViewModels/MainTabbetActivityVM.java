@@ -54,9 +54,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Context _context;
     private int _regionSelected;
     private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
-    private ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
     private com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
     private ArrayList<Symbol> _markersInserted;
+    private com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox;//Para crear un nuevo punto de localización
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -98,9 +98,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
         _localizationPointsMapbox = new ArrayList<>();
-        _localizationPointsWithMarkerMapbox = new ArrayList<>();
         _localizationPointClickedMapbox = null;
         _markersInserted = new ArrayList<>();
+        _longClickPositionMapbox = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -178,14 +178,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointsMapbox = _localizationPointsMapbox;
     }
 
-    public ArrayList<ClsMarkerWithLocalizationMapbox> get_localizationPointsWithMarkerMapbox() {
-        return _localizationPointsWithMarkerMapbox;
-    }
-
-    public void set_localizationPointsWithMarkerMapbox(ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox) {
-        this._localizationPointsWithMarkerMapbox = _localizationPointsWithMarkerMapbox;
-    }
-
     public com.mapbox.mapboxsdk.geometry.LatLng get_localizationPointClickedMapbox() {
         return _localizationPointClickedMapbox;
     }
@@ -200,6 +192,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_markersInserted(ArrayList<Symbol> _markersInserted) {
         this._markersInserted = _markersInserted;
+    }
+
+    public com.mapbox.mapboxsdk.geometry.LatLng get_longClickPositionMapbox() {
+        return _longClickPositionMapbox;
+    }
+
+    public void set_longClickPositionMapbox(com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox) {
+        this._longClickPositionMapbox = _longClickPositionMapbox;
     }
 
     //Gets y Sets Fragment Localizations
@@ -465,7 +465,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
 
         if(get_selectedLocalizationPoint() != null){
-            drUser.addValueEventListener(new ValueEventListener() {
+            drUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     ClsUser user = null;
@@ -547,7 +547,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 Toast.makeText(context, R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
                 //Eliminamos el punto de localización
                 eliminarPuntoDeLocalizacionSeleccionado();
-                set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
+                set_localizationPointClickedMapbox(null);//Indicamos que el marcador seleccionado pasa a null
                 ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
             }
         });

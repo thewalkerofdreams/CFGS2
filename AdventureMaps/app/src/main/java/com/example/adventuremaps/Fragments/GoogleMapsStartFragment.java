@@ -220,26 +220,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
     }
 
-    /*
-     * Interfaz
-     * Nombre: insertarMarcador
-     * Comentario: Este método nos permite insertar un marcador en el mapa.
-     * Además guarda ese marcador en el VM MainTabbetActicityVM.
-     * Cabecera: private void insertarMarcador(LatLng latLng)
-     * Entrada:
-     *   -LatLng latLng
-     * Postcondiciones: El método inserta un marcador en el mapa. Además se guarda
-     * ese marcador en el VM MainTabbetActicityVM.
-     * */
-    /*private void insertarMarcador(LatLng latLng){
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);//Indicamos la posición del marcador
-        markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
-        Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-        setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
-        viewModel.set_markerToCreate(marker);//Almacenamos el marcador creado en el VM
-    }*/
-
     /**
      * Interfaz
      * Nombre: saveLocalizationPoint
