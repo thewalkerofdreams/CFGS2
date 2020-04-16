@@ -21,6 +21,7 @@ import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
+import com.example.adventuremaps.Models.ClsMarkerWithLocalizationMapbox;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -51,10 +52,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Location _actualLocation;
     private Context _context;
     private int _regionSelected;
+    private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
+    private ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
+    private com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
     private boolean _dialogShareLocalizationShowing;
+    private boolean _dialogShortLocalizationListShowing;
     private ArrayList<String> _localizationsIdActualUser;
     private ArrayList<ClsLocalizationPoint> _localizationsActualUser;
     private ArrayList<ClsLocalizationPointWithFav> _itemsLocalizationList;
@@ -64,8 +69,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     //Fragment Routes
     private boolean _dialogDeleteRouteShowing;
+    private boolean _dialogShortRouteListShowing;
     private ArrayList<ClsRoute> _itemsRouteList;
     private ArrayList<ClsRoute> _selectedRoutes;
+    private int _positionSelectedOrderTypesRoutes;
 
     //Fragment Start
     private LatLng _longClickPosition;//Para crear un nuevo punto de localización
@@ -88,10 +95,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
+        _localizationPointsMapbox = new ArrayList<>();
+        _localizationPointsWithMarkerMapbox = new ArrayList<>();
+        _localizationPointClickedMapbox = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
         _dialogShareLocalizationShowing = false;
+        _dialogShortLocalizationListShowing = false;
         _localizationsActualUser = new ArrayList<>();
         _localizationsIdActualUser = new ArrayList<>();
         _itemsLocalizationList = new ArrayList<>();
@@ -101,8 +112,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Routes
         _dialogDeleteRouteShowing = false;
+        _dialogShortRouteListShowing = false;
         _itemsRouteList = new ArrayList<>();
         _selectedRoutes = new ArrayList<>();
+        _positionSelectedOrderTypesRoutes = 0;
 
         //Fragment Start
         _longClickPosition = null;
@@ -154,6 +167,30 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return JSON_FIELD_REGION_NAME;
     }
 
+    public ArrayList<ClsLocalizationPoint> get_localizationPointsMapbox() {
+        return _localizationPointsMapbox;
+    }
+
+    public void set_localizationPointsMapbox(ArrayList<ClsLocalizationPoint> _localizationPointsMapbox) {
+        this._localizationPointsMapbox = _localizationPointsMapbox;
+    }
+
+    public ArrayList<ClsMarkerWithLocalizationMapbox> get_localizationPointsWithMarkerMapbox() {
+        return _localizationPointsWithMarkerMapbox;
+    }
+
+    public void set_localizationPointsWithMarkerMapbox(ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox) {
+        this._localizationPointsWithMarkerMapbox = _localizationPointsWithMarkerMapbox;
+    }
+
+    public com.mapbox.mapboxsdk.annotations.Marker get_localizationPointClickedMapbox() {
+        return _localizationPointClickedMapbox;
+    }
+
+    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox) {
+        this._localizationPointClickedMapbox = _localizationPointClickedMapbox;
+    }
+
     //Gets y Sets Fragment Localizations
     public ArrayList<ClsLocalizationPoint> get_localizationsActualUser() {
         return _localizationsActualUser;
@@ -173,6 +210,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public boolean is_dialogDeleteLocalizationShowing() {
         return _dialogDeleteLocalizationShowing;
+    }
+
+    public boolean is_dialogShortLocalizationListShowing() {
+        return _dialogShortLocalizationListShowing;
+    }
+
+    public void set_dialogShortLocalizationListShowing(boolean _dialogShortLocalizationListShowing) {
+        this._dialogShortLocalizationListShowing = _dialogShortLocalizationListShowing;
     }
 
     public void set_dialogDeleteLocalizationShowing(boolean _dialogDeleteLocalizationShowing) {
@@ -228,6 +273,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._dialogDeleteRouteShowing = _dialogDeleteRouteShowing;
     }
 
+    public boolean is_dialogShortRouteListShowing() {
+        return _dialogShortRouteListShowing;
+    }
+
+    public void set_dialogShortRouteListShowing(boolean _dialogShortRouteListShowing) {
+        this._dialogShortRouteListShowing = _dialogShortRouteListShowing;
+    }
+
     public ArrayList<ClsRoute> get_itemsRouteList() {
         return _itemsRouteList;
     }
@@ -242,6 +295,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedRoutes(ArrayList<ClsRoute> _selectedRoutes) {
         this._selectedRoutes = _selectedRoutes;
+    }
+
+    public int get_positionSelectedOrderTypesRoutes() {
+        return _positionSelectedOrderTypesRoutes;
+    }
+
+    public void set_positionSelectedOrderTypesRoutes(int _positionSelectedOrderTypesRoutes) {
+        this._positionSelectedOrderTypesRoutes = _positionSelectedOrderTypesRoutes;
     }
 
     //Gets y Sets Fragment Start

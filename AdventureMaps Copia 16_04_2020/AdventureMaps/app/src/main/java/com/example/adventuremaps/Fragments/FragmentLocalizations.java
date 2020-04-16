@@ -47,7 +47,7 @@ public class FragmentLocalizations extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ListView listView;
     private MainTabbetActivityVM viewModel;
-    private AlertDialog alertDialogDeleteLocalization, alertDialogShareLocalization;
+    private AlertDialog alertDialogDeleteLocalization, alertDialogShareLocalization, alertDialogShortList;
     private Button btnFav, btnDelete, btnShare, btnOrderLocalizations;
     private DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
     private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
@@ -174,13 +174,18 @@ public class FragmentLocalizations extends Fragment {
         if(sharedPreferencesFav.getBoolean("OrderLocalizationListFav", false))//Si el filtro de favoritos se encuentraba activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
-        if(savedInstanceState != null && viewModel.is_dialogDeleteLocalizationShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
-            showDeleteLocalizationDialog();
-        }else{
-            if(savedInstanceState != null && viewModel.is_dialogShareLocalizationShowing())//Si el dialogo para compartir una localización estaba abierto lo recargamos
-                openShareDialog();
+        if(savedInstanceState != null){//Si la actividad ya contiene datos almacenados
+            if(viewModel.is_dialogDeleteLocalizationShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
+                showDeleteLocalizationDialog();
+            }else{
+                if(viewModel.is_dialogShareLocalizationShowing()) {//Si el dialogo para compartir una localización estaba abierto lo recargamos
+                    openShareDialog();
+                }else{
+                    if(viewModel.is_dialogShortLocalizationListShowing())//Si el dialogo de ordenación se encontraba abierto
+                        showOrderLocalizationListDialog();
+                }
+            }
         }
-
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
             LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutTabLocalizations);
@@ -468,6 +473,11 @@ public class FragmentLocalizations extends Fragment {
             if(alertDialogShareLocalization != null && alertDialogShareLocalization.isShowing()){
                 alertDialogShareLocalization.dismiss();// close dialog to prevent leaked window
                 viewModel.set_dialogShareLocalizationShowing(true);
+            }else{
+                if(alertDialogShortList != null && alertDialogShortList.isShowing()){
+                    alertDialogShortList.dismiss();
+                    viewModel.set_dialogShortLocalizationListShowing(true);
+                }
             }
         }
     }
@@ -608,11 +618,12 @@ public class FragmentLocalizations extends Fragment {
                 getResources().getString(R.string.date_of_creation), getResources().getString(R.string.shared_by_name), getResources().getString(R.string.shared_by_date_of_creaction),
                 getResources().getString(R.string.no_owner_by_name), getResources().getString(R.string.no_owner_by_date_of_creation)};
 
-        int actualTypeSelected = sharedpreferencesField.getInt("OrderLocalizationListField", 1) -1;
+        viewModel.set_positionSelectedOrderTypesLocations(sharedpreferencesField.getInt("OrderLocalizationListField", 1) -1);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.order_types);
-        builder.setSingleChoiceItems(orderTypes, actualTypeSelected, new DialogInterface.OnClickListener() {
+        builder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+        builder.setSingleChoiceItems(orderTypes, viewModel.get_positionSelectedOrderTypesLocations(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.set_positionSelectedOrderTypesLocations(which);
@@ -625,10 +636,17 @@ public class FragmentLocalizations extends Fragment {
                 editor01.putInt("OrderLocalizationListField", viewModel.get_positionSelectedOrderTypesLocations()+1);
                 editor01.commit();
                 loadList();//Recargamos la lista
+
+                viewModel.set_dialogShortLocalizationListShowing(false);//Indicamos que se finalizó el dialogo
             }
         });
-        builder.setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_dialogShortLocalizationListShowing(false);//Indicamos que se finalizó el dialogo
+            }
+        });
+        alertDialogShortList = builder.create();
+        alertDialogShortList.show();
     }
 }

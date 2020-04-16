@@ -1,11 +1,14 @@
 package com.example.adventuremaps.Activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -106,6 +109,17 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         if(viewModel.get_localizationTypes().contains(getString(R.string.camping)))
             camping.setChecked(true);
         checkBoxes.add(camping);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
+            //Modificamos el tamaño de los LinearLayouts
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (float) 1.0);
+            param.weight = 20;
+            LinearLayout linearLayoutName = findViewById(R.id.LinearLayoutNameEditLocalizationPointActivity);
+            linearLayoutName.setLayoutParams(param);
+            param.weight = 25;
+            LinearLayout linearLayoutDescription = findViewById(R.id.LinearLayoutDescriptionEditLocalizationPointActivity);
+            linearLayoutDescription.setLayoutParams(param);
+        }
     }
 
     /**

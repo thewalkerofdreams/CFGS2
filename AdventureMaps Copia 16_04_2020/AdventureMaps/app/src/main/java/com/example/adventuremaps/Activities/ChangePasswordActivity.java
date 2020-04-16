@@ -1,8 +1,12 @@
 package com.example.adventuremaps.Activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +40,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         textOldPassword = findViewById(R.id.EditTextOldPasswordActivityChangePassword);
         textNewPassword01 = findViewById(R.id.EditTextNewPasswor01dActivityChangePassword);
         textNewPassword02 = findViewById(R.id.EditTextNewPasswor02dActivityChangePassword);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
+            ImageView icono = findViewById(R.id.IconImageChangePasswordActivity);
+            icono.setVisibility(View.GONE);//Ocultamos la imagen del icono
+        }
     }
 
     /**

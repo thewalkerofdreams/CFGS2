@@ -45,7 +45,7 @@ public class FragmentRoutes extends Fragment {
     private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
     private ListView listView;
     private MainTabbetActivityVM viewModel;
-    private AlertDialog alertDialogDeleteRoute;
+    private AlertDialog alertDialogDeleteRoute, alertDialogShortList;
     private Button btnFav, btnDelete, btnOrderRoutes;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
@@ -146,8 +146,13 @@ public class FragmentRoutes extends Fragment {
         if(sharedPreferencesFav.getBoolean("OrderRouteListFav", false))//Si el filtro de favoritos se encuentra activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
-        if(savedInstanceState != null && viewModel.is_dialogDeleteRouteShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
-            showDeleteRouteDialog();
+        if(savedInstanceState != null){//Si la actividad tiene datos almacenados
+            if(viewModel.is_dialogDeleteRouteShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
+                showDeleteRouteDialog();
+            }else{
+                if(viewModel.is_dialogShortRouteListShowing())//Si el dialogo de ordenación estaba abierto
+                    showOrderRoutesListDialog();
+            }
         }
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
@@ -310,6 +315,11 @@ public class FragmentRoutes extends Fragment {
         if(alertDialogDeleteRoute != null && alertDialogDeleteRoute.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
             alertDialogDeleteRoute.dismiss();// close dialog to prevent leaked window
             viewModel.set_dialogDeleteRouteShowing(true);
+        }else{
+            if(alertDialogShortList != null && alertDialogShortList.isShowing()){//Si se encuentra abierto el dialogo de ordenación
+                alertDialogShortList.dismiss();
+                viewModel.set_dialogShortRouteListShowing(true);
+            }
         }
     }
 
@@ -373,27 +383,35 @@ public class FragmentRoutes extends Fragment {
         final CharSequence [] orderTypes = {getResources().getString(R.string.name),
                 getResources().getString(R.string.date_of_creation)};
 
-        int actualTypeSelected = sharedpreferencesField.getInt("OrderRouteListField", 1) -1;//Obtenemos el último tipo de selección, si lo hubiera
+        viewModel.set_positionSelectedOrderTypesRoutes(sharedpreferencesField.getInt("OrderRouteListField", 1) -1);//Obtenemos el último tipo de selección, si lo hubiera
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.order_types);
-        builder.setSingleChoiceItems(orderTypes, actualTypeSelected, new DialogInterface.OnClickListener() {
+        builder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+        builder.setSingleChoiceItems(orderTypes, viewModel.get_positionSelectedOrderTypesRoutes(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                viewModel.set_positionSelectedOrderTypesLocations(which);
+                viewModel.set_positionSelectedOrderTypesRoutes(which);
             }
         });
         builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
-                editor01.putInt("OrderRouteListField", viewModel.get_positionSelectedOrderTypesLocations()+1);
+                editor01.putInt("OrderRouteListField", viewModel.get_positionSelectedOrderTypesRoutes()+1);
                 editor01.commit();
                 loadList();//Recargamos la lista
+
+                viewModel.set_dialogShortRouteListShowing(false);//Indicamos que el dialogo finalizó
             }
         });
-        builder.setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.set_dialogShortRouteListShowing(false);//Indicamos que el dialogo finalizó
+            }
+        });
+        alertDialogShortList = builder.create();
+        alertDialogShortList.show();
     }
 }

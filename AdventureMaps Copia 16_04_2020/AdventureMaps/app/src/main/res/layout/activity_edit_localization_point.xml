@@ -5,6 +5,7 @@
     android:layout_margin="5sp">
 
     <LinearLayout
+        android:id="@+id/LinearLayoutNameEditLocalizationPointActivity"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="15"
@@ -26,6 +27,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/LinearLayoutDescriptionEditLocalizationPointActivity"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="30"

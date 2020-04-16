@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,10 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -132,6 +137,25 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(//Modificamos el tamaño de los botones
+                    200,
+                    200,
+                    (float) 0.0
+            );
+            btnFavourite.setLayoutParams(param);
+            btnImageGallery.setLayoutParams(param);
+
+            //Ocultamos los textViews del nombre y la descripcción e insertamos una pista en los editText.
+            TextView textViewName = findViewById(R.id.TextViewNameCreateLocalizationPointActivity);
+            textViewName.setVisibility(View.GONE);
+            name.setHint(R.string.name);
+
+            TextView textViewDescription = findViewById(R.id.TextViewDescriptionCreateLocalizationPointActivity);
+            textViewDescription.setVisibility(View.GONE);
+            description.setHint(R.string.description);
+        }
     }
 
     /**
