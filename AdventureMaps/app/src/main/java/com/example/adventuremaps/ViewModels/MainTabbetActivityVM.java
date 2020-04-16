@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 
 import org.json.JSONObject;
 
@@ -54,7 +55,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private int _regionSelected;
     private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
     private ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
-    private com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
+    private com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
+    private ArrayList<Symbol> _markersInserted;
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -98,6 +100,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationPointsMapbox = new ArrayList<>();
         _localizationPointsWithMarkerMapbox = new ArrayList<>();
         _localizationPointClickedMapbox = null;
+        _markersInserted = new ArrayList<>();
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -183,12 +186,20 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointsWithMarkerMapbox = _localizationPointsWithMarkerMapbox;
     }
 
-    public com.mapbox.mapboxsdk.annotations.Marker get_localizationPointClickedMapbox() {
+    public com.mapbox.mapboxsdk.geometry.LatLng get_localizationPointClickedMapbox() {
         return _localizationPointClickedMapbox;
     }
 
-    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox) {
+    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox) {
         this._localizationPointClickedMapbox = _localizationPointClickedMapbox;
+    }
+
+    public ArrayList<Symbol> get_markersInserted() {
+        return _markersInserted;
+    }
+
+    public void set_markersInserted(ArrayList<Symbol> _markersInserted) {
+        this._markersInserted = _markersInserted;
     }
 
     //Gets y Sets Fragment Localizations
@@ -499,6 +510,46 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 eliminarPuntoDeLocalizacionSeleccionado();
                 set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
                 ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: deleteLocalizationDialogMapbox
+     * Comentario: Este método muestra un dialogo por pantalla para eliminar un punto de localización seleccionado
+     * en el mapa offline.
+     * Si el usuario confirma la eliminación, se eliminará la localización de la plataforma FireBase, en caso
+     * contrario no sucederá nada. Un usuario solo podrá eliminar las localizaciones que el haya creado, si intenta
+     * eliminar una que no es suya el método mostrará un mensaje de error por pantalla.
+     * Cabecera: public void deleteLocalizationDialogMapbox()
+     * Postcondiciones: Si el usuario es propietario de ese punto de localización, el método muestra un dialogo por pantalla
+     * , si el usuario lo confirma eliminará el punto de localización seleccionado, en caso contrario no sucederá nada.
+     */
+    public void deleteLocalizationDialogMapbox(final Context context){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_delete_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(context, R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
+                //Eliminamos el punto de localización
+                eliminarPuntoDeLocalizacionSeleccionado();
+                set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
+                ((MainTabbetActivity) context).findViewById(R.id.FrameLayoutLocalizationClicked).setVisibility(View.GONE);//Volvemos invisible el FrameLayout
+                ((MainTabbetActivity) context).findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);//Volvemoa visible el LinearLayout inferior
             }
         });
 

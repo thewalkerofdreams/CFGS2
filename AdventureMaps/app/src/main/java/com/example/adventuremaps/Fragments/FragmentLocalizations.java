@@ -259,7 +259,7 @@ public class FragmentLocalizations extends Fragment {
                 viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
+                    if(localizationPoint != null && localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
                             viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si la localización pertenece al usuario o la tiene en favoritos
                         viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
                     }
