@@ -548,8 +548,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 //Eliminamos el punto de localización
                 eliminarPuntoDeLocalizacionSeleccionado();
                 set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
-                ((MainTabbetActivity) context).findViewById(R.id.FrameLayoutLocalizationClicked).setVisibility(View.GONE);//Volvemos invisible el FrameLayout
-                ((MainTabbetActivity) context).findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);//Volvemoa visible el LinearLayout inferior
+                ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
             }
         });
 

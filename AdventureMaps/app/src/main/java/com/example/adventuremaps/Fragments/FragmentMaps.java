@@ -84,6 +84,7 @@ public class FragmentMaps extends Fragment {
     //Insert Markers
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private SymbolManager symbolManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -170,7 +171,10 @@ public class FragmentMaps extends Fragment {
             @Override
             public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
                 map = mapboxMap;
-
+                //Limpiamos los posibles símbolos insertados en el mapa
+                if(symbolManager != null){//Si el administrador ya fue instanciado
+                    symbolManager.delete(viewModel.get_markersInserted());//Elimminamos todos los símbolos que inserto anteriormente
+                }
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -192,7 +196,7 @@ public class FragmentMaps extends Fragment {
                         });
 
                         //Creamos un objeto symbol manager
-                        SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style);
+                        symbolManager = new SymbolManager(mapView, mapboxMap, style);
 
                         //Declaramos los eventos de los marcadores
                         symbolManager.addClickListener(new OnSymbolClickListener() {
@@ -214,7 +218,8 @@ public class FragmentMaps extends Fragment {
                         //Añadimos la imagen al estilo
                         style.addImage("my_image", smallMarker);
 
-                        viewModel.get_markersInserted().clear();//Limpiamos la lista de marcadores insertados del VM
+                        //Limpiamos la lista de marcadores insertados del VM
+                        viewModel.get_markersInserted().clear();
                         //Añadimos los puntos de localización almacenados en el VM
                         for(int i = 0; i < viewModel.get_localizationPointsMapbox().size(); i++){
                             Symbol symbol = symbolManager.create(new SymbolOptions()
