@@ -105,7 +105,7 @@ public class FragmentStartLocalizationPointClick extends Fragment {
      */
     private void tryShowDeleteLocalizationPointDialog(){
         if(viewModel.get_selectedLocalizationPoint() != null && viewModel.get_selectedLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización existe y es del usuario actual
-            viewModel.deleteLocalizationDialog(getActivity());
+            viewModel.deleteLocalizationDialog(getActivity(), 1);
         }else{
             Toast.makeText(getContext(), R.string.cant_delete_localization_owner, Toast.LENGTH_LONG).show();
         }
