@@ -406,4 +406,16 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     public void reloadInitialFragment(){
         viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
     }
+
+    /**
+     * Interfaz
+     * Nombre: reloadOfflineFragment
+     * Comentario: Este método nos permite recargar el fragmento offline de la aplicación.
+     * Cabecera: public void reloadOfflineFragment()
+     * Postcondiciones: El método recarga el fragmento offline de la aplicación.
+     */
+    public void reloadOfflineFragment(){
+        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+        viewPager.setCurrentItem(3);
+    }
 }

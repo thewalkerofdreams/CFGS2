@@ -31,6 +31,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="100sp"
+        android:visibility="visible"
         android:layout_alignParentBottom="true"
         android:background="@color/colorTabList"
         android:orientation="horizontal">
@@ -83,4 +84,12 @@
     </LinearLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/FrameLayoutLocalizationClicked"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"></FrameLayout>
+
 </RelativeLayout>

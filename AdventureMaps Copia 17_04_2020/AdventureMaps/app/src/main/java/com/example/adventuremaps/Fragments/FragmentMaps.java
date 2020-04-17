@@ -3,8 +3,11 @@ package com.example.adventuremaps.Fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,18 +15,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -39,6 +53,10 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 
 import org.json.JSONObject;
 
@@ -56,9 +74,16 @@ public class FragmentMaps extends Fragment {
     private ProgressBar progressBar;
     private Button downloadButton;
     private Button listButton;
+    private LinearLayout linearLayoutInferior;
+    private FrameLayout frameLayoutInferior;
     //Offline objects
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
+    //Insert Markers
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private SymbolManager symbolManager;
+    private ValueEventListener listener = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,13 +94,16 @@ public class FragmentMaps extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Instanciamos el VM
+        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
         HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs, para poder cargar zonas online
 
         //Inflamos el layout para este fragmento
-        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        final View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
         //Comprobamos que tiene los permisos, si no los tiene enviamos un dialogo
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -86,59 +114,129 @@ public class FragmentMaps extends Fragment {
         //Si se han aceptado los permisos continuamos
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            //Instanciamos el VM
-            viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
-
             //Instanciamos los elementos de la UI
             mapView = view.findViewById(R.id.mapView);
             mapView.onCreate(savedInstanceState);
-            mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
+
+            //Insertamos el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout inferior
+            insertInferiorFragment();
+
+            //Instanciamos el progressBar
+            progressBar = view.findViewById(R.id.progress_bar);
+
+            //Instanciamos la variable offlineManager
+            offlineManager = OfflineManager.getInstance(getActivity());
+
+            //Instanciamos el LinearLayout inferior
+            linearLayoutInferior = view.findViewById(R.id.bottom_navigation);
+            //Instanciamos el FrameLayout
+            frameLayoutInferior = view.findViewById(R.id.FrameLayoutLocalizationClicked);
+
+            //Instanciamos los botones de la actividad
+            downloadButton = view.findViewById(R.id.download_button);
+            downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onMapReady(@NonNull MapboxMap mapboxMap) {//Called when the map is ready to be used.
-                    map = mapboxMap;
-                    mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-                        @Override
-                        public void onStyleLoaded(@NonNull Style style) {
-                            CameraPosition position = new CameraPosition.Builder()
-                                    .target(new LatLng(viewModel.get_actualLocation().getLatitude(),
-                                            viewModel.get_actualLocation().getLongitude()))
-                                    .zoom(10)
-                                    .tilt(20)
-                                    .build();
-                            map.setCameraPosition(position);
+                public void onClick(View view) {
+                    showDownloadRegionDialog();
+                }
+            });
 
-                            if(getActivity() != null){//Si se ha cargado correctamente la actividad actual
-                                //Instanciamos el progressBar
-                                progressBar = getActivity().findViewById(R.id.progress_bar);
-
-                                //Instanciamos la variable offlineManager
-                                offlineManager = OfflineManager.getInstance(getActivity());
-
-                                //Instanciamos los botones de la actividad
-                                downloadButton = getActivity().findViewById(R.id.download_button);
-                                downloadButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        showDownloadRegionDialog();
-                                    }
-                                });
-
-
-                                listButton = getActivity().findViewById(R.id.list_button);
-                                listButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        downloadedRegionList();
-                                    }
-                                });
-                            }
-                        }
-                    });
+            listButton = view.findViewById(R.id.list_button);
+            listButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    downloadedRegionList();
                 }
             });
         }
 
         return view;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: loadOnMapReadyCallback
+     * Comentario: El método carga la función onMapReady mediante un callback. Dentro de onMapReady
+     * declaramos un nuevo estilo que ajustará la camara y agregará los marcadores sobre el mapa actual.
+     * Cabecera: private void loadOnMapReadyCallback()
+     * Postcondiciones: El método carga la función onMapReady, dentro se genera un estilo personalizado para
+     * el mapa.
+     */
+    private void loadOnMapReadyCallback(){
+        mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
+            @Override
+            public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
+                map = mapboxMap;
+                //Limpiamos los posibles símbolos insertados en el mapa
+                if(symbolManager != null){//Si el administrador ya fue instanciado
+                    symbolManager.delete(viewModel.get_markersInserted());//Elimminamos todos los símbolos que inserto anteriormente
+                }
+                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
+                                .target(new LatLng(viewModel.get_actualLocation().getLatitude(),
+                                        viewModel.get_actualLocation().getLongitude()))
+                                .zoom(10)
+                                .tilt(20)
+                                .build();
+                        map.setCameraPosition(position);
+                        //Declaramos el evento de clicado del mapa
+                        map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                            @Override
+                            public boolean onMapClick(@NonNull LatLng point) {
+                                Toast.makeText(getActivity(), "Click al mapa", Toast.LENGTH_SHORT).show();
+                                mostrarAccionesSobreElMapa();
+                                return false;//False para que podemos clicar en los marcadores
+                            }
+                        });
+                        map.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
+                            @Override
+                            public boolean onMapLongClick(@NonNull LatLng point) {
+                                viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
+                                insertLocalizationDialog();//Comenzamos un dialogo de inserción
+                                return true;//Soluciona el error de ejecución múltiple
+                            }
+                        });
+
+                        //Creamos un objeto symbol manager
+                        symbolManager = new SymbolManager(mapView, mapboxMap, style);
+
+                        //Declaramos los eventos de los marcadores
+                        symbolManager.addClickListener(new OnSymbolClickListener() {
+                            @Override
+                            public void onAnnotationClick(Symbol symbol) {
+                                Toast.makeText(getActivity(), "Click corto", Toast.LENGTH_SHORT).show();
+                                viewModel.set_localizationPointClickedMapbox(symbol.getLatLng());
+                                mostrarAccionesSobreUnMarcador();
+                            }
+                        });
+
+                        //Declaramos un par de propiedades
+                        symbolManager.setIconAllowOverlap(true);//Permitimos la superposición del símbolo
+                        symbolManager.setIconIgnorePlacement(true);//Ajustamos su colocación en el mapa
+
+                        //Ajustamos la imagen del icono
+                        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                        //Añadimos la imagen al estilo
+                        style.addImage("my_image", smallMarker);
+
+                        //Limpiamos la lista de marcadores insertados del VM
+                        viewModel.get_markersInserted().clear();
+                        //Añadimos los puntos de localización almacenados en el VM
+                        for(int i = 0; i < viewModel.get_localizationPointsMapbox().size(); i++){
+                            Symbol symbol = symbolManager.create(new SymbolOptions()
+                                    .withLatLng(new LatLng(viewModel.get_localizationPointsMapbox().get(i).getLatitude(),
+                                            viewModel.get_localizationPointsMapbox().get(i).getLongitude()))
+                                    .withIconImage("my_image")
+                                    .withIconSize(1.0f));
+                            viewModel.get_markersInserted().add(symbol);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -531,6 +629,8 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        storeFavoutireLocalizationsId();//Comenzamos a obtener los datos de la plataforma FireBase
+
         mapView.onStart();
     }
 
@@ -538,7 +638,7 @@ public class FragmentMaps extends Fragment {
     public void onPause() {
         super.onPause();
         HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
-        clearAmbientCache();
+        clearAmbientCache();//Limpiamos la caché del mapa
         mapView.onPause();
     }
 
@@ -551,6 +651,7 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        listener = null;
         mapView.onStop();
     }
 
@@ -576,5 +677,202 @@ public class FragmentMaps extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mapView.onDestroy(); //after super call
+    }
+
+    //Métodos de obtención de información
+    /**
+     * Interfaz
+     * Nombre: storeFavoutireLocalizationsId
+     * Comentario: El método almacena todas las id's de las localizaciones favoritas del usuario
+     * actual en el VM. Por último llama al método "storeOwnerAndFavouriteLocalizations".
+     * Cabecera: private void storeFavoutireLocalizationsId()
+     * Postcondiciones: El método almacena en el VM todas las id's de localizaciones favoritas del
+     * usuario actual.
+     */
+    private void storeFavoutireLocalizationsId(){
+        listener = userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
+                viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
+                for(DataSnapshot datas: dataSnapshot.getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
+                        String localizationId = booksSnapshot.getValue(String.class);
+                        viewModel.get_localizationsIdActualUser().add(localizationId);
+                    }
+                }
+                storeOwnerAndFavouriteLocalizations();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeOwnerAndFavouriteLocalizations
+     * Comentario: El método almacena las localizaciones propias y/o favoritas del usuario actual en el VM.
+     * Este método es llamado por la función "storeFavoutireLocalizationsId". Por último llama a la función
+     * "loadLocalizationPoints" para cargar las localizaciones en el mapa actual.
+     * Cabecera: private void storeOwnerAndFavouriteLocalizations()
+     * Postcondiciones: El método almacena las localizaciones propias y/o favoritas del usuario actual en el VM.
+     */
+    private void storeOwnerAndFavouriteLocalizations(){
+        localizationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(getContext() != null){//Si se encuentra en el contexto actual
+                    viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
+                    for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                        ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
+
+                        if(localizationPoint != null && ((viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())//Si la localización es del usuario actual o la tiene marcada como favorita
+                                || (localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))))){
+                            viewModel.get_localizationPointsMapbox().add(localizationPoint);
+                        }
+                    }
+
+                    loadOnMapReadyCallback();//Cargamos los elementos instanciados en onMapReady
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    //Funciones sobre la lista de botones inferior
+
+    /**
+     * Interfaz
+     * Nombre: mostrarAccionesSobreElMapa
+     * Comentario: El método muestra el LinearLayout inferior, dejando ver los botones que interactuan
+     * con el mapa, ocultando el FrameLayout inferior.
+     * Cabecera: private void mostrarAccionesSobreElMapa()
+     * Postcondiciones: El método muestra el LinearLayout inferior, ocultando el FrameLayout inferior.
+     */
+    private void mostrarAccionesSobreElMapa(){
+        linearLayoutInferior.setVisibility(View.VISIBLE);
+        frameLayoutInferior.setVisibility(View.GONE);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: mostrarAccionesSobreUnMarcador
+     * Comentario: El método muestra el FrameLayout inferior, dejando ver los botones que interactuan
+     * con un marcador, ocultando el LinearLayout inferior.
+     * Cabecera: private void mostrarAccionesSobreUnMarcador()
+     * Postcondiciones: El método muestra el FrameLayout inferior, ocultando el LinearLayout inferior.
+     */
+    private void mostrarAccionesSobreUnMarcador(){
+        linearLayoutInferior.setVisibility(View.GONE);
+        frameLayoutInferior.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: insertInferiorFragment
+     * Comentario: Este método inserta el fragmento FragmentOfflineLocalizationPointClick en el
+     * FrameLayout inferior del fragmento actual.
+     * Cabecera: private void insertInferiorFragment()
+     * Postcondiciones: El método carga el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout
+     * "FrameLayoutLocalizationClicked".
+     */
+    private void insertInferiorFragment(){
+        FragmentOfflineLocalizationPointClick fragment = new FragmentOfflineLocalizationPointClick();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.FrameLayoutLocalizationClicked, fragment);
+        transaction.commit();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: insertLocalizationDialog
+     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en el mapa.
+     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
+     * Cabecera: private void insertLocalizationDialog()
+     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
+     * creación del nuevo punto de localización.
+     */
+    private void insertLocalizationDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                throwCreateLocalizationPointActivity();//Lanzamos la actividad de creación
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwCreateLocalizationPointActivity
+     * Comentario: Este método lanza la actividad CreateLocalizationPointActivity, para crear una localización
+     * en el mapa actual. Se le pasarán los datos necesarios para poder crear la nueva localización en el
+     * lugar seleccionado
+     * Cabecera: private void throwCreateLocalizationPointActivity()
+     * Postcondiciones: El método lanza la actividad CreateLocalizationPointActivity.
+     */
+    private void throwCreateLocalizationPointActivity(){
+        Intent intent = new Intent(getActivity(), CreateLocalizationPointActivity.class);
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLatitude", viewModel.get_longClickPositionMapbox().getLatitude());
+        intent.putExtra("ActualLongitude", viewModel.get_longClickPositionMapbox().getLongitude());
+        startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: saveLocalizationPoint
+     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
+     * "_localizationToSave" del VM en la plataforma FireBase.
+     * Cabecera: private void saveLocalizationPoint()
+     * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
+     */
+    private void saveLocalizationPoint(){
+        //Almacenamos el punto de localización en la plataforma
+        FirebaseDatabase.getInstance().getReference("Localizations").
+                child(viewModel.get_localizationToSave().getLocalizationPointId())
+                .setValue(viewModel.get_localizationToSave());
+
+        //Almacenamos los tipos del punto de localización
+        String typeId;
+        for(int i = 0; i < viewModel.get_localizationTypesToSave().size(); i++){
+            typeId = localizationReference.push().getKey();
+            FirebaseDatabase.getInstance().getReference("Localizations").
+                    child(viewModel.get_localizationToSave().getLocalizationPointId()).child("types")
+                    .child(typeId).setValue(viewModel.get_localizationTypesToSave().get(i));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT) {
+            if (resultCode == Activity.RESULT_OK) {//Si se confirmó el guardado del nuevo punto de localización
+                viewModel.set_localizationToSave((ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
+                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
+
+                saveLocalizationPoint();//Almacenamos el punto de localización en FireBase
+                Toast.makeText(getActivity(), R.string.localization_point_created, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
