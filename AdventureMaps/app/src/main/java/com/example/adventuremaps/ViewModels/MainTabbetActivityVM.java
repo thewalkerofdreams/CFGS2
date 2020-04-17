@@ -450,7 +450,92 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return regionName;
     }
 
-    //Funciones Fragment Start
+    //Fragment Localizations
+
+    /**
+     * Interfaz
+     * Nombre: shareLocalizationPoint
+     * Comentario: Este método nos permite compartir un punto de localización con la plataforma.
+     * Cabecera: public void shareLocalizationPoint()
+     * Precondiciones:
+     *  -El atributo _selectedLocalizations del VM debe contener una sola localización (Por razones de seguridad solo le dejamos compartir de una en una)
+     * Postcondiciones: El método hace visible para todos los usuarios un punto de localización
+     * seleccionado, la localización seleccionada se almacena en el atributo _selectedLocalizations
+     * del VM.
+     */
+    public void shareLocalizationPoint(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
+        Map<String, Object> hopperUpdates = new HashMap<>();
+        hopperUpdates.put("shared", true);
+        databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
+    }
+
+    //Métodos para la creación de un punto de localización
+    /**
+     * Interfaz
+     * Nombre: insertLocalizationDialog
+     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en un mapa.
+     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
+     * Se debe indicar desde que mapa se desea realiazar la creación del punto de localización:
+     *  1 --> Desde el mapa de inicio
+     *  2 --> Desde el mapa offline
+     * Cabecera: public void insertLocalizationDialog(final Context context, final int callSection)
+     * Entrada:
+     *  -final Context context
+     *  -final int callSection
+     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
+     * creación del nuevo punto de localización.
+     */
+    public void insertLocalizationDialog(final Context context, final int callSection){
+        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                ((MainTabbetActivity)context).throwCreateLocalizationPointActivity(callSection);//Lanzamos la actividad de creación
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        androidx.appcompat.app.AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: saveLocalizationPoint
+     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
+     * "_localizationToSave" del VM en la plataforma FireBase.
+     * Cabecera: public void saveLocalizationPoint()
+     * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
+     */
+    public void saveLocalizationPoint(){
+        DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+
+        //Almacenamos el punto de localización en la plataforma
+        FirebaseDatabase.getInstance().getReference("Localizations").
+                child(get_localizationToSave().getLocalizationPointId())
+                .setValue(get_localizationToSave());
+
+        //Almacenamos los tipos del punto de localización
+        String typeId;
+        for(int i = 0; i < get_localizationTypesToSave().size(); i++){
+            typeId = localizationReference.push().getKey();
+            FirebaseDatabase.getInstance().getReference("Localizations").
+                    child(get_localizationToSave().getLocalizationPointId()).child("types")
+                    .child(typeId).setValue(get_localizationTypesToSave().get(i));
+        }
+    }
+
+    //Métodos para la eliminación de un punto de localización
 
     /**
      * Interfaz
@@ -539,88 +624,4 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         alertDialogDeleteRoute.show();
     }
 
-    //Fragment Localizations
-
-    /**
-     * Interfaz
-     * Nombre: shareLocalizationPoint
-     * Comentario: Este método nos permite compartir un punto de localización con la plataforma.
-     * Cabecera: public void shareLocalizationPoint()
-     * Precondiciones:
-     *  -El atributo _selectedLocalizations del VM debe contener una sola localización (Por razones de seguridad solo le dejamos compartir de una en una)
-     * Postcondiciones: El método hace visible para todos los usuarios un punto de localización
-     * seleccionado, la localización seleccionada se almacena en el atributo _selectedLocalizations
-     * del VM.
-     */
-    public void shareLocalizationPoint(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
-        Map<String, Object> hopperUpdates = new HashMap<>();
-        hopperUpdates.put("shared", true);
-        databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
-    }
-
-    //Métodos para la creación de un punto de localización
-    /**
-     * Interfaz
-     * Nombre: insertLocalizationDialog
-     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en un mapa.
-     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
-     * Se debe indicar desde que mapa se desea realiazar la creación del punto de localización:
-     *  1 --> Desde el mapa de inicio
-     *  2 --> Desde el mapa offline
-     * Cabecera: public void insertLocalizationDialog(final Context context, final int callSection)
-     * Entrada:
-     *  -final Context context
-     *  -final int callSection
-     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
-     * creación del nuevo punto de localización.
-     */
-    public void insertLocalizationDialog(final Context context, final int callSection){
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
-        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                ((MainTabbetActivity)context).throwCreateLocalizationPointActivity(callSection);//Lanzamos la actividad de creación
-            }
-        });
-
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        androidx.appcompat.app.AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
-        alertDialogDeleteRoute.show();
-    }
-
-    /**
-     * Interfaz
-     * Nombre: saveLocalizationPoint
-     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
-     * "_localizationToSave" del VM en la plataforma FireBase.
-     * Cabecera: public void saveLocalizationPoint()
-     * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
-     */
-    public void saveLocalizationPoint(){
-        DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
-
-        //Almacenamos el punto de localización en la plataforma
-        FirebaseDatabase.getInstance().getReference("Localizations").
-                child(get_localizationToSave().getLocalizationPointId())
-                .setValue(get_localizationToSave());
-
-        //Almacenamos los tipos del punto de localización
-        String typeId;
-        for(int i = 0; i < get_localizationTypesToSave().size(); i++){
-            typeId = localizationReference.push().getKey();
-            FirebaseDatabase.getInstance().getReference("Localizations").
-                    child(get_localizationToSave().getLocalizationPointId()).child("types")
-                    .child(typeId).setValue(get_localizationTypesToSave().get(i));
-        }
-    }
 }

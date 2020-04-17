@@ -80,6 +80,7 @@ public class FragmentMaps extends Fragment {
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
     private SymbolManager symbolManager;
+
     private ValueEventListener listener = null;
 
     private OnFragmentInteractionListener mListener;
