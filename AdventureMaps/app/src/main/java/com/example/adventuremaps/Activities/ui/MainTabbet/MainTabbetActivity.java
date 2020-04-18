@@ -240,15 +240,21 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
         switch (requestCode){
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos de localización
-                    PlaceholderFragment.newInstance(1);//Recargamos el fragment inicial
+                    viewModel.reloadActualLocalization();//Recargamos la localización del usuario
+                    //PlaceholderFragment.newInstance(1);//Recargamos el fragment inicial
+                    reloadInitialFragment();//Recargamos el fragment inicial
                 }
                 break;
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos para la descarga de mapas offline
-                    PlaceholderFragment.newInstance(4);//Recargamos el fragment del mapa offline
+                    viewModel.reloadActualLocalization();//Recargamos la localización del usuario
+                    //PlaceholderFragment.newInstance(4);//Recargamos el fragment del mapa offline
+                    viewPager.setCurrentItem(0);//Nos movemos a la primera sección
+                    Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos //TODO Aún no he conseguido que se actualice del tirón en la sección offline
                 }
                 break;
         }
@@ -424,7 +430,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Postcondiciones: El método recarga el fragmento offline de la aplicación.
      */
     public void reloadOfflineFragment(){
-        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento offline
         viewPager.setCurrentItem(3);
     }
 
@@ -474,5 +480,16 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 Toast.makeText(this, R.string.localization_point_created, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    //Back Button
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(this.findViewById(R.id.FrameLayout02) != null){//Si la actividad de inicio se encuentra abierta
+            this.findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el FrameLayout inferior
+        }
+        finish();//Cerramos la actividad
     }
 }

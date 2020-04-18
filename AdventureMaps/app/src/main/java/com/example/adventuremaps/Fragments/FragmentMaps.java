@@ -172,9 +172,14 @@ public class FragmentMaps extends Fragment {
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
+                        LatLng latLng = null;
+                        if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
+                            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+                        }else{//Lo mandamos a R'lyeh
+                            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);         }
+
                         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
-                                .target(new LatLng(viewModel.get_actualLocation().getLatitude(),
-                                        viewModel.get_actualLocation().getLongitude()))
+                                .target(latLng)
                                 .zoom(10)
                                 .tilt(20)
                                 .build();
@@ -375,6 +380,7 @@ public class FragmentMaps extends Fragment {
 
             @Override
             public void mapboxTileCountLimitExceeded(long limit) {//Si se supera el límite de descarga
+                endProgress();//Habilitamos los botones inferiores y deshabilitamos el progressbar
                 Toast.makeText(getActivity(), getString(R.string.exceeded_download_limit), Toast.LENGTH_SHORT).show();
             }
         });
@@ -629,7 +635,8 @@ public class FragmentMaps extends Fragment {
         super.onStart();
         storeFavoutireLocalizationsId();//Comenzamos a obtener los datos de la plataforma FireBase
 
-        mapView.onStart();
+        if(mapView != null)
+            mapView.onStart();
     }
 
     @Override
@@ -637,26 +644,32 @@ public class FragmentMaps extends Fragment {
         super.onPause();
         HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
         clearAmbientCache();//Limpiamos la caché del mapa
-        mapView.onPause();
+
+        if(mapView != null)
+            mapView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
+
+        if(mapView != null)
+            mapView.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         listener = null;
-        mapView.onStop();
+        if(mapView != null)
+            mapView.onStop();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        if(mapView != null)
+            mapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -668,13 +681,15 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if(mapView != null)
+            mapView.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mapView.onDestroy(); //after super call
+        if(mapView != null)
+            mapView.onDestroy(); //after super call
     }
 
     //Métodos de obtención de información
@@ -732,7 +747,8 @@ public class FragmentMaps extends Fragment {
                         }
                     }
 
-                    loadOnMapReadyCallback();//Cargamos los elementos instanciados en onMapReady
+                    if(mapView != null)
+                        loadOnMapReadyCallback();//Cargamos los elementos instanciados en onMapReady
                 }
             }
 

@@ -15,4 +15,9 @@ public class ApplicationConstants {
     //Icons Size
     public final static int MARKER_WITH_SIZE = 120;
     public final static int MARKER_HEIGHT_SIZE = 120;
+
+    //Default Coordenates
+    public final static double RLYEH_LATITUDE = -47.15;//Easter egg
+    public final static double RLYEH_LONGITUDE = -126.71666666666667;
+
 }

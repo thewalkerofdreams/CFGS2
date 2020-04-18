@@ -427,6 +427,19 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     /**
      * Interfaz
+     * Nombre: reloadActualLocalization
+     * Comentario: El método recarga la localización del usuario actual en el atributo
+     * "_actualLocation" del VM.
+     * Cabecera: public void reloadActualLocalization()
+     * Postcondiciones: El método modifica el valor del atributo _actualLocation con la posición
+     * del usuario actual.
+     */
+    public void reloadActualLocalization(){
+        _actualLocation = getLastKnownLocation();
+    }
+
+    /**
+     * Interfaz
      * Nombre: getRegionName
      * Comentario: Con este método obtenemos el nombre de la región de un metadato offlineRegion.
      * Cabecera: public String getRegionName(OfflineRegion offlineRegion)
