@@ -42,7 +42,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         textNewPassword02 = findViewById(R.id.EditTextNewPasswor02dActivityChangePassword);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
-            ImageView icono = findViewById(R.id.IconImageChangePasswordActivity);
+            LinearLayout icono = findViewById(R.id.IconImageChangePasswordActivity);
             icono.setVisibility(View.GONE);//Ocultamos la imagen del icono
         }
     }

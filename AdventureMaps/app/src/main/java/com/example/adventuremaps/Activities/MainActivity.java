@@ -6,9 +6,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.adventuremaps.Activities.AutoRestartApp.MyExceptionHandler;
@@ -53,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
         if(user != null){//Si ya existe una sesión iniciada
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
             finish();
+        }
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
+            //Ajustamos el LinearLayout que contiene la imagen
+            LinearLayout linearLayout = findViewById(R.id.LinearLayoutLoginActivity);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, (float) 1.0);
+            param.weight = 20;
+            param.gravity = Gravity.CENTER;
+            linearLayout.setLayoutParams(param);
+            //Ajustamos la imagen
+            ImageView imageView = findViewById(R.id.ImageViewLoginActivity);
+            param = new LinearLayout.LayoutParams(150, 150, (float) 1.0);
+            imageView.setLayoutParams(param);
         }
     }
 

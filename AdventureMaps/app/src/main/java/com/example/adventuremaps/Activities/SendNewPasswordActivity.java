@@ -1,8 +1,12 @@
 package com.example.adventuremaps.Activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +35,14 @@ public class SendNewPasswordActivity extends AppCompatActivity {
 
         //Incializamos las views
         textEmail = findViewById(R.id.EditTextEmailActivitySendNewPassword);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
+            LinearLayout linearLayout = findViewById(R.id.ImageViewSendNewPasswordActivity);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, (float) 1.0);
+            param.weight = 50;//Aumentamos el tamaño que ocupa en la actividad
+            param.gravity = Gravity.CENTER;//Lo centramos
+            linearLayout.setLayoutParams(param);
+        }
     }
 
     /**

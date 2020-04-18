@@ -49,13 +49,13 @@ public class CreateCountActivity extends AppCompatActivity {
         progressDialog.setMessage("Performing online registration");//Le damos un mensaje
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
-            ImageView imageView = findViewById(R.id.ImageViewCreateCountActivity);
+            LinearLayout linearLayout = findViewById(R.id.ImageViewCreateCountActivity);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     0,
                     0,
                     (float) 1.0
             );
-            imageView.setLayoutParams(param);
+            linearLayout.setLayoutParams(param);
         }
     }
 
