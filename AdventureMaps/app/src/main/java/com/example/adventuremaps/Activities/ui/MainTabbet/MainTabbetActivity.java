@@ -1,5 +1,6 @@
 package com.example.adventuremaps.Activities.ui.MainTabbet;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
@@ -128,14 +130,23 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     /**
      * Interfaz
      * Nombre: throwCreateRouteActivity
-     * Comentario: Este método lanza la actividad CreateRouteActivity
+     * Comentario: Este método lanza la actividad CreateRouteActivity si el usuario aceptó todos
+     * los permisos de localización. El método muestra un mensaje por pantalla si el usuario no los
+     * aceptó.
      * Cabecera: public void throwCreateRouteActivity(View v)
      * Entrada:
      *  -View v
-     * Postcondiciones: El método lanza la actividad CreateRouteActivity.
+     * Postcondiciones: El método lanza la actividad CreateRouteActivity si el usuario aceptó los permisos
+     * de localización, en caso contrario el método solo muestra un mensaje de error por pantalla.
      */
     public void throwCreateRouteActivity(View v){
-        startActivity(new Intent(this, CreateRouteActivity.class).putExtra("ActualEmail", viewModel.get_actualEmailUser()));
+        //Si el usuario aceptó los permisos
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            startActivity(new Intent(this, CreateRouteActivity.class).putExtra("ActualEmail", viewModel.get_actualEmailUser()));
+        }else{
+            Toast.makeText(this, R.string.create_route_permission_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -375,38 +386,47 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     /**
      * Interfaz
      * Nombre: navigateToLocalization
-     * Comentario: Este método nos permite navegar a una localización específica.
+     * Comentario: Este método nos permite navegar a una localización específica en el mapa de inicio.
+     * Si el usuario no aceptó los permisos de localización, el método solo muestra un mensaje por pantalla
+     * explicando el error.
      * Cabecera: public void navigateToLocalization(View v)
      * Entrada:
      *  -View v
-     * Postcondiciones: El método nos mueve a la sección del mapa principal, posicionando este
-     * sobre el punto de localización.
+     * Postcondiciones: Si el usuario aceptó los permisos de localización, el método nos mueve a la sección
+     * del mapa principal, posicionando este sobre el punto de localización. En caso contrario el método
+     * muestra un mensaje de error por pantalla.
      */
     public void navigateToLocalization(View v){
-        //get the row the clicked button is in
-        LinearLayout vwParentRow = (LinearLayout)v.getParent();
-        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
-        String id = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+        //Si la aplicación tiene los permisos necesarios
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            //get the row the clicked button is in
+            LinearLayout vwParentRow = (LinearLayout)v.getParent();
+            ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+            String id = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-        DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference("Localizations");
+            DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference("Localizations");
 
-        localizationference.orderByChild("localizationPointId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                double latitude = 0, longitude = 0;
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    latitude = data.child("latitude").getValue(Double.class);
-                    longitude = data.child("longitude").getValue(Double.class);
+            localizationference.orderByChild("localizationPointId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    double latitude = 0, longitude = 0;
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        latitude = data.child("latitude").getValue(Double.class);
+                        longitude = data.child("longitude").getValue(Double.class);
+                    }
+                    viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));//Almacenamos lo posición del punto de localización en el VM
+                    reloadInitialFragment();//Recargamos el fragmento inicial
+                    viewPager.setCurrentItem(0);//Lanzamos el fragmento principal
                 }
-                viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));//Almacenamos lo posición del punto de localización en el VM
-                reloadInitialFragment();//Recargamos el fragmento inicial
-                viewPager.setCurrentItem(0);//Lanzamos el fragmento principal
-            }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            });
+        }else{
+            Toast.makeText(this, R.string.navigate_localization_permission_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //Métodos de recarga de la interfaz

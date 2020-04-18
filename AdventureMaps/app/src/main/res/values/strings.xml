@@ -189,4 +189,7 @@
     <string name="save_changes">Save changes</string>
 
     <string name="permission_acepted">Permissions acepted!</string>
+    <string name="create_localization_permission_error">You must accept the location permissions to create a location point!</string>
+    <string name="create_route_permission_error">You must accept the location permissions to create a route!</string>
+    <string name="navigate_localization_permission_error">You must accept the location permissions to navigate to a location point!</string>
 </resources>

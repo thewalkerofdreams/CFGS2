@@ -1,5 +1,7 @@
 package com.example.adventuremaps.Fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
@@ -119,8 +122,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        viewModel.set_longClickPosition(latLng);//Almacenamos la posición seleccionada en el mapa en el VM
-        viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
+        //Si la aplicación tiene los permisos necesarios, mostramos un dialogo de inserción
+        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            viewModel.set_longClickPosition(latLng);//Almacenamos la posición seleccionada en el mapa en el VM
+            viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
+        }else{
+            Toast.makeText(getActivity(), R.string.create_localization_permission_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
