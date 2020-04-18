@@ -1,9 +1,5 @@
 package com.example.adventuremaps.Fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -16,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
@@ -125,7 +120,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onMapLongClick(LatLng latLng) {
         viewModel.set_longClickPosition(latLng);//Almacenamos la posición seleccionada en el mapa en el VM
-        insertLocalizationDialog();//Comenzamos un dialogo de inserción
+        viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
     }
 
     /**
@@ -220,50 +215,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
     }
 
-    /*
-     * Interfaz
-     * Nombre: insertarMarcador
-     * Comentario: Este método nos permite insertar un marcador en el mapa.
-     * Además guarda ese marcador en el VM MainTabbetActicityVM.
-     * Cabecera: private void insertarMarcador(LatLng latLng)
-     * Entrada:
-     *   -LatLng latLng
-     * Postcondiciones: El método inserta un marcador en el mapa. Además se guarda
-     * ese marcador en el VM MainTabbetActicityVM.
-     * */
-    /*private void insertarMarcador(LatLng latLng){
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);//Indicamos la posición del marcador
-        markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
-        Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-        setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
-        viewModel.set_markerToCreate(marker);//Almacenamos el marcador creado en el VM
-    }*/
-
-    /**
-     * Interfaz
-     * Nombre: saveLocalizationPoint
-     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
-     * "_localizationToSave" del VM en la plataforma FireBase.
-     * Cabecera: private void saveLocalizationPoint()
-     * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
-     */
-    private void saveLocalizationPoint(){
-        //Almacenamos el punto de localización en la plataforma
-        FirebaseDatabase.getInstance().getReference("Localizations").
-                child(viewModel.get_localizationToSave().getLocalizationPointId())
-                .setValue(viewModel.get_localizationToSave());
-
-        //Almacenamos los tipos del punto de localización
-        String typeId;
-        for(int i = 0; i < viewModel.get_localizationTypesToSave().size(); i++){
-            typeId = localizationReference.push().getKey();
-            FirebaseDatabase.getInstance().getReference("Localizations").
-                    child(viewModel.get_localizationToSave().getLocalizationPointId()).child("types")
-                    .child(typeId).setValue(viewModel.get_localizationTypesToSave().get(i));
-        }
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -345,70 +296,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private void cleanAllLocalizations(){
         for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size(); i++){
             viewModel.get_localizationPointsWithMarker().get(i).getMarker().remove();
-        }
-    }
-
-    /**
-     * Interfaz
-     * Nombre: insertLocalizationDialog
-     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en el mapa.
-     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
-     * Cabecera: private void insertLocalizationDialog()
-     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
-     * creación del nuevo punto de localización.
-     */
-    private void insertLocalizationDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
-        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
-        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
-
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                throwCreateLocalizationPointActivity();//Lanzamos la actividad de creación
-            }
-        });
-
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
-        alertDialogDeleteRoute.show();
-    }
-
-    /**
-     * Interfaz
-     * Nombre: throwCreateLocalizationPointActivity
-     * Comentario: Este método lanza la actividad CreateLocalizationPointActivity, para crear una localización
-     * en el mapa de inicio. Se le pasarán los datos necesarios para poder crear la nueva localización en el
-     * lugar seleccionado
-     * Cabecera: private void throwCreateLocalizationPointActivity()
-     * Postcondiciones: El método lanza la actividad CreateLocalizationPointActivity.
-     */
-    private void throwCreateLocalizationPointActivity(){
-        Intent intent = new Intent(getActivity(), CreateLocalizationPointActivity.class);
-        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualLatitude", viewModel.get_longClickPosition().latitude);
-        intent.putExtra("ActualLongitude", viewModel.get_longClickPosition().longitude);
-        startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT) {
-            if (resultCode == Activity.RESULT_OK) {//Si se confirmó el guardado del nuevo punto de localización
-                viewModel.set_localizationToSave((ClsLocalizationPoint)data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
-                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
-
-                saveLocalizationPoint();//Almacenamos el punto de localización en FireBase
-                Toast.makeText(getActivity(), R.string.localization_point_created, Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

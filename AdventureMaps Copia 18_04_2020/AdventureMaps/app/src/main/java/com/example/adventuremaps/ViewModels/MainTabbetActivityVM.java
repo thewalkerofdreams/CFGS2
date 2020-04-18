@@ -21,7 +21,6 @@ import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
-import com.example.adventuremaps.Models.ClsMarkerWithLocalizationMapbox;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -31,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 
 import org.json.JSONObject;
 
@@ -53,8 +53,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Context _context;
     private int _regionSelected;
     private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
-    private ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
-    private com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
+    private com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
+    private ArrayList<Symbol> _markersInserted;
+    private com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox;//Para crear un nuevo punto de localización
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -96,8 +97,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
         _localizationPointsMapbox = new ArrayList<>();
-        _localizationPointsWithMarkerMapbox = new ArrayList<>();
         _localizationPointClickedMapbox = null;
+        _markersInserted = new ArrayList<>();
+        _longClickPositionMapbox = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -175,20 +177,28 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointsMapbox = _localizationPointsMapbox;
     }
 
-    public ArrayList<ClsMarkerWithLocalizationMapbox> get_localizationPointsWithMarkerMapbox() {
-        return _localizationPointsWithMarkerMapbox;
-    }
-
-    public void set_localizationPointsWithMarkerMapbox(ArrayList<ClsMarkerWithLocalizationMapbox> _localizationPointsWithMarkerMapbox) {
-        this._localizationPointsWithMarkerMapbox = _localizationPointsWithMarkerMapbox;
-    }
-
-    public com.mapbox.mapboxsdk.annotations.Marker get_localizationPointClickedMapbox() {
+    public com.mapbox.mapboxsdk.geometry.LatLng get_localizationPointClickedMapbox() {
         return _localizationPointClickedMapbox;
     }
 
-    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.annotations.Marker _localizationPointClickedMapbox) {
+    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox) {
         this._localizationPointClickedMapbox = _localizationPointClickedMapbox;
+    }
+
+    public ArrayList<Symbol> get_markersInserted() {
+        return _markersInserted;
+    }
+
+    public void set_markersInserted(ArrayList<Symbol> _markersInserted) {
+        this._markersInserted = _markersInserted;
+    }
+
+    public com.mapbox.mapboxsdk.geometry.LatLng get_longClickPositionMapbox() {
+        return _longClickPositionMapbox;
+    }
+
+    public void set_longClickPositionMapbox(com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox) {
+        this._longClickPositionMapbox = _longClickPositionMapbox;
     }
 
     //Gets y Sets Fragment Localizations
@@ -440,21 +450,114 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         return regionName;
     }
 
-    //Funciones Fragment Start
+    //Fragment Localizations
+
+    /**
+     * Interfaz
+     * Nombre: shareLocalizationPoint
+     * Comentario: Este método nos permite compartir un punto de localización con la plataforma.
+     * Cabecera: public void shareLocalizationPoint()
+     * Precondiciones:
+     *  -El atributo _selectedLocalizations del VM debe contener una sola localización (Por razones de seguridad solo le dejamos compartir de una en una)
+     * Postcondiciones: El método hace visible para todos los usuarios un punto de localización
+     * seleccionado, la localización seleccionada se almacena en el atributo _selectedLocalizations
+     * del VM.
+     */
+    public void shareLocalizationPoint(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
+        Map<String, Object> hopperUpdates = new HashMap<>();
+        hopperUpdates.put("shared", true);
+        databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
+    }
+
+    //Métodos para la creación de un punto de localización
+    /**
+     * Interfaz
+     * Nombre: insertLocalizationDialog
+     * Comentario: Este método muestra un dialogo por pantalla para insertar un punto de localización en un mapa.
+     * Si el usuario confirma la creación, se cargará un formulario para la creación del nuevo punto de localización.
+     * Se debe indicar desde que mapa se desea realiazar la creación del punto de localización:
+     *  1 --> Desde el mapa de inicio
+     *  2 --> Desde el mapa offline
+     * Cabecera: public void insertLocalizationDialog(final Context context, final int callSection)
+     * Entrada:
+     *  -final Context context
+     *  -final int callSection
+     * Postcondiciones: Si el usuario confirma el dialogo, se cargará una nueva actividad formulario para la
+     * creación del nuevo punto de localización.
+     */
+    public void insertLocalizationDialog(final Context context, final int callSection){
+        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(R.string.confirm_insert);// Setting Alert Dialog Title
+        alertDialogBuilder.setMessage(R.string.question_create_localization_point);// Setting Alert Dialog Message
+        alertDialogBuilder.setCancelable(false);//Para que no podamos quitar el dialogo sin contestarlo
+
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                ((MainTabbetActivity)context).throwCreateLocalizationPointActivity(callSection);//Lanzamos la actividad de creación
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        androidx.appcompat.app.AlertDialog alertDialogDeleteRoute = alertDialogBuilder.create();
+        alertDialogDeleteRoute.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: saveLocalizationPoint
+     * Comentario: Este método nos permite guardar el punto de localización almacenado en el atributo
+     * "_localizationToSave" del VM en la plataforma FireBase.
+     * Cabecera: public void saveLocalizationPoint()
+     * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
+     */
+    public void saveLocalizationPoint(){
+        DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+
+        //Almacenamos el punto de localización en la plataforma
+        FirebaseDatabase.getInstance().getReference("Localizations").
+                child(get_localizationToSave().getLocalizationPointId())
+                .setValue(get_localizationToSave());
+
+        //Almacenamos los tipos del punto de localización
+        String typeId;
+        for(int i = 0; i < get_localizationTypesToSave().size(); i++){
+            typeId = localizationReference.push().getKey();
+            FirebaseDatabase.getInstance().getReference("Localizations").
+                    child(get_localizationToSave().getLocalizationPointId()).child("types")
+                    .child(typeId).setValue(get_localizationTypesToSave().get(i));
+        }
+    }
+
+    //Métodos para la eliminación de un punto de localización
 
     /**
      * Interfaz
      * Nombre: eliminarPuntoDeLocalizacionSeleccionado
-     * Comentario: Este método nos permite eliminar el punto de localización clicado actualmente.
-     * Cabecera: public void eliminarPuntoDeLocalizacionSeleccionado()
+     * Comentario: Este método nos permite eliminar el punto de localización seleccionado.
+     * Se debe especificar en que sección de mapa se desea realizar la eliminación:
+     *  1 --> Mapa de inicio
+     *  2 --> Mapa offline
+     * De esta manera se actualizará una parte de la interfaz trás la eliminación del punto
+     * de localización.
+     * Cabecera: public void eliminarPuntoDeLocalizacionSeleccionado(int callSection)
+     * Entrada:
+     *  -final Context context,
+     *  -final int callSection
      * Postcondiciones: El método elimina el punto de localización seleccionado.
      */
-    public void eliminarPuntoDeLocalizacionSeleccionado(){
+    public void eliminarPuntoDeLocalizacionSeleccionado(final Context context, final int callSection){
         final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
         final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
 
         if(get_selectedLocalizationPoint() != null){
-            drUser.addValueEventListener(new ValueEventListener() {
+            drUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     ClsUser user = null;
@@ -465,6 +568,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                     }
                     //Eliminamos el punto de localización
                     drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
+                    //Actualizamos la interfaz del mapa actual
+                    if(callSection == 1){//Si es en el mapa de inicio
+                        ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                    }else{//Si es en el mapa offline
+                        ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
+                    }
                 }
 
                 @Override
@@ -485,7 +594,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Postcondiciones: Si el usuario es propietario de ese punto de localización, el método muestra un dialogo por pantalla
      * , si el usuario lo confirma eliminará el punto de localización seleccionado, en caso contrario no sucederá nada.
      */
-    public void deleteLocalizationDialog(final Context context){
+    public void deleteLocalizationDialog(final Context context, final int callSection){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_localization_point);// Setting Alert Dialog Message
@@ -496,9 +605,12 @@ public class MainTabbetActivityVM extends AndroidViewModel {
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(context, R.string.localization_point_deleted, Toast.LENGTH_SHORT).show();
                 //Eliminamos el punto de localización
-                eliminarPuntoDeLocalizacionSeleccionado();
-                set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
-                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                eliminarPuntoDeLocalizacionSeleccionado(context, callSection);
+                if(callSection == 1){//Si se desea realizar la eliminación en el mapa de inicio
+                    set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
+                }else{//Si se desea realizar la eliminación en el mapa offline
+                    set_localizationPointClickedMapbox(null);
+                }
             }
         });
 
@@ -512,23 +624,4 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         alertDialogDeleteRoute.show();
     }
 
-    //Fragment Localizations
-
-    /**
-     * Interfaz
-     * Nombre: shareLocalizationPoint
-     * Comentario: Este método nos permite compartir un punto de localización con la plataforma.
-     * Cabecera: public void shareLocalizationPoint()
-     * Precondiciones:
-     *  -El atributo _selectedLocalizations del VM debe contener una sola localización (Por razones de seguridad solo le dejamos compartir de una en una)
-     * Postcondiciones: El método hace visible para todos los usuarios un punto de localización
-     * seleccionado, la localización seleccionada se almacena en el atributo _selectedLocalizations
-     * del VM.
-     */
-    public void shareLocalizationPoint(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
-        Map<String, Object> hopperUpdates = new HashMap<>();
-        hopperUpdates.put("shared", true);
-        databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
-    }
 }

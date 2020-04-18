@@ -78,8 +78,10 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(btnFavourite.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
                     btnFavourite.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
-                    userReference.child(FirebaseAuth.getInstance().
-                            getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
+                    if(FirebaseAuth.getInstance().getCurrentUser() != null){
+                        userReference.child(FirebaseAuth.getInstance().
+                                getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
+                    }
                 }else{
                     btnFavourite.setBackgroundResource(R.drawable.fill_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
                     userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(

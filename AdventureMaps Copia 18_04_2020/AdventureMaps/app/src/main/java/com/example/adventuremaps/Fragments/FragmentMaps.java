@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.ApplicationConstants;
-import com.example.adventuremaps.Models.ClsMarkerWithLocalizationMapbox;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.database.DataSnapshot;
@@ -37,10 +36,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -55,6 +50,10 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 
 import org.json.JSONObject;
 
@@ -80,6 +79,9 @@ public class FragmentMaps extends Fragment {
     //Insert Markers
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private SymbolManager symbolManager;
+
+    private ValueEventListener listener = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -92,12 +94,6 @@ public class FragmentMaps extends Fragment {
                              Bundle savedInstanceState) {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
-
-        //Insertamos el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout inferior
-        FragmentOfflineLocalizationPointClick fragment = new FragmentOfflineLocalizationPointClick();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.FrameLayoutLocalizationClicked, fragment);
-        transaction.commit();
 
         //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
         Mapbox.getInstance(getActivity(), getString(R.string.access_token));
@@ -119,77 +115,126 @@ public class FragmentMaps extends Fragment {
             //Instanciamos los elementos de la UI
             mapView = view.findViewById(R.id.mapView);
             mapView.onCreate(savedInstanceState);
-            mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
+
+            //Insertamos el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout inferior
+            insertInferiorFragment();
+
+            //Instanciamos el progressBar
+            progressBar = view.findViewById(R.id.progress_bar);
+
+            //Instanciamos la variable offlineManager
+            offlineManager = OfflineManager.getInstance(getActivity());
+
+            //Instanciamos el LinearLayout inferior
+            linearLayoutInferior = view.findViewById(R.id.bottom_navigation);
+            //Instanciamos el FrameLayout
+            frameLayoutInferior = view.findViewById(R.id.FrameLayoutLocalizationClicked);
+
+            //Instanciamos los botones de la actividad
+            downloadButton = view.findViewById(R.id.download_button);
+            downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
-                    map = mapboxMap;
-                    mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-                        @Override
-                        public void onStyleLoaded(@NonNull Style style) {
-                            CameraPosition position = new CameraPosition.Builder()
-                                    .target(new LatLng(viewModel.get_actualLocation().getLatitude(),
-                                            viewModel.get_actualLocation().getLongitude()))
-                                    .zoom(10)
-                                    .tilt(20)
-                                    .build();
-                            map.setCameraPosition(position);
+                public void onClick(View view) {
+                    showDownloadRegionDialog();
+                }
+            });
 
-                            if(getActivity() != null){//Si se ha cargado correctamente la actividad actual
-                                //Instanciamos el progressBar
-                                progressBar = getActivity().findViewById(R.id.progress_bar);
-
-                                //Instanciamos la variable offlineManager
-                                offlineManager = OfflineManager.getInstance(getActivity());
-
-                                //Instanciamos los botones de la actividad
-                                downloadButton = getActivity().findViewById(R.id.download_button);
-                                downloadButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        showDownloadRegionDialog();
-                                    }
-                                });
-
-                                listButton = getActivity().findViewById(R.id.list_button);
-                                listButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        downloadedRegionList();
-                                    }
-                                });
-
-                                //Instanciamos el LinearLayout inferior
-                                linearLayoutInferior = view.findViewById(R.id.bottom_navigation);
-                                //Instanciamos el FrameLayout
-                                frameLayoutInferior = view.findViewById(R.id.FrameLayoutLocalizationClicked);
-                            }
-                        }
-                    });
-                    /*map.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(@NonNull Marker marker) {
-                            Toast.makeText(getActivity(), "Click al marcador", Toast.LENGTH_SHORT).show();
-                            linearLayoutInferior.setVisibility(View.GONE);
-                            frameLayoutInferior.setVisibility(View.VISIBLE);
-                            return false;//True nos permite que el evento no sea tapado por otro como addOnMapClickListener
-                        }
-                    });*/
-
-                    /*map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
-                        @Override
-                        public boolean onMapClick(@NonNull LatLng point) {
-                            Toast.makeText(getActivity(), "Click al mapa", Toast.LENGTH_SHORT).show();
-                            linearLayoutInferior.setVisibility(View.VISIBLE);
-                            frameLayoutInferior.setVisibility(View.GONE);
-                            return true;
-                        }
-                    });*/
+            listButton = view.findViewById(R.id.list_button);
+            listButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    downloadedRegionList();
                 }
             });
         }
 
-
         return view;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: loadOnMapReadyCallback
+     * Comentario: El método carga la función onMapReady mediante un callback. Dentro de onMapReady
+     * declaramos un nuevo estilo que ajustará la camara y agregará los marcadores sobre el mapa actual.
+     * Cabecera: private void loadOnMapReadyCallback()
+     * Postcondiciones: El método carga la función onMapReady, dentro se genera un estilo personalizado para
+     * el mapa.
+     */
+    private void loadOnMapReadyCallback(){
+        mapView.getMapAsync(new OnMapReadyCallback() {//Se invocará cuando el mapa este listo para ser usado
+            @Override
+            public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
+                map = mapboxMap;
+                //Limpiamos los posibles símbolos insertados en el mapa
+                if(symbolManager != null){//Si el administrador ya fue instanciado
+                    symbolManager.delete(viewModel.get_markersInserted());//Elimminamos todos los símbolos que inserto anteriormente
+                }
+                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
+                                .target(new LatLng(viewModel.get_actualLocation().getLatitude(),
+                                        viewModel.get_actualLocation().getLongitude()))
+                                .zoom(10)
+                                .tilt(20)
+                                .build();
+                        map.setCameraPosition(position);
+                        //Declaramos el evento de clicado del mapa
+                        map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                            @Override
+                            public boolean onMapClick(@NonNull LatLng point) {
+                                Toast.makeText(getActivity(), "Click al mapa", Toast.LENGTH_SHORT).show();
+                                mostrarAccionesSobreElMapa();
+                                return false;//False para que podemos clicar en los marcadores
+                            }
+                        });
+                        map.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
+                            @Override
+                            public boolean onMapLongClick(@NonNull LatLng point) {
+                                viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
+                                viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
+                                return true;//Soluciona el error de ejecución múltiple
+                            }
+                        });
+
+                        //Creamos un objeto symbol manager
+                        symbolManager = new SymbolManager(mapView, mapboxMap, style);
+
+                        //Declaramos los eventos de los marcadores
+                        symbolManager.addClickListener(new OnSymbolClickListener() {
+                            @Override
+                            public void onAnnotationClick(Symbol symbol) {
+                                Toast.makeText(getActivity(), "Click corto", Toast.LENGTH_SHORT).show();
+                                viewModel.set_localizationPointClickedMapbox(symbol.getLatLng());
+                                mostrarAccionesSobreUnMarcador();
+                            }
+                        });
+
+                        //Declaramos un par de propiedades
+                        symbolManager.setIconAllowOverlap(true);//Permitimos la superposición del símbolo
+                        symbolManager.setIconIgnorePlacement(true);//Ajustamos su colocación en el mapa
+
+                        //Ajustamos la imagen del icono
+                        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                        //Añadimos la imagen al estilo
+                        style.addImage("my_image", smallMarker);
+
+                        //Limpiamos la lista de marcadores insertados del VM
+                        viewModel.get_markersInserted().clear();
+                        //Añadimos los puntos de localización almacenados en el VM
+                        for(int i = 0; i < viewModel.get_localizationPointsMapbox().size(); i++){
+                            Symbol symbol = symbolManager.create(new SymbolOptions()
+                                    .withLatLng(new LatLng(viewModel.get_localizationPointsMapbox().get(i).getLatitude(),
+                                            viewModel.get_localizationPointsMapbox().get(i).getLongitude()))
+                                    .withIconImage("my_image")
+                                    .withIconSize(1.0f));
+                            viewModel.get_markersInserted().add(symbol);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -604,6 +649,7 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        listener = null;
         mapView.onStop();
     }
 
@@ -642,10 +688,10 @@ public class FragmentMaps extends Fragment {
      * usuario actual.
      */
     private void storeFavoutireLocalizationsId(){
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                cleanAllLocalizations();
+                viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
@@ -676,9 +722,7 @@ public class FragmentMaps extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
-                    viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
-                    //cleanAllLocalizations();
-                    viewModel.get_localizationPointsWithMarkerMapbox().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
+                    viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
@@ -687,7 +731,8 @@ public class FragmentMaps extends Fragment {
                             viewModel.get_localizationPointsMapbox().add(localizationPoint);
                         }
                     }
-                    loadLocalizationPoints();
+
+                    loadOnMapReadyCallback();//Cargamos los elementos instanciados en onMapReady
                 }
             }
 
@@ -697,131 +742,49 @@ public class FragmentMaps extends Fragment {
         });
     }
 
-    //Métodos de marcado
+    //Funciones sobre la lista de botones inferior
 
     /**
      * Interfaz
-     * Nombre: loadLocalizationPoints
-     * Comentario: Este método nos permite cargar en el mapa los puntos de localización almacenados en el VM.
-     * Cabecera: private void loadLocalizationPoints()
-     * Postcondiciones: El método carga los puntos de localización en el mapa actual.
+     * Nombre: mostrarAccionesSobreElMapa
+     * Comentario: El método muestra el LinearLayout inferior, dejando ver los botones que interactuan
+     * con el mapa, ocultando el FrameLayout inferior.
+     * Cabecera: private void mostrarAccionesSobreElMapa()
+     * Postcondiciones: El método muestra el LinearLayout inferior, ocultando el FrameLayout inferior.
      */
-    private void loadLocalizationPoints(){
-        for(int i = 0; i < viewModel.get_localizationPointsMapbox().size(); i++){
-            colocarMarcador(viewModel.get_localizationPointsMapbox().get(i)); //Comenzamos a marcar las localizaciones almacenadaa
-        }
+    private void mostrarAccionesSobreElMapa(){
+        linearLayoutInferior.setVisibility(View.VISIBLE);
+        frameLayoutInferior.setVisibility(View.GONE);
     }
 
     /**
      * Interfaz
-     * Nombre: colocarMarcador
-     * Comentario: Este métdodo coloca un marcador en el mapa.
-     * Cabecera: private void colocarMarcador(ClsLocalizationPoint localizationPoint)
-     * Entrada:
-     *  -ClsLocalizationPoint localizationPoint
-     * Postcondiciones: El método coloca un marcador en el mapa.
+     * Nombre: mostrarAccionesSobreUnMarcador
+     * Comentario: El método muestra el FrameLayout inferior, dejando ver los botones que interactuan
+     * con un marcador, ocultando el LinearLayout inferior.
+     * Cabecera: private void mostrarAccionesSobreUnMarcador()
+     * Postcondiciones: El método muestra el FrameLayout inferior, ocultando el LinearLayout inferior.
      */
-    private void colocarMarcador(ClsLocalizationPoint localizationPoint){
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
-        if(map != null){//Si se ha cargado la referencia al mapa de inicio
-            Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-            adjustMarkerType(marker, localizationPoint);//Ajustamos el marcador actual
-            viewModel.get_localizationPointsWithMarkerMapbox().add(new ClsMarkerWithLocalizationMapbox(marker, localizationPoint));//Almacenamos el Marcador en un modelo
-
-            //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
-            /*if(viewModel.get_localizationPointClickedMapbox() != null && viewModel.get_localizationPointClickedMapbox().getPosition().getLatitude() == marker.getPosition().getLatitude() &&
-                    viewModel.get_localizationPointClickedMapbox().getPosition().getLongitude() == marker.getPosition().getLongitude()){
-                viewModel.set_localizationPointClickedMapbox(marker);//Almacenamos la referencia al nuevo marcador
-                //onMarkerClick(viewModel.get_localizationPointClickedMapbox());//Volvemos a seleccionarlo
-            }*/
-        }
+    private void mostrarAccionesSobreUnMarcador(){
+        linearLayoutInferior.setVisibility(View.GONE);
+        frameLayoutInferior.setVisibility(View.VISIBLE);
     }
+
+    //Método para la inserción del fragmento inferior
 
     /**
      * Interfaz
-     * Nombre: adjustMarkerType
-     * Comentario: Este método nos permite ajustar un marcador en específico, insertandole un icono
-     * y un id, que lo permita distinguir del resto de marcadores que no son del mismo tipo. Este
-     * método es llamado desde dentro del método "colocarMarcador".
-     * Cabecera: public void private(Marker marker, ClsLocalizationPoint localizationPoint)
-     * Entrada:
-     *  -Marker marker
-     *  -ClsLocalizationPoint localizationPoint
-     * Postcondciones: El método inserta un icono y un id al marcador pasado por parámetros.
+     * Nombre: insertInferiorFragment
+     * Comentario: Este método inserta el fragmento FragmentOfflineLocalizationPointClick en el
+     * FrameLayout inferior del fragmento actual.
+     * Cabecera: private void insertInferiorFragment()
+     * Postcondiciones: El método carga el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout
+     * "FrameLayoutLocalizationClicked".
      */
-    private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
-        if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
-            setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
-            marker.setId(0);//1 indica que el marcador esta marcado como favorito
-        }else{
-            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
-                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
-                marker.setId(1);//1 indica que el marcador es del usuario
-            }
-        }
+    private void insertInferiorFragment(){
+        FragmentOfflineLocalizationPointClick fragment = new FragmentOfflineLocalizationPointClick();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.FrameLayoutLocalizationClicked, fragment);
+        transaction.commit();
     }
-
-    /**
-     * Interfaz
-     * Nombre: restoreIconMarker
-     * Comentario: Este método nos permite restablecer el icono por defecto de un marcador específico.
-     * Cabecera: private void restoreIconMarker(Marker marker)
-     * Entrada:
-     *  -Marker marker
-     * Postcondiciones: El método restablece el icono por defecto de un macador.
-     */
-    private void restoreIconMarker(Marker marker){
-        if(marker != null){
-            switch ((int) marker.getId()){
-                case 0://Si esta marcado como favorito
-                    setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
-                    break;
-                case 1://Si es del usuario actual
-                    setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Interfaz
-     * Nombre: cleanAllLocalizations
-     * Comentario: Este método nos permite limpiar todos los marcadores sobre el mapa.
-     * Cabecera: private void cleanAllLocalizations()
-     * Postcondiciones: El método elimina todos los marcadores que se encuentran sobre
-     * el mapa actual.
-     */
-    private void cleanAllLocalizations(){
-        for(int i = 0; i < viewModel.get_localizationPointsWithMarkerMapbox().size(); i++){
-            viewModel.get_localizationPointsWithMarkerMapbox().get(i).getMarker().remove();
-        }
-    }
-
-    /**
-     * Interfaz
-     * Nombre: setIconToMarker
-     * Comentario: Este método nos permite insertar un icono en un marcador.
-     * Cabecera: private void setIconToMarker(String addressIcon)
-     * Entrada:
-     *  -String addressIcon
-     * Precondiciones:
-     *  -addressIcon debe apuntar a una imagen existente.
-     * Postcondiciones: El método agrega un icono a un marcador.
-     */
-    private void setIconToMarker(final Marker marker, final String addressIcon){
-        getActivity().runOnUiThread(new Runnable() {//TODO el icono de inserta en un hilo secundario
-            public void run() {
-                //Ajustamos la imagen del icono
-                BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
-                Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                //Creamos un objeto icono para la imagen del marcador
-                IconFactory iconFactory = IconFactory.getInstance(getActivity());
-                Icon icon = iconFactory.fromBitmap(smallMarker);
-                //Añadimos el icono al marcador
-                marker.setIcon(icon);
-            }
-        });
-    }
-
 }

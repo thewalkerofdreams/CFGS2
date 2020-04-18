@@ -1,5 +1,6 @@
 package com.example.adventuremaps.Activities.ui.MainTabbet;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +10,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.adventuremaps.Activities.ChangePasswordActivity;
+import com.example.adventuremaps.Activities.CreateLocalizationPointActivity;
 import com.example.adventuremaps.Activities.CreateRouteActivity;
 import com.example.adventuremaps.Activities.MainActivity;
 import com.example.adventuremaps.Activities.Tutorial.TutorialViewPagerActivity;
 import com.example.adventuremaps.Adapters.MapViewPager;
+import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
@@ -28,6 +32,7 @@ import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -231,37 +236,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
     }
 
-    //Methods Fragment Localizations
-
-    /**
-     * Interfaz
-     * Nombre: onClickLocalizationFav
-     * Comentario: Este método nos permite modificar el estado de favorito de una localización del usuario actual.
-     * Cabecera: public void onClickLocalizationFav(View v)
-     * @param v
-     * Postcondiciones: El método guarda la localización como favorita para el usuario actual, realizando el cambio
-     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
-     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
-     */
-    public void onClickLocalizationFav(View v){
-        //get the row the clicked button is in
-        LinearLayout vwParentRow = (LinearLayout)v.getParent();
-        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
-        String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
-
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-
-        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
-            btnChild.setBackgroundResource(R.drawable.empty_star);
-            databaseReference.child(FirebaseAuth.getInstance().
-                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
-        }else{
-            btnChild.setBackgroundResource(R.drawable.fill_star);
-            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
-        }
-
-        reloadInitialFragment();//Recargamos el mapa principal
-    }
+    //Permisos
 
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -359,6 +334,38 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         dialog.show();//Mostramos el dialogo por pantalla
     }
 
+    //Métodos FragmentLocalizations
+
+    /**
+     * Interfaz
+     * Nombre: onClickLocalizationFav
+     * Comentario: Este método nos permite modificar el estado de favorito de una localización del usuario actual.
+     * Cabecera: public void onClickLocalizationFav(View v)
+     * @param v
+     * Postcondiciones: El método guarda la localización como favorita para el usuario actual, realizando el cambio
+     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
+     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
+     */
+    public void onClickLocalizationFav(View v){
+        //get the row the clicked button is in
+        LinearLayout vwParentRow = (LinearLayout)v.getParent();
+        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+        String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
+            btnChild.setBackgroundResource(R.drawable.empty_star);
+            databaseReference.child(FirebaseAuth.getInstance().
+                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
+        }else{
+            btnChild.setBackgroundResource(R.drawable.fill_star);
+            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
+        }
+
+        reloadInitialFragment();//Recargamos el mapa principal
+    }
+
     /**
      * Interfaz
      * Nombre: navigateToLocalization
@@ -396,6 +403,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         });
     }
 
+    //Métodos de recarga de la interfaz
+
     /**
      * Interfaz
      * Nombre: reloadInitialFragment
@@ -405,5 +414,65 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      */
     public void reloadInitialFragment(){
         viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+    }
+
+    /**
+     * Interfaz
+     * Nombre: reloadOfflineFragment
+     * Comentario: Este método nos permite recargar el fragmento offline de la aplicación.
+     * Cabecera: public void reloadOfflineFragment()
+     * Postcondiciones: El método recarga el fragmento offline de la aplicación.
+     */
+    public void reloadOfflineFragment(){
+        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+        viewPager.setCurrentItem(3);
+    }
+
+    //GoogleMapsStartFragment and FragmentMaps (Métodos para la creación de un punto de localización)
+    /**
+     * Interfaz
+     * Nombre: throwCreateLocalizationPointActivity
+     * Comentario: Este método lanza la actividad CreateLocalizationPointActivity, para crear una localización
+     * en uno de los mapas de la aplicación. Se le pasarán los datos necesarios para poder crear la nueva localización en el
+     * lugar seleccionado, para ello se debe indicar la sección donde se realizó la llamada:
+     *  1 --> En el mapa de incio
+     *  2 --> En el mapa offline
+     * Cabecera: public void throwCreateLocalizationPointActivity(int callSection)
+     * Entrada:
+     *  int callSection
+     * Precondiciones:
+     *  -callSection debe ser igual a 1 o 2.
+     * Postcondiciones: El método lanza la actividad CreateLocalizationPointActivity.
+     */
+    public void throwCreateLocalizationPointActivity(int callSection){
+        double latitude, longitude;
+        if(callSection == 1){
+            latitude = viewModel.get_longClickPosition().latitude;
+            longitude = viewModel.get_longClickPosition().longitude;
+        }else{
+            latitude = viewModel.get_longClickPositionMapbox().getLatitude();
+            longitude = viewModel.get_longClickPositionMapbox().getLongitude();
+        }
+
+        Intent intent = new Intent(this, CreateLocalizationPointActivity.class);
+        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra("ActualLatitude", latitude);
+        intent.putExtra("ActualLongitude", longitude);
+        startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT) {//Al salir del formulario de creación de una ruta
+            if (resultCode == Activity.RESULT_OK) {//Si se confirmó el guardado del nuevo punto de localización
+                viewModel.set_localizationToSave((ClsLocalizationPoint) data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
+                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
+
+                viewModel.saveLocalizationPoint();//Almacenamos el punto de localización en FireBase
+                Toast.makeText(this, R.string.localization_point_created, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
