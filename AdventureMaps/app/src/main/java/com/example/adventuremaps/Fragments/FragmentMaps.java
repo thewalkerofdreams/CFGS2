@@ -689,7 +689,7 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        listener = null;
+        userReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
         if(mapView != null)
             mapView.onStop();
     }
