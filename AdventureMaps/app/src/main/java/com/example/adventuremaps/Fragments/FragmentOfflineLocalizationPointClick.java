@@ -47,7 +47,7 @@ public class FragmentOfflineLocalizationPointClick extends Fragment {
             @Override
             public void onClick(View v) {
                 final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-                drLocalization.orderByChild("index").equalTo(viewModel.get_localizationPointClickedMapbox().getLatitude()+"~"+viewModel.get_localizationPointClickedMapbox().getLongitude()).addListenerForSingleValueEvent(new ValueEventListener() {
+                drLocalization.orderByChild("index").equalTo(viewModel.get_symbolClicked().getLatLng().getLatitude()+"~"+viewModel.get_symbolClicked().getLatLng().getLongitude()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ClsLocalizationPoint localizationPointToDelete = null;
@@ -70,7 +70,7 @@ public class FragmentOfflineLocalizationPointClick extends Fragment {
             @Override
             public void onClick(View v) {
                 final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-                drLocalization.orderByChild("index").equalTo(viewModel.get_localizationPointClickedMapbox().getLatitude()+"~"+viewModel.get_localizationPointClickedMapbox().getLongitude()).addListenerForSingleValueEvent(new ValueEventListener() {
+                drLocalization.orderByChild("index").equalTo(viewModel.get_symbolClicked().getLatLng().getLatitude()+"~"+viewModel.get_symbolClicked().getLatLng().getLongitude()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ClsLocalizationPoint localizationPointToShow = null;

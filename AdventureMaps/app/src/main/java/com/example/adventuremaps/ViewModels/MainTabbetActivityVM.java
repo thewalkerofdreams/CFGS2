@@ -53,9 +53,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private Context _context;
     private int _regionSelected;
     private ArrayList<ClsLocalizationPoint> _localizationPointsMapbox;//Los puntos de localización que obtendremos de la plataforma FireBase
-    private com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox;//Obtendremos el marcador de un punto de localización clicado
     private ArrayList<Symbol> _markersInserted;
     private com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox;//Para crear un nuevo punto de localización
+    private Symbol _symbolClicked;
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -97,9 +97,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
         _localizationPointsMapbox = new ArrayList<>();
-        _localizationPointClickedMapbox = null;
         _markersInserted = new ArrayList<>();
         _longClickPositionMapbox = null;
+        _symbolClicked = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -177,14 +177,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._localizationPointsMapbox = _localizationPointsMapbox;
     }
 
-    public com.mapbox.mapboxsdk.geometry.LatLng get_localizationPointClickedMapbox() {
-        return _localizationPointClickedMapbox;
-    }
-
-    public void set_localizationPointClickedMapbox(com.mapbox.mapboxsdk.geometry.LatLng _localizationPointClickedMapbox) {
-        this._localizationPointClickedMapbox = _localizationPointClickedMapbox;
-    }
-
     public ArrayList<Symbol> get_markersInserted() {
         return _markersInserted;
     }
@@ -199,6 +191,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_longClickPositionMapbox(com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox) {
         this._longClickPositionMapbox = _longClickPositionMapbox;
+    }
+
+    public Symbol get_symbolClicked() {
+        return _symbolClicked;
+    }
+
+    public void set_symbolClicked(Symbol _symbolClicked) {
+        this._symbolClicked = _symbolClicked;
     }
 
     //Gets y Sets Fragment Localizations
@@ -622,7 +622,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 if(callSection == 1){//Si se desea realizar la eliminación en el mapa de inicio
                     set_localizationPointClicked(null);//Indicamos que el marcador seleccionado pasa a null
                 }else{//Si se desea realizar la eliminación en el mapa offline
-                    set_localizationPointClickedMapbox(null);
+                    set_symbolClicked(null);
                 }
             }
         });

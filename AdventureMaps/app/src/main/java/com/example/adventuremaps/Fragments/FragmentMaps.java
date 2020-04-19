@@ -165,6 +165,11 @@ public class FragmentMaps extends Fragment {
             @Override
             public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
                 map = mapboxMap;
+                if(getActivity() != null){
+                    getActivity().findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);
+                    getActivity().findViewById(R.id.FrameLayoutLocalizationClicked).setVisibility(View.GONE);//Ocultamos el FrameLayout inferior
+                }
+
                 //Limpiamos los posibles símbolos insertados en el mapa
                 if(symbolManager != null){//Si el administrador ya fue instanciado
                     symbolManager.delete(viewModel.get_markersInserted());//Elimminamos todos los símbolos que inserto anteriormente
@@ -188,8 +193,8 @@ public class FragmentMaps extends Fragment {
                         map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                             @Override
                             public boolean onMapClick(@NonNull LatLng point) {
-                                Toast.makeText(getActivity(), "Click al mapa", Toast.LENGTH_SHORT).show();
-                                mostrarAccionesSobreElMapa();
+                                tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
+                                mostrarAccionesSobreElMapa();//Mostramos los iconos para interactuar con el mapa
                                 return false;//False para que podemos clicar en los marcadores
                             }
                         });
@@ -209,9 +214,12 @@ public class FragmentMaps extends Fragment {
                         symbolManager.addClickListener(new OnSymbolClickListener() {
                             @Override
                             public void onAnnotationClick(Symbol symbol) {
-                                Toast.makeText(getActivity(), "Click corto", Toast.LENGTH_SHORT).show();
-                                viewModel.set_localizationPointClickedMapbox(symbol.getLatLng());
-                                mostrarAccionesSobreUnMarcador();
+                                tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
+
+                                viewModel.set_symbolClicked(symbol);
+                                symbol.setIconImage("marker_selected");
+                                symbolManager.update(symbol);
+                                mostrarAccionesSobreUnMarcador();//Hacemos visible las opciones del icono
                             }
                         });
 
@@ -224,6 +232,11 @@ public class FragmentMaps extends Fragment {
                         Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
                         //Añadimos la imagen al estilo
                         style.addImage("my_image", smallMarker);
+
+                        //Añadiamos la imagen para cuando se seleccione un marcador
+                        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(R.drawable.blue_marker));
+                        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                        style.addImage("marker_selected", smallMarker);
 
                         //Limpiamos la lista de marcadores insertados del VM
                         viewModel.get_markersInserted().clear();
@@ -240,6 +253,22 @@ public class FragmentMaps extends Fragment {
                 });
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryChangeMarkerToDefaultImage
+     * Comentario: El método cambia el icono del marcador almacenado en el atributo
+     * "_symbolClicked" del VM, al icono por defecto si este tiene un valor diferente de nulo.
+     * Cabecera: private void tryChangeMarkerToDefaultImage()
+     * Postcondiciones: Si el simbolo almacenado en el VM es diferente de null, se cambia su icono
+     * por el de por defecto.
+     */
+    private void tryChangeMarkerToDefaultImage(){
+        if(viewModel.get_symbolClicked() != null){//Si ya se había clicado sobre otro marcador
+            viewModel.get_symbolClicked().setIconImage("my_image");//Le insertamos el icono por defecto
+            symbolManager.update(viewModel.get_symbolClicked());
+        }
     }
 
     /**

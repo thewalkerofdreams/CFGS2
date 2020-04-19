@@ -72,10 +72,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(viewModel.get_localizationPointClicked() != null) {//Si ya existe un marcador seleccionado
-            restoreIconMarker(viewModel.get_localizationPointClicked());//Restablecemos el icono por defecto del marcador seleccionado
-        }
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));//Cambiamos el color del nuevo marcador seleccionado
+        tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
+
+        setIconToMarker(marker, String.valueOf(R.drawable.blue_marker));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
         if(getActivity() != null)//Si la referencia a la actividad no es nula
@@ -90,9 +89,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
-        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
-            restoreIconMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
-        }
+        tryChangeMarkerToDefaultImage();//Si existe un marcador seleccionado, restauramos su icono por defecto
     }
 
     @Override
@@ -129,6 +126,21 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
         }else{
             Toast.makeText(getActivity(), R.string.create_localization_permission_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryChangeMarkerToDefaultImage
+     * Comentario: El método cambia el icono del marcador almacenado en el atributo
+     * "get_localizationPointClicked" del VM, al icono por defecto si este tiene un valor diferente de nulo.
+     * Cabecera: private void tryChangeMarkerToDefaultImage()
+     * Postcondiciones: Si el simbolo almacenado en el VM es diferente de null, se cambia su icono
+     * por el de por defecto.
+     */
+    private void tryChangeMarkerToDefaultImage(){
+        if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
+            restoreIconMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
         }
     }
 
