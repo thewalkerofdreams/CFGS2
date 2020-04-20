@@ -32,7 +32,7 @@
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="65"
+                android:layout_weight="50"
                 android:orientation="vertical">
 
                 <TextView
@@ -44,9 +44,10 @@
 
                 <Button
                     android:id="@+id/btnOrderLocalizations"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/order_by"
+                    android:layout_width="60sp"
+                    android:layout_height="60sp"
+                    android:background="@drawable/descending_sort"
+                    android:layout_marginStart="10sp"
                     android:onClick="showOrderLocalizationListDialog"></Button>
 
             </LinearLayout>
@@ -54,7 +55,7 @@
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="35"
+                android:layout_weight="50"
                 android:gravity="center"
                 android:orientation="vertical">
 

@@ -165,8 +165,8 @@ public class FragmentMaps extends Fragment {
             @Override
             public void onMapReady(@NonNull final MapboxMap mapboxMap) {//Called when the map is ready to be used.
                 map = mapboxMap;
-                if(getActivity() != null){
-                    getActivity().findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);
+                if(getActivity() != null){//Ajustamos la botonera inferior
+                    getActivity().findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);//Hacemos visible los botones de interación con el mapa
                     getActivity().findViewById(R.id.FrameLayoutLocalizationClicked).setVisibility(View.GONE);//Ocultamos el FrameLayout inferior
                 }
 
@@ -174,6 +174,7 @@ public class FragmentMaps extends Fragment {
                 if(symbolManager != null){//Si el administrador ya fue instanciado
                     symbolManager.delete(viewModel.get_markersInserted());//Elimminamos todos los símbolos que inserto anteriormente
                 }
+
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -181,7 +182,8 @@ public class FragmentMaps extends Fragment {
                         if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
                             latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
                         }else{//Lo mandamos a R'lyeh
-                            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);         }
+                            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
+                        }
 
                         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
                                 .target(latLng)
