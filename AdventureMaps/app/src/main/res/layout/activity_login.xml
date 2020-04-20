@@ -57,8 +57,7 @@
         android:onClick="throwSendNewPasswordActivity"
         android:text="@string/forgotten_password"></TextView>
 
-    <Button
-        android:id="@+id/btnLoginActivityLogin"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="18"
@@ -66,19 +65,36 @@
         android:layout_marginBottom="5sp"
         android:layout_marginStart="30sp"
         android:layout_marginEnd="30sp"
-        android:text="@string/login"
-        android:onClick="tryLogUser"></Button>
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnCreateCountActivityLogin"
+        <Button
+            android:id="@+id/btnLoginActivityLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:background="@drawable/background_login_buttons"
+            android:onClick="tryLogUser"></Button>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="18"
         android:layout_marginTop="5sp"
         android:layout_marginBottom="10sp"
         android:layout_marginStart="30sp"
-        android:layout_marginEnd="30sp"
-        android:text="@string/create_count"
-        android:onClick="throwCreateCountActivity"></Button>
+        android:layout_marginEnd="30sp">
+
+        <Button
+            android:id="@+id/btnCreateCountActivityLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_count"
+            android:background="@drawable/background_login_buttons"
+            android:onClick="throwCreateCountActivity"></Button>
+
+    </LinearLayout>
 
 </LinearLayout>

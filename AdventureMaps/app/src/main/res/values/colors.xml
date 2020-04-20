@@ -8,4 +8,5 @@
     <color name="BlueItem">#2E86C1</color>
     <color name="Black">#000</color>
     <color name="UnderlinedBlue">#590BFF</color>
+    <color name="DefaultGrey">#ddd</color>
 </resources>

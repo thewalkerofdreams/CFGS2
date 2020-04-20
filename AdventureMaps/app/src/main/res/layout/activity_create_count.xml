@@ -65,8 +65,7 @@
         android:inputType="textPassword"
         android:hint="@string/hint_repeat_the_password"></EditText>
 
-    <Button
-        android:id="@+id/btnCreateCountActivityCreateCount"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="20"
@@ -74,7 +73,16 @@
         android:layout_marginBottom="10sp"
         android:layout_marginStart="30sp"
         android:layout_marginEnd="30sp"
-        android:text="@string/create"
-        android:onClick="trySaveCount"></Button>
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnCreateCountActivityCreateCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create"
+            android:background="@drawable/background_login_buttons"
+            android:onClick="trySaveCount"></Button>
+
+    </LinearLayout>
 
 </LinearLayout>
