@@ -59,7 +59,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     private MainTabbetActivityVM viewModel;
     private MapViewPager viewPager;//ViewPager adaptado para las secciones que contienen mapas
     private FragmentStartLocalizationPointClick fragment = new FragmentStartLocalizationPointClick();
-    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +66,20 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         setContentView(R.layout.activity_main_tabbet);
 
         //Instanciamos el objeto SharedPreference
-        sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);
+        SharedPreferences sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);
 
         //Instanciamos el ViewModel
         viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
 
-        //Instanciamos el VM
+        //Instanciamos los elementos de la UI
         viewPager = findViewById(R.id.view_pager);//Instanciamos el ViewPager
         loadViewPager();//Lo cargamos con los datos
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
         //Cargamos los filtros chequeados, al principio todos los filtros se encuentran check
-        final String[] filterItems = {getResources().getString(R.string.potable_water),
-                getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
-                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
-                getResources().getString(R.string.vivac)};
+        final String[] filterItems = {getResources().getString(R.string.potable_water), getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
+                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing), getResources().getString(R.string.vivac)};
         viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
         String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
@@ -100,6 +97,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    //ThrowActivity Methods
 
     /**
      * Interfaz
@@ -148,6 +147,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             Toast.makeText(this, R.string.create_route_permission_error, Toast.LENGTH_SHORT).show();
         }
     }
+
+    //UI Methods
 
     /**
      * Interfaz
@@ -225,7 +226,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Cabecera: public void onClickRouteFav(View v)
      * @param v
      * Postcondiciones: El método modifica el estado del atributo favorito de una ruta, realizando el cambio
-     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
+     * en la base de datos de la plataforma FireBase, además cambia el icono del item clicado a una estrella
      * vacía si se encontraba en favoritos cuando se pulso y viceversa.
      */
     public void onClickRouteFav(View v){
@@ -238,7 +239,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         Map<String, Object> hopperUpdates = new HashMap<>();
 
         if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
-            btnChild.setBackgroundResource(R.drawable.empty_star);
+            btnChild.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono
             hopperUpdates.put("favourite", false);
         }else{
             btnChild.setBackgroundResource(R.drawable.fill_star);
@@ -256,14 +257,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos de localización
                     viewModel.reloadActualLocalization();//Recargamos la localización del usuario
-                    //PlaceholderFragment.newInstance(1);//Recargamos el fragment inicial
                     reloadInitialFragment();//Recargamos el fragment inicial
                 }
                 break;
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos para la descarga de mapas offline
                     viewModel.reloadActualLocalization();//Recargamos la localización del usuario
-                    //PlaceholderFragment.newInstance(4);//Recargamos el fragment del mapa offline
                     viewPager.setCurrentItem(0);//Nos movemos a la primera sección
                     Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos //TODO Aún no he conseguido que se actualice del tirón en la sección offline
                 }
@@ -276,13 +275,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     /**
      * Interfaz
      * Nombre: replaceFragment
-     * Comentario: Este método nos permite crear un fragmento y remplazar el contenido de nuestro
-     * FrameLayout "FrameLayout02" por ese mismo fragmento.
+     * Comentario: Este método nos permite remplazar el contenido de nuestro
+     * FrameLayout "FrameLayout02" por el fragmento "FragmentStartLocalizationPointClick".
      * Cabecera: public void replaceFragment()
-     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el nuevo fragmento.
+     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el fragmento FragmentStartLocalizationPointClick.
      * */
     public void replaceFragment(){
-        fragment = new FragmentStartLocalizationPointClick();
         FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
         transation.replace(R.id.FrameLayout02, fragment);
         transation.addToBackStack(null);//add the transaction to the back stack so the user can navigate back
@@ -292,9 +290,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     /**
      * Interfaz
      * Nombre: removeYourFragment
-     * Comentario: Este método nos permite eliminar el fragmento de la actividad actual.
+     * Comentario: Este método nos permite eliminar el fragmento FragmentStartLocalizationPointClick de la actividad actual.
      * Cabecera: public void removeYourFragment()
-     * Postcondiciones: El método elimina el fragmento de la actividad actual.
+     * Postcondiciones: El método elimina el fragmento FragmentStartLocalizationPointClick de la actividad actual.
      * */
     public void removeYourFragment(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -309,9 +307,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     /**
      * Interfaz
      * Nombre: showFilterDialog
-     * Comentario: Este método muestra por pantalla un dialogo con los diferentes filtros, aplicados
-     * sobre el mapa, si el usuario confirma el dialogo, se aplicará la configuración actual dependiendo
-     * de los filtros que haya seleccionado.
+     * Comentario: Este método muestra por pantalla un dialogo con los diferentes filtros aplicados
+     * sobre el mapa. Si el usuario confirma el dialogo, se recargará el mapa actual mostrando las
+     * localizaciones que cumplan los filtros seleccionados.
      * Cabecera: public void showFilterDialog(View view)
      * Entrada:
      *  -View view
@@ -339,16 +337,26 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         builder.setPositiveButton(R.string.apply_changes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Volvemos a cargar el fragmento del mapa con el nuevo filtrado
-                GoogleMapsStartFragment fragment = new GoogleMapsStartFragment();
-                FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
-                transation.replace(R.id.fragmentGoogleMapsStart, fragment);
-                transation.commit();
+                reloadStartFragmentMaps(); //Volvemos a cargar el fragmento del mapa con el nuevo filtrado
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
         dialog.show();//Mostramos el dialogo por pantalla
+    }
+
+    /**
+     * Interfaz
+     * Nombre: reloadStartFragmentMaps
+     * Comentario: El método vuelve a cargar el fragmento GoogleMapsStartFragment en el contenedor fragmentGoogleMapsStart.
+     * Cabecera: private void reloadStartFragmentMaps()
+     * Postcondiciones: El método recarga el fragmento GoogleMapsStartFragment en el contenedor fragmentGoogleMapsStart.
+     */
+    private void reloadStartFragmentMaps(){
+        GoogleMapsStartFragment fragment = new GoogleMapsStartFragment();
+        FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
+        transation.replace(R.id.fragmentGoogleMapsStart, fragment);
+        transation.commit();
     }
 
     //Métodos FragmentLocalizations
@@ -359,8 +367,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Comentario: Este método nos permite modificar el estado de favorito de una localización del usuario actual.
      * Cabecera: public void onClickLocalizationFav(View v)
      * @param v
-     * Postcondiciones: El método guarda la localización como favorita para el usuario actual, realizando el cambio
-     * en la base de datos de la plataforma de FireBase, además cambia el icono del item clicado a una estrella
+     * Postcondiciones: El método guarda la modificación sobre el estado de favorito de la localización, almacenando el cambio
+     * en la base de datos de la plataforma FireBase, además cambia el icono del item clicado a una estrella
      * vacía si se encontraba en favoritos cuando se pulso y viceversa.
      */
     public void onClickLocalizationFav(View v){
@@ -393,8 +401,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Entrada:
      *  -View v
      * Postcondiciones: Si el usuario aceptó los permisos de localización, el método nos mueve a la sección
-     * del mapa principal, posicionando este sobre el punto de localización. En caso contrario el método
-     * muestra un mensaje de error por pantalla.
+     * del mapa principal, posicionando este sobre el punto de localización almacenado en el VM.
+     * En caso contrario el método muestra un mensaje de error por pantalla.
      */
     public void navigateToLocalization(View v){
         //Si la aplicación tiene los permisos necesarios
@@ -411,7 +419,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     double latitude = 0, longitude = 0;
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {//Obtenemos la posición del punto de localización
                         latitude = data.child("latitude").getValue(Double.class);
                         longitude = data.child("longitude").getValue(Double.class);
                     }
@@ -472,11 +480,11 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      */
     public void throwCreateLocalizationPointActivity(int callSection){
         double latitude, longitude;
-        if(callSection == 1){
-            latitude = viewModel.get_longClickPosition().latitude;
+        if(callSection == 1){//Si se llamó desde la sección de inicio
+            latitude = viewModel.get_longClickPosition().latitude;//Obtenemos los datos de un ojeto LatLng propio de Google almacenado en el VM
             longitude = viewModel.get_longClickPosition().longitude;
-        }else{
-            latitude = viewModel.get_longClickPositionMapbox().getLatitude();
+        }else{//Si se llamó desde la sección offline
+            latitude = viewModel.get_longClickPositionMapbox().getLatitude();//Obtenemos los datos de un ojeto LatLng propio de Mapbox almacenado en el VM
             longitude = viewModel.get_longClickPositionMapbox().getLongitude();
         }
 

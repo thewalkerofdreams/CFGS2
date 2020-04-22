@@ -8,7 +8,7 @@ import android.content.Intent;
 
 import com.example.adventuremaps.Activities.MainActivity;
 
-public class MyExceptionHandler implements Thread.UncaughtExceptionHandler {//Saltará cuando la aplicación se cierre por algún error
+public class MyExceptionHandler implements Thread.UncaughtExceptionHandler {//Saltará cuando la aplicación se cierre por algún motivo
 
     private Activity activity;
 

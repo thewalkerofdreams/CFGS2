@@ -4,9 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,7 +50,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
      * Nombre: tryChangePassword
      * Comentario: Este método intentará cambiar la contraseña de una cuenta, si la cuenta existía
      * anteriormente en la plataforma y si todos los campos se rellenarón adecuadamente, en caso contrario
-     * el método mostrará por pantalla mensajes de error.
+     * el método mostrará por pantalla un mensaje de error.
      * Cabecera: public void tryChangePassword(View v)
      * Entrada:
      *  -View v

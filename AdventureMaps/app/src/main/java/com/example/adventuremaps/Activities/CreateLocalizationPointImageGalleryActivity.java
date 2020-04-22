@@ -50,19 +50,13 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
-                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada, lanzamos la actividad ImageGalleryViewPagerActivity
-                    Intent intent = new Intent(getApplication(), CreateLocalizationPointImageGalleryViewPagerActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToSave());//Pasamos las imagenes a cargar
-                    intent.putExtras(bundle);
-                    intent.putExtra("PositionImageSelected", position);//Indicamos la posición de la imagen clicada
-                    startActivity(intent);
+                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay ninguna imagen seleccionada
+                    throwCreateLocalizationPointImageGalleryViewPagerActivity(position);//Lanzamos la actividad throwCreateLocalizationPointImageGalleryViewPagerActivity
                 }else{
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
-                        viewModel.get_imagesSelected().remove(item);//Eliminamos esa imagen de la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
+                        unselectImage(item, view);//Eliminamos la imagen de la lista de seleccionadas
                     }else{
-                        selectImage(item, view);
+                        selectImage(item, view);//Añadimos la imagen a la lista de seleccionadas
                     }
                 }
             }
@@ -73,9 +67,8 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsImageWithId item = (ClsImageWithId) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_imagesSelected().isEmpty()) {//Si no existe ninguna imagen seleccionada
-                    selectImage(item, view);
+                    selectImage(item, view);//Seleccionamos la imagen
                 }
-
                 return true;
             }
         });
@@ -105,6 +98,28 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
         if(savedInstanceState != null && viewModel.is_dialogDeleteImagesShowing()) {//Si el dialogo de eliminación estaba abierto lo recargamos
             deleteImagesDialog();
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: throwCreateLocalizationPointImageGalleryViewPagerActivity
+     * Comentario: El método lanza la actividad CreateLocalizationPointImageGalleryViewPagerActivity,
+     * con la información necesaria para cargar la galería de imagenes expandidas. El método requiere
+     * la posición de la primera imagen a mostrar.
+     * Cabecera: private void throwCreateLocalizationPointImageGalleryViewPagerActivity(int imagePosition)
+     * Entrada:
+     *  -int imagePosition
+     * Precondiciones:
+     *  -imagePosition debe hacer referencia a una imagen existente en la galería
+     * Postcondiciones: El método lanza la actividad CreateLocalizationPointImageGalleryViewPagerActivity.
+     */
+    private void throwCreateLocalizationPointImageGalleryViewPagerActivity(int imagePosition){
+        Intent intent = new Intent(getApplication(), CreateLocalizationPointImageGalleryViewPagerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToSave());//Pasamos las imagenes a cargar
+        intent.putExtras(bundle);
+        intent.putExtra("PositionImageSelected", imagePosition);//Indicamos la posición de la imagen clicada
+        startActivity(intent);
     }
 
     /**
@@ -140,6 +155,22 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
         view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
     }
 
+    /**
+     * Interfaz
+     * Nombre: unselectImage
+     * Comentario: Este método nos permite deseleccionar una imagen de la galería.
+     * Cabecera: private void selectImage(ClsImageWithId image, View view)
+     * Entrada:
+     *  -ClsImageWithId image
+     *  -View view
+     * Postcondiciones: El método deselecciona una imagen de la galería, eliminando la imagen de la lista
+     * de seleccionadas del VM y cambiando el color de fondo del item.
+     */
+    private void unselectImage(ClsImageWithId image, View view){
+        viewModel.get_imagesSelected().remove(image);//Eliminamos la imagen de la lista de seleccionadas
+        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -148,7 +179,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
                 final Uri imageUri = data.getData();
                 String imageId = localizationReference.push().getKey();
 
-                viewModel.get_imagesToSave().add(new ClsImageWithId(imageUri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en la lisat del VM
+                viewModel.get_imagesToSave().add(new ClsImageWithId(imageUri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en la lista del VM
                 loadGallery();//Volvemos a cargar la galería
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
@@ -201,13 +232,9 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getApplication(), R.string.images_deleted, Toast.LENGTH_SHORT).show();
-                //Eliminamos las imagenes seleccionadas
-                for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
-                    viewModel.get_imagesToSave().remove(viewModel.get_imagesSelected().get(i));
-                }
+                deleteSelectedImages();//Eliminamos las imagenes seleccionadas
 
                 viewModel.set_dialogDeleteImagesShowing(false);//Indicamos que el dialogo ha finalizado
-                viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
                 loadGallery();//Recargamos la galería
             }
         });
@@ -221,6 +248,20 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
 
         alertDialogDeleteImages = alertDialogBuilder.create();
         alertDialogDeleteImages.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: deleteSelectedImages
+     * Comentario: El método elimina las imagenes seleccionadas de la galería actual.
+     * Cabecera: private void deleteSelectedImages()
+     * Postcondiciones: El método elimina las imagenes seleccionadas de la galería.
+     */
+    private void deleteSelectedImages(){
+        for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
+            viewModel.get_imagesToSave().remove(viewModel.get_imagesSelected().get(i));
+        }
+        viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
     }
 
     @Override

@@ -85,30 +85,12 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                         public void onClick(DialogInterface dialog, int which) {
                             String routeName = nameEdit.getText().toString();//Nombre de la ruta a crear
 
-                            if (routeName.isEmpty()) {//Si esta vacío
+                            if (routeName.isEmpty()) {//Si el nombre está vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
-                                //Almacenamos la ruta
-                                ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                                FirebaseDatabase.getInstance().getReference("Users").
-                                        child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
-                                        .setValue(newRoute);
-
-                                //Almacenamos los puntos de la ruta
-                                for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-                                    String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
-                                    ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
-                                            routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
-
-                                    FirebaseDatabase.getInstance().getReference("Users").
-                                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
-                                            .child("routePoints").child(newRoutePoint.getRoutePointId())
-                                            .setValue(newRoutePoint);
-                                }
-
+                                saveRoute(routeName);//Almacenamos la nueva ruta en la plataforma Firebase
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();
-                                finish();
+                                finish();//Finalizamos la actividad actual
                             }
                         }
                     })
@@ -125,4 +107,33 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         }
     }
 
+    /**
+     * Interfaz
+     * Nombre: saveRoute
+     * Comentario: El método almacena la ruta actual junto con sus puntos en la plataforma Firebase.
+     * Cabecera: private void saveRoute(String routeName)
+     * Entrada:
+     *  -String routeName
+     * Postcondiciones: El método almacena la ruta actual con un nombre determinado en la plataforma de Firebase.
+     */
+    private void saveRoute(String routeName){
+        String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
+        //Almacenamos la ruta
+        ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        FirebaseDatabase.getInstance().getReference("Users").
+                child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
+                .setValue(newRoute);
+
+        //Almacenamos los puntos de la ruta
+        for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
+            String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
+            ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
+                    routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
+
+            FirebaseDatabase.getInstance().getReference("Users").
+                    child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
+                    .child("routePoints").child(newRoutePoint.getRoutePointId())
+                    .setValue(newRoutePoint);
+        }
+    }
 }

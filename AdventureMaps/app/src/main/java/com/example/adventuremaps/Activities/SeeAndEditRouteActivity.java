@@ -106,18 +106,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
 
                                 //Eliminamos los anteriores puntos de la ruta
                                 deleteOldRoutePoints();
-
-                                //Almacenamos los puntos de la ruta
-                                for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-                                    String routePointId = routeReference.push().getKey();//Obtenemos una id para la ruta
-                                    ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
-                                            viewModel.get_actualIdRoute(), viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
-
-                                    FirebaseDatabase.getInstance().getReference("Users").
-                                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute())
-                                            .child("routePoints").child(newRoutePoint.getRoutePointId())
-                                            .setValue(newRoutePoint);
-                                }
+                                //Almacenamos los puntos actuales de la ruta
+                                saveActualRoutePoints();
 
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();
                                 finish();
@@ -148,6 +138,26 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         DatabaseReference drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
                 getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute()).child("routePoints");
         drRoutePoint.removeValue();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: saveActualRoutePoints
+     * Comentario: El método almacena los puntos existentes en la ruta actual en la plataforma Firebase.
+     * Cabecera: private void saveActualRoutePoints()
+     * Postcondiciones: El método almacena los puntos existentes de la ruta actual en la plataforma Firebase.
+     */
+    private void saveActualRoutePoints(){
+        for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
+            String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
+            ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
+                    viewModel.get_actualIdRoute(), viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
+
+            FirebaseDatabase.getInstance().getReference("Users").
+                    child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute())
+                    .child("routePoints").child(newRoutePoint.getRoutePointId())
+                    .setValue(newRoutePoint);
+        }
     }
 
     @Override

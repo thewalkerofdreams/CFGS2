@@ -211,7 +211,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
 
                             loadValoration();//Cargamos la valoración dada por el usuario actual, si tiene una
                             if(!checkedImageToDelete)//Si aún no se ha comprobado si se debe eliminar la imagen
-                            tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
+                                tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
                         }
 
                         @Override

@@ -13,8 +13,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -139,11 +137,8 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         });
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(//Modificamos el tamaño de los botones
-                    200,
-                    200,
-                    (float) 0.0
-            );
+            //Modificamos el tamaño de los botones
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(200, 200, (float) 0.0);
             btnFavourite.setLayoutParams(param);
             btnImageGallery.setLayoutParams(param);
 

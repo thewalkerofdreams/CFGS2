@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -50,11 +49,7 @@ public class CreateCountActivity extends AppCompatActivity {
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
             LinearLayout linearLayout = findViewById(R.id.ImageViewCreateCountActivity);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    0,
-                    0,
-                    (float) 1.0
-            );
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, 0, (float) 1.0);
             linearLayout.setLayoutParams(param);
         }
     }
@@ -70,7 +65,7 @@ public class CreateCountActivity extends AppCompatActivity {
      * Entrada:
      *  -View v
      * Postcondiciones: El método crea y almacena una nueva cuenta en la plataforma de FireBase o muestra
-     * un mensaje de error por pantalla si el correo ya existe o si la contraseña no es válida.
+     * un mensaje de error por pantalla si el correo ya existe en la plataforma o si la contraseña no es válida.
      */
     public void trySaveCount(View v){
         viewModel.set_nickName(textNickName.getText().toString().trim());
@@ -91,15 +86,13 @@ public class CreateCountActivity extends AppCompatActivity {
                                         Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
                                         //Almacenamos al nuevo usuario
                                         ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
-                                        FirebaseDatabase.getInstance().getReference("Users").
-                                                child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .setValue(nuevoUsuario);
+                                        FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
                                         finish();//Finalizamos la actividad
                                     }else{
                                         //Si el correo ya se encontraba registrado en la plataforma, es decir, si ocurre una colisión
                                         if(task.getException() instanceof FirebaseAuthUserCollisionException){
                                             Toast.makeText(getApplication(), R.string.create_count_error_colision, Toast.LENGTH_SHORT).show();
-                                        }else{
+                                        }else{//Si es por otro tipo de error
                                             Toast.makeText(getApplication(), R.string.create_count_error, Toast.LENGTH_SHORT).show();
                                         }
                                     }

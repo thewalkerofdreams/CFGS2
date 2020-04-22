@@ -37,7 +37,7 @@ public class CreateLocalizationPointImageGalleryViewPagerActivity extends AppCom
     /**
      * Interfaz
      * Nombre: loadViewPager
-     * Comentario: Este método nos permite cargar el viewPager que contiene la galerría de imagenes.
+     * Comentario: Este método nos permite cargar el viewPager que contiene la galería de imagenes.
      * Cabecera: public void loadViewPager()
      * Postcondiciones: El método carga el viewPager que contiene la galería de imagenes.
      */

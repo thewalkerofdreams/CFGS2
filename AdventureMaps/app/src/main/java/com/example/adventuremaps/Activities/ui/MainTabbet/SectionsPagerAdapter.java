@@ -1,15 +1,12 @@
 package com.example.adventuremaps.Activities.ui.MainTabbet;
 
 import android.content.Context;
-import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerTabStrip;
 
 import com.example.adventuremaps.Fragments.FragmentStart;
 import com.example.adventuremaps.R;

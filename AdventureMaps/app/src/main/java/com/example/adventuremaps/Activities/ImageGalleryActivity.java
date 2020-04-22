@@ -69,10 +69,9 @@ public class ImageGalleryActivity extends AppCompatActivity {
                     throwImageGalleryViewPagerActivity(position);//Lanzamos la galería de imágenes inmersiva
                 }else{
                     if(viewModel.get_imagesSelected().contains(item)){//Si la imagen ya estaba seleccionada, la deselecciona
-                        viewModel.get_imagesSelected().remove(item);//Eliminamos esa imagen de la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
+                        unselectImage(item, view);//Deseleccionamos la imagen
                     }else{
-                        selectImage(item, view);
+                        selectImage(item, view);//Seleccionamos la imagen
                     }
                 }
             }
@@ -172,15 +171,30 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * para eliminarla.
      */
     private void selectImage(ClsImageWithId image, View view){
-            if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(image.get_userEmailCreator()) ||
-                    viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
-                viewModel.get_imagesSelected().add(image);//Añadimos la imagen a la lista de seleccionadas
-                view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
-            }else{
-                Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
-            }
+        if(viewModel.get_actualEmailUser().replaceAll("[.]", " ").equals(image.get_userEmailCreator()) ||
+                viewModel.get_actualEmailUser().equals(viewModel.get_actualLocalizationPoint().getEmailCreator())){//Si el usuario tiene permiso para eliminarla
+            viewModel.get_imagesSelected().add(image);//Añadimos la imagen a la lista de seleccionadas
+            view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la imagen seleccionada
+        }else{
+            Toast.makeText(getApplication(), R.string.no_permisission_to_delete_image, Toast.LENGTH_LONG).show();
+        }
     }
 
+    /**
+     * Interfaz
+     * Nombre: unselectImage
+     * Comentario: Este método nos permite deseleccionar una imagen de la galería.
+     * Cabecera: private void selectImage(ClsImageWithId image, View view)
+     * Entrada:
+     *  -ClsImageWithId image
+     *  -View view
+     * Postcondiciones: El método deselecciona una imagen de la galería, eliminando la imagen de la lista
+     * de seleccionadas del VM y cambiando el color de fondo del item.
+     */
+    private void unselectImage(ClsImageWithId image, View view){
+        viewModel.get_imagesSelected().remove(image);//Eliminamos la imagen de la lista de seleccionadas
+        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -243,17 +257,9 @@ public class ImageGalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getApplication(), R.string.images_deleted, Toast.LENGTH_SHORT).show();
-                //Eliminamos las imagenes seleccionadas
-                DatabaseReference drImages;
-
-                for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
-                    drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").
-                            child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child("LocalizationImages").child(viewModel.get_imagesSelected().get(i).get_imageId());
-                    drImages.removeValue();
-                }
+                deleteSelectedImages();//Eliminamos las imagenes seleccionadas de la galería
 
                 viewModel.set_dialogDeleteImagesShowing(false);//Indicamos que el dialogo ha finalizado
-                viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
                 loadGallery();//Recargamos la galería
             }
         });
@@ -267,6 +273,24 @@ public class ImageGalleryActivity extends AppCompatActivity {
 
         alertDialogDeleteImages = alertDialogBuilder.create();
         alertDialogDeleteImages.show();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: deleteSelectedImages
+     * Comentario: El método elimina las imagenes seleccionadas de la galería actual.
+     * Cabecera: private void deleteSelectedImages()
+     * Postcondiciones: El método elimina las imagenes seleccionadas de la galería.
+     */
+    private void deleteSelectedImages(){
+        DatabaseReference drImages;
+
+        for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
+            drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").
+                    child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child("LocalizationImages").child(viewModel.get_imagesSelected().get(i).get_imageId());
+            drImages.removeValue();
+        }
+        viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
     }
 
     @Override
