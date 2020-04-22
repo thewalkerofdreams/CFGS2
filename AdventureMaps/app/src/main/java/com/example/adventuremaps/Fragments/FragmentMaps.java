@@ -69,8 +69,7 @@ public class FragmentMaps extends Fragment {
     private MapView mapView;
     private MapboxMap map;
     private ProgressBar progressBar;
-    private Button downloadButton;
-    private Button listButton;
+    private Button downloadButton, listButton;
     private LinearLayout linearLayoutInferior;
     private FrameLayout frameLayoutInferior;
     //Offline objects

@@ -27,7 +27,7 @@ import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.R;
-import com.example.adventuremaps.ViewModels.LocalizationPointActivitiesVM;
+import com.example.adventuremaps.ViewModels.CreateLocalizationPointActivityVM;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 
 public class CreateLocalizationPointActivity extends AppCompatActivity {
 
-    private LocalizationPointActivitiesVM viewModel;
+    private CreateLocalizationPointActivityVM viewModel;
     private EditText name, description;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
@@ -58,7 +58,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_localization_point);
 
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(this).get(LocalizationPointActivitiesVM.class);
+        viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointActivityVM.class);
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
         viewModel.set_latitude(getIntent().getDoubleExtra("ActualLatitude", 0));
         viewModel.set_longitude(getIntent().getDoubleExtra("ActualLongitude", 0));

@@ -146,7 +146,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
      * Nombre: sameLastMarker
      * Comentario: Este método nos permite verificar su una posición (Latitud y longitud) coinciden
      * con el último marcador insertado en el mapa del fragmento.
-     * Cabecera: public boolean sameLastMarker(LatLng latLng)
+     * Cabecera: private boolean sameLastMarker(LatLng latLng)
      * Entrada:
      *  -LatLng latLng
      * Salida:
@@ -155,7 +155,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
      * coincide con el último marcador insertado en el mapa o false en caso contrario. Si el mapa
      * no contiene ningún marcador también devolverá false.
      */
-    public boolean sameLastMarker(LatLng latLng) {
+    private boolean sameLastMarker(LatLng latLng) {
         boolean samePosition = false;
         LatLng lastPositionMarked;
 

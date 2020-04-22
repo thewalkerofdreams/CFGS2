@@ -14,13 +14,11 @@ public class EditLocalizationPointActivityVM extends ViewModel {
     private ArrayList<String> _localizationsIdActualUser;
     private String _newName;
     private String _newDescription;
-    private boolean _favourite;
 
     public EditLocalizationPointActivityVM(){
         _actualEmailUser = "";
         _actualLocalizationPoint = null;
         _localizationTypes = new ArrayList<>();
-        _favourite = false;
         _localizationsIdActualUser = new ArrayList<>();
         _newName = "";
         _newDescription = "";
@@ -49,14 +47,6 @@ public class EditLocalizationPointActivityVM extends ViewModel {
 
     public void set_localizationTypes(ArrayList<String> _localizationTypes) {
         this._localizationTypes = _localizationTypes;
-    }
-
-    public boolean is_favourite() {
-        return _favourite;
-    }
-
-    public void set_favourite(boolean _favourite) {
-        this._favourite = _favourite;
     }
 
     public String get_newName() {

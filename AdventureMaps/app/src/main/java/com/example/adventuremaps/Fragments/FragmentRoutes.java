@@ -157,11 +157,7 @@ public class FragmentRoutes extends Fragment {
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
             LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutTabRoutes);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    0,
-                    (float) 1.0
-            );
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (float) 1.0);
             param.weight = 40;
             linearLayout.setLayoutParams(param);
         }
@@ -216,11 +212,11 @@ public class FragmentRoutes extends Fragment {
      * Comentario: Este método muestra un dialogo por pantalla para eliminar una ruta seleccionada.
      * Si el usuario confirma la eliminación, se eliminará la ruta de la plataforma FireBase, en caso
      * contrario no sucederá nada.
-     * Cabecera: public void deleteRouteDialog()
+     * Cabecera: private void deleteRouteDialog()
      * Postcondiciones: El método muestra un dialogo por pantalla, si el usuario lo confirma eliminará
      * la tuta seleccionada, en caso contrario no sucederá nada.
      */
-    public void showDeleteRouteDialog(){
+    private void showDeleteRouteDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_route);// Setting Alert Dialog Message
@@ -230,16 +226,9 @@ public class FragmentRoutes extends Fragment {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(getActivity(), R.string.routes_deleted, Toast.LENGTH_SHORT).show();
-                //Eliminamos las rutas seleccionadas
-                DatabaseReference drRoutePoint;
-
-                for(int i = 0; i < viewModel.get_selectedRoutes().size(); i++){
-                    drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_selectedRoutes().get(i).getRouteId());
-                    drRoutePoint.removeValue();
-                }
+                deleteSelectedRoutes();//Eliminamos las rutas seleccionadas
 
                 viewModel.set_dialogDeleteRouteShowing(false);//Indicamos que el dialogo ha finalizado
-                viewModel.get_selectedRoutes().clear();//Vaciamos la lista de selecionadas
             }
         });
 
@@ -256,12 +245,30 @@ public class FragmentRoutes extends Fragment {
 
     /**
      * Interfaz
+     * Nombre: deleteSelectedRoutes
+     * Comentario: El método elimina las rutas seleccionadas en la lista.
+     * Cabecera: private void deleteSelectedRoutes()
+     * Postcondiciones: El método elimina las rutas seleccionadas en la lista.
+     */
+    private void deleteSelectedRoutes(){
+        DatabaseReference drRoutePoint;
+
+        for(int i = 0; i < viewModel.get_selectedRoutes().size(); i++){
+            drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_selectedRoutes().get(i).getRouteId());
+            drRoutePoint.removeValue();
+        }
+
+        viewModel.get_selectedRoutes().clear();//Vaciamos la lista de selecionadas
+    }
+
+    /**
+     * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar las rutas del usuario en la lista actual.
-     * Cabecera: public void loadList()
+     * Cabecera: private void loadList()
      * Postcondiciones: El método carga la lista rutas del usuario actual.
      */
-    public void loadList(){
+    private void loadList(){
         Parcelable state = listView.onSaveInstanceState();//Guardamos el estado actual del listview (Nos interesa la posición actual del scroll)
 
         //Instanciamos los SharedPreference (Este método es llamado desde onStart, por lo que también debemos instanciarlos aquí también)
@@ -334,7 +341,7 @@ public class FragmentRoutes extends Fragment {
      * Favourite:
      *  -true (Order by favourites routes)
      *  -false (Does not take into account favorite routes)
-     * Cabecera: public void orderList(int field, boolean favourite)
+     * Cabecera: private void orderList(int field, boolean favourite)
      * Entrada:
      *  -int field
      *  -boolean favourite
@@ -343,7 +350,7 @@ public class FragmentRoutes extends Fragment {
      * Postcondiciones: El método ordena la lista de rutas según los criterios introducidos
      * por parámetros.
      */
-    public void orderList(int field, boolean favourite){
+    private void orderList(int field, boolean favourite){
         if(favourite){//Si la lista se encuentra ordenada por favoritos
             if(field == 1){
                 new OrderLists().orderRouteListAscByNameAndFavourite(viewModel.get_itemsRouteList());//Order list by name and fav
@@ -375,11 +382,11 @@ public class FragmentRoutes extends Fragment {
      * Comentario: Este método muestra por pantalla un dialogo con los diferentes tipos de ordenación, que se puede aplicar
      * sobre la lista de rutas, si el usuario confirma el dialogo, se ordenará la lista actual dependiendo
      * del tipo seleccionado.
-     * Cabecera: public void showOrderRoutesListDialog()
+     * Cabecera: private void showOrderRoutesListDialog()
      * Postcondiciones: El método abre un dialogo de ordenación, si el usuario confirma el dialogo se
      * ordena la lista de rutas por el criterio seleccionado.
      */
-    public void showOrderRoutesListDialog() {
+    private void showOrderRoutesListDialog() {
         final CharSequence [] orderTypes = {getResources().getString(R.string.name),
                 getResources().getString(R.string.date_of_creation)};
 

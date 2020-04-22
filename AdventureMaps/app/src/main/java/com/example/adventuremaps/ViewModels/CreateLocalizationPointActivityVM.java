@@ -6,9 +6,8 @@ import com.example.adventuremaps.Models.ClsImageWithId;
 
 import java.util.ArrayList;
 
-public class LocalizationPointActivitiesVM extends ViewModel {
+public class CreateLocalizationPointActivityVM extends ViewModel {
 
-    //CreateLocalizationPointActivity
     private String _actualEmailUser;
     private String _name;
     private String _description;
@@ -18,7 +17,7 @@ public class LocalizationPointActivitiesVM extends ViewModel {
     private boolean _favourite;
     private ArrayList<ClsImageWithId> _imagesToSave;
 
-    public LocalizationPointActivitiesVM(){
+    public CreateLocalizationPointActivityVM(){
         _actualEmailUser = "";
         _name = "";
         _description = "";

@@ -49,11 +49,7 @@ public class FragmentUser extends Fragment {
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
             LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutInfo01);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    0,
-                    (float) 1.0
-            );
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (float) 1.0);
             param.weight = 50;
             linearLayout.setLayoutParams(param);
         }

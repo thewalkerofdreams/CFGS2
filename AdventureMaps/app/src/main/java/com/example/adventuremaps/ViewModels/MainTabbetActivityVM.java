@@ -77,7 +77,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     //Fragment Start
     private LatLng _longClickPosition;//Para crear un nuevo punto de localización
-    private Marker _markerToCreate;
     private ArrayList<ClsLocalizationPoint> _localizationPoints;//Los puntos de localización que obtendremos de la plataforma FireBase
     private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
     private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
@@ -121,7 +120,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Start
         _longClickPosition = null;
-        _markerToCreate = null;
         _localizationPointsWithMarker = new ArrayList<>();
         _localizationPoints = new ArrayList<>();
         _localizationPointClicked = null;
@@ -322,14 +320,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_longClickPosition(LatLng _longClickPosition) {
         this._longClickPosition = _longClickPosition;
-    }
-
-    public Marker get_markerToCreate() {
-        return _markerToCreate;
-    }
-
-    public void set_markerToCreate(Marker _markerToCreate) {
-        this._markerToCreate = _markerToCreate;
     }
 
     public ArrayList<ClsLocalizationPoint> get_localizationPoints() {
