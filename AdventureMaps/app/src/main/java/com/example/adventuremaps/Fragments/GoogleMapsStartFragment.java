@@ -20,6 +20,8 @@ import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.UtilStrings;
+import com.example.adventuremaps.Models.MyClusterItem;
+import com.example.adventuremaps.Models.MyClusterRenderer;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -35,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -48,6 +52,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private BitmapDrawable bitmapdraw;
     private Bitmap smallMarker;
     private ValueEventListener listener;
+    //ClusterItem
+    private ClusterManager<MyClusterItem> mClusterManager;
+    private MyClusterRenderer myClusterRenderer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,7 +100,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {
+    public void onMapReady(final GoogleMap map) {
         this.map = map;
         LatLng latLng;
         float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
@@ -111,7 +118,27 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));//Movemos la camara según los valores definidos
 
+        //Inicializamos el cluster manager
+        mClusterManager = new ClusterManager<MyClusterItem>(getActivity(), this.map);
+        //Utilizamos un render personalizado para cambiar el icono por defecto de los marcadores
+        myClusterRenderer = new MyClusterRenderer(getActivity(), this.map, mClusterManager);
+        mClusterManager.setRenderer(myClusterRenderer);
+
         //Declaramos los eventos
+        //map.setOnCameraIdleListener(mClusterManager);
+        final CameraPosition[] mPreviousCameraPosition = {null};
+        map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {//Modificamos el evento de cambio de camara
+            @Override
+            public void onCameraIdle() {
+                CameraPosition position = map.getCameraPosition();
+                if(mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {//Si el zoom cambia ocultamos el fragmento inferior
+                    mPreviousCameraPosition[0] = map.getCameraPosition();
+                    mClusterManager.cluster();
+                    ocultarFragmentoInferior();//Ocultamos el fragmento inferior
+                }
+            }
+        });
+
         map.setOnMapClickListener(this);
         map.setOnMapLongClickListener(this);
         map.setOnMarkerClickListener(this);
@@ -152,9 +179,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método carga los puntos de localización en el mapa actual.
      */
     private void loadLocalizationPoints(){
+        mClusterManager.clearItems();
         for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
             colocarMarcador(viewModel.get_localizationPoints().get(i)); //Comenzamos a marcar las localizaciones almacenadaa
         }
+        mClusterManager.cluster();
     }
 
     /**
@@ -167,7 +196,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método coloca un marcador en el mapa.
      */
     private void colocarMarcador(ClsLocalizationPoint localizationPoint){
-        MarkerOptions markerOptions = new MarkerOptions();
+        /*MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
         markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
         if(map != null){//Si se ha cargado la referencia al mapa de inicio
@@ -181,7 +210,46 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
                 onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
             }
+        }*/
+        String tag = getTagLocalization(localizationPoint);//Obtenemos el tag del punto de localización
+        boolean itemSelected = false;
+
+        //Si el marcador ya se encontraba seleccionado
+        if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == localizationPoint.getLatitude() &&
+                viewModel.get_localizationPointClicked().getPosition().longitude == localizationPoint.getLongitude()){
+            itemSelected = true;
+            mClusterManager.getMarkerCollection().remove(viewModel.get_localizationPointClicked());
         }
+
+        MyClusterItem item = new MyClusterItem(localizationPoint.getLatitude(), localizationPoint.getLongitude(), tag, itemSelected);
+        mClusterManager.addItem(item);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getTagLocalization
+     * Comentario: El método obtiene un tag para una localización determinada.
+     * Cabecera: private String getTagLocalization(ClsLocalizationPoint localizationPoint)
+     * Entrada:
+     *  -ClsLocalizationPoint localizationPoint
+     * Salida:
+     *  -String tag
+     * Postcondiciones: El método devuelve un tag para utilizar en la localización.
+     */
+    private String getTagLocalization(ClsLocalizationPoint localizationPoint){
+        String tag = "";
+
+        if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la localización
+            tag = "Fav";
+        }else{
+            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
+                tag = "Owner";
+            }else{//Si la loclización no es del usuario actual
+                tag = "NoOwner";
+            }
+        }
+
+        return tag;
     }
 
     /**
@@ -196,7 +264,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      *  -ClsLocalizationPoint localizationPoint
      * Postcondciones: El método inserta un icono y un tag al marcador pasado por parámetros.
      */
-    private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
+    /*private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
         if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
             setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
             marker.setTag("Fav");
@@ -209,7 +277,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 marker.setTag("NoOwner");
             }
         }
-    }
+    }*/
 
     /**
      * Interfaz
@@ -245,7 +313,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
-                    cleanAllLocalizations();
+                    //cleanAllLocalizations();
                     viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
@@ -283,7 +351,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                cleanAllLocalizations();
+                //cleanAllLocalizations();
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
