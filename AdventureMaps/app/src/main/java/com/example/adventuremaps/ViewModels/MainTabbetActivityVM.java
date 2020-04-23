@@ -21,6 +21,7 @@ import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
+import com.example.adventuremaps.Models.MyClusterItem;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -85,6 +86,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<String> _checkedFilters;
     private boolean[] _dialogPostisionsChecked;
     private ClsLocalizationPoint _selectedLocalizationPoint;
+    private MyClusterItem _itemSelected;//Item seleccionado del cluster manager
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -131,6 +133,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
             _dialogPostisionsChecked[i] = true;
         }
         _selectedLocalizationPoint = null;
+        _itemSelected = null;
     }
 
     //Get y Set
@@ -384,6 +387,14 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_selectedLocalizationPoint(ClsLocalizationPoint _selectedLocalizationPoint) {
         this._selectedLocalizationPoint = _selectedLocalizationPoint;
+    }
+
+    public MyClusterItem get_itemSelected() {
+        return _itemSelected;
+    }
+
+    public void set_itemSelected(MyClusterItem _itemSelected) {
+        this._itemSelected = _itemSelected;
     }
 
     //Functions Fragment Offline Maps Part

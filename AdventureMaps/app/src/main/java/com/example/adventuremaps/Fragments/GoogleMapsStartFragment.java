@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Management.ApplicationConstants;
-import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.UtilStrings;
 import com.example.adventuremaps.Models.MyClusterItem;
@@ -32,7 +31,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +52,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private ValueEventListener listener;
     //ClusterItem
     private ClusterManager<MyClusterItem> mClusterManager;
-    private MyClusterRenderer myClusterRenderer;
+    private MyClusterRenderer myClusterRenderer;//Nos permite modificar características especiales de los items del cluster
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +77,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
+        if(!tryChangeSelectedItem()){//Si no había un item seleccionado del cluster (Si lo había se restaura su icono por defecto)
+            tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
+        }
 
         setIconToMarker(marker, String.valueOf(R.drawable.blue_marker));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
@@ -96,7 +96,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
-        tryChangeMarkerToDefaultImage();//Si existe un marcador seleccionado, restauramos su icono por defecto
+        if(!tryChangeSelectedItem()){//Si no había un item seleccionado del cluster
+            tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
+        }
     }
 
     @Override
@@ -125,16 +127,18 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         mClusterManager.setRenderer(myClusterRenderer);
 
         //Declaramos los eventos
-        //map.setOnCameraIdleListener(mClusterManager);
         final CameraPosition[] mPreviousCameraPosition = {null};
         map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {//Modificamos el evento de cambio de camara
             @Override
-            public void onCameraIdle() {
+            public void onCameraIdle() {//Sobreescribimos el método de cambio de cámara sobre el mapa
                 CameraPosition position = map.getCameraPosition();
-                if(mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {//Si el zoom cambia ocultamos el fragmento inferior
+                if(mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {//Si el zoom de la cámara cambia
                     mPreviousCameraPosition[0] = map.getCameraPosition();
-                    mClusterManager.cluster();
+                    mClusterManager.cluster();//Volvemos a cargar el cluster
                     ocultarFragmentoInferior();//Ocultamos el fragmento inferior
+                    if(!tryChangeSelectedItem()){//Desmarcamos el marker que se encontraba seleccionado
+                        tryChangeMarkerToDefaultImage();//Si existe un marcador seleccionado, restauramos su icono por defecto
+                    }
                 }
             }
         });
@@ -154,6 +158,35 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }else{
             Toast.makeText(getActivity(), R.string.create_localization_permission_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryChangeSelectedItem
+     * Comentario: El método modifica el marcador seleccionado sobre el mapa, cambiando su icono a por
+     * el de por defecto. Este método es necesario cuando se ha vuelto de la pantalla de detalles de
+     * la localización seleccionada, permitiendonos cambiar el icono del item del cluster lo que también
+     * modificará el icono del marcador.
+     * Cabecera: private boolean tryChangeSelectedItem(Marker marker)
+     * Entrada:
+     *  -Marker marker
+     * Postcondiciones: El método cambia el icono del marcador al de por defecto.
+     */
+    private boolean tryChangeSelectedItem(){
+        boolean changed = false;
+
+        //Si existe un item seleccionado en el cluster
+        if(viewModel.get_itemSelected() != null){
+            viewModel.get_itemSelected().setItemSelected(false);//Indicamos que el item ya no se encuentra seleccionado
+            restoreIconMarker(myClusterRenderer.getMarker(viewModel.get_itemSelected()));//Restauramos el icono del marcador
+
+            viewModel.set_itemSelected(null);//Indicamos que ya no existe un item seleccionado
+            mClusterManager.cluster();//Actualizamos el cluster
+
+            changed = true;//Indicamos que se cambió el item del cluster por otro nuevo
+        }
+
+        return changed;
     }
 
     /**
@@ -212,17 +245,20 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             }
         }*/
         String tag = getTagLocalization(localizationPoint);//Obtenemos el tag del punto de localización
-        boolean itemSelected = false;
 
         //Si el marcador ya se encontraba seleccionado
         if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == localizationPoint.getLatitude() &&
                 viewModel.get_localizationPointClicked().getPosition().longitude == localizationPoint.getLongitude()){
-            itemSelected = true;
-            mClusterManager.getMarkerCollection().remove(viewModel.get_localizationPointClicked());
-        }
 
-        MyClusterItem item = new MyClusterItem(localizationPoint.getLatitude(), localizationPoint.getLongitude(), tag, itemSelected);
-        mClusterManager.addItem(item);
+            MyClusterItem item = new MyClusterItem(localizationPoint.getLatitude(), localizationPoint.getLongitude(), tag, true);
+            mClusterManager.addItem(item);
+
+            viewModel.set_itemSelected(item);//Almacenamos el item en el VM
+            viewModel.set_localizationPointClicked(myClusterRenderer.getMarker(item));//Almacenamos la nueva localización clicada
+        }else{
+            MyClusterItem item = new MyClusterItem(localizationPoint.getLatitude(), localizationPoint.getLongitude(), tag, false);
+            mClusterManager.addItem(item);
+        }
     }
 
     /**
@@ -234,7 +270,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      *  -ClsLocalizationPoint localizationPoint
      * Salida:
      *  -String tag
-     * Postcondiciones: El método devuelve un tag para utilizar en la localización.
+     * Postcondiciones: El método devuelve un tag que será utilizado para insertar un punto de
+     * localización en el mapa.
      */
     private String getTagLocalization(ClsLocalizationPoint localizationPoint){
         String tag = "";
@@ -314,7 +351,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
                     //cleanAllLocalizations();
-                    viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
+                    //viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
@@ -338,6 +375,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     /**
@@ -382,11 +424,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método elimina todos los marcadores que se encuentran sobre
      * el mapa actual.
      */
-    private void cleanAllLocalizations(){
+    /*private void cleanAllLocalizations(){
         for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size(); i++){
             viewModel.get_localizationPointsWithMarker().get(i).getMarker().remove();
         }
-    }
+    }*/
 
     /**
      * Interfaz

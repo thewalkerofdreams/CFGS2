@@ -41,6 +41,10 @@ public class MyClusterItem implements ClusterItem {
         return tag;
     }
 
+    public void setItemSelected(boolean itemSelected) {
+        this.itemSelected = itemSelected;
+    }
+
     public boolean getItemSelected(){
         return itemSelected;
     }
