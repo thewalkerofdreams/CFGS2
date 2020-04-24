@@ -77,9 +77,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(!tryChangeSelectedItem()){//Si no había un item seleccionado del cluster (Si lo había se restaura su icono por defecto)
-            tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
-        }
+        tryDesmarkMarker();//Si ya existe un marcador seleccionado lo deseleccionamos
 
         setIconToMarker(marker, String.valueOf(R.drawable.blue_marker));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
@@ -96,9 +94,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         Toast.makeText(getContext(), format, Toast.LENGTH_LONG).show();
         ocultarFragmentoInferior();//Ocultamos el fragmento inferior, si este no lo estuviera
 
-        if(!tryChangeSelectedItem()){//Si no había un item seleccionado del cluster
-            tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
-        }
+        tryDesmarkMarker();//Si ya existe un marcador seleccionado lo deseleccionamos
     }
 
     @Override
@@ -157,6 +153,19 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
         }else{
             Toast.makeText(getActivity(), R.string.create_localization_permission_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryDesmarkMarker
+     * Comentario: El método descarca el marcador seleccionado en el mapa, si existe uno.
+     * Cabecera: private void tryDesmarkMarker()
+     * Postcondiciones: Si existe un marcador seleccionado en el mapa, el método lo deselecciona.
+     */
+    private void tryDesmarkMarker(){
+        if(!tryChangeSelectedItem()){//Si no había un item seleccionado del cluster (Si lo había se restaura su icono por defecto)
+            tryChangeMarkerToDefaultImage();//Si ya existe un marcador seleccionado, restauramos su icono por defecto
         }
     }
 
@@ -229,23 +238,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método coloca un marcador en el mapa.
      */
     private void colocarMarcador(ClsLocalizationPoint localizationPoint){
-        /*MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(localizationPoint.getLatitude(), localizationPoint.getLongitude()));//Indicamos la posición del marcador
-        markerOptions.draggable(false);//Evitamos que se puedan mover los marcadores por el mapa
-        if(map != null){//Si se ha cargado la referencia al mapa de inicio
-            Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
-            adjustMarkerType(marker, localizationPoint);//Ajustamos el marcador actual
-            viewModel.get_localizationPointsWithMarker().add(new ClsMarkerWithLocalization(marker, localizationPoint));//Almacenamos el Marcador en un modelo
-
-            //Si el marcador colocado es igual al marcador seleccionado almacenado en el VM (Nos permite conservar el color del marker seleccionado cuando cambiamos de pantalla)
-            if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == marker.getPosition().latitude &&
-                    viewModel.get_localizationPointClicked().getPosition().longitude == marker.getPosition().longitude){
-                viewModel.set_localizationPointClicked(marker);//Almacenamos la referencia al nuevo marcador
-                onMarkerClick(viewModel.get_localizationPointClicked());//Volvemos a seleccionarlo
-            }
-        }*/
         String tag = getTagLocalization(localizationPoint);//Obtenemos el tag del punto de localización
-
         //Si el marcador ya se encontraba seleccionado
         if(viewModel.get_localizationPointClicked() != null && viewModel.get_localizationPointClicked().getPosition().latitude == localizationPoint.getLatitude() &&
                 viewModel.get_localizationPointClicked().getPosition().longitude == localizationPoint.getLongitude()){
@@ -254,7 +247,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             mClusterManager.addItem(item);
 
             viewModel.set_itemSelected(item);//Almacenamos el item en el VM
-            viewModel.set_localizationPointClicked(myClusterRenderer.getMarker(item));//Almacenamos la nueva localización clicada
         }else{
             MyClusterItem item = new MyClusterItem(localizationPoint.getLatitude(), localizationPoint.getLongitude(), tag, false);
             mClusterManager.addItem(item);
@@ -291,33 +283,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     /**
      * Interfaz
-     * Nombre: adjustMarkerType
-     * Comentario: Este método nos permite ajustar un marcador en específico, insertandole un icono
-     * y un tag, que lo permita distindguir del resto de marcadores que no son del mismo tipo. Este
-     * método es llamado desde dentro del método "colocarMarcador".
-     * Cabecera: public void private(Marker marker, ClsLocalizationPoint localizationPoint)
-     * Entrada:
-     *  -Marker marker
-     *  -ClsLocalizationPoint localizationPoint
-     * Postcondciones: El método inserta un icono y un tag al marcador pasado por parámetros.
-     */
-    /*private void adjustMarkerType(Marker marker, ClsLocalizationPoint localizationPoint){
-        if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la ruta
-            setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
-            marker.setTag("Fav");
-        }else{
-            if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
-                setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
-                marker.setTag("Owner");
-            }else{//Si la loclización no es del usuario actual
-                setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
-                marker.setTag("NoOwner");
-            }
-        }
-    }*/
-
-    /**
-     * Interfaz
      * Nombre: restoreIconMarker
      * Comentario: Este método nos permite restablecer el icono por defecto de un marcador específico.
      * Cabecera: private void restoreIconMarker(Marker marker)
@@ -350,8 +315,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
-                    //cleanAllLocalizations();
-                    //viewModel.get_localizationPointsWithMarker().clear();//Limpiamos la lista de puntos de localización que contienen los marcadores
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
@@ -377,11 +340,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         });
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     /**
      * Interfaz
      * Nombre: storeFavouriteLocalizationsId
@@ -393,7 +351,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //cleanAllLocalizations();
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
@@ -415,20 +372,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         super.onPause();
         localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
     }
-
-    /**
-     * Interfaz
-     * Nombre: cleanAllLocalizations
-     * Comentario: Este método nos permite limpiar todos los marcadores sobre el mapa.
-     * Cabecera: private void cleanAllLocalizations()
-     * Postcondiciones: El método elimina todos los marcadores que se encuentran sobre
-     * el mapa actual.
-     */
-    /*private void cleanAllLocalizations(){
-        for(int i = 0; i < viewModel.get_localizationPointsWithMarker().size(); i++){
-            viewModel.get_localizationPointsWithMarker().get(i).getMarker().remove();
-        }
-    }*/
 
     /**
      * Interfaz

@@ -17,7 +17,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
-import com.example.adventuremaps.Models.ClsMarkerWithLocalization;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
@@ -79,7 +78,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     //Fragment Start
     private LatLng _longClickPosition;//Para crear un nuevo punto de localización
     private ArrayList<ClsLocalizationPoint> _localizationPoints;//Los puntos de localización que obtendremos de la plataforma FireBase
-    private ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker;//A cada punto de localización le asignaremos un Marker para evitar errores de posicionamiento
     private Marker _localizationPointClicked;//Obtendremos el marcador de un punto de localización clicado
     private ClsLocalizationPoint _localizationToSave;
     private ArrayList<String> _localizationTypesToSave;
@@ -122,7 +120,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Start
         _longClickPosition = null;
-        _localizationPointsWithMarker = new ArrayList<>();
         _localizationPoints = new ArrayList<>();
         _localizationPointClicked = null;
         _localizationToSave = null;
@@ -331,14 +328,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_localizationPoints(ArrayList<ClsLocalizationPoint> _localizationPoints) {
         this._localizationPoints = _localizationPoints;
-    }
-
-    public ArrayList<ClsMarkerWithLocalization> get_localizationPointsWithMarker() {
-        return _localizationPointsWithMarker;
-    }
-
-    public void set_localizationPointsWithMarker(ArrayList<ClsMarkerWithLocalization> _localizationPointsWithMarker) {
-        this._localizationPointsWithMarker = _localizationPointsWithMarker;
     }
 
     public Marker get_localizationPointClicked() {
