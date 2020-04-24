@@ -13,9 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.UtilStrings;
@@ -63,7 +63,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
             //Cargamos el fragmento inferior
-            ((MainTabbetActivity)getActivity()).replaceFragment();
+            replaceFragment();
         }
 
         return view;
@@ -404,5 +404,21 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
             }
         });
+    }
+
+    //Método para cargar el fragmento inferior
+    /**
+     * Interfaz
+     * Nombre: replaceFragment
+     * Comentario: Este método nos permite remplazar el contenido de nuestro
+     * FrameLayout "FrameLayout02" por el fragmento "FragmentStartLocalizationPointClick".
+     * Cabecera: public void replaceFragment()
+     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el fragmento FragmentStartLocalizationPointClick.
+     * */
+    public void replaceFragment(){
+        FragmentTransaction transation = getFragmentManager().beginTransaction();
+        transation.replace(R.id.FrameLayout02, new FragmentStartLocalizationPointClick());
+        transation.addToBackStack(null);//add the transaction to the back stack so the user can navigate back
+        transation.commit();
     }
 }

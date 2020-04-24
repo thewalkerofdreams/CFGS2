@@ -271,22 +271,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     }
 
     //Methods Fragment Star
-
-    /**
-     * Interfaz
-     * Nombre: replaceFragment
-     * Comentario: Este método nos permite remplazar el contenido de nuestro
-     * FrameLayout "FrameLayout02" por el fragmento "FragmentStartLocalizationPointClick".
-     * Cabecera: public void replaceFragment()
-     * Postcondiciones: El método reemplaza el contenido del FrameLayout por el fragmento FragmentStartLocalizationPointClick.
-     * */
-    public void replaceFragment(){
-        FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
-        transation.replace(R.id.FrameLayout02, fragment);
-        transation.addToBackStack(null);//add the transaction to the back stack so the user can navigate back
-        transation.commit();
-    }
-
     /**
      * Interfaz
      * Nombre: removeYourFragment
