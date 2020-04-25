@@ -1,5 +1,6 @@
 package com.example.adventuremaps.Models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,36 +16,40 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 public class MyClusterRenderer extends DefaultClusterRenderer<MyClusterItem> {
 
-    private Context context;
+    private Activity activity;
 
-    public MyClusterRenderer(Context context, GoogleMap map, ClusterManager<MyClusterItem> clusterManager) {
-        super(context, map, clusterManager);
-        this.context = context;
+    public MyClusterRenderer(Activity activity, GoogleMap map, ClusterManager<MyClusterItem> clusterManager) {
+        super(activity, map, clusterManager);
+        this.activity = activity;
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(MyClusterItem item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(final MyClusterItem item, final MarkerOptions markerOptions) {
 
-        BitmapDrawable bitmapdraw = null;
-        Bitmap smallIcon = null;
+        activity.runOnUiThread(new Runnable() {//Insertamos el icono en un hilo secundario
+            public void run() {
+                BitmapDrawable bitmapdraw = null;
+                Bitmap smallIcon = null;
 
-        if(item.getItemSelected()){//Si el item se encuentra seleccionado
-            bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(Integer.valueOf(R.drawable.blue_marker));
-        }else{
-            switch (item.getTag()){
-                case "Fav":
-                    bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(Integer.valueOf(R.drawable.marker_fav));
-                    break;
-                case "Owner":
-                    bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(Integer.valueOf(R.drawable.own_location));
-                    break;
-                case "NoOwner":
-                    bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
-                    break;
+                if(item.getItemSelected()){//Si el item se encuentra seleccionado
+                    bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.blue_marker));
+                }else{
+                    switch (item.getTag()){
+                        case "Fav":
+                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.marker_fav));
+                            break;
+                        case "Owner":
+                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.own_location));
+                            break;
+                        case "NoOwner":
+                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
+                            break;
+                    }
+                }
+                smallIcon = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
             }
-        }
-        smallIcon = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+        });
     }
 
     @Override

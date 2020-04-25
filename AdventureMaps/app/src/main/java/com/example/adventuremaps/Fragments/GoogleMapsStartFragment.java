@@ -309,12 +309,25 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onStart() {
         super.onStart();
+        storeLocalizationPointsToShow();//Almacenamos los puntos de localización a mostrar
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeLocalizationPointsToShow
+     * Comentario: El método almacena los puntos de localización que se van mostrar en el mapa
+     * en el VM. Luego llama a la función "storeFavouriteLocalizationsId" para almacenar las id's de
+     * las localizaciones favoritas del usuario, para luego mostrarlas con el icono de favorito.
+     * Cabecera: private void storeLocalizationPointsToShow()
+     * Postcondiciones: El método almacena los puntos de localización que se van a mostrar en el VM.
+     */
+    private void storeLocalizationPointsToShow(){
         // Read from the database
         listener = localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
-                    viewModel.get_localizationPoints().clear();//Limpiamos la lista de rutas
+                    viewModel.get_localizationPoints().clear();//Limpiamos la lista de puntos de localización
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
 
