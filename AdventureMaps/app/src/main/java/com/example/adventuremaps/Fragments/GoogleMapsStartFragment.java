@@ -312,6 +312,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         storeLocalizationPointsToShow();//Almacenamos los puntos de localización a mostrar
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+    }
+
     /**
      * Interfaz
      * Nombre: storeLocalizationPointsToShow
@@ -363,7 +369,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private void storeFavouriteLocalizationsId(){
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario

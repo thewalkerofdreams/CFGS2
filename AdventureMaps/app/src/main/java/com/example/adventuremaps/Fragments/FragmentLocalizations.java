@@ -225,6 +225,12 @@ public class FragmentLocalizations extends Fragment {
         storeIdLocalizationPointsFavourites();//Cargamos las id's de las localizaaciones favoritas del usuario actual
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        drUser.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+    }
+
     /**
      * Interfaz
      * Nombre: storeIdLocalizationPointsFavourites

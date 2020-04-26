@@ -185,6 +185,19 @@ public class FragmentRoutes extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        storeAndLoadRoutesFromActualUser();//Obtenemos las rutas del usuario actual y cargamos la lista con ellas
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeAndLoadRoutesFromActualUser
+     * Comentario: El método guarda en el VM las rutas almacenadas en la plataforma Firebase del usuario actual,
+     * para luego mostrarlas en la lista de rutas.
+     * Cabecera: private void storeAndLoadRoutesFromActualUser()
+     * Postcondiciones: El método almacena las rutas del usuario actual en el VM y las carga en
+     * una lista.
+     */
+    private void storeAndLoadRoutesFromActualUser(){
         // Read from the database
         myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
