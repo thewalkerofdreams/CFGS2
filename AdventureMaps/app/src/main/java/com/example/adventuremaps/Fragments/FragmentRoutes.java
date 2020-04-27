@@ -379,7 +379,7 @@ public class FragmentRoutes extends Fragment {
         }
     }
 
-    @Override
+    /*@Override
     public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación permitida en cada página del ViewPager
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
@@ -387,7 +387,7 @@ public class FragmentRoutes extends Fragment {
             if(actualActivity != null)
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
-    }
+    }*/
 
     /**
      * Interfaz
