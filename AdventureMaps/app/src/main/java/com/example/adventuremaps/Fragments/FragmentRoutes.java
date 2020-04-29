@@ -1,13 +1,11 @@
 package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -49,6 +47,7 @@ public class FragmentRoutes extends Fragment {
     private Button btnFav, btnDelete, btnOrderRoutes;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
+    private ValueEventListener listener;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -188,6 +187,12 @@ public class FragmentRoutes extends Fragment {
         storeAndLoadRoutesFromActualUser();//Obtenemos las rutas del usuario actual y cargamos la lista con ellas
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        myDataBaseReference.removeEventListener(listener);
+    }
+
     /**
      * Interfaz
      * Nombre: storeAndLoadRoutesFromActualUser
@@ -199,7 +204,7 @@ public class FragmentRoutes extends Fragment {
      */
     private void storeAndLoadRoutesFromActualUser(){
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_itemsRouteList().clear();//Limpiamos la lista de rutas
