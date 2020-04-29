@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +36,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     private RouteActivitiesVM viewModel;
     private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,10 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
         viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
         viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
+
+        //Instanciamos los elementos de la UI
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Saving changes");
     }
 
     /**
@@ -108,9 +116,6 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                                 deleteOldRoutePoints();
                                 //Almacenamos los puntos actuales de la ruta
                                 saveActualRoutePoints();
-
-                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();
-                                finish();
                             }
                         }
                     })
@@ -148,7 +153,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
      * Postcondiciones: El método almacena los puntos existentes de la ruta actual en la plataforma Firebase.
      */
     private void saveActualRoutePoints(){
-        for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
+        progressDialog.show();//Mostramos el dialogo hasta que se hayan guardado todos los cambios en la plataforma Firebase
+        for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){//Almacenamos cada existente en la ruta
             String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
             ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
                     viewModel.get_actualIdRoute(), viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
@@ -156,7 +162,18 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference("Users").
                     child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute())
                     .child("routePoints").child(newRoutePoint.getRoutePointId())
-                    .setValue(newRoutePoint);
+                    .setValue(newRoutePoint).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    viewModel.set_routePointsInserted(viewModel.get_routePointsInserted() + 1);//Aumentamos en uno el número de puntos insertados
+                    if(viewModel.get_localizationPoints().size() == viewModel.get_routePointsInserted()){//Si era el último punto de la ruta
+                        viewModel.set_routePointsInserted(0);//Volvemos a poner el contador a 0
+                        progressDialog.dismiss();//Ocultamos el progressDialog
+                        Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();//Indicamos que se guardaron los cambios
+                        finish();//Finalizamos la actividad
+                    }
+                }
+            });
         }
     }
 

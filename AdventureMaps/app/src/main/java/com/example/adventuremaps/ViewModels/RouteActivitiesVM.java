@@ -29,6 +29,7 @@ public class RouteActivitiesVM extends AndroidViewModel {
     private ArrayList<ClsMarkerWithPriority> _localizationPoints;
     private ClsRoute _route;
     private ClsRoutePoint _lastLocalizationClicked;
+    private int _routePointsInserted;//Nos permite verificar si se han subido todos los puntos de una ruta a la plataforma Firebase
 
     //Atributos específicamos para SeeAndEditRouteActivity
     private String _actualIdRoute;
@@ -48,6 +49,7 @@ public class RouteActivitiesVM extends AndroidViewModel {
         _actualIdRoute = "";
         _actualRouteName = "";
         _routePoints = new ArrayList<>();
+        _routePointsInserted = 0;
     }
 
     //Get y Set
@@ -113,6 +115,14 @@ public class RouteActivitiesVM extends AndroidViewModel {
 
     public void set_actualEmailUser(String _actualEmailUser) {
         this._actualEmailUser = _actualEmailUser;
+    }
+
+    public int get_routePointsInserted() {
+        return _routePointsInserted;
+    }
+
+    public void set_routePointsInserted(int _routePointsInserted) {
+        this._routePointsInserted = _routePointsInserted;
     }
 
     //Get y Set específicos para SeeAndEditRouteActivity

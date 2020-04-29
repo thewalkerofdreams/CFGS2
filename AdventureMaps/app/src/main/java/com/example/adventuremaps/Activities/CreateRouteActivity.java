@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
 
     private RouteActivitiesVM viewModel;
     private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
+
+        //Instanciamos los elementos de la UI
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Saving new route");
     }
 
     /**
@@ -118,6 +124,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
      * Postcondiciones: El método almacena la ruta actual con un nombre determinado en la plataforma de Firebase.
      */
     private void saveRoute(String routeName){
+        progressDialog.show();//Mostramos el progressDialog mientras se guarde la nueva ruta
         final String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
 
         //Almacenamos la ruta
@@ -136,11 +143,19 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                     FirebaseDatabase.getInstance().getReference("Users").
                             child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
                             .child("routePoints").child(newRoutePoint.getRoutePointId())
-                            .setValue(newRoutePoint);
+                            .setValue(newRoutePoint).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            viewModel.set_routePointsInserted(viewModel.get_routePointsInserted() + 1);//Aumentamos en uno el número de puntos insertados
+                            if(viewModel.get_localizationPoints().size() == viewModel.get_routePointsInserted()){//Si era el último punto de la ruta
+                                viewModel.set_routePointsInserted(0);//Volvemos a poner el contador a 0
+                                progressDialog.dismiss();//Ocultamos el progressDialog
+                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();//Indicamos que se ha guardado la ruta
+                                finish();//Finalizamos la actividad actual
+                            }
+                        }
+                    });
                 }
-
-                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();//Indicamos que se ha guardado la ruta
-                finish();//Finalizamos la actividad actual
             }
         });
     }
