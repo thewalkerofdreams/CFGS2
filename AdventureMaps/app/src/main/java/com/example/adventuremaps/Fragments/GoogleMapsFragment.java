@@ -1,6 +1,8 @@
 package com.example.adventuremaps.Fragments;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsMarkerWithPriority;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
+import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -132,6 +137,7 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
             markerOptions.position(latLng);//Indicamos la posición del marcador
             markerOptions.draggable(true);//Permite que podamos mover elmarcador por el mapa, en este caso, lo utilizamos para hacer un marcado largo
             Marker marker = map.addMarker(markerOptions);//Agregamos el marcador a la UI
+            setIconToMarker(marker);//Le agregamos el icono de punto de ruta
 
             //Almacenaremos un ClsMarkerWithPriority en la lista de puntos de localización del VM
             ClsMarkerWithPriority markerWithPriority = new ClsMarkerWithPriority(marker, viewModel.getLastPositionNumber()+1);
@@ -193,4 +199,22 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         polyline.setColor(Color.RED);//Indicamos el color de la línea
     }
 
+    /**
+     * Interfaz
+     * Nombre: setIconToMarker
+     * Comentario: Este método nos permite insertar el icono de punto de ruta en un marcador.
+     * Cabecera: private void setIconToMarker(final Marker marker)
+     * Entrada:
+     *  -final Marker marker
+     * Postcondiciones: El método agrega el icono de punto de ruta a un marcador.
+     */
+    private void setIconToMarker(final Marker marker){
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.route_point);
+                Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+            }
+        });
+    }
 }

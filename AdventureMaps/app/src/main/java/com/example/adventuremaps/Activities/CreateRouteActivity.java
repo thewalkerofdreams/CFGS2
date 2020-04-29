@@ -58,7 +58,6 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
      * alguna.
      * */
     public void intentarMarcarLocalizacion(View view){
-
         if(viewModel.get_lastLocalizationClicked() != null){//Si se ha marcado una localización
             FragmentManager fm = getSupportFragmentManager();
             GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
