@@ -14,7 +14,6 @@ import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection02;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection03;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection04;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection05;
-import com.example.adventuremaps.Fragments.Tutorial.OfflineMapsSection01Fragment;
 import com.example.adventuremaps.R;
 
 /**

@@ -56,11 +56,12 @@ public class CommonFragmentSection02 extends Fragment {//Contendrá las páginas
     /**
      * Interfaz
      * Nombre: enterNextFragment
-     * Comentario: Este método nos permite movernos al siguiente fragmento de la sección, si este existe. Reemplazando
-     * el actual por el nuevo.
+     * Comentario: Este método nos permite movernos a la siguiente página de la sección. Reemplazando
+     * la actual por el nueva.
      * Cabecera: private void enterNextFragment()
-     * Postcondiciones: El método reemplaza el fragmento actual por el siguiente a este, si existe algún
-     * fragmento posterior.
+     * Precondiciones:
+     *  -debe existir una página(fragmento) posterior en la sección
+     * Postcondiciones: El método reemplaza la página actual por la siguiente a este.
      */
     private void enterNextFragment() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -83,11 +84,12 @@ public class CommonFragmentSection02 extends Fragment {//Contendrá las páginas
     /**
      * Interfaz
      * Nombre: backToLasFragment
-     * Comentario: Este método nos permite movernos al anterior fragmento de la sección, si este existe. Reemplazando
-     * el actual por el anterior.
+     * Comentario: Este método nos permite movernos a la anterior página de la sección. Reemplazando
+     * la actual por la anterior.
      * Cabecera: private void backToLasFragment()
-     * Postcondiciones: El método reemplaza el fragmento actual por el anterior a este, si existe algún
-     * fragmento anterior.
+     * Precondiciones:
+     *  -debe de existir una página anterior a la actual en la sección
+     * Postcondiciones: El método reemplaza la página actual por la anterior a esta.
      */
     private void backToLasFragment(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -110,10 +112,10 @@ public class CommonFragmentSection02 extends Fragment {//Contendrá las páginas
     /**
      * Interfaz
      * Nombre: loadActualPage
-     * Comentario: Este método nos permite cargar la primera página por defecto de la sección,
+     * Comentario: Este método nos permite cargar una página de la sección,
      * según el valor que tenga actualmente el atributo _actualSubPageSection2 del VM.
      * Cabecera: private void loadActualPage()
-     * Postcondiciones: El método carga la página actual de la sección.
+     * Postcondiciones: El método carga una página de la sección.
      */
     private void loadActualPage(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();

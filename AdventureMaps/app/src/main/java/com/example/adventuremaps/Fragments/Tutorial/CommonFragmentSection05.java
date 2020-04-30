@@ -99,10 +99,10 @@ public class CommonFragmentSection05 extends Fragment {//Contendrá las páginas
     /**
      * Interfaz
      * Nombre: loadActualPage
-     * Comentario: Este método nos permite cargar la primera página por defecto de la sección,
-     * según el valor que tenga actualmente el atributo _actualSubPageSection1 del VM.
+     * Comentario: Este método nos permite cargar una página de la sección,
+     * según el valor que tenga actualmente el atributo _actualSubPageSection5 del VM.
      * Cabecera: private void loadActualPage()
-     * Postcondiciones: El método carga la página actual de la sección.
+     * Postcondiciones: El método carga una página de la sección.
      */
     private void loadActualPage(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
