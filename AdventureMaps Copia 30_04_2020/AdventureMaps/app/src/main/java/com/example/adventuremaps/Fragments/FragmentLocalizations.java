@@ -222,7 +222,27 @@ public class FragmentLocalizations extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Read from the database
+        storeIdLocalizationPointsFavourites();//Cargamos las id's de las localizaaciones favoritas del usuario actual
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        drUser.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeIdLocalizationPointsFavourites
+     * Comentario: El métoco almacena las id's de los puntos de localización marcados como
+     * favoritos por el usuario actual. Una vez se hayan obtenido estos datos, el método lanza
+     * la función "loadLocalizationsUserFromPlataform" para proceder a cargar los luntos de localización
+     * que sean del usuario actual o que esten marcados como favoritos por este.
+     * Cabecera: private void storeIdLocalizationPointsFavourites()
+     * Postcondiciones: El método almacena las id's de las localizaciones favoritas del usuario almacenadas
+     * en la plataforma Firebase, luego lanza la función "loadLocalizationsUserFromPlataform".
+     */
+    private void storeIdLocalizationPointsFavourites(){
         listener = drUser.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

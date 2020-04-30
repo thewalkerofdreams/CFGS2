@@ -1,12 +1,14 @@
 package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
@@ -18,6 +20,8 @@ import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,6 +30,7 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
 
     private RouteActivitiesVM viewModel;
     private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,10 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
         viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
+
+        //Instanciamos los elementos de la UI
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Saving new route");
     }
 
     /**
@@ -49,7 +58,6 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
      * alguna.
      * */
     public void intentarMarcarLocalizacion(View view){
-
         if(viewModel.get_lastLocalizationClicked() != null){//Si se ha marcado una localización
             FragmentManager fm = getSupportFragmentManager();
             GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
@@ -89,8 +97,6 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
                                 saveRoute(routeName);//Almacenamos la nueva ruta en la plataforma Firebase
-                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();
-                                finish();//Finalizamos la actividad actual
                             }
                         }
                     })
@@ -117,23 +123,39 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
      * Postcondiciones: El método almacena la ruta actual con un nombre determinado en la plataforma de Firebase.
      */
     private void saveRoute(String routeName){
-        String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
+        progressDialog.show();//Mostramos el progressDialog mientras se guarde la nueva ruta
+        final String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
+
         //Almacenamos la ruta
-        ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        final ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseDatabase.getInstance().getReference("Users").
                 child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
-                .setValue(newRoute);
+                .setValue(newRoute).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {//Una vez almacenada la ruta, almacenamos los puntos que la forman
+                //Almacenamos los puntos de la ruta
+                for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
+                    String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
+                    ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
+                            routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
 
-        //Almacenamos los puntos de la ruta
-        for(int i = 0; i < viewModel.get_localizationPoints().size(); i++){
-            String routePointId = routeReference.push().getKey();//Obtenemos una id para el punto de la ruta
-            ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
-                    routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
-
-            FirebaseDatabase.getInstance().getReference("Users").
-                    child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
-                    .child("routePoints").child(newRoutePoint.getRoutePointId())
-                    .setValue(newRoutePoint);
-        }
+                    FirebaseDatabase.getInstance().getReference("Users").
+                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
+                            .child("routePoints").child(newRoutePoint.getRoutePointId())
+                            .setValue(newRoutePoint).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            viewModel.set_routePointsInserted(viewModel.get_routePointsInserted() + 1);//Aumentamos en uno el número de puntos insertados
+                            if(viewModel.get_localizationPoints().size() == viewModel.get_routePointsInserted()){//Si era el último punto de la ruta
+                                viewModel.set_routePointsInserted(0);//Volvemos a poner el contador a 0
+                                progressDialog.dismiss();//Ocultamos el progressDialog
+                                Toast.makeText(getApplication(), getApplication().getString(R.string.route_saved), Toast.LENGTH_SHORT).show();//Indicamos que se ha guardado la ruta
+                                finish();//Finalizamos la actividad actual
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }

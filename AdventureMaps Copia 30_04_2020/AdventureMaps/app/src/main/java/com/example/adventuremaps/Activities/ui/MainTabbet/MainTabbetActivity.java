@@ -223,29 +223,35 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Interfaz
      * Nombre: onClickRouteFav
      * Comentario: Este método nos permite modificar el estado de favorito de una ruta del usuario actual.
+     * En el caso de que no haya ningún ítem selecciondo en la lista de rutas, en caso contrario el método
+     * muestra un mensaje de error por pantalla.
      * Cabecera: public void onClickRouteFav(View v)
      * @param v
-     * Postcondiciones: El método modifica el estado del atributo favorito de una ruta, realizando el cambio
-     * en la base de datos de la plataforma FireBase, además cambia el icono del item clicado a una estrella
-     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
+     * Postcondiciones: Si no hay ningún ítem seleccionado en la lista de rutas, el método modifica el estado del
+     * atributo favorito de una ruta, realizando el cambio en la base de datos de la plataforma FireBase, además
+     * cambia el icono del item clicado a una estrella vacía si se encontraba en favoritos cuando se pulso y viceversa.
      */
     public void onClickRouteFav(View v){
-        //get the row the clicked button is in
-        LinearLayout vwParentRow = (LinearLayout)v.getParent();
-        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
-        String routeId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+        if(viewModel.get_selectedRoutes().isEmpty()){//Si no hay ningúna ruta seleccionada en la lista
+            //get the row the clicked button is in
+            LinearLayout vwParentRow = (LinearLayout)v.getParent();
+            ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+            String routeId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        Map<String, Object> hopperUpdates = new HashMap<>();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            Map<String, Object> hopperUpdates = new HashMap<>();
 
-        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
-            btnChild.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono
-            hopperUpdates.put("favourite", false);
+            if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
+                btnChild.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono
+                hopperUpdates.put("favourite", false);
+            }else{
+                btnChild.setBackgroundResource(R.drawable.fill_star);
+                hopperUpdates.put("favourite", true);
+            }
+            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
         }else{
-            btnChild.setBackgroundResource(R.drawable.fill_star);
-            hopperUpdates.put("favourite", true);
+            Toast.makeText(this, R.string.error_item_selected, Toast.LENGTH_SHORT).show();
         }
-        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
     }
 
     //Permisos
@@ -349,30 +355,36 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Interfaz
      * Nombre: onClickLocalizationFav
      * Comentario: Este método nos permite modificar el estado de favorito de una localización del usuario actual.
+     * En el caso de que no haya ningún ítem selecciondo en la lista de localizaciones, en caso contrario el método
+     * muestra un mensaje de error por pantalla.
      * Cabecera: public void onClickLocalizationFav(View v)
      * @param v
-     * Postcondiciones: El método guarda la modificación sobre el estado de favorito de la localización, almacenando el cambio
-     * en la base de datos de la plataforma FireBase, además cambia el icono del item clicado a una estrella
-     * vacía si se encontraba en favoritos cuando se pulso y viceversa.
+     * Postcondiciones: Si no hay ningún ítem seleccionado en la lista de localizaciones, el método guarda la modificación
+     * sobre el estado de favorito de la localización, almacenando el cambio en la base de datos de la plataforma FireBase,
+     * además cambia el icono del item clicado a una estrella vacía si se encontraba en favoritos cuando se pulso y viceversa.
      */
     public void onClickLocalizationFav(View v){
-        //get the row the clicked button is in
-        LinearLayout vwParentRow = (LinearLayout)v.getParent();
-        ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
-        String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
+        if(viewModel.get_selectedLocalizations().isEmpty()){//Si no hay ningún punto de localización seleccionado
+            //get the row the clicked button is in
+            LinearLayout vwParentRow = (LinearLayout)v.getParent();
+            ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
+            String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
-        if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
-            btnChild.setBackgroundResource(R.drawable.empty_star);
-            databaseReference.child(FirebaseAuth.getInstance().
-                    getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
+            if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
+                btnChild.setBackgroundResource(R.drawable.empty_star);
+                databaseReference.child(FirebaseAuth.getInstance().
+                        getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
+            }else{
+                btnChild.setBackgroundResource(R.drawable.fill_star);
+                databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
+            }
+
+            reloadInitialFragment();//Recargamos el mapa principal
         }else{
-            btnChild.setBackgroundResource(R.drawable.fill_star);
-            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
+            Toast.makeText(this, R.string.error_item_selected, Toast.LENGTH_SHORT).show();
         }
-
-        reloadInitialFragment();//Recargamos el mapa principal
     }
 
     /**

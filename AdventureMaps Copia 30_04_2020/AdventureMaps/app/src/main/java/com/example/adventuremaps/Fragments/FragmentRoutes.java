@@ -1,13 +1,11 @@
 package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -49,6 +47,7 @@ public class FragmentRoutes extends Fragment {
     private Button btnFav, btnDelete, btnOrderRoutes;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
+    private ValueEventListener listener;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -185,8 +184,27 @@ public class FragmentRoutes extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        storeAndLoadRoutesFromActualUser();//Obtenemos las rutas del usuario actual y cargamos la lista con ellas
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        myDataBaseReference.removeEventListener(listener);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeAndLoadRoutesFromActualUser
+     * Comentario: El método guarda en el VM las rutas almacenadas en la plataforma Firebase del usuario actual,
+     * para luego mostrarlas en la lista de rutas.
+     * Cabecera: private void storeAndLoadRoutesFromActualUser()
+     * Postcondiciones: El método almacena las rutas del usuario actual en el VM y las carga en
+     * una lista.
+     */
+    private void storeAndLoadRoutesFromActualUser(){
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewModel.get_itemsRouteList().clear();//Limpiamos la lista de rutas
@@ -366,7 +384,7 @@ public class FragmentRoutes extends Fragment {
         }
     }
 
-    @Override
+    /*@Override
     public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación permitida en cada página del ViewPager
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
@@ -374,7 +392,7 @@ public class FragmentRoutes extends Fragment {
             if(actualActivity != null)
                 actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
-    }
+    }*/
 
     /**
      * Interfaz
