@@ -195,4 +195,12 @@
 
     <string name="reloading_datas">Reloading datas...</string>
     <string name="error_item_selected">To change the favorite status, there must be no item selected in the list!</string>
+
+    <string name="different_markers_description">The locations that you have marked as favorites will appear in gold on the map and those that have not, will appear with a user icon if they are yours or with a red marker if they are not.</string>
+    <string name="different_offline_markers_description">Only the user"'s favorite locations will appear on the offline map with a golden icon and the rest of the locations that the user has created with a user icon.</string>
+    <string name="cluster_map_description">Automatically with the change of zoom on the map, the locations will be grouped into regions when they are very close together and will be separated as we increase the zoom in these regions.</string>
+    <string name="routes_description_simple_click">You can click on one of the routes in the list to enter it.</string>
+    <string name="routes_description_fav">You can mark routes as favorites.</string>
+    <string name="offlineMap_description_click_marker">If you click on a marker, the lower buttons will be replaced by others that will allow you to delete the location if it is yours or enter its details.</string>
+    <string name="offlineMap_description_simple_click">You can click anywhere on the map to get the click position and the bottom tab will show the interaction buttons with the map.</string>
 </resources>

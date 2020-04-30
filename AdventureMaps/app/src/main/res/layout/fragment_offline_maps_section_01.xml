@@ -21,7 +21,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/filter">
+                android:background="@drawable/click">
             </ImageView>
 
         </LinearLayout>
@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="75"
             android:gravity="center"
-            android:text="@string/startMap_description_filter"></TextView>
+            android:text="@string/offlineMap_description_simple_click"></TextView>
 
     </LinearLayout>
 
@@ -51,7 +51,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/general_marker_tutorial">
+                android:background="@drawable/long_click">
             </ImageView>
 
         </LinearLayout>
@@ -61,7 +61,7 @@
             android:layout_height="match_parent"
             android:layout_weight="75"
             android:gravity="center"
-            android:text="@string/different_markers_description"></TextView>
+            android:text="@string/startMap_description_long_click"></TextView>
 
     </LinearLayout>
 
@@ -81,7 +81,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:background="@drawable/cluster_map_tutorial">
+                android:background="@drawable/marker">
             </ImageView>
 
         </LinearLayout>
@@ -91,7 +91,7 @@
             android:layout_height="match_parent"
             android:layout_weight="75"
             android:gravity="center"
-            android:text="@string/cluster_map_description"></TextView>
+            android:text="@string/offlineMap_description_click_marker"></TextView>
 
     </LinearLayout>
 

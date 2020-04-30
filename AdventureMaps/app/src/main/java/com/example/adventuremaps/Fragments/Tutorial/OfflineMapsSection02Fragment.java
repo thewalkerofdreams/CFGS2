@@ -9,17 +9,18 @@ import androidx.fragment.app.Fragment;
 
 import com.example.adventuremaps.R;
 
-public class StartSection03Fragment extends Fragment {
+public class OfflineMapsSection02Fragment extends Fragment {
 
-
-    public StartSection03Fragment() {
+    public OfflineMapsSection02Fragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Inflamos el layout del fragmento
-        return inflater.inflate(R.layout.fragment_start_section_03, container, false);
+        //Inflamos el layout del fragment
+        View rootView = inflater.inflate(R.layout.fragment_offline_maps_section_02, container, false);
+
+        return rootView;
     }
 
 }

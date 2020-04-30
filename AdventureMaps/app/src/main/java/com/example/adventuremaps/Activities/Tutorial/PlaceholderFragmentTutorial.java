@@ -12,8 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection01;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection02;
 import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection03;
-import com.example.adventuremaps.Fragments.Tutorial.OfflineMapsSectionFragment;
-import com.example.adventuremaps.Fragments.Tutorial.RoutesSectionFragment;
+import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection04;
+import com.example.adventuremaps.Fragments.Tutorial.CommonFragmentSection05;
+import com.example.adventuremaps.Fragments.Tutorial.OfflineMapsSection01Fragment;
 import com.example.adventuremaps.R;
 
 /**
@@ -37,10 +38,10 @@ public class PlaceholderFragmentTutorial extends Fragment {
                 fragment = new CommonFragmentSection03();//Cargamos la sección de las localizaciones
                 break;
             case 4:
-                fragment = new RoutesSectionFragment();//Cargamos la sección de las rutas
+                fragment = new CommonFragmentSection04();//Cargamos la sección de las rutas
                 break;
             case 5:
-                fragment = new OfflineMapsSectionFragment();//Cargamos la sección de los mapas offline
+                fragment = new CommonFragmentSection05();//Cargamos la sección de los mapas offline
                 break;
         }
 

@@ -13,12 +13,11 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.TutorialViewPagerActivityVM;
 
-public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas de la sección del mapa de inicio
-
+public class CommonFragmentSection04 extends Fragment {//Contendrá las páginas de la sección de rutas
     private Button btnLastFragment, btnNextFragment;
     private TutorialViewPagerActivityVM viewModel;
 
-    public CommonFragmentSection01() {
+    public CommonFragmentSection04() {
     }
 
     @Override
@@ -56,11 +55,12 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
     /**
      * Interfaz
      * Nombre: enterNextFragment
-     * Comentario: Este método nos permite movernos al siguiente fragmento de la sección, si este existe. Reemplazando
+     * Comentario: Este método nos permite movernos al siguiente fragmento de la sección. Reemplazando
      * el actual por el nuevo.
      * Cabecera: private void enterNextFragment()
-     * Postcondiciones: El método reemplaza el fragmento actual por el siguiente a este, si existe algún
-     * fragmento posterior.
+     * Precondiciones:
+     *  -debe existir un fragmento posterior al actual
+     * Postcondiciones: El método reemplaza el fragmento actual por el siguiente a este.
      */
     private void enterNextFragment() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -68,20 +68,21 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
 
         btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();//Remplazamos el fragmento
+        transaction.replace(R.id.fragment_mainLayout, new RouteSection02Fragment()).commit();//Remplazamos el fragmento
         btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
 
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()+1);//Indicamos hacia que fragmento nos hemos movido
+        viewModel.set_actualSubPageSection4(viewModel.get_actualSubPageSection4()+1);//Indicamos hacia que fragmento nos hemos movido
     }
 
     /**
      * Interfaz
      * Nombre: backToLasFragment
-     * Comentario: Este método nos permite movernos al anterior fragmento de la sección, si este existe. Reemplazando
+     * Comentario: Este método nos permite movernos al anterior fragmento de la sección. Reemplazando
      * el actual por el anterior.
      * Cabecera: private void backToLasFragment()
-     * Postcondiciones: El método reemplaza el fragmento actual por el anterior a este, si existe algún
-     * fragmento anterior.
+     * Precondiciones:
+     *  -debe existir un fragmento anterior al actual
+     * Postcondiciones: El método reemplaza el fragmento actual por el anterior a este.
      */
     private void backToLasFragment(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -89,10 +90,10 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
 
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();//Remplazamos el fragmento
+        transaction.replace(R.id.fragment_mainLayout, new RouteSection01Fragment()).commit();//Remplazamos el fragmento
         btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
 
-        viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()-1);//Indicamos hacia que fragmento nos hemos movido
+        viewModel.set_actualSubPageSection4(viewModel.get_actualSubPageSection4()-1);//Indicamos hacia que fragmento nos hemos movido
     }
 
     /**
@@ -106,12 +107,12 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
     private void loadActualPage(){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        switch (viewModel.get_actualSubPageSection1()){
+        switch (viewModel.get_actualSubPageSection4()){
             case 0:
-                transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new RouteSection01Fragment()).commit();
                 break;
             case 1:
-                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();
+                transaction.replace(R.id.fragment_mainLayout, new RouteSection02Fragment()).commit();
                 btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
                 btnNextFragment.setVisibility(View.INVISIBLE);//Volvemos invisible el botón next
                 break;
