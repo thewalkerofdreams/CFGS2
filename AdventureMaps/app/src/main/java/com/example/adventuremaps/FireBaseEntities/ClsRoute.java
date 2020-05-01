@@ -8,7 +8,7 @@ public class ClsRoute {
     private String routeId;
     private String name;
     private Boolean favourite;
-    private Long dateOfCreation;//En FireBase no podemos almacenar el dato Int
+    private Long dateOfCreation;//En FireBase no podemos almacenar el dato Date o Int
     private String userEmail;
 
     public ClsRoute(){

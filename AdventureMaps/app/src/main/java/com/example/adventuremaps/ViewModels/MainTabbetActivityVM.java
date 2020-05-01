@@ -125,7 +125,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationToSave = null;
         _localizationTypesToSave = new ArrayList<>();
         _checkedFilters = new ArrayList<>();
-        _dialogPostisionsChecked = new boolean[8];
+        _dialogPostisionsChecked = new boolean[10];
         for(int i = 0; i < _dialogPostisionsChecked.length; i++){//Inicializamos el filtrado sobr el mapa
             _dialogPostisionsChecked[i] = true;
         }

@@ -79,7 +79,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
         //Cargamos los filtros chequeados, al principio todos los filtros se encuentran check
         final String[] filterItems = {getResources().getString(R.string.potable_water), getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
-                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing), getResources().getString(R.string.vivac)};
+                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing), getResources().getString(R.string.vivac), getResources().getString(R.string.culture),  getResources().getString(R.string.camping)};
         viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
         String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
@@ -310,7 +310,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         final String[] filterItems = {getResources().getString(R.string.potable_water),
                 getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
                 getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing),
-                getResources().getString(R.string.vivac)};
+                getResources().getString(R.string.vivac), getResources().getString(R.string.culture), getResources().getString(R.string.camping)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.filter_title);
