@@ -20,4 +20,6 @@ public class ApplicationConstants {
     public final static double RLYEH_LATITUDE = -47.15;//Easter egg
     public final static double RLYEH_LONGITUDE = -126.71666666666667;
 
+    //Maps Settings
+    public final static double MIN_ZOOM_LEVEL_OFFLINE_MAP = 2;
 }

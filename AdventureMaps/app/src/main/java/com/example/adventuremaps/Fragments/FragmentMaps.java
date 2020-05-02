@@ -184,7 +184,7 @@ public class FragmentMaps extends Fragment {
                             latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
                         }
                         //Ajustamos el zoom mínimo en el mapa
-                        map.setMinZoomPreference(2);
+                        map.setMinZoomPreference(ApplicationConstants.MIN_ZOOM_LEVEL_OFFLINE_MAP);
 
                         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
                                 .target(latLng)
