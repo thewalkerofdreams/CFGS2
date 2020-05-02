@@ -160,7 +160,7 @@
     <string name="startMap_description_filter">By clicking on the filter button you can filter the location points shown on the map.</string>
     <string name="marker_general_description">The name and description will be shown on the details screen of a location. In addition to the ambient types that characterize it and a link to its image gallery.</string>
     <string name="marker_description_validate_location">You can click on the hit like o dislike icons to check if the location is valid.</string>
-    <string name="marker_image_gallery_multiple_selection">With a long click on an image you can activate multiple selection on them. You can only select the images you inserted or all if you created the location point.</string>
+    <string name="marker_image_gallery_multiple_selection">With a long click on an image you can activate multiple selection on them. You can only select the images you inserted or all if you created the location point. Your images will have a green background.</string>
     <string name="marker_image_gallery_delete_images">To delete one or more images, they must be selected.</string>
     <string name="marker_image_gallery_upload_image">Press this icon to upload an image from the device gallery.</string>
     <string name="marker_image_gallery_show_image">Click on an image without having multiple selection activated to see it up close. Now if you click on the image a rating icon will appear so you can rate it.</string>

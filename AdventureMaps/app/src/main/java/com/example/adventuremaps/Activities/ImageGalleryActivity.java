@@ -227,7 +227,11 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 if(viewModel.get_imagesSelected().contains(viewModel.get_imagesToLoad().get(position))){//Si la ruta se encuentra en la lista de seleccionadas
                     view.setBackgroundResource(R.color.BlueItem);
                 }else{
-                    view.setBackgroundResource(R.color.WhiteItem);
+                    if(viewModel.get_imagesToLoad().get(position).get_userEmailCreator().replaceAll(" ", ".").equals(viewModel.get_actualEmailUser())){//Si la imagen pertence al usuario actual
+                        view.setBackgroundResource(R.color.colorAccent);
+                    }else{
+                        view.setBackgroundResource(R.color.WhiteItem);
+                    }
                 }
 
                 return view;
