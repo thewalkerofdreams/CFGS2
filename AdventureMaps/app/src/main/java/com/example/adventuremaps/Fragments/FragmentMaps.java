@@ -412,8 +412,18 @@ public class FragmentMaps extends Fragment {
 
             @Override
             public void mapboxTileCountLimitExceeded(long limit) {//Si se supera el límite de descarga
-                endProgress();//Habilitamos los botones inferiores y deshabilitamos el progressbar
-                Toast.makeText(getActivity(), getString(R.string.exceeded_download_limit), Toast.LENGTH_SHORT).show();
+                offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {//Eliminamos la región offline de la lista
+                    @Override
+                    public void onDelete() {
+                        endProgress();//Habilitamos los botones inferiores y deshabilitamos el progressbar
+                        Toast.makeText(getActivity(), getString(R.string.exceeded_download_limit), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Timber.e( "Error: %s", error);
+                    }
+                });
             }
         });
 
