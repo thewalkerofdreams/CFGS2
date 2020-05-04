@@ -22,4 +22,7 @@ public class ApplicationConstants {
 
     //Maps Settings
     public final static double MIN_ZOOM_LEVEL_OFFLINE_MAP = 2;
+
+    public final static String DEFAULT_MARKER_ICON_OFFLINE_MAPS = "DEFAULT_ICON";
+    public final static String MARKER_SELECTED_ICON_OFFLINE_MAPS = "MARKER_SELECTED";
 }

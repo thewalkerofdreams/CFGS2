@@ -220,7 +220,7 @@ public class FragmentMaps extends Fragment {
                                 tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
 
                                 viewModel.set_symbolClicked(symbol);
-                                symbol.setIconImage("marker_selected");
+                                symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);
                                 symbolManager.update(symbol);
                                 mostrarAccionesSobreUnMarcador();//Hacemos visible las opciones del icono
                             }
@@ -230,16 +230,7 @@ public class FragmentMaps extends Fragment {
                         symbolManager.setIconAllowOverlap(true);//Permitimos la superposición del símbolo
                         symbolManager.setIconIgnorePlacement(true);//Ajustamos su colocación en el mapa
 
-                        //Ajustamos la imagen del icono
-                        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
-                        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                        //Añadimos la imagen al estilo
-                        style.addImage("my_image", smallMarker);
-
-                        //Añadiamos la imagen para cuando se seleccione un marcador
-                        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(R.drawable.blue_marker));
-                        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                        style.addImage("marker_selected", smallMarker);
+                        initLayerIcons(style);//Inicializamos los iconos que se utilizarán en el estilo
 
                         //Limpiamos la lista de marcadores insertados del VM
                         viewModel.get_markersInserted().clear();
@@ -248,7 +239,7 @@ public class FragmentMaps extends Fragment {
                             Symbol symbol = symbolManager.create(new SymbolOptions()
                                     .withLatLng(new LatLng(viewModel.get_localizationPointsMapbox().get(i).getLatitude(),
                                             viewModel.get_localizationPointsMapbox().get(i).getLongitude()))
-                                    .withIconImage("my_image")
+                                    .withIconImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS)
                                     .withIconSize(1.0f));
                             viewModel.get_markersInserted().add(symbol);
                         }
@@ -256,6 +247,27 @@ public class FragmentMaps extends Fragment {
                 });
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: initLayerIcons
+     * Comentario: Este método nos permite instanciar una serie de iconos para el estilo del mapa actual.
+     * Cabecera: private void initLayerIcons(@NonNull Style loadedMapStyle)
+     * Entrada/Salida:
+     * @param loadedMapStyle
+     * Postcondiciones: El método añade una serie de iconos al estilo pasado por parámetros.
+     */
+    private void initLayerIcons(@NonNull Style loadedMapStyle) {
+        //Ajustamos la imagen del icono por defecto de un marcador
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.simple_marker);
+        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+        loadedMapStyle.addImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
+
+        //Añadiamos la imagen para cuando se seleccione un marcador
+        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.blue_marker);
+        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+        loadedMapStyle.addImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
     }
 
     /**
@@ -269,7 +281,7 @@ public class FragmentMaps extends Fragment {
      */
     private void tryChangeMarkerToDefaultImage(){
         if(viewModel.get_symbolClicked() != null){//Si ya se había clicado sobre otro marcador
-            viewModel.get_symbolClicked().setIconImage("my_image");//Le insertamos el icono por defecto
+            viewModel.get_symbolClicked().setIconImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS);//Le insertamos el icono por defecto
             symbolManager.update(viewModel.get_symbolClicked());
         }
     }
