@@ -101,7 +101,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onMapReady(final GoogleMap map) {
         this.map = map;
         LatLng latLng;
-        float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
+        final float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
 
         if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
             if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actual del usuario
@@ -115,6 +115,19 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));//Movemos la camara según los valores definidos
+        map.setMyLocationEnabled(true);//Nos permite indicar donde se encuentra el usuario actual, además activa el botón para centrar la cámara
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
+            @Override
+            public boolean onMyLocationButtonClick() {
+                //Centramos la cámara
+                map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
+                map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
+                return true;//Con esto indicamos que no se mueva la cámara por defecto
+            }
+        });
+        map.getUiSettings().setCompassEnabled(true);//Insertamos la brújula en el mapa
+        map.setPadding(750, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
 
         //Inicializamos el cluster manager
         mClusterManager = new ClusterManager<MyClusterItem>(getActivity(), this.map);
