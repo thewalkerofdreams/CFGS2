@@ -11,7 +11,6 @@ import com.example.adventuremaps.R;
 
 public class StartSection02Fragment extends Fragment {
 
-
     public StartSection02Fragment() {
     }
 

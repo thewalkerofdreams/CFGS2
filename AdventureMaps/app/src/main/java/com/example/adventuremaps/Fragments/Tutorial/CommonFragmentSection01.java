@@ -69,8 +69,15 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
 
         btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();//Remplazamos el fragmento
-        btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
+        switch (viewModel.get_actualSubPageSection1()){
+            case 0:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();//Remplazamos el fragmento
+                break;
+            case 1:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection03Fragment()).commit();
+                btnNextFragment.setVisibility(View.INVISIBLE);//Volvemos invisible el botón next
+                break;
+        }
 
         viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()+1);//Indicamos hacia que fragmento nos hemos movido
     }
@@ -91,8 +98,15 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
 
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();//Remplazamos el fragmento
-        btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
+        switch (viewModel.get_actualSubPageSection1()){
+            case 1:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection01Fragment()).commit();//Remplazamos el fragmento
+                btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();//Remplazamos el fragmento
+                break;
+        }
 
         viewModel.set_actualSubPageSection1(viewModel.get_actualSubPageSection1()-1);//Indicamos hacia que fragmento nos hemos movido
     }
@@ -114,6 +128,10 @@ public class CommonFragmentSection01 extends Fragment {//Contendrá las páginas
                 break;
             case 1:
                 transaction.replace(R.id.fragment_mainLayout, new StartSection02Fragment()).commit();
+                btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_mainLayout, new StartSection03Fragment()).commit();
                 btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
                 btnNextFragment.setVisibility(View.INVISIBLE);//Volvemos invisible el botón next
                 break;

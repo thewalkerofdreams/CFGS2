@@ -203,4 +203,7 @@
     <string name="routes_description_fav">You can mark routes as favorites.</string>
     <string name="offlineMap_description_click_marker">If you click on a marker, the lower buttons will be replaced by others that will allow you to delete the location if it is yours or enter its details.</string>
     <string name="offlineMap_description_simple_click">You can click anywhere on the map to get the click position and the bottom tab will show the interaction buttons with the map.</string>
+
+    <string name="compass_description">If you change the orientation axis of the map as you move, a compass will be displayed at the top right of the map. Click on it to reorient the map north.</string>
+    <string name="center_location_button_description">If you click on the button with this icon, you will center the map camera on your current position.</string>
 </resources>
