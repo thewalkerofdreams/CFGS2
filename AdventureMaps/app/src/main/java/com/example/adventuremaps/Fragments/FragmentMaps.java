@@ -40,6 +40,10 @@ import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -79,6 +83,8 @@ public class FragmentMaps extends Fragment {
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
     private SymbolManager symbolManager;
+    //Center User Location
+    Button btnCenterLocation;
 
     private ValueEventListener listener = null;
 
@@ -117,6 +123,15 @@ public class FragmentMaps extends Fragment {
 
             //Insertamos el fragmento "FragmentOfflineLocalizationPointClick" en el FrameLayout inferior
             insertInferiorFragment();
+
+            //Instanciamos el botón para centrar la localización del usuario
+            btnCenterLocation = view.findViewById(R.id.btnMapCenterLocation);
+            btnCenterLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
+                }
+            });
 
             //Instanciamos el progressBar
             progressBar = view.findViewById(R.id.progress_bar);
@@ -177,21 +192,15 @@ public class FragmentMaps extends Fragment {
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-                        LatLng latLng = null;
-                        if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
-                            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
-                        }else{//Lo mandamos a R'lyeh
-                            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
-                        }
                         //Ajustamos el zoom mínimo en el mapa
                         map.setMinZoomPreference(ApplicationConstants.MIN_ZOOM_LEVEL_OFFLINE_MAP);
 
-                        CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
-                                .target(latLng)
-                                .zoom(10)
-                                .tilt(20)
-                                .build();
-                        map.setCameraPosition(position);
+                        moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
+
+                        mapboxMap.getUiSettings().setCompassMargins(0, 15, 190, 0);//Ajustamos la posición de la brújula en el mapa
+
+                        initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
+
                         //Declaramos el evento de clicado del mapa
                         map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                             @Override
@@ -247,6 +256,55 @@ public class FragmentMaps extends Fragment {
                 });
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: moveMapCameraToActualUserLocation
+     * Comentario: El método mueve la cámara del mapa centrandola en la posición actual del usuario.
+     * Cabecera: private void moveMapCameraToActualUserLocation()
+     */
+    private void moveMapCameraToActualUserLocation(){
+        LatLng latLng = null;
+        if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
+            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+        }else{//Lo mandamos a R'lyeh
+            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
+        }
+
+        CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
+                .target(latLng)
+                .zoom(10)
+                .tilt(20)
+                .build();
+        map.setCameraPosition(position);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: initComponentLocalizationActualUser
+     * Comentario: El método permite inicializar un componente en el mapa para detectar la localiazción
+     * del usuario actual, mostrando en el mapa un punto (el usuario) junto con una flecha (indica en que
+     * dirección esta posicionado).
+     * Cabecera: private void initComponentLocalizationActualUser(MapboxMap mapboxMap, Style style)
+     * Entrada:
+     */
+    private void initComponentLocalizationActualUser(MapboxMap mapboxMap, Style style){
+        // Get an instance of the component
+        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+        // Activate with options
+        locationComponent.activateLocationComponent(
+                LocationComponentActivationOptions.builder(getActivity(), style).build());
+
+        // Enable to make component visible
+        locationComponent.setLocationComponentEnabled(true);
+
+        // Set the component's camera mode
+        locationComponent.setCameraMode(CameraMode.TRACKING);
+
+        // Set the component's render mode
+        locationComponent.setRenderMode(RenderMode.COMPASS);
     }
 
     /**

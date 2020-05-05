@@ -16,6 +16,15 @@
         mapbox:mapbox_cameraZoom="15.27"
         mapbox:mapbox_cameraZoomMin="10"/>
 
+    <Button
+        android:id="@+id/btnMapCenterLocation"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:background="@drawable/center_location_tutorial"
+        android:layout_margin="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"></Button>
+
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
