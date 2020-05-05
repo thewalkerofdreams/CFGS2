@@ -197,7 +197,7 @@ public class FragmentMaps extends Fragment {
 
                         moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
 
-                        mapboxMap.getUiSettings().setCompassMargins(0, 15, 190, 0);//Ajustamos la posición de la brújula en el mapa
+                        mapboxMap.getUiSettings().setCompassMargins(0, 20, 190, 0);//Ajustamos la posición de la brújula en el mapa
 
                         initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
 

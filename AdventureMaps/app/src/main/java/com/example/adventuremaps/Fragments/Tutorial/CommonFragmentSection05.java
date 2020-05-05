@@ -68,8 +68,15 @@ public class CommonFragmentSection05 extends Fragment {//Contendrá las páginas
 
         btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de back por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection02Fragment()).commit();//Remplazamos el fragmento
-        btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
+        switch (viewModel.get_actualSubPageSection5()){
+            case 0:
+                transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection02Fragment()).commit();//Remplazamos el fragmento
+                break;
+            case 1:
+                transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection03Fragment()).commit();//Remplazamos el fragmento
+                btnNextFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos posteriores lo ocultamos
+                break;
+        }
 
         viewModel.set_actualSubPageSection5(viewModel.get_actualSubPageSection5()+1);//Indicamos hacia que fragmento nos hemos movido
     }
@@ -90,8 +97,15 @@ public class CommonFragmentSection05 extends Fragment {//Contendrá las páginas
 
         btnNextFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de next por si se encontraba invisible
 
-        transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection01Fragment()).commit();//Remplazamos el fragmento
-        btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
+        switch (viewModel.get_actualSubPageSection5()){
+            case 1:
+                transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection01Fragment()).commit();//Remplazamos el fragmento
+                btnLastFragment.setVisibility(View.INVISIBLE);//Como no quedan más fragmentos anteriores lo ocultamos
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection02Fragment()).commit();//Remplazamos el fragmento
+                break;
+        }
 
         viewModel.set_actualSubPageSection5(viewModel.get_actualSubPageSection5()-1);//Indicamos hacia que fragmento nos hemos movido
     }
@@ -113,6 +127,10 @@ public class CommonFragmentSection05 extends Fragment {//Contendrá las páginas
                 break;
             case 1:
                 transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection02Fragment()).commit();
+                btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_mainLayout, new OfflineMapsSection03Fragment()).commit();
                 btnLastFragment.setVisibility(View.VISIBLE);//Volvemos visible el botón de retorno
                 btnNextFragment.setVisibility(View.INVISIBLE);//Volvemos invisible el botón next
                 break;

@@ -18,10 +18,10 @@
 
     <Button
         android:id="@+id/btnMapCenterLocation"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:background="@drawable/center_location_tutorial"
-        android:layout_margin="5sp"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:background="@drawable/center_location"
+        android:layout_margin="10sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"></Button>
 

@@ -22,5 +22,4 @@ public class OfflineMapsSection02Fragment extends Fragment {
 
         return rootView;
     }
-
 }
