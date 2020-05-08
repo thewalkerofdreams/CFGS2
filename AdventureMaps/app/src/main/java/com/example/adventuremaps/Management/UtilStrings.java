@@ -1,6 +1,8 @@
 package com.example.adventuremaps.Management;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UtilStrings {
 
@@ -30,5 +32,33 @@ public class UtilStrings {
         }
 
         return containSameData;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: correctFormatEmail
+     * Comentario: El método verifica si una cadena concuerda con el formato correcto de un email.
+     * Cabecera: public static boolean correctFormatEmail(String email)
+     * Entrada:
+     *  -String email
+     * Salida:
+     *  -boolean correct
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si la cadena tiene
+     * un formato correcto para ser un email o false en caso contrario.
+     */
+    public static boolean correctFormatEmail(String email){
+        boolean correct = false;
+
+        //Patrón para validar el email
+        Pattern pattern = Pattern
+                .compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
+
+        Matcher mather = pattern.matcher(email);
+
+        if (mather.find()) {//Si el email coincide con los requisitos de la expresión regex, es un email válido
+            correct = true;
+        }
+
+        return correct;
     }
 }

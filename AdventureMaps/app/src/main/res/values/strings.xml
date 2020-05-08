@@ -206,4 +206,6 @@
 
     <string name="compass_description">If you change the orientation axis of the map as you move, a compass will be displayed at the top right of the map. Click on it to reorient the map north.</string>
     <string name="center_location_button_description">If you click on the button with this icon, you will center the map camera on your current position.</string>
+
+    <string name="email_format_error">Wrong format for email!</string>
 </resources>

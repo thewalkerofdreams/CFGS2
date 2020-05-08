@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
+import com.example.adventuremaps.Management.UtilStrings;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateCountActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -74,36 +75,40 @@ public class CreateCountActivity extends AppCompatActivity {
         viewModel.set_password02(textPassword02.getText().toString().trim());
 
         if(!viewModel.get_nickName().isEmpty() && !viewModel.get_email().isEmpty() && !viewModel.get_password01().isEmpty() && !viewModel.get_password02().isEmpty()){
-            if(viewModel.get_password01().equals(viewModel.get_password02())){//Las contraseñas no son iguales
-                if(viewModel.get_password01().length() >= 6){//La contraseña tiene un tamaño menor que 6
-                    progressDialog.show();
-                    firebaseAuth.createUserWithEmailAndPassword(viewModel.get_email(), viewModel.get_password01())
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    //Verificamos que se pudo registrar el usuario
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
-                                        //Almacenamos al nuevo usuario
-                                        ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
-                                        FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
-                                        finish();//Finalizamos la actividad
-                                    }else{
-                                        //Si el correo ya se encontraba registrado en la plataforma, es decir, si ocurre una colisión
-                                        if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                            Toast.makeText(getApplication(), R.string.create_count_error_colision, Toast.LENGTH_SHORT).show();
-                                        }else{//Si es por otro tipo de error
-                                            Toast.makeText(getApplication(), R.string.create_count_error, Toast.LENGTH_SHORT).show();
+            if(UtilStrings.correctFormatEmail(viewModel.get_email())){
+                if(viewModel.get_password01().equals(viewModel.get_password02())){//Las contraseñas no son iguales
+                    if(viewModel.get_password01().length() >= 6){//La contraseña tiene un tamaño menor que 6
+                        progressDialog.show();
+                        firebaseAuth.createUserWithEmailAndPassword(viewModel.get_email(), viewModel.get_password01())
+                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        //Verificamos que se pudo registrar el usuario
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
+                                            //Almacenamos al nuevo usuario
+                                            ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
+                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
+                                            finish();//Finalizamos la actividad
+                                        }else{
+                                            //Si el correo ya se encontraba registrado en la plataforma, es decir, si ocurre una colisión
+                                            if(task.getException() instanceof FirebaseAuthUserCollisionException){
+                                                Toast.makeText(getApplication(), R.string.create_count_error_colision, Toast.LENGTH_SHORT).show();
+                                            }else{//Si es por otro tipo de error
+                                                Toast.makeText(getApplication(), R.string.create_count_error, Toast.LENGTH_SHORT).show();
+                                            }
                                         }
+                                        progressDialog.dismiss();
                                     }
-                                    progressDialog.dismiss();
-                                }
-                            });
+                                });
+                    }else{
+                        Toast.makeText(this, R.string.password_lenght_error, Toast.LENGTH_SHORT).show();
+                    }
                 }else{
-                    Toast.makeText(this, R.string.password_lenght_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.password_not_equals, Toast.LENGTH_SHORT).show();
                 }
             }else{
-                Toast.makeText(this, R.string.password_not_equals, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.email_format_error, Toast.LENGTH_SHORT).show();
             }
         }else{
             Toast.makeText(this, R.string.all_fields_required, Toast.LENGTH_SHORT).show();
