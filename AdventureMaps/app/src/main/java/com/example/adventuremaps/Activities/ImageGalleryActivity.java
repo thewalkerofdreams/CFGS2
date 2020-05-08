@@ -193,7 +193,12 @@ public class ImageGalleryActivity extends AppCompatActivity {
      */
     private void unselectImage(ClsImageWithId image, View view){
         viewModel.get_imagesSelected().remove(image);//Eliminamos la imagen de la lista de seleccionadas
-        view.setBackgroundColor(getResources().getColor(R.color.WhiteItem));//Cambiamos el color de la imagen deseleccionada
+        //Cambiamos el color de la imagen deseleccionada
+        if(image.get_userEmailCreator().replaceAll(" ", ".").equals(viewModel.get_actualEmailUser())){//Si la imagen pertence al usuario actual
+            view.setBackgroundResource(R.color.colorAccent);
+        }else{
+            view.setBackgroundResource(R.color.WhiteItem);
+        }
     }
 
     @Override

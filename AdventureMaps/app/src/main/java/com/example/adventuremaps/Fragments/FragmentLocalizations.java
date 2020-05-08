@@ -123,12 +123,16 @@ public class FragmentLocalizations extends Fragment {
                     if(!item.get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no le pertenece al usuario
                         Toast.makeText(getActivity(), R.string.error_selected_localizations_no_owner, Toast.LENGTH_SHORT).show();
                     }else{
-                        if(viewModel.get_selectedLocalizations().contains(item)){//Si la localización ya estaba seleccionada, la deselecciona
-                            viewModel.get_selectedLocalizations().remove(item);//Eliminamos esa localización de la lista de seleccionadas
-                            changeBackgroundColorItemView(view, position);//Cambiamos el color de la localización
+                        if(!item.get_localizationPoint().isShared()){//Si la localización no se encuentra compartida con la aplicación
+                            if(viewModel.get_selectedLocalizations().contains(item)){//Si la localización ya estaba seleccionada, la deselecciona
+                                viewModel.get_selectedLocalizations().remove(item);//Eliminamos esa localización de la lista de seleccionadas
+                                changeBackgroundColorItemView(view, position);//Cambiamos el color de la localización
+                            }else{
+                                viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
+                                view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la localización seleccionada
+                            }
                         }else{
-                            viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
-                            view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la localización seleccionada
+                            Toast.makeText(getActivity(), R.string.error_selected_localizations_shared, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -143,8 +147,12 @@ public class FragmentLocalizations extends Fragment {
                     if(!item.get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no le pertenece al usuario
                         Toast.makeText(getActivity(), R.string.error_selected_localizations_no_owner, Toast.LENGTH_SHORT).show();
                     }else{
-                        viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
-                        view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
+                        if(!item.get_localizationPoint().isShared()) {//Si la localización no se encuentra compartida con la aplicación
+                            viewModel.get_selectedLocalizations().add(item);//Añadimos la localización a la lista de seleccionadas
+                            view.setBackgroundColor(getResources().getColor(R.color.BlueItem));//Cambiamos el color de la ruta seleccionada
+                        }else{
+                            Toast.makeText(getActivity(), R.string.error_selected_localizations_shared, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 return true;
@@ -161,11 +169,7 @@ public class FragmentLocalizations extends Fragment {
                     if(viewModel.get_selectedLocalizations().size() > 1){//Si hay más de una localización seleccionada
                         Toast.makeText(getActivity(), R.string.error_selected_localizations_overflowed, Toast.LENGTH_SHORT).show();
                     }else{
-                        if(viewModel.get_selectedLocalizations().get(0).get_localizationPoint().isShared()){
-                            Toast.makeText(getActivity(), R.string.error_selected_localizations_already_shared, Toast.LENGTH_SHORT).show();
-                        }else{
-                            openShareDialog();//Abrimos el dialogo
-                        }
+                        openShareDialog();//Abrimos el dialogo
                     }
                 }
             }

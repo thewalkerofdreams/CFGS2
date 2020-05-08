@@ -169,12 +169,13 @@
     <string name="localizations_description_fav">You can save and stop saving location points that are not yours by adding them to favorites.</string>
     <string name="localizations_description_multiple_delete">You can delete the selected locations.</string>
     <string name="lists_description_order_by">You can sort the list by properties and/or favorites.</string>
-    <string name="localizations_description_share_location">You can share a selected location with the application. All users will be able to see it.</string>
+    <string name="localizations_description_share_location">You can share a selected location with the application. All users will be able to see it. You cannot delete the location while it is shared.</string>
     <string name="routes_description_multiple_selection">With a long click on an element you can activate multiple selection on them.</string>
     <string name="routes_description_new_route">You can create a new custom route.</string>
     <string name="routes_description_multiple_delete">You can delete the selected routes.</string>
     <string name="maps_description_download_region">Scroll through the map and click on "Download Map" to save the current region.</string>
     <string name="maps_description_maps_list">Click on "Map List" to show a list with all the regions downloaded, you can navigate to each of them.</string>
+    <string name="error_selected_localizations_shared">You cannot select a shared location!</string>
 
     <string name="error_location_permission">You cannot enter the route without granting location permissions!</string>
 
