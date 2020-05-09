@@ -115,19 +115,23 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));//Movemos la camara según los valores definidos
-        map.setMyLocationEnabled(true);//Nos permite indicar donde se encuentra el usuario actual, además activa el botón para centrar la cámara
-        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
-            @Override
-            public boolean onMyLocationButtonClick() {
-                //Centramos la cámara
-                map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
-                map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
-                return true;//Con esto indicamos que no se mueva la cámara por defecto
-            }
-        });
-        map.getUiSettings().setCompassEnabled(true);//Insertamos la brújula en el mapa
-        map.setPadding(750, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
+        //Si la aplicación tiene los permisos necesarios de localización, añadimos el botón de centrar la cámara en la posición actual del usuario y señalamos a la persona en el mapa con un icono
+        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            map.setMyLocationEnabled(true);//Nos permite indicar donde se encuentra el usuario actual, además activa el botón para centrar la cámara
+            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    //Centramos la cámara
+                    map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
+                    map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
+                    return true;//Con esto indicamos que no se mueva la cámara por defecto
+                }
+            });
+            map.getUiSettings().setCompassEnabled(true);//Insertamos la brújula en el mapa
+            map.setPadding(750, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
+        }
 
         //Inicializamos el cluster manager
         mClusterManager = new ClusterManager<MyClusterItem>(getActivity(), this.map);
