@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,10 +124,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
                 @Override
                 public boolean onMyLocationButtonClick() {
-                    //Centramos la cámara
-                    map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
-                    map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
+                    final LocationManager manager = (LocationManager) getActivity().getSystemService( getActivity().LOCATION_SERVICE );
+
+                    if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {//Si el gps se encuentra activado en el dispositivo
+                        viewModel.reloadActualLocalization();//Recargamos la localización actual del usuario
+                        //Centramos la cámara
+                        map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
+                        map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
+                    }
+
                     return true;//Con esto indicamos que no se mueva la cámara por defecto
                 }
             });

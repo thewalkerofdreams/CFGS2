@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -317,15 +318,21 @@ public class FragmentMaps extends Fragment {
      * Postcondiciones: El método añade una serie de iconos al estilo pasado por parámetros.
      */
     private void initLayerIcons(@NonNull Style loadedMapStyle) {
-        //Ajustamos la imagen del icono por defecto de un marcador
-        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.simple_marker);
-        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        loadedMapStyle.addImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
+        BitmapDrawable bitmapdrawSimpleMarker = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.simple_marker);//Obtenemos la imagen de los recursos
+        BitmapDrawable bitmapdrawBlueMarker = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.blue_marker);
+        Bitmap smallSimpleMarker, smallBlueMarker;
 
-        //Añadiamos la imagen para cuando se seleccione un marcador
-        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.blue_marker);
-        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        loadedMapStyle.addImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
+        //Ajustamos el tamaño de las imagenes
+        if(Build.VERSION.SDK_INT != 28){//Si el dispositivo android no es de la versión pie
+            smallSimpleMarker = Bitmap.createScaledBitmap(bitmapdrawSimpleMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+            smallBlueMarker = Bitmap.createScaledBitmap(bitmapdrawBlueMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+        }else{
+            smallSimpleMarker = Bitmap.createScaledBitmap(bitmapdrawSimpleMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE_ERROR_ANDROID_VERSION, ApplicationConstants.MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION, false);
+            smallBlueMarker = Bitmap.createScaledBitmap(bitmapdrawBlueMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE_ERROR_ANDROID_VERSION, ApplicationConstants.MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION, false);
+        }
+        //Añadimos las imagenes al estilo
+        loadedMapStyle.addImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS, smallSimpleMarker);//Añadimos la imagen al estilo
+        loadedMapStyle.addImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS, smallBlueMarker);//Añadimos la imagen al estilo
     }
 
     /**
