@@ -1,11 +1,11 @@
 package com.example.adventuremaps.Models;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
-import com.example.adventuremaps.Management.ApplicationConstants;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -29,25 +29,24 @@ public class MyClusterRenderer extends DefaultClusterRenderer<MyClusterItem> {
         activity.runOnUiThread(new Runnable() {//Insertamos el icono en un hilo secundario
             public void run() {
                 BitmapDrawable bitmapdraw = null;
-                Bitmap smallIcon = null;
 
                 if(item.getItemSelected()){//Si el item se encuentra seleccionado
-                    bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.blue_marker));
+                    bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(activity.getResources(), R.mipmap.blue_marker, null);
                 }else{
                     switch (item.getTag()){
                         case "Fav":
-                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.marker_fav));
+                            bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(activity.getResources(), R.mipmap.marker_fav, null);
                             break;
                         case "Owner":
-                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.own_location));
+                            bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(activity.getResources(), R.mipmap.own_location, null);
                             break;
                         case "NoOwner":
-                            bitmapdraw = (BitmapDrawable) activity.getResources().getDrawable(Integer.valueOf(R.drawable.simple_marker));
+                            bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(activity.getResources(), R.mipmap.simple_marker, null);
                             break;
                     }
                 }
-                smallIcon = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapdraw.getBitmap())));
             }
         });
     }

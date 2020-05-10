@@ -13,8 +13,8 @@ public class ApplicationConstants {
     public final static int REQUEST_CODE_CREATE_LOCALIZATION_POINT = 9;
 
     //Icons Size
-    public final static int MARKER_WITH_SIZE = 120;
-    public final static int MARKER_HEIGHT_SIZE = 120;
+    public final static int MARKER_WITH_SIZE = 70;
+    public final static int MARKER_HEIGHT_SIZE = 70;
     public final static int MARKER_WITH_SIZE_ERROR_ANDROID_VERSION = 40;
     public final static int MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION = 40;
 

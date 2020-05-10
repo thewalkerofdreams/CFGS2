@@ -323,7 +323,7 @@ public class FragmentMaps extends Fragment {
         Bitmap smallSimpleMarker, smallBlueMarker;
 
         //Ajustamos el tamaño de las imagenes
-        if(Build.VERSION.SDK_INT != 28){//Si el dispositivo android no es de la versión pie
+        if(Build.VERSION.SDK_INT < 27){//Si el dispositivo android no es de la versión oreo o superior
             smallSimpleMarker = Bitmap.createScaledBitmap(bitmapdrawSimpleMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
             smallBlueMarker = Bitmap.createScaledBitmap(bitmapdrawBlueMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
         }else{

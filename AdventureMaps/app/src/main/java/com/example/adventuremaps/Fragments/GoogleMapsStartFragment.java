@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,7 +80,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public boolean onMarkerClick(final Marker marker) {
         tryDesmarkMarker();//Si ya existe un marcador seleccionado lo deseleccionamos
 
-        setIconToMarker(marker, String.valueOf(R.drawable.blue_marker));//Cambiamos el color del nuevo marcador seleccionado
+        setIconToMarker(marker, String.valueOf(R.mipmap.blue_marker));//Cambiamos el color del nuevo marcador seleccionado
         viewModel.set_localizationPointClicked(marker);//Almacenamos el marcador seleccionado
 
         if(getActivity() != null)//Si la referencia a la actividad no es nula
@@ -317,17 +316,22 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      */
     private void restoreIconMarker(Marker marker){
         if(marker != null && marker.getTag() != null){
+            BitmapDrawable bitmapDrawable = null;
             switch (marker.getTag().toString()){
                 case "Fav":
-                    setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
+                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.marker_fav);//Le colocamos el icono al marcador
+                    //setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
                     break;
                 case "Owner":
-                    setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.own_location);//Le colocamos el icono al marcador
+                    //setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
                     break;
                 case "NoOwner":
-                    setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.simple_marker);//Le colocamos el icono al marcador
+                    //setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
                     break;
             }
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
         }
     }
 
@@ -441,13 +445,15 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método agrega un icono a un marcador.
      */
     private void setIconToMarker(final Marker marker, final String addressIcon){
-        getActivity().runOnUiThread(new Runnable() {//TODO el icono de inserta en un hilo secundario
+        /*getActivity().runOnUiThread(new Runnable() {//TODO el icono de inserta en un hilo secundario
             public void run() {
                 bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
                 smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
             }
-        });
+        });*/
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));//Le colocamos el icono al marcador
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
     }
 
     //Método para cargar el fragmento inferior
