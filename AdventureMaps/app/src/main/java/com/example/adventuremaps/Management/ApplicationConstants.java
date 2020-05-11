@@ -15,8 +15,8 @@ public class ApplicationConstants {
     //Icons Size
     public final static int MARKER_WITH_SIZE = 70;
     public final static int MARKER_HEIGHT_SIZE = 70;
-    public final static int MARKER_WITH_SIZE_ERROR_ANDROID_VERSION = 40;
-    public final static int MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION = 40;
+    public final static int MARKER_WITH_SIZE_ERROR_ANDROID_VERSION = 50;
+    public final static int MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION = 50;
 
     //Default Coordenates
     public final static double RLYEH_LATITUDE = -47.15;//Easter egg
