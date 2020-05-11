@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,7 +199,8 @@ public class FragmentMaps extends Fragment {
 
                         moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
 
-                        mapboxMap.getUiSettings().setCompassMargins(0, 20, 190, 0);//Ajustamos la posición de la brújula en el mapa
+                        //mapboxMap.getUiSettings().setCompassMargins(0, 10, 80, 0);//Ajustamos la posición de la brújula en el mapa
+                        adjustMarginCompass(mapboxMap);//Ajustamos la posición de la brújula en el mapa
 
                         initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
 
@@ -257,6 +259,28 @@ public class FragmentMaps extends Fragment {
                 });
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: adjustMarginCompass
+     * Comentario: El método ajusta el margen de la brújula del mapa, según el tamaño del dispositivo actual.
+     * Cabecera: private void adjustMarginCompass(MapboxMap map)
+     * Entrada:
+     *  -MapboxMap map
+     * Postcondiciones: El método ajusta el margen de la brújula sobre el mapa, según el tamaño del dispositivo actual.
+     */
+    private void adjustMarginCompass(MapboxMap map){
+        int mapboxMarginCompass;
+        TypedValue tv = new TypedValue();
+        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
+        {
+            mapboxMarginCompass = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el margen según el tamaño de la pantalla
+        }else{
+            mapboxMarginCompass = ApplicationConstants.DEFAULT_RIGHT_MARGIN_OFFLINE_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un margen por defecto
+        }
+        //Modificamos el padding del mapa
+        map.getUiSettings().setCompassMargins(0, 5, mapboxMarginCompass, 0);
     }
 
     /**

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,14 +131,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                         //Centramos la cámara
                         map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
-                        map.setPadding(750, 0, 0,0);//Volvemos a habilitar el padding para la brújula
+                        adjustPaddingMap(map);//Volvemos a habilitar el padding para la brújula
+                        //map.setPadding(0, 0, 0,0);//Volvemos a habilitar el padding para la brújula
                     }
 
                     return true;//Con esto indicamos que no se mueva la cámara por defecto
                 }
             });
             map.getUiSettings().setCompassEnabled(true);//Insertamos la brújula en el mapa
-            map.setPadding(750, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
+            adjustPaddingMap(map);//Modificamos la posición de los elementos que pertenecen al mapa
+            //map.setPadding(0, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
         }
 
         //Inicializamos el cluster manager
@@ -178,6 +181,28 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }else{
             Toast.makeText(getActivity(), R.string.create_localization_permission_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: adjustPaddingMap
+     * Comentario: El método ajusta el padding del mapa, según el tamaño del dispositivo actual.
+     * Cabecera: private void adjustPaddingMap(GoogleMap map)
+     * Entrada:
+     *  -GoogleMap map
+     * Postcondiciones: El método ajusta el padding del mapa, según el tamaño del dispositivo actual.
+     */
+    private void adjustPaddingMap(GoogleMap map){
+        int googleMapPadding;
+        TypedValue tv = new TypedValue();
+        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
+        {
+            googleMapPadding = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el padding según el tamaño de la pantalla
+        }else{
+            googleMapPadding = ApplicationConstants.DEFAULT_RIGHT_PADDING_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un padding por defecto
+        }
+        //Modificamos el padding del mapa
+        map.setPadding(getActivity().getWindowManager().getDefaultDisplay().getWidth() - (googleMapPadding * 2 + ApplicationConstants.DEFAULT_RIGHT_MARGIN_MAP), 0, 0, 0);
     }
 
     /**
