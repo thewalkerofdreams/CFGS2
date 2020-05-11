@@ -31,4 +31,5 @@ public class ApplicationConstants {
     public final static int DEFAULT_RIGHT_MARGIN_MAP = 20;
     public final static int DEFAULT_RIGHT_PADDING_MAP_BUT_NO_ACTIONBARSIZE_FOUND = 750;
     public final static int DEFAULT_RIGHT_MARGIN_OFFLINE_MAP_BUT_NO_ACTIONBARSIZE_FOUND = 60;
+    public final static int DEFAULT_TOP_MARGIN_OFFLINE_MAP = 8;
 }

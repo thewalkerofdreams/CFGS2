@@ -280,7 +280,7 @@ public class FragmentMaps extends Fragment {
             mapboxMarginCompass = ApplicationConstants.DEFAULT_RIGHT_MARGIN_OFFLINE_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un margen por defecto
         }
         //Modificamos el padding del mapa
-        map.getUiSettings().setCompassMargins(0, 5, mapboxMarginCompass, 0);
+        map.getUiSettings().setCompassMargins(0, ApplicationConstants.DEFAULT_TOP_MARGIN_OFFLINE_MAP, mapboxMarginCompass, 0);
     }
 
     /**
