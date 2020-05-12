@@ -209,4 +209,5 @@
     <string name="center_location_button_description">If you click on the button with this icon, you will center the map camera on your current position.</string>
 
     <string name="email_format_error">Wrong format for email!</string>
+    <string name="error_upload_image_without_connection">You cannot upload an image without connection!</string>
 </resources>
