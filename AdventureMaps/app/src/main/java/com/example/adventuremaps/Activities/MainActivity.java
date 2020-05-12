@@ -21,6 +21,7 @@ import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -107,7 +108,12 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 progressDialog.dismiss();
                             }
-                        });
+                        }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_SHORT).show();//Indicamos el fallo
+                        }
+                });
             }else{
                 Toast.makeText(this, R.string.password_empty, Toast.LENGTH_SHORT).show();
             }

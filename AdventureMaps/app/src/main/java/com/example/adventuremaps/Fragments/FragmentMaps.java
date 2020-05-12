@@ -2,6 +2,7 @@ package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,6 +134,7 @@ public class FragmentMaps extends Fragment {
             btnCenterLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    viewModel.reloadActualLocalization();
                     moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
                 }
             });
@@ -294,7 +298,7 @@ public class FragmentMaps extends Fragment {
         if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
             latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
         }else{//Lo mandamos a R'lyeh
-            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
+            latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);
         }
 
         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
@@ -804,6 +808,7 @@ public class FragmentMaps extends Fragment {
     public void onStop() {
         super.onStop();
         userReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+
         if(mapView != null)
             mapView.onStop();
     }

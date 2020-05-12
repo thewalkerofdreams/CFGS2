@@ -19,8 +19,8 @@ public class ApplicationConstants {
     public final static int MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION = 50;
 
     //Default Coordenates
-    public final static double RLYEH_LATITUDE = -47.15;//Easter egg
-    public final static double RLYEH_LONGITUDE = -126.71666666666667;
+    public final static double SEVILLE_LATITUDE = 37.3828300;
+    public final static double SEVILLE_LONGITUDE = -5.9731700;
 
     //Maps Settings
     public final static double MIN_ZOOM_LEVEL_OFFLINE_MAP = 2;
