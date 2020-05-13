@@ -2,13 +2,18 @@ package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +134,7 @@ public class FragmentMaps extends Fragment {
             btnCenterLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    viewModel.reloadActualLocalization();
                     moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
                 }
             });
@@ -197,7 +203,8 @@ public class FragmentMaps extends Fragment {
 
                         moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
 
-                        mapboxMap.getUiSettings().setCompassMargins(0, 20, 190, 0);//Ajustamos la posición de la brújula en el mapa
+                        //mapboxMap.getUiSettings().setCompassMargins(0, 10, 80, 0);//Ajustamos la posición de la brújula en el mapa
+                        adjustMarginCompass(mapboxMap);//Ajustamos la posición de la brújula en el mapa
 
                         initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
 
@@ -260,6 +267,28 @@ public class FragmentMaps extends Fragment {
 
     /**
      * Interfaz
+     * Nombre: adjustMarginCompass
+     * Comentario: El método ajusta el margen de la brújula del mapa, según el tamaño del dispositivo actual.
+     * Cabecera: private void adjustMarginCompass(MapboxMap map)
+     * Entrada:
+     *  -MapboxMap map
+     * Postcondiciones: El método ajusta el margen de la brújula sobre el mapa, según el tamaño del dispositivo actual.
+     */
+    private void adjustMarginCompass(MapboxMap map){
+        int mapboxMarginCompass;
+        TypedValue tv = new TypedValue();
+        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
+        {
+            mapboxMarginCompass = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el margen según el tamaño de la pantalla
+        }else{
+            mapboxMarginCompass = ApplicationConstants.DEFAULT_RIGHT_MARGIN_OFFLINE_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un margen por defecto
+        }
+        //Modificamos el padding del mapa
+        map.getUiSettings().setCompassMargins(0, ApplicationConstants.DEFAULT_TOP_MARGIN_OFFLINE_MAP, mapboxMarginCompass, 0);
+    }
+
+    /**
+     * Interfaz
      * Nombre: moveMapCameraToActualUserLocation
      * Comentario: El método mueve la cámara del mapa centrandola en la posición actual del usuario.
      * Cabecera: private void moveMapCameraToActualUserLocation()
@@ -269,7 +298,7 @@ public class FragmentMaps extends Fragment {
         if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
             latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
         }else{//Lo mandamos a R'lyeh
-            latLng = new LatLng(ApplicationConstants.RLYEH_LATITUDE, ApplicationConstants.RLYEH_LONGITUDE);
+            latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);
         }
 
         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
@@ -317,15 +346,21 @@ public class FragmentMaps extends Fragment {
      * Postcondiciones: El método añade una serie de iconos al estilo pasado por parámetros.
      */
     private void initLayerIcons(@NonNull Style loadedMapStyle) {
-        //Ajustamos la imagen del icono por defecto de un marcador
-        BitmapDrawable bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.simple_marker);
-        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        loadedMapStyle.addImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
+        BitmapDrawable bitmapdrawSimpleMarker = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.simple_marker);//Obtenemos la imagen de los recursos
+        BitmapDrawable bitmapdrawBlueMarker = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.blue_marker);
+        Bitmap smallSimpleMarker, smallBlueMarker;
 
-        //Añadiamos la imagen para cuando se seleccione un marcador
-        bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(R.drawable.blue_marker);
-        smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-        loadedMapStyle.addImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS, smallMarker);//Añadimos la imagen al estilo
+        //Ajustamos el tamaño de las imagenes
+        if(Build.VERSION.SDK_INT < 27){//Si el dispositivo android no es de la versión oreo o superior
+            smallSimpleMarker = Bitmap.createScaledBitmap(bitmapdrawSimpleMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+            smallBlueMarker = Bitmap.createScaledBitmap(bitmapdrawBlueMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+        }else{
+            smallSimpleMarker = Bitmap.createScaledBitmap(bitmapdrawSimpleMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE_ERROR_ANDROID_VERSION, ApplicationConstants.MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION, false);
+            smallBlueMarker = Bitmap.createScaledBitmap(bitmapdrawBlueMarker.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE_ERROR_ANDROID_VERSION, ApplicationConstants.MARKER_HEIGHT_SIZE_ERROR_ANDROID_VERSION, false);
+        }
+        //Añadimos las imagenes al estilo
+        loadedMapStyle.addImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS, smallSimpleMarker);//Añadimos la imagen al estilo
+        loadedMapStyle.addImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS, smallBlueMarker);//Añadimos la imagen al estilo
     }
 
     /**
@@ -773,6 +808,7 @@ public class FragmentMaps extends Fragment {
     public void onStop() {
         super.onStop();
         userReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+
         if(mapView != null)
             mapView.onStop();
     }
