@@ -1,6 +1,7 @@
 package com.example.adventuremaps.Fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -49,12 +50,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private MainTabbetActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
-    private BitmapDrawable bitmapdraw;
-    private Bitmap smallMarker;
+    //private BitmapDrawable bitmapdraw;
+    //private Bitmap smallMarker;
     private ValueEventListener listener;
     //ClusterItem
     private ClusterManager<MyClusterItem> mClusterManager;
     private MyClusterRenderer myClusterRenderer;//Nos permite modificar características especiales de los items del cluster
+    //For GPS
+    private LocationManager manager = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +69,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
             //Cargamos el fragmento inferior
             replaceFragment();
+
+            //Instanciamos la variable LocationManager
+            manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         }
 
         return view;
@@ -103,11 +109,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onMapReady(final GoogleMap map) {
         this.map = map;
         LatLng latLng;
-        final float zoom = 13;//Posicionamos el mapa en una localización y con un nivel de zoom
 
         if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
-            if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actual del usuario
-                latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
+            if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si no podemos obtener la localización actual del usuario
+                latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
             }else{
                 latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
             }
@@ -116,7 +121,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             viewModel.set_latLngToNavigate(null);//Indicamos que ya se ha desplazado hacia el punto de navegación
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));//Movemos la camara según los valores definidos
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ApplicationConstants.DEFAULT_LEVEL_ZOOM));//Movemos la camara según los valores definidos
         //Si la aplicación tiene los permisos necesarios de localización, añadimos el botón de centrar la cámara en la posición actual del usuario y señalamos a la persona en el mapa con un icono
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -124,15 +129,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
                 @Override
                 public boolean onMyLocationButtonClick() {
-                    final LocationManager manager = (LocationManager) getActivity().getSystemService( getActivity().LOCATION_SERVICE );
-
                     if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {//Si el gps se encuentra activado en el dispositivo
                         viewModel.reloadActualLocalization();//Recargamos la localización actual del usuario
                         //Centramos la cámara
                         map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), zoom));
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), ApplicationConstants.DEFAULT_LEVEL_ZOOM));
                         adjustPaddingMap(map);//Volvemos a habilitar el padding para la brújula
-                        //map.setPadding(0, 0, 0,0);//Volvemos a habilitar el padding para la brújula
                     }
 
                     return true;//Con esto indicamos que no se mueva la cámara por defecto
@@ -140,7 +142,6 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             });
             map.getUiSettings().setCompassEnabled(true);//Insertamos la brújula en el mapa
             adjustPaddingMap(map);//Modificamos la posición de los elementos que pertenecen al mapa
-            //map.setPadding(0, 0, 0,0);//Modificamos la posición de los elementos que pertenecen al mapa
         }
 
         //Inicializamos el cluster manager
