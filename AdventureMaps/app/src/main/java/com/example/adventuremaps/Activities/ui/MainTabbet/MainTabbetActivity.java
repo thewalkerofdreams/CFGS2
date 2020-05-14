@@ -33,6 +33,7 @@ import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -83,11 +84,11 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
         String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
-        if(!email.isEmpty()){//Si no hay ninguna cuenta iniciada
+        if(email != null && !email.isEmpty()){//Si no hay ninguna cuenta iniciada
             viewModel.set_actualEmailUser(email);//Almacenamos en el VM el email del usuario actual
             SharedPreferences.Editor editor = sharedpreferences.edit();//Además guardamos este email con el objeto SharedPreferences
             editor.putString("UserActualEmail", email);
-            editor.commit();
+            editor.apply();
         }else{//Si la cuenta ya estaba abierta, almacenamos en el VM el email del usuario actual
             viewModel.set_actualEmailUser(sharedpreferences.getString("UserActualEmail", ""));
         }
@@ -257,7 +258,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     //Permisos
 
     @Override//Controlamos la respuesta a los permisos
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode){
             case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
@@ -413,7 +414,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
             localizationference.orderByChild("localizationPointId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     double latitude = 0, longitude = 0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {//Obtenemos la posición del punto de localización
                         latitude = data.child("latitude").getValue(Double.class);
@@ -425,7 +426,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 }
 
                 @Override
-                public void onCancelled(DatabaseError error) {
+                public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
         }else{
