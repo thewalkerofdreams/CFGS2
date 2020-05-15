@@ -2,7 +2,9 @@ package com.example.adventuremaps.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -125,16 +127,21 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         });
 
         btnImageGallery = findViewById(R.id.btnImageGalleryCreateLocalizationPoint);
-        btnImageGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {//Si el usuario aceptó los permisos necesarios
-                    startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY);
-                }else{
-                    Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();
+
+        if(isMIUI(this)){//Si el dispositivo es un XIAOMI, evitamos un error de fábrica de estos dispositivos
+            btnImageGallery.setVisibility(View.GONE);
+        }else{
+            btnImageGallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {//Si el usuario aceptó los permisos necesarios
+                        startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY);
+                    }else{
+                        Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla en landscape
             //Modificamos el tamaño de los botones
@@ -151,6 +158,46 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
             textViewDescription.setVisibility(View.GONE);
             description.setHint(R.string.description);
         }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: isIntentResolved
+     * Comentario: Este método nos permite verificar si un intent contiene un componente (en nuestro caso una versión miui)
+     * que se encuentra en los paquetes instalados del dispositivo actual.
+     * Cabecera: private static boolean isIntentResolved(Context ctx, Intent intent)
+     * Entrada:
+     *  -Context context
+     *  -Intent intent
+     * Salida:
+     *  -boolean isResolved
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
+     * cuenta con algún componente del intent o false en caso contrario.
+     */
+    private static boolean isIntentResolved(Context context, Intent intent){
+        return (intent!=null && context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null);
+    }
+
+    /**
+     * Interfaz
+     * Nombre: isMIUI
+     * Comentario: El método permite verificar si el dispositivo contiene una versión MIUI.
+     * Cabecera: public static boolean isMIUI(Context context)
+     * Entrada:
+     *  -Context context
+     * Salida:
+     *  -boolean isMIUI
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
+     * cuenta con una versión operativa MIUI o false en caso contrario.
+     */
+    public static boolean isMIUI(Context context) {
+        boolean isMIUI = false;
+        if(isIntentResolved(context, new Intent("miui.intent.action.OP_AUTO_START").addCategory(Intent.CATEGORY_DEFAULT))
+                || isIntentResolved(context, new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")))
+                || isIntentResolved(context, new Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST").addCategory(Intent.CATEGORY_DEFAULT))
+                || isIntentResolved(context, new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))))
+            isMIUI = true;
+        return isMIUI;
     }
 
     /**
@@ -281,7 +328,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
     }
 
     @Override//Controlamos la respuesta a los permisos
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == ApplicationConstants.REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getApplication(), R.string.read_external_storage_permission_granted, Toast.LENGTH_SHORT).show();//Indicamos que se concedió el permiso

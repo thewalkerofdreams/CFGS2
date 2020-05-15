@@ -28,7 +28,7 @@ public class CreateCountActivity extends AppCompatActivity {
     private EditText textNickName, textEmail, textPassword01, textPassword02;
     private FirebaseAuth firebaseAuth;
     private CreateCountActivityVM viewModel;
-    private ProgressDialog progressDialog;;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

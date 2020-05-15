@@ -3,8 +3,11 @@ package com.example.adventuremaps.Activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +41,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.net.InetAddress;
 
 public class ImageGalleryActivity extends AppCompatActivity {
 
@@ -206,10 +211,13 @@ public class ImageGalleryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
             if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
-                final Uri imageUri = data.getData();
-
-                insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
-                loadGallery();//Volvemos a cargar la galería
+                if(isOnline(this)){//Si el dispositivo tiene conexión a Internet
+                    final Uri imageUri = data.getData();
+                    insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
+                    loadGallery();//Volvemos a cargar la galería
+                }else{
+                    Toast.makeText(this, R.string.error_upload_image_without_connection, Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
             }
@@ -303,7 +311,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
+    public void onSaveInstanceState(@NonNull Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteImages != null && alertDialogDeleteImages.isShowing()) {//Si se encuentra abierto el dialogo de eliminación
@@ -362,7 +370,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                         progressDialog.setProgress((int) progress);
                     }
@@ -390,7 +398,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
         // Read from the database
         localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
@@ -443,5 +451,23 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private void hideProgressDialogWithTitle() {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.dismiss();
+    }
+
+    /**
+     * Interfaz
+     * Nombre: isOnline
+     * Comentario: Este método nos permite verificar si el dispositivo actual tiene conexión a Internet.
+     * Cabecera: public boolean isOnline(Context context)
+     * Entrada:
+     *  -Context context
+     * Salida:
+     *  -boolean connection
+     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
+     * actual tiene conexión a Internet o false en caso contrario.
+     */
+    public boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 }

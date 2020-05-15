@@ -188,7 +188,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         // Read from the database
         localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationTypes().clear();
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot types : datas.child("types").getChildren()){
@@ -205,7 +205,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationsIdActualUser().clear();//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){
@@ -221,7 +221,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
             }
         });
@@ -321,7 +321,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
+    public void onSaveInstanceState(@NonNull Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
         super.onSaveInstanceState(outState);
 
         if(goodValorationDialog != null && goodValorationDialog.isShowing()) {//Si se encuentra abierto el dialogo de valoración positiva

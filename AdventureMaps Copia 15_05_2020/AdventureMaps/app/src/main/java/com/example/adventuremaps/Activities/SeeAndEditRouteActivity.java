@@ -183,7 +183,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
         // Read from the database
         userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {//Los datos del usuario actual
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_routePoints().clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     ClsUser user = datas.getValue(ClsUser.class);
@@ -207,7 +207,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
             }
         });
