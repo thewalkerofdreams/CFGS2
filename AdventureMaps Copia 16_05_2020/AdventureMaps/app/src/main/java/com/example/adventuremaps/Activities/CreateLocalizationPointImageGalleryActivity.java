@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -276,7 +277,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
+    public void onSaveInstanceState(@NonNull Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteImages != null && alertDialogDeleteImages.isShowing()) {//Si se encuentra abierto el dialogo de eliminación

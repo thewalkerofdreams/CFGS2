@@ -23,6 +23,7 @@ public class ApplicationConstants {
     public final static double SEVILLE_LONGITUDE = -5.9731700;
 
     //Maps Settings
+    public final static int DEFAULT_LEVEL_ZOOM = 13;
     public final static double MIN_ZOOM_LEVEL_OFFLINE_MAP = 2;
 
     public final static String DEFAULT_MARKER_ICON_OFFLINE_MAPS = "DEFAULT_ICON";

@@ -8,11 +8,10 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +88,9 @@ public class FragmentMaps extends Fragment {
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
     private SymbolManager symbolManager;
     //Center User Location
-    Button btnCenterLocation;
+    private Button btnCenterLocation;
+    //For GPS
+    private LocationManager manager = null;
 
     private ValueEventListener listener = null;
 
@@ -134,8 +135,10 @@ public class FragmentMaps extends Fragment {
             btnCenterLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewModel.reloadActualLocalization();
-                    moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
+                    if(manager != null && manager.isProviderEnabled( LocationManager.GPS_PROVIDER)){//Si el GPS se encuentra activado
+                        viewModel.reloadActualLocalization();//Recargamos la posición actual del usuario
+                        moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
+                    }
                 }
             });
 
@@ -166,6 +169,9 @@ public class FragmentMaps extends Fragment {
                     downloadedRegionList();
                 }
             });
+
+            //Instanciamos la variable LocationManager
+            manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         }
 
         return view;
@@ -201,9 +207,6 @@ public class FragmentMaps extends Fragment {
                         //Ajustamos el zoom mínimo en el mapa
                         map.setMinZoomPreference(ApplicationConstants.MIN_ZOOM_LEVEL_OFFLINE_MAP);
 
-                        moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
-
-                        //mapboxMap.getUiSettings().setCompassMargins(0, 10, 80, 0);//Ajustamos la posición de la brújula en el mapa
                         adjustMarginCompass(mapboxMap);//Ajustamos la posición de la brújula en el mapa
 
                         initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
@@ -212,6 +215,7 @@ public class FragmentMaps extends Fragment {
                         map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                             @Override
                             public boolean onMapClick(@NonNull LatLng point) {
+                                viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
                                 tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
                                 mostrarAccionesSobreElMapa();//Mostramos los iconos para interactuar con el mapa
                                 return false;//False para que podemos clicar en los marcadores
@@ -220,6 +224,7 @@ public class FragmentMaps extends Fragment {
                         map.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
                             @Override
                             public boolean onMapLongClick(@NonNull LatLng point) {
+                                viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
                                 viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
                                 viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
                                 return true;//Soluciona el error de ejecución múltiple
@@ -235,8 +240,12 @@ public class FragmentMaps extends Fragment {
                             public void onAnnotationClick(Symbol symbol) {
                                 tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
 
-                                viewModel.set_symbolClicked(symbol);
-                                symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);
+                                //Almacenamos el zoom y la posición actual sobre el mapa
+                                viewModel.set_actualCameraZoom(map.getCameraPosition().zoom);
+                                viewModel.set_actualCameraPosition(map.getCameraPosition().target);
+
+                                viewModel.set_symbolClicked(symbol);//Almacenamos el simbolo clicado en el VM
+                                symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);//Cambiamos su icono
                                 symbolManager.update(symbol);
                                 mostrarAccionesSobreUnMarcador();//Hacemos visible las opciones del icono
                             }
@@ -258,6 +267,12 @@ public class FragmentMaps extends Fragment {
                                     .withIconImage(ApplicationConstants.DEFAULT_MARKER_ICON_OFFLINE_MAPS)
                                     .withIconSize(1.0f));
                             viewModel.get_markersInserted().add(symbol);
+                        }
+
+                        if(viewModel.get_symbolClicked() != null){//Si ya se había marcado un punto de localización
+                            moveMapCameraToLastPosition();
+                        }else{
+                            moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
                         }
                     }
                 });
@@ -289,21 +304,49 @@ public class FragmentMaps extends Fragment {
 
     /**
      * Interfaz
+     * Nombre: moveMapCameraToLastPosition
+     * Comentario: El método mueve la cámara del mapa centrandola en la última posición almacenada en el VM
+     * cuando se clicó un punto de localización.
+     * Cabecera: private void moveMapCameraToLastPosition()
+     * Precondiciones:
+     *  -El VM debe contar con el nivel de zoom y con la última posición almacenada cuando se clicó un simbolo (marcador)
+     * Postcondiciones: El método desplaza la cámara del mapa a la posición del último punto de localización
+     * clicado.
+     */
+    private void moveMapCameraToLastPosition(){
+        CameraPosition position = new CameraPosition.Builder()//Movemos la camara hacie la última posición almacenada
+                .target(viewModel.get_actualCameraPosition())
+                .zoom(viewModel.get_actualCameraZoom())
+                .tilt(20)
+                .build();
+        map.setCameraPosition(position);
+
+        //Inicializamos por defecto el nivel de zoom y posición actual
+        viewModel.set_actualCameraZoom(0);
+        viewModel.set_actualCameraPosition(null);
+    }
+
+    /**
+     * Interfaz
      * Nombre: moveMapCameraToActualUserLocation
-     * Comentario: El método mueve la cámara del mapa centrandola en la posición actual del usuario.
+     * Comentario: El método mueve la cámara del mapa centrandola en la posición actual del usuario,
+     * en el caso de no poder obtener la localización actual del usuario se moverá la cámara hacia
+     * Sevilla.
      * Cabecera: private void moveMapCameraToActualUserLocation()
+     * Postcondiciones: El método desplaza la cámara del mapa hacia la posición actual del usuario o
+     * hacia Sevilla si no se pudo obtener la posición del usuario.
      */
     private void moveMapCameraToActualUserLocation(){
-        LatLng latLng = null;
-        if(viewModel.get_actualLocation() != null){//Si se pudo obtener la localización del ussuario
-            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
-        }else{//Lo mandamos a R'lyeh
+        LatLng latLng;
+        if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si se pudo obtener la localización del ussuario
             latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);
+        }else{
+            latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());//Guardamos la posición del usuario actual
         }
 
         CameraPosition position = new CameraPosition.Builder()//Movemos la camara del mapa a la posición del usuario actual
                 .target(latLng)
-                .zoom(10)
+                .zoom(ApplicationConstants.DEFAULT_LEVEL_ZOOM)
                 .tilt(20)
                 .build();
         map.setCameraPosition(position);

@@ -27,7 +27,7 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
      * Interfaz
      * Nombre: loadViewPager
      * Comentario: Este método nos permite cargar el viewPager de la actividad actual.
-     * Cabecera: public void loadViewPager()
+     * Cabecera: private void loadViewPager()
      * Postcondiciones: El método carga el viewPager de la actividad actual.
      */
     private void loadViewPager(){

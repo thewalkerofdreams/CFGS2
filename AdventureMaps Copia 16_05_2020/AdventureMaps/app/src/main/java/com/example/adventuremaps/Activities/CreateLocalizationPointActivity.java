@@ -166,9 +166,11 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      * Comentario: Este método nos permite verificar si un intent contiene un componente (en nuestro caso una versión miui)
      * que se encuentra en los paquetes instalados del dispositivo actual.
      * Cabecera: private static boolean isIntentResolved(Context ctx, Intent intent)
-     * @param context
-     * @param intent
-     * @return
+     * Entrada:
+     *  -Context context
+     *  -Intent intent
+     * Salida:
+     *  -boolean isResolved
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
      * cuenta con algún componente del intent o false en caso contrario.
      */
@@ -181,8 +183,10 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      * Nombre: isMIUI
      * Comentario: El método permite verificar si el dispositivo contiene una versión MIUI.
      * Cabecera: public static boolean isMIUI(Context context)
-     * @param context
-     * @return
+     * Entrada:
+     *  -Context context
+     * Salida:
+     *  -boolean isMIUI
      * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
      * cuenta con una versión operativa MIUI o false en caso contrario.
      */
@@ -324,7 +328,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
     }
 
     @Override//Controlamos la respuesta a los permisos
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == ApplicationConstants.REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getApplication(), R.string.read_external_storage_permission_granted, Toast.LENGTH_SHORT).show();//Indicamos que se concedió el permiso

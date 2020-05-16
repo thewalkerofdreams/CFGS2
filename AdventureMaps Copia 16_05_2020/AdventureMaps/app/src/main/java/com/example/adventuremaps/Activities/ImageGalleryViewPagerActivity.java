@@ -253,7 +253,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
         // Read from the database
         localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
