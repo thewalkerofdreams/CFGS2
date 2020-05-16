@@ -224,6 +224,7 @@ public class FragmentMaps extends Fragment {
                         map.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
                             @Override
                             public boolean onMapLongClick(@NonNull LatLng point) {
+                                storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
                                 viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
                                 viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
                                 viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
@@ -239,10 +240,7 @@ public class FragmentMaps extends Fragment {
                             @Override
                             public void onAnnotationClick(Symbol symbol) {
                                 tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
-
-                                //Almacenamos el zoom y la posición actual sobre el mapa
-                                viewModel.set_actualCameraZoom(map.getCameraPosition().zoom);
-                                viewModel.set_actualCameraPosition(map.getCameraPosition().target);
+                                storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
 
                                 viewModel.set_symbolClicked(symbol);//Almacenamos el simbolo clicado en el VM
                                 symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);//Cambiamos su icono
@@ -269,7 +267,7 @@ public class FragmentMaps extends Fragment {
                             viewModel.get_markersInserted().add(symbol);
                         }
 
-                        if(viewModel.get_symbolClicked() != null){//Si ya se había marcado un punto de localización
+                        if(viewModel.get_actualCameraPosition() != null){//Si ya se había guardado una posición sobre el mapa
                             moveMapCameraToLastPosition();
                         }else{
                             moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
@@ -278,6 +276,18 @@ public class FragmentMaps extends Fragment {
                 });
             }
         });
+    }
+
+    /**
+     * Interfaz
+     * Nombre: storeActualPositionAndZoom
+     * Comentario: El método almacena la actual posición y zoom sobre el mapa en el VM.
+     * Cabecera: private void storeActualPositionAndZoom()
+     * Postcondiciones: Se almacena la actual posición y zoom de la cámara sobre el mapa.
+     */
+    private void storeActualPositionAndZoom(){
+        viewModel.set_actualCameraZoom(map.getCameraPosition().zoom);
+        viewModel.set_actualCameraPosition(map.getCameraPosition().target);
     }
 
     /**
