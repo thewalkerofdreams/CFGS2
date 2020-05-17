@@ -91,8 +91,12 @@ public class FragmentMaps extends Fragment {
     private Button btnCenterLocation;
     //For GPS
     private LocationManager manager = null;
-
-    private ValueEventListener listener = null;
+    //Listeners
+    private ValueEventListener listenerFavouriteLocationsId = null;
+    private ValueEventListener listenerLocalizationsSaved = null;
+    private MapboxMap.OnMapClickListener listenerOnMapClick = null;
+    private MapboxMap.OnMapLongClickListener listenerOnMapLongClick = null;
+    private OnSymbolClickListener listenerMarkerClick = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -172,9 +176,56 @@ public class FragmentMaps extends Fragment {
 
             //Instanciamos la variable LocationManager
             manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            //Instanciamos los listeners sobre el mapa
+            listenerOnMapClick = new MapboxMap.OnMapClickListener() {
+                @Override
+                public boolean onMapClick(@NonNull LatLng point) {
+                    tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
+                    mostrarAccionesSobreElMapa();//Mostramos los iconos para interactuar con el mapa
+                    viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
+                    return false;//False para que podemos clicar en los marcadores
+                }
+            };
+
+            listenerOnMapLongClick = new MapboxMap.OnMapLongClickListener() {
+                @Override
+                public boolean onMapLongClick(@NonNull LatLng point) {
+                    storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
+                    viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
+                    viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
+                    viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
+                    return true;//Soluciona el error de ejecución múltiple
+                }
+            };
+
+            listenerMarkerClick = new OnSymbolClickListener() {
+                @Override
+                public void onAnnotationClick(Symbol symbol) {
+                    tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
+                    storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
+
+                    viewModel.set_symbolClicked(symbol);//Almacenamos el simbolo clicado en el VM
+                    symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);//Cambiamos su icono
+                    symbolManager.update(symbol);
+                    mostrarAccionesSobreUnMarcador();//Hacemos visible las opciones del icono
+                }
+            };
         }
 
         return view;
+    }
+
+    /**
+     * Interfaz
+     * Nombre: removeMapListeners
+     * Comentario: Este método nos permite eliminar los posibles listeners del mapa.
+     * Cabecera: private void removeMapListeners()
+     * Postcondiciones: El método elimina los listeners sobre el mapa actual.
+     */
+    private void removeMapListeners(){
+        map.removeOnMapClickListener(listenerOnMapClick);
+        map.removeOnMapLongClickListener(listenerOnMapLongClick);
     }
 
     /**
@@ -211,43 +262,16 @@ public class FragmentMaps extends Fragment {
 
                         initComponentLocalizationActualUser(mapboxMap, style);//Inicializamos el componente de la localización actual del usuario
 
-                        //Declaramos el evento de clicado del mapa
-                        map.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
-                            @Override
-                            public boolean onMapClick(@NonNull LatLng point) {
-                                viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
-                                tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
-                                mostrarAccionesSobreElMapa();//Mostramos los iconos para interactuar con el mapa
-                                return false;//False para que podemos clicar en los marcadores
-                            }
-                        });
-                        map.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
-                            @Override
-                            public boolean onMapLongClick(@NonNull LatLng point) {
-                                storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
-                                viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
-                                viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
-                                viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
-                                return true;//Soluciona el error de ejecución múltiple
-                            }
-                        });
+                        removeMapListeners();//Eliminamos los listeners existentes sobre el mapa
+                        //Declaramos los eventos de clicado del mapa
+                        map.addOnMapClickListener(listenerOnMapClick);
+                        map.addOnMapLongClickListener(listenerOnMapLongClick);
 
                         //Creamos un objeto symbol manager
                         symbolManager = new SymbolManager(mapView, mapboxMap, style);
 
                         //Declaramos los eventos de los marcadores
-                        symbolManager.addClickListener(new OnSymbolClickListener() {
-                            @Override
-                            public void onAnnotationClick(Symbol symbol) {
-                                tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
-                                storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
-
-                                viewModel.set_symbolClicked(symbol);//Almacenamos el simbolo clicado en el VM
-                                symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);//Cambiamos su icono
-                                symbolManager.update(symbol);
-                                mostrarAccionesSobreUnMarcador();//Hacemos visible las opciones del icono
-                            }
-                        });
+                        symbolManager.addClickListener(listenerMarkerClick);
 
                         //Declaramos un par de propiedades
                         symbolManager.setIconAllowOverlap(true);//Permitimos la superposición del símbolo
@@ -860,14 +884,15 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        userReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+        userReference.removeEventListener(listenerFavouriteLocationsId);//Eliminamos el evento unido a la referencia de los usuarios
+        localizationReference.removeEventListener(listenerLocalizationsSaved);//Eliminamos el evento unido a la referencia de las localizaciones
 
         if(mapView != null)
             mapView.onStop();
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if(mapView != null)
             mapView.onSaveInstanceState(outState);
@@ -904,9 +929,9 @@ public class FragmentMaps extends Fragment {
      * usuario actual.
      */
     private void storeFavoutireLocalizationsId(){
-        listener = userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listenerFavouriteLocationsId = userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
@@ -934,9 +959,12 @@ public class FragmentMaps extends Fragment {
      * Postcondiciones: El método almacena las localizaciones propias y/o favoritas del usuario actual en el VM.
      */
     private void storeOwnerAndFavouriteLocalizations(){
-        localizationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        if(listenerLocalizationsSaved != null)
+            localizationReference.removeEventListener(listenerLocalizationsSaved);
+
+        listenerLocalizationsSaved = localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {

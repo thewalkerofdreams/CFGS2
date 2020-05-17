@@ -24,6 +24,8 @@ import com.example.adventuremaps.Models.MyClusterItem;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -590,13 +592,17 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                         drUser.child(user.getUserId()).child("localizationsId").child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
                     }
                     //Eliminamos el punto de localización
-                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
-                    //Actualizamos la interfaz del mapa actual
-                    if(callSection == 1){//Si es en el mapa de inicio
-                        ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
-                    }else{//Si es en el mapa offline
-                        ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
-                    }
+                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            //Actualizamos la interfaz del mapa actual
+                            if(callSection == 1){//Si es en el mapa de inicio
+                                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                            }else{//Si es en el mapa offline
+                                ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
+                            }
+                        }
+                    });
                 }
 
                 @Override
