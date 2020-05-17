@@ -87,7 +87,7 @@ public class CreateCountActivity extends AppCompatActivity {
                                         if(task.isSuccessful()){
                                             Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
                                             //Almacenamos al nuevo usuario
-                                            ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email(), viewModel.get_password01());
+                                            ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email());
                                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
                                             finish();//Finalizamos la actividad
                                         }else{
