@@ -311,7 +311,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
+    public void onSaveInstanceState(@NonNull Bundle outState) {//Lo utilizamos para permitir que el dialogo sobreviva a los cambios de la pantalla
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteImages != null && alertDialogDeleteImages.isShowing()) {//Si se encuentra abierto el dialogo de eliminación
@@ -370,7 +370,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                         progressDialog.setProgress((int) progress);
                     }
@@ -398,7 +398,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
         // Read from the database
         localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
