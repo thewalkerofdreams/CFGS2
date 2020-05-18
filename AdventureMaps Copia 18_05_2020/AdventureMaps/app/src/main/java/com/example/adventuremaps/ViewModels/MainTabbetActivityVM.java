@@ -24,6 +24,8 @@ import com.example.adventuremaps.Models.MyClusterItem;
 import com.example.adventuremaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +58,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<Symbol> _markersInserted;
     private com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox;//Para crear un nuevo punto de localización
     private Symbol _symbolClicked;
+    private double _actualCameraZoom;
+    private com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPosition;
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -99,6 +103,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _markersInserted = new ArrayList<>();
         _longClickPositionMapbox = null;
         _symbolClicked = null;
+        _actualCameraZoom = 0;
+        _actualCameraPosition = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -197,6 +203,22 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_symbolClicked(Symbol _symbolClicked) {
         this._symbolClicked = _symbolClicked;
+    }
+
+    public double get_actualCameraZoom() {
+        return _actualCameraZoom;
+    }
+
+    public void set_actualCameraZoom(double _actualCameraZoom) {
+        this._actualCameraZoom = _actualCameraZoom;
+    }
+
+    public com.mapbox.mapboxsdk.geometry.LatLng get_actualCameraPosition() {
+        return _actualCameraPosition;
+    }
+
+    public void set_actualCameraPosition(com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPosition) {
+        this._actualCameraPosition = _actualCameraPosition;
     }
 
     //Gets y Sets Fragment Localizations
@@ -570,13 +592,17 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                         drUser.child(user.getUserId()).child("localizationsId").child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
                     }
                     //Eliminamos el punto de localización
-                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
-                    //Actualizamos la interfaz del mapa actual
-                    if(callSection == 1){//Si es en el mapa de inicio
-                        ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
-                    }else{//Si es en el mapa offline
-                        ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
-                    }
+                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            //Actualizamos la interfaz del mapa actual
+                            if(callSection == 1){//Si es en el mapa de inicio
+                                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                            }else{//Si es en el mapa offline
+                                ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
+                            }
+                        }
+                    });
                 }
 
                 @Override
