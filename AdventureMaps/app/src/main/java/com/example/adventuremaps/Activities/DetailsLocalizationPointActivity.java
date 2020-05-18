@@ -25,6 +25,7 @@ import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.DetailsLocalizationPointActivityVM;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,8 +40,9 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     private ImageButton goodValoration, badValoration;
     private AlertDialog goodValorationDialog, badValorationDialog;
     private DetailsLocalizationPointActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos la referencia de las Localizaciones
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);//Tomamos la referencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(DetailsLocalizationPointActivityVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
-        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalization"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
+        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION));
+
+        //Obtenemos la referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Instanciamos los elementos de la UI
         nameLocalizationPoint = findViewById(R.id.TextViewNameLocalizationPointDetailsActivity);
@@ -78,13 +83,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(btnFavourite.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el punto de localización estaba marcado como favorito
                     btnFavourite.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
-                    if(FirebaseAuth.getInstance().getCurrentUser() != null){
-                        userReference.child(FirebaseAuth.getInstance().
-                                getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
-                    }
+                    userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).removeValue();
+
                 }else{
                     btnFavourite.setBackgroundResource(R.drawable.fill_star);//Cambiamos el icono y almacenamos el nuevo resultado en la plataforma
-                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(
+                    userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(
                             viewModel.get_actualLocalizationPoint().getLocalizationPointId())
                             .setValue(viewModel.get_actualLocalizationPoint().getLocalizationPointId());
                 }
@@ -159,10 +162,10 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      */
     private void throwEditLocalizationPointActivity(){
         Intent intent = new Intent(getApplication(), EditLocalizationPointActivity.class);
-        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
-        intent.putStringArrayListExtra("LocalizationTypes", viewModel.get_localizationTypes());
-        intent.putStringArrayListExtra("LocationsIdActualUser", viewModel.get_localizationsIdActualUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION, viewModel.get_actualLocalizationPoint());
+        intent.putStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES, viewModel.get_localizationTypes());
+        intent.putStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATIONS_ID_ACTUAL_USER, viewModel.get_localizationsIdActualUser());
         startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT);
     }
 
@@ -177,8 +180,8 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      */
     private void throwImageGalleryActivity(){
         Intent intent = new Intent(getApplication(), ImageGalleryActivity.class);
-        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualLocalizationPoint", viewModel.get_actualLocalizationPoint());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION_POINT, viewModel.get_actualLocalizationPoint());
         startActivity(intent);
     }
 
@@ -186,12 +189,12 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationTypes().clear();
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot types : datas.child("types").getChildren()){
+                    for(DataSnapshot types : datas.child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD).getChildren()){
                         viewModel.get_localizationTypes().add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización
                     }
                 }
@@ -203,12 +206,12 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             }
         });
 
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        userReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationsIdActualUser().clear();//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child(ApplicationConstants.FB_LOCALIZATIONS_ID).getChildren()){
                         String localizationId = booksSnapshot.getValue(String.class);
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
@@ -243,9 +246,9 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT){
-            if(resultCode == Activity.RESULT_OK){
-                nameLocalizationPoint.setText(data.getStringExtra("NameUpdated"));
-                descriptionLocalizationPoint.setText(data.getStringExtra("DescriptionUpdated"));
+            if(resultCode == Activity.RESULT_OK && data != null){//Si se finalizó la edición y se obtuvieron datos de respuesta
+                nameLocalizationPoint.setText(data.getStringExtra(ApplicationConstants.INTENT_NAME_UPDATED));
+                descriptionLocalizationPoint.setText(data.getStringExtra(ApplicationConstants.INTENT_DESCRIPTION_UPDATED));
             }
         }
     }
@@ -349,7 +352,8 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      * Postcondiciones: El método envia la valoración a la plataforma Firebase.
      */
     public void sendValorationToFirebase(boolean valoracion){
-        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("Valoration").setValue(valoracion);
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD)
+                .child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).setValue(valoracion);
         if(!valoracion && viewModel.get_actualLocalizationPoint().isShared())//Si la valoración es negativa y el punto de localización esta compartido
             tryToStopSharingLocalizationPoint();
     }
@@ -364,13 +368,13 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
      * 80 porciento de estas son negativas.
      */
     public void tryToStopSharingLocalizationPoint(){
-        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("valorations").addListenerForSingleValueEvent(new ValueEventListener() {
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int goodValorationCounter = 0;
                 int badValorationCounter = 0;
                 for(DataSnapshot emails: dataSnapshot.getChildren()){//Obtenemos la valoración de todos los usuarios
-                    if(emails.child("Valoration").getValue(Boolean.class)){
+                    if(emails.child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).getValue(Boolean.class)){
                         goodValorationCounter++;
                     }else{
                         badValorationCounter++;
@@ -378,7 +382,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                 }
 
                 if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas //TODO Falta tener en cuenta el numero de votos pero lo dejo para las pruebas
-                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("shared").setValue(false);//Dejamos de compartir el punto de localización actual
+                    localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_LOCATION_SHARED_CHILD).setValue(false);//Dejamos de compartir el punto de localización actual
                     desmarcarLocalizacionDeFavoritos();
 
                     if(!viewModel.get_actualLocalizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no pertenece al usuario actual
@@ -411,11 +415,11 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot users: dataSnapshot.getChildren()){//Obtenemos los diferentes usuarios
                     String userId = users.getKey();
-                    String email = (String)users.child("email").getValue();
-                    for(DataSnapshot booksSnapshot : users.child("localizationsId").getChildren()){
+                    String email = (String)users.child(ApplicationConstants.FB_USER_EMAIL_CHILD).getValue();
+                    for(DataSnapshot booksSnapshot : users.child(ApplicationConstants.FB_LOCALIZATIONS_ID).getChildren()){
                         if(viewModel.get_actualLocalizationPoint().getLocalizationPointId().equals(booksSnapshot.getValue(String.class)) &&
                             !viewModel.get_actualLocalizationPoint().getEmailCreator().equals(email))
-                            userReference.child(userId).child("localizationsId").child(booksSnapshot.getValue(String.class)).removeValue();
+                            userReference.child(userId).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(booksSnapshot.getValue(String.class)).removeValue();
                     }
                 }
             }

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.EditLocalizationPointActivityVM;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,7 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
     private CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private EditLocalizationPointActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +41,10 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(EditLocalizationPointActivityVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
-        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalization"));
-        viewModel.set_localizationTypes(getIntent().getStringArrayListExtra("LocalizationTypes"));
-        viewModel.set_localizationsIdActualUser(getIntent().getStringArrayListExtra("LocationsIdActualUser"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
+        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION));
+        viewModel.set_localizationTypes(getIntent().getStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES));
+        viewModel.set_localizationsIdActualUser(getIntent().getStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATIONS_ID_ACTUAL_USER));
 
         //Instanciamos los elementos de la UI
         name = findViewById(R.id.EditTextLocalizationName);
@@ -61,7 +62,7 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         });
 
         water = findViewById(R.id.checkboxWater);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.potable_water)))//TODO Cambiar esto en un futuro si renta para evitar tantos if
+        if(viewModel.get_localizationTypes().contains(getString(R.string.potable_water)))
             water.setChecked(true);
         checkBoxes.add(water);
 
@@ -149,14 +150,14 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
                 //Cambiamos el nombre del punto de localización si ha cambiado
                 if(!viewModel.get_actualLocalizationPoint().getName().equals(viewModel.get_newName())){
                     Map<String, Object> hopperUpdates = new HashMap<>();
-                    hopperUpdates.put("name", viewModel.get_newName());
+                    hopperUpdates.put(ApplicationConstants.FB_LOCATION_NAME_CHILD, viewModel.get_newName());
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
                 }
 
                 //Cambiamos la descripción del punto de localización si ha cambiado
                 if(!viewModel.get_actualLocalizationPoint().getDescription().equals(viewModel.get_newDescription())){
                     Map<String, Object> hopperUpdates = new HashMap<>();
-                    hopperUpdates.put("description", viewModel.get_newDescription());
+                    hopperUpdates.put(ApplicationConstants.Fb_LOCATION_DESCRIPTION_CHILD, viewModel.get_newDescription());
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
                 }
 
@@ -166,9 +167,10 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
                 String typeId;
                 for(int i = 0; i < viewModel.get_localizationTypes().size(); i++){
                     typeId = localizationReference.push().getKey();
-                    FirebaseDatabase.getInstance().getReference("Localizations").
-                            child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("types")
-                            .child(typeId).setValue(viewModel.get_localizationTypes().get(i));
+                    if(typeId != null){//Si se pudo obtener el id para el nuevo tipo
+                        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD)
+                                .child(typeId).setValue(viewModel.get_localizationTypes().get(i));
+                    }
                 }
 
                 //Indicamos que se ha realizado la modificación
@@ -176,8 +178,8 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
 
                 //Volvemos a la actividad de detalles
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("NameUpdated", viewModel.get_newName());
-                resultIntent.putExtra("DescriptionUpdated", viewModel.get_newDescription());
+                resultIntent.putExtra(ApplicationConstants.INTENT_NAME_UPDATED, viewModel.get_newName());
+                resultIntent.putExtra(ApplicationConstants.INTENT_DESCRIPTION_UPDATED, viewModel.get_newDescription());
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }else{
@@ -196,8 +198,8 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
      * Postcondiciones: El método elimina todos los tipos del punto de localización actual.
      */
     public void deleteOldLocalizationPointTypes(){
-        DatabaseReference drLocalizationPoint = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPoint().
-                getLocalizationPointId()).child("types");
+        DatabaseReference drLocalizationPoint = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS).child(viewModel.get_actualLocalizationPoint().
+                getLocalizationPointId()).child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD);
         drLocalizationPoint.removeValue();
     }
 }

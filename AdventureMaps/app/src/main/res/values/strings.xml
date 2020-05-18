@@ -213,4 +213,8 @@
 
     <string name="delete">Delete</string>
     <string name="details">Details</string>
+
+    <string name="saving_route">Saving new route</string>
+    <string name="uploading_image">Uploading the image</string>
+    <string name="wait_a_moment">Wait a moment please...</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.MyPageAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -29,8 +30,8 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private RatingBar ratingBar, ratingBarGeneral;
     private ImageGalleryViewPagerActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
-    private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con poca valoración
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+    private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +40,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(ImageGalleryViewPagerActivityVM.class);
-        viewModel.set_actualUserEmail(getIntent().getStringExtra("ActualUserEmail"));
-        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalization"));
-        viewModel.set_positionSelectedImage(getIntent().getIntExtra("PositionImageSelected",0));
+        viewModel.set_actualUserEmail(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
+        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION));
+        viewModel.set_positionSelectedImage(getIntent().getIntExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED,0));
 
         //Instanciamos los elementos de la UI
         ratingBarGeneral = findViewById(R.id.RatingBarGeneralImage);
@@ -119,9 +120,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     public void loadValoration(){
         reloadRatingBar(0);//Recargamos el ratingBar inferior
 
-        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
-                child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
-                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").addListenerForSingleValueEvent(new ValueEventListener() {
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+                child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).
+                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null){//Si el usuario ya ha valorado la imagen
@@ -147,9 +148,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      * Postcondiciones: El método almacena la valoración del usuario en la plataforma FireBase.
      */
     public void valorateImage(final double valoration){
-        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
-                child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
-                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child("Valoration").setValue(valoration);
+        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+                child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).
+                child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).setValue(valoration);
         checkedImageToDelete = false;
     }
 
@@ -201,15 +202,15 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void setGeneralRatingOfActualImage(){
         if(viewModel.get_positionSelectedImage() < viewModel.get_imagesToLoad().size()){//Si la posición seleccionada es menor que el tamaño de las imagenes de la gelería
-            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
-                    child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child("Valorations").
+            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+                    child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).
                     addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             int auxCounter = 0;
                             float totalValoration = 0;
                             for(DataSnapshot emails: dataSnapshot.getChildren()){//Obtenemos la valoración de todos los usuarios
-                                totalValoration += (float)(double)emails.child("Valoration").getValue(Double.class);
+                                totalValoration += (float)(double)emails.child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).getValue(Double.class);
                                 auxCounter++;
                             }
 
@@ -242,8 +243,8 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void tryToDeleteImageFromFireBase(){
         if(viewModel.get_numberOfValorations() > 2 && (double) viewModel.get_generalRatingOfActualImage() < 2){//Si se cumple las restricciones de eliminación
-            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
-                    child("LocalizationImages").child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).removeValue();
+            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+                    child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).removeValue();
 
             if(!viewModel.get_imagesToLoad().isEmpty()){//Si la lista de imagenes no se encuentra vacía
                 //Modificamos la posición de la imagen seleccionada
@@ -260,22 +261,22 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
+                    for (DataSnapshot userEmailImages : datas.child(ApplicationConstants.FB_EMAIL_IMAGES).getChildren()) {
                         String emailImage = userEmailImages.getKey();
-                        for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
+                        for(DataSnapshot images: userEmailImages.child(ApplicationConstants.FB_LOCALIZATION_IMAGES).getChildren()){
                             String imageId = images.getKey();
-                            String imageAddress = String.valueOf(images.child("Uri").getValue());//Obtenemos la dirección de la imagen
+                            String imageAddress = String.valueOf(images.child(ApplicationConstants.FB_IMAGES_URI_CHILD).getValue());//Obtenemos la dirección de la imagen
                             //Comenzamos a cargar las imagenes con su uri en una lista del VM
                             if(!imageAddress.equals("null"))//Si la dirección no es nula
                                 viewModel.get_imagesToLoad().add(new ClsImageWithId(imageAddress, emailImage.replace("[' ']", "."), imageId));
                         }
                     }
-                    changeRatingBarToGone();//TODO Actualmente para ajustar la imagen, ver como arreglarlo en un futuro
+                    changeRatingBarToGone();//Ajustamos la imagen
                     setGeneralRatingOfActualImage();//Obtemos la valoración general de la imagen
                     loadViewPager(); //Recargamos la gelería de imagenes
                 }

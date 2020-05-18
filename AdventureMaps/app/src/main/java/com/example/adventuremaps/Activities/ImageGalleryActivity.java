@@ -42,8 +42,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.InetAddress;
-
 public class ImageGalleryActivity extends AppCompatActivity {
 
     private Button btnAddImage, btnDeleteImages;
@@ -52,7 +50,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ImageGalleryActivityVM viewModel;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +59,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(ImageGalleryActivityVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
-        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra("ActualLocalizationPoint"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
+        viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION_POINT));
 
         //Instanciamos los elementos de la UI
         gridView = findViewById(R.id.GridViewGalleryImageActivity);
@@ -137,11 +135,11 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private void throwImageGalleryViewPagerActivity(int imagePosition){
         Intent intent = new Intent(getApplication(), ImageGalleryViewPagerActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToLoad());//Pasamos las imagenes a cargar
+        bundle.putSerializable(ApplicationConstants.INTENT_IMAGES_TO_LOAD, viewModel.get_imagesToLoad());//Pasamos las imágenes a cargar
         intent.putExtras(bundle);
-        intent.putExtra("PositionImageSelected", imagePosition);//Indicamos la posición de la imagen clicada
-        intent.putExtra("ActualUserEmail", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualLocalization", viewModel.get_actualLocalizationPoint());
+        intent.putExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED, imagePosition);//Indicamos la posición de la imagen clicada
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION, viewModel.get_actualLocalizationPoint());
         startActivity(intent);
     }
 
@@ -156,7 +154,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
      */
     private void getImageIntoGallery(){
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
-        photoPickerIntent.setType("image/*");
+        photoPickerIntent.setType(ApplicationConstants.PHOTO_PICKER_TYPE);
         startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
     }
 
@@ -210,7 +208,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
-            if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
+            if (resultCode == RESULT_OK && data != null) {//Si el usuario seleccionó una imagen de la galería y se obtuvieron datos de respuesta
                 if(isOnline(this)){//Si el dispositivo tiene conexión a Internet
                     final Uri imageUri = data.getData();
                     insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
@@ -303,8 +301,8 @@ public class ImageGalleryActivity extends AppCompatActivity {
         DatabaseReference drImages;
 
         for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
-            drImages = FirebaseDatabase.getInstance().getReference("Localizations").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").
-                    child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child("LocalizationImages").child(viewModel.get_imagesSelected().get(i).get_imageId());
+            drImages = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).
+                    child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesSelected().get(i).get_imageId());
             drImages.removeValue();
         }
         viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
@@ -330,11 +328,11 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Postcondiciones: El método sube una imagen a la plataforma FireBase.
      */
     public void insertImageToFireBase(Uri image){
-        final StorageReference riversRef = mStorageRef.child("Images").child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
+        final StorageReference riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
                 child(System.currentTimeMillis()+""+getExtension(image));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
         progressDialog = new ProgressDialog(this);//Isntanciamos el progressDialog
-        showProgressDialogWithTitle("Uploading the image", "Wait a moment please...");
+        showProgressDialogWithTitle(getString(R.string.uploading_image), getString(R.string.wait_a_moment));
 
         riversRef.putFile(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -349,11 +347,14 @@ public class ImageGalleryActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                         String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
-                                        //Insertamos la dirección de la imagen en la base de datos
-                                        localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
-                                                .child(imageId).child("Uri").setValue(imageUrl);
+                                        if(imageId != null){//Si se pudo obtener una id de la plataforma para la imagen
+                                            //Insertamos la dirección de la imagen en la base de datos
+                                            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES)
+                                                    .child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES)
+                                                    .child(imageId).child(ApplicationConstants.FB_IMAGES_URI_CHILD).setValue(imageUrl);
 
-                                        viewModel.get_imagesToLoad().add(new ClsImageWithId(uri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
+                                            viewModel.get_imagesToLoad().add(new ClsImageWithId(uri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
+                                        }
                                     }
                                 });
                             }
@@ -396,16 +397,16 @@ public class ImageGalleryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild("localizationPointId").equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
+        localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    for (DataSnapshot userEmailImages : datas.child("emailImages").getChildren()) {
+                    for (DataSnapshot userEmailImages : datas.child(ApplicationConstants.FB_EMAIL_IMAGES).getChildren()) {
                         String emailImage = userEmailImages.getKey();
-                        for(DataSnapshot images: userEmailImages.child("LocalizationImages").getChildren()){
+                        for(DataSnapshot images: userEmailImages.child(ApplicationConstants.FB_LOCALIZATION_IMAGES).getChildren()){
                             String imageId = images.getKey();
-                            String imageAddress = String.valueOf(images.child("Uri").getValue());//Obtenemos la dirección de la imagen
+                            String imageAddress = String.valueOf(images.child(ApplicationConstants.FB_IMAGES_URI_CHILD).getValue());//Obtenemos la dirección de la imagen
                             //Comenzamos a cargar los imagenes con su uri en una lista del VM
                             if(!imageAddress.equals("null"))//Si la dirección no es nula
                                 viewModel.get_imagesToLoad().add(new ClsImageWithId(imageAddress, emailImage.replace("[' ']", "."), imageId));
@@ -429,8 +430,10 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Comentario: Este método nos permite mostrar el dialogo de progreso que hemos instanciado en
      * el método OnCreate de la actividad.
      * Cabecera: private void showProgressDialogWithTitle(String title, String substring)
-     * @param title
-     * @param substring
+     * Entrada:
+     *  -String title
+     *  -String substring
+     * Postondiciones: El método activa el dialgo de progreso.
      */
     private void showProgressDialogWithTitle(String title,String substring) {
         progressDialog.setTitle(title);

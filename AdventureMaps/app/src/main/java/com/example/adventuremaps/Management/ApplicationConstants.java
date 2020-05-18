@@ -44,6 +44,9 @@ public class ApplicationConstants {
     public final static String INTENT_ACTUAL_LATITUDE = "ActualLatitude";
     public final static String INTENT_ACTUAL_LONGITUDE = "ActualLongitude";
 
+    public final static String INTENT_ACTUAL_LOCALIZATION = "ActualLocalization";
+    public final static String INTENT_ACTUAL_LOCALIZATION_POINT = "ActualLocalizationPoint";
+
     public final static String INTENT_IMAGES_TO_SAVE = "ImagesToSave";
 
     public final static String INTENT_IMAGES_TO_LOAD = "ImagesToLoad";
@@ -51,9 +54,15 @@ public class ApplicationConstants {
 
     public final static String PHOTO_PICKER_TYPE = "image/*";
 
+    public final static String INTENT_NAME_UPDATED = "NameUpdated";
+    public final static String INTENT_DESCRIPTION_UPDATED = "DescriptionUpdated";
+
     //Datas
     public final static String DATA_LOCALIZATION_TO_SAVE = "LocalizationToSave";
     public final static String DATA_LOCALIZATION_TYPES_TO_SAVE = "LocalizationTypesToSave";
+
+    public final static String DATA_LOCALIZATION_TYPES = "LocalizationTypes";
+    public final static String DATA_LOCALIZATIONS_ID_ACTUAL_USER = "LocationsIdActualUser";
 
     //SharedPreferences
     public final static String SP_ACTUAL_USER_EMAIL = "UserActualEmail";
@@ -61,18 +70,28 @@ public class ApplicationConstants {
     //Firebase Addresses
     public final static String FB_USERS_ADDRESS = "Users";
     public final static String FB_LOCALIZATIONS_ID = "localizationsId";
+    public final static String FB_USER_EMAIL_CHILD = "email";
 
     public final static String FB_ROUTES_ADDRESS = "routes";
     public final static String FB_ROUTE_FAVOURITE_CHILD = "favourite";
+    public final static String FB_ROUTE_POINTS_CHILD = "routePoints";
 
     public final static String FB_LOCALIZATIONS_ADDRESS = "Localizations";
     public final static String FB_LOCALIZATION_POINT_ID = "localizationPointId";
     public final static String FB_LOCATION_LATITUDE = "latitude";
     public final static String FB_LOCATION_LONGITUDE = "longitude";
+    public final static String FB_LOCATION_SHARED_CHILD = "shared";
+    public final static String FB_LOCATION_NAME_CHILD = "name";
+    public final static String Fb_LOCATION_DESCRIPTION_CHILD = "description";
+
+    public final static String FB_LOCALIZATION_VALORATIONS_CHILD = "valorations";
+    public final static String FB_LOCALIZATION_VALORATION_CHILD = "Valoration";
 
     public final static String FB_EMAIL_IMAGES = "emailImages";
     public final static String FB_LOCALIZATION_IMAGES = "LocalizationImages";
     public final static String FB_IMAGES_URI_CHILD = "Uri";
+
+    public final static String FB_LOCALIZATION_TYPES_CHILD = "types";
 
     public final static String FB_STORAGE_IMAGES = "Images";
 

@@ -17,19 +17,22 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateRouteActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private RouteActivitiesVM viewModel;
-    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
+    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_ROUTES_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
     private ProgressDialog progressDialog;
 
     @Override
@@ -39,11 +42,14 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_EMAIL));
+
+        //Obtenemos una referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Instanciamos los elementos de la UI
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Saving new route");
+        progressDialog.setMessage(getString(R.string.saving_route));
     }
 
     /**
@@ -63,7 +69,8 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
             GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
             LatLng latLng = new LatLng(viewModel.get_lastLocalizationClicked().getLatitude(), viewModel.get_lastLocalizationClicked().getLongitude());
             //Marcamos esa posición
-            fragment.colocarMarcador(latLng);
+            if(fragment != null)//Si se instanció correctamente el fragmento
+                fragment.colocarMarcador(latLng);
         }
     }
 
@@ -127,9 +134,9 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
         final String routeId = routeReference.push().getKey();//Obtenemos una id para la ruta
 
         //Almacenamos la ruta
-        final ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        FirebaseDatabase.getInstance().getReference("Users").
-                child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
+        final ClsRoute newRoute = new ClsRoute(routeId, routeName, false, System.currentTimeMillis(), firebaseCurrentUser.getEmail());
+        FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).
+                child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(newRoute.getRouteId())
                 .setValue(newRoute).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {//Una vez almacenada la ruta, almacenamos los puntos que la forman
@@ -139,9 +146,9 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                     ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
                             routeId, viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
 
-                    FirebaseDatabase.getInstance().getReference("Users").
-                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(newRoute.getRouteId())
-                            .child("routePoints").child(newRoutePoint.getRoutePointId())
+                    FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).
+                            child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(newRoute.getRouteId())
+                            .child(ApplicationConstants.FB_ROUTE_POINTS_CHILD).child(newRoutePoint.getRoutePointId())
                             .setValue(newRoutePoint).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
