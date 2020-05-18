@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,12 +48,12 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
     private CreateLocalizationPointActivityVM viewModel;
     private EditText name, description;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
     private Button btnSave, btnFavourite, btnImageGallery;
     private CheckBox water, food, restArea, hunting, culture, hotel, naturalSite, fishing, vivac, camping;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-    private DatabaseReference localizationPointReference = FirebaseDatabase.getInstance().getReference("ClsLocalizationPoint");
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +62,12 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointActivityVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmailUser"));
-        viewModel.set_latitude(getIntent().getDoubleExtra("ActualLatitude", 0));
-        viewModel.set_longitude(getIntent().getDoubleExtra("ActualLongitude", 0));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
+        viewModel.set_latitude(getIntent().getDoubleExtra(ApplicationConstants.INTENT_ACTUAL_LATITUDE, 0));
+        viewModel.set_longitude(getIntent().getDoubleExtra(ApplicationConstants.INTENT_ACTUAL_LONGITUDE, 0));
+
+        //Obtenemos la referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Si la aplicación no tiene los permisos de lectura externa los pide
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -135,7 +139,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if(ActivityCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {//Si el usuario aceptó los permisos necesarios
-                        startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra("ImagesToSave", viewModel.get_imagesToSave()), ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY);
+                        startActivityForResult(new Intent(getApplication(), CreateLocalizationPointImageGalleryActivity.class).putExtra(ApplicationConstants.INTENT_IMAGES_TO_SAVE, viewModel.get_imagesToSave()), ApplicationConstants.REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY);
                     }else{
                         Toast.makeText(getApplication(), R.string.error_read_external_storage, Toast.LENGTH_SHORT).show();
                     }
@@ -192,10 +196,10 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      */
     public static boolean isMIUI(Context context) {
         boolean isMIUI = false;
-        if(isIntentResolved(context, new Intent("miui.intent.action.OP_AUTO_START").addCategory(Intent.CATEGORY_DEFAULT))
-                || isIntentResolved(context, new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")))
-                || isIntentResolved(context, new Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST").addCategory(Intent.CATEGORY_DEFAULT))
-                || isIntentResolved(context, new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))))
+        if(isIntentResolved(context, new Intent(ApplicationConstants.MIUI_OP_AUTO_START).addCategory(Intent.CATEGORY_DEFAULT))
+                || isIntentResolved(context, new Intent().setComponent(new ComponentName(ApplicationConstants.MIUI_SECURITY_CENTER, ApplicationConstants.MIUI_AUTO_START_MANAGEMENT)))
+                || isIntentResolved(context, new Intent(ApplicationConstants.MIUI_POWER_HIDE_MODE_LIST).addCategory(Intent.CATEGORY_DEFAULT))
+                || isIntentResolved(context, new Intent().setComponent(new ComponentName(ApplicationConstants.MIUI_SECURITY_CENTER, ApplicationConstants.MIUI_POWER_SETTINGS))))
             isMIUI = true;
         return isMIUI;
     }
@@ -224,26 +228,28 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
         if(!viewModel.get_name().isEmpty() && !viewModel.get_description().isEmpty()){//Si el nombre y la descripción son válidos
             if(!viewModel.get_localizationTypes().isEmpty()){//Si existe al menos un tipo seleccionado para la localización
-                String localizationPointId = localizationPointReference.push().getKey();//Obtenemos una id para el punto de localización
-                //Creamos el punto de localización
-                ClsLocalizationPoint newLocalizationPoint = new ClsLocalizationPoint(localizationPointId, viewModel.get_name(), viewModel.get_description(), viewModel.get_latitude(), viewModel.get_longitude(),
-                        System.currentTimeMillis(), viewModel.get_actualEmailUser());
+                String localizationPointId = localizationReference.push().getKey();//Obtenemos una id para el punto de localización
+                if(localizationPointId != null){//Si se pudo obtener un id para el punto de localización
+                    //Creamos el punto de localización
+                    ClsLocalizationPoint newLocalizationPoint = new ClsLocalizationPoint(localizationPointId, viewModel.get_name(), viewModel.get_description(), viewModel.get_latitude(), viewModel.get_longitude(),
+                            System.currentTimeMillis(), viewModel.get_actualEmailUser());
 
-                if(viewModel.is_favourite()){//Si el punto de localización fue marcado como favorito
-                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(
-                            localizationPointId)
-                            .setValue(localizationPointId);
+                    if(viewModel.is_favourite()){//Si el punto de localización fue marcado como favorito
+                        userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(
+                                localizationPointId)
+                                .setValue(localizationPointId);
+                    }
+
+                    //Almacenamos las imagenes del punto de localización
+                    insertImagesToFireBase(localizationPointId);
+
+                    //Cerramos la actividad actual
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(ApplicationConstants.DATA_LOCALIZATION_TO_SAVE, newLocalizationPoint);
+                    resultIntent.putExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES_TO_SAVE, viewModel.get_localizationTypes());
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
                 }
-
-                //Almacenamos las imagenes del punto de localización
-                insertImagesToFireBase(localizationPointId);
-
-                //Cerramos la actividad actual
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("LocalizationToSave", newLocalizationPoint);
-                resultIntent.putExtra("LocalizationTypesToSave", viewModel.get_localizationTypes());
-                setResult(RESULT_OK, resultIntent);
-                finish();
             }else{
                 Toast.makeText(this, R.string.min_one_type_required, Toast.LENGTH_SHORT).show();
             }
@@ -280,7 +286,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      */
     public void insertImagesToFireBase(final String localizationPointId){
         for(int i = 0; i < viewModel.get_imagesToSave().size(); i++){
-            final StorageReference storageReference = mStorageRef.child("Images").child(localizationPointId).child(viewModel.get_actualEmailUser()).
+            final StorageReference storageReference = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(localizationPointId).child(viewModel.get_actualEmailUser()).
                     child(System.currentTimeMillis()+""+getExtension(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri())));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
             storageReference.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
@@ -295,11 +301,13 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
                                         public void onSuccess(Uri uri) {
                                             String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                             String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
-                                            //Insertamos la dirección de la imagen en la base de datos
-                                            localizationReference.child(localizationPointId).child("emailImages").child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child("LocalizationImages")
-                                                    .child(imageId).child("Uri").setValue(imageUrl);
+                                            if(imageId != null){//Si se pudo obtener una id para la imagen
+                                                //Insertamos la dirección de la imagen en la base de datos
+                                                localizationReference.child(localizationPointId).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES)
+                                                        .child(imageId).child(ApplicationConstants.FB_IMAGES_URI_CHILD).setValue(imageUrl);
 
-                                            Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
+                                                Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
+                                            }
                                         }
                                     });
                                 }

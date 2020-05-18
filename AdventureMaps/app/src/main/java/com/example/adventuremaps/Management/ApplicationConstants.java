@@ -44,6 +44,13 @@ public class ApplicationConstants {
     public final static String INTENT_ACTUAL_LATITUDE = "ActualLatitude";
     public final static String INTENT_ACTUAL_LONGITUDE = "ActualLongitude";
 
+    public final static String INTENT_IMAGES_TO_SAVE = "ImagesToSave";
+
+    public final static String INTENT_IMAGES_TO_LOAD = "ImagesToLoad";
+    public final static String INTENT_POSITION_IMAGE_SELECTED = "PositionImageSelected";
+
+    public final static String PHOTO_PICKER_TYPE = "image/*";
+
     //Datas
     public final static String DATA_LOCALIZATION_TO_SAVE = "LocalizationToSave";
     public final static String DATA_LOCALIZATION_TYPES_TO_SAVE = "LocalizationTypesToSave";
@@ -62,4 +69,17 @@ public class ApplicationConstants {
     public final static String FB_LOCALIZATION_POINT_ID = "localizationPointId";
     public final static String FB_LOCATION_LATITUDE = "latitude";
     public final static String FB_LOCATION_LONGITUDE = "longitude";
+
+    public final static String FB_EMAIL_IMAGES = "emailImages";
+    public final static String FB_LOCALIZATION_IMAGES = "LocalizationImages";
+    public final static String FB_IMAGES_URI_CHILD = "Uri";
+
+    public final static String FB_STORAGE_IMAGES = "Images";
+
+    //MIUI
+    public final static String MIUI_OP_AUTO_START = "miui.intent.action.OP_AUTO_START";
+    public final static String MIUI_SECURITY_CENTER = "com.miui.securitycenter";
+    public final static String MIUI_AUTO_START_MANAGEMENT = "com.miui.permcenter.autostart.AutoStartManagementActivity";
+    public final static String MIUI_POWER_HIDE_MODE_LIST = "miui.intent.action.POWER_HIDE_MODE_APP_LIST";
+    public final static String MIUI_POWER_SETTINGS = "com.miui.powercenter.PowerSettings";
 }

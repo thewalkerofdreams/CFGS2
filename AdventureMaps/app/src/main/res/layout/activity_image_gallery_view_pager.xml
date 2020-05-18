@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/LinearLayoutRatingBar"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="8"
@@ -13,7 +14,7 @@
         <RatingBar
             android:id="@+id/RatingBarGeneralImage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:numStars="5"
             android:isIndicator="true">
         </RatingBar>

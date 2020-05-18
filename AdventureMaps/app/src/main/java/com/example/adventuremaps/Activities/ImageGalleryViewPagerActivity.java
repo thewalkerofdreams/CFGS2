@@ -1,7 +1,9 @@
 package com.example.adventuremaps.Activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
@@ -64,6 +66,13 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape ajustamos el layout del rating bar
+            LinearLayout linearLayout = findViewById(R.id.LinearLayoutRatingBar);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (float) 1.0);
+            param.weight = 12;
+            linearLayout.setLayoutParams(param);
+        }
     }
 
     /**

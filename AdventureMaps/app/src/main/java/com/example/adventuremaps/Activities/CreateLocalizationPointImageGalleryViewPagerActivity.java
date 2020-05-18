@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.MyPageAdapterCreationLocalizationPoint;
 import com.example.adventuremaps.R;
@@ -25,8 +26,8 @@ public class CreateLocalizationPointImageGalleryViewPagerActivity extends AppCom
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointViewPagerActivityVM.class);
-        viewModel.set_positionSelectedImage(getIntent().getIntExtra("PositionImageSelected",0));
-        viewModel.set_imagesToLoad((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra("ImagesToLoad"));
+        viewModel.set_positionSelectedImage(getIntent().getIntExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED,0));
+        viewModel.set_imagesToLoad((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra(ApplicationConstants.INTENT_IMAGES_TO_LOAD));
 
         //Instanciamos los elementos de la UI
         viewPager = findViewById(R.id.viewPagerCreateLocalizationPoint);

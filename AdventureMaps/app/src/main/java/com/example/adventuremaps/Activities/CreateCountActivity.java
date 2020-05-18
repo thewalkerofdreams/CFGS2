@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateCountActivity extends AppCompatActivity {
@@ -29,6 +30,7 @@ public class CreateCountActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private CreateCountActivityVM viewModel;
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,11 +87,15 @@ public class CreateCountActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         //Verificamos que se pudo registrar el usuario
                                         if(task.isSuccessful()){
-                                            Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
-                                            //Almacenamos al nuevo usuario
-                                            ClsUser nuevoUsuario = new ClsUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.get_nickName(), viewModel.get_email());
-                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
-                                            finish();//Finalizamos la actividad
+                                            //Obtenemos una referencia del usuario actual
+                                            FirebaseUser firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                            if(firebaseCurrentUser != null){//Si se pudo obtener la referencia
+                                                Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
+                                                //Almacenamos los datos del nuevo usuario
+                                                ClsUser nuevoUsuario = new ClsUser(firebaseCurrentUser.getUid(), viewModel.get_nickName(), viewModel.get_email());
+                                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
+                                                finish();//Finalizamos la actividad
+                                            }
                                         }else{
                                             //Si el correo ya se encontraba registrado en la plataforma, es decir, si ocurre una colisión
                                             if(task.getException() instanceof FirebaseAuthUserCollisionException){

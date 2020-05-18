@@ -34,7 +34,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     private GridView gridView;
     private AlertDialog alertDialogDeleteImages;
     private CreateLocalizationPointImageGalleryActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(CreateLocalizationPointImageGalleryActivityVM.class);
-        viewModel.set_imagesToSave((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra("ImagesToSave"));//Ontenemos las imagenes que se seleccionaron anteriormente
+        viewModel.set_imagesToSave((ArrayList<ClsImageWithId>) getIntent().getSerializableExtra(ApplicationConstants.INTENT_IMAGES_TO_SAVE));//Obtenemos las imágenes que se seleccionaron anteriormente
 
         //Instanciamos los elementos de la UI
         gridView = findViewById(R.id.GridViewGalleryImageActivity);
@@ -88,7 +88,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
         btnDeleteImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay imagenes seleccionadas
+                if(viewModel.get_imagesSelected().isEmpty()){//Si no hay imágenes seleccionadas
                     Toast.makeText(getApplication(), R.string.no_exist_selected_image, Toast.LENGTH_LONG).show();
                 }else{
                     deleteImagesDialog();//Lanzamos un dialogo de eliminación
@@ -117,9 +117,9 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     private void throwCreateLocalizationPointImageGalleryViewPagerActivity(int imagePosition){
         Intent intent = new Intent(getApplication(), CreateLocalizationPointImageGalleryViewPagerActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ImagesToLoad", viewModel.get_imagesToSave());//Pasamos las imagenes a cargar
+        bundle.putSerializable(ApplicationConstants.INTENT_IMAGES_TO_LOAD, viewModel.get_imagesToSave());//Pasamos las imágenes a cargar
         intent.putExtras(bundle);
-        intent.putExtra("PositionImageSelected", imagePosition);//Indicamos la posición de la imagen clicada
+        intent.putExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED, imagePosition);//Indicamos la posición de la imagen clicada
         startActivity(intent);
     }
 
@@ -136,7 +136,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     private void searchImageIntoGallery(){
         viewModel.set_searchingImage(true);//Indicamos en el VM que el usuario está buscando una imagen en la galería
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);//Nos permite obtener una imagen de la galería del teléfono
-        photoPickerIntent.setType("image/*");
+        photoPickerIntent.setType(ApplicationConstants.PHOTO_PICKER_TYPE);
         startActivityForResult(photoPickerIntent, ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY);
     }
 
@@ -176,12 +176,13 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
-            if (resultCode == RESULT_OK) {//Si el usuario seleccionó una imagen de la galería
-                final Uri imageUri = data.getData();
+            if (resultCode == RESULT_OK && data != null) {//Si el usuario seleccionó una imagen de la galería y se obtuvo datos de respuesta
+                Uri imageUri = data.getData();
                 String imageId = localizationReference.push().getKey();
-
-                viewModel.get_imagesToSave().add(new ClsImageWithId(imageUri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en la lista del VM
-                loadGallery();//Volvemos a cargar la galería
+                if(imageUri != null && imageId != null){//Si se pudo obtener correctamente la URI de la imagen y su nuevo id
+                    viewModel.get_imagesToSave().add(new ClsImageWithId(imageUri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en la lista del VM
+                    loadGallery();//Volvemos a cargar la galería
+                }
             } else {
                 Toast.makeText(this, R.string.you_havent_picked_image, Toast.LENGTH_LONG).show();
             }
@@ -268,7 +269,7 @@ public class CreateLocalizationPointImageGalleryActivity extends AppCompatActivi
     @Override
     public void onBackPressed() {
         Intent intent=new Intent();
-        intent.putExtra("ImagesToSave", viewModel.get_imagesToSave());
+        intent.putExtra(ApplicationConstants.INTENT_IMAGES_TO_SAVE, viewModel.get_imagesToSave());
         setResult(Activity.RESULT_OK, intent);//Enviamos el resultado antes de llamar al método onBackPressed de la clase padre
 
         super.onBackPressed();
