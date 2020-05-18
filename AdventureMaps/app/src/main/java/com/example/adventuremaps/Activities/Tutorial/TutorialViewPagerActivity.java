@@ -19,7 +19,7 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);//Instanciamos el ViewPager
         loadViewPager();//Lo cargamos con los datos
         TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);//Le introducimos los titulos de sección
+        tabs.setupWithViewPager(viewPager);//Le introducimos los títulos de sección
     }
 
 

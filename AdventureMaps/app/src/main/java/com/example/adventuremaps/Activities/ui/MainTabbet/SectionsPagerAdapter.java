@@ -2,6 +2,7 @@ package com.example.adventuremaps.Activities.ui.MainTabbet;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -26,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         mContext = context;
     }
 
-    @Override
+    @Override @NonNull
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
@@ -46,7 +47,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         if(object instanceof FragmentStart){//Si la posición pertenece a la sección del mapa inicial la recarga
             return POSITION_NONE;//POSITION_NONE makes it possible to reload the PagerAdapter
         }else{

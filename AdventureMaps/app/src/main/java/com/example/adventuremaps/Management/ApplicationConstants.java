@@ -33,4 +33,33 @@ public class ApplicationConstants {
     public final static int DEFAULT_RIGHT_PADDING_MAP_BUT_NO_ACTIONBARSIZE_FOUND = 750;
     public final static int DEFAULT_RIGHT_MARGIN_OFFLINE_MAP_BUT_NO_ACTIONBARSIZE_FOUND = 60;
     public final static int DEFAULT_TOP_MARGIN_OFFLINE_MAP = 8;
+
+    //AutoRestart App
+    public final static String AUTORESTART_APP_CRASH = "crash";
+
+    //Intents
+    public final static String INTENT_LOGIN_EMAIL = "LoginEmail";
+    public final static String INTENT_ACTUAL_EMAIL = "ActualEmail";
+    public final static String INTENT_ACTUAL_USER_EMAIL = "ActualEmailUser";
+    public final static String INTENT_ACTUAL_LATITUDE = "ActualLatitude";
+    public final static String INTENT_ACTUAL_LONGITUDE = "ActualLongitude";
+
+    //Datas
+    public final static String DATA_LOCALIZATION_TO_SAVE = "LocalizationToSave";
+    public final static String DATA_LOCALIZATION_TYPES_TO_SAVE = "LocalizationTypesToSave";
+
+    //SharedPreferences
+    public final static String SP_ACTUAL_USER_EMAIL = "UserActualEmail";
+
+    //Firebase Addresses
+    public final static String FB_USERS_ADDRESS = "Users";
+    public final static String FB_LOCALIZATIONS_ID = "localizationsId";
+
+    public final static String FB_ROUTES_ADDRESS = "routes";
+    public final static String FB_ROUTE_FAVOURITE_CHILD = "favourite";
+
+    public final static String FB_LOCALIZATIONS_ADDRESS = "Localizations";
+    public final static String FB_LOCALIZATION_POINT_ID = "localizationPointId";
+    public final static String FB_LOCATION_LATITUDE = "latitude";
+    public final static String FB_LOCATION_LONGITUDE = "longitude";
 }

@@ -24,7 +24,6 @@ import com.example.adventuremaps.Fragments.FragmentLocalizations;
 import com.example.adventuremaps.Fragments.FragmentMaps;
 import com.example.adventuremaps.Fragments.FragmentRoutes;
 import com.example.adventuremaps.Fragments.FragmentStart;
-import com.example.adventuremaps.Fragments.FragmentStartLocalizationPointClick;
 import com.example.adventuremaps.Fragments.FragmentUser;
 import com.example.adventuremaps.Fragments.GoogleMapsStartFragment;
 import com.example.adventuremaps.Management.ApplicationConstants;
@@ -43,6 +42,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +59,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
     private MainTabbetActivityVM viewModel;
     private MapViewPager viewPager;//ViewPager adaptado para las secciones que contienen mapas
-    private FragmentStartLocalizationPointClick fragment = new FragmentStartLocalizationPointClick();
+    private FirebaseUser firebaseCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         setContentView(R.layout.activity_main_tabbet);
 
         //Instanciamos el objeto SharedPreference
-        SharedPreferences sharedpreferences = this.getSharedPreferences("UserActualEmail", MODE_PRIVATE);
+        SharedPreferences sharedpreferences = this.getSharedPreferences(ApplicationConstants.SP_ACTUAL_USER_EMAIL, MODE_PRIVATE);
 
         //Instanciamos el ViewModel
         viewModel = ViewModelProviders.of(this).get(MainTabbetActivityVM.class);
@@ -83,15 +83,18 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing), getResources().getString(R.string.vivac), getResources().getString(R.string.culture),  getResources().getString(R.string.camping)};
         viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
-        String email = getIntent().getStringExtra("LoginEmail");//Si la cuenta ya estaba abierta, email se encontrará vacío.
+        String email = getIntent().getStringExtra(ApplicationConstants.INTENT_LOGIN_EMAIL);//Si la cuenta ya estaba abierta, email se encontrará vacío.
         if(email != null && !email.isEmpty()){//Si no hay ninguna cuenta iniciada
             viewModel.set_actualEmailUser(email);//Almacenamos en el VM el email del usuario actual
             SharedPreferences.Editor editor = sharedpreferences.edit();//Además guardamos este email con el objeto SharedPreferences
-            editor.putString("UserActualEmail", email);
+            editor.putString(ApplicationConstants.SP_ACTUAL_USER_EMAIL, email);
             editor.apply();
         }else{//Si la cuenta ya estaba abierta, almacenamos en el VM el email del usuario actual
-            viewModel.set_actualEmailUser(sharedpreferences.getString("UserActualEmail", ""));
+            viewModel.set_actualEmailUser(sharedpreferences.getString(ApplicationConstants.SP_ACTUAL_USER_EMAIL, ""));
         }
+
+        //Instanciamos la referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -143,7 +146,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         //Si el usuario aceptó los permisos
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            startActivity(new Intent(this, CreateRouteActivity.class).putExtra("ActualEmail", viewModel.get_actualEmailUser()));
+            startActivity(new Intent(this, CreateRouteActivity.class).putExtra(ApplicationConstants.INTENT_ACTUAL_EMAIL, viewModel.get_actualEmailUser()));
         }else{
             Toast.makeText(this, R.string.create_route_permission_error, Toast.LENGTH_SHORT).show();
         }
@@ -239,17 +242,17 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
             String routeId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
             Map<String, Object> hopperUpdates = new HashMap<>();
 
             if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
                 btnChild.setBackgroundResource(R.drawable.empty_star);//Cambiamos el icono
-                hopperUpdates.put("favourite", false);
+                hopperUpdates.put(ApplicationConstants.FB_ROUTE_FAVOURITE_CHILD, false);
             }else{
                 btnChild.setBackgroundResource(R.drawable.fill_star);
-                hopperUpdates.put("favourite", true);
+                hopperUpdates.put(ApplicationConstants.FB_ROUTE_FAVOURITE_CHILD, true);
             }
-            databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
+            databaseReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(routeId).updateChildren(hopperUpdates);//Realizamos la actualización en la plataforma
         }else{
             Toast.makeText(this, R.string.error_item_selected, Toast.LENGTH_SHORT).show();
         }
@@ -271,21 +274,21 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos para la descarga de mapas offline
                     viewModel.reloadActualLocalization();//Recargamos la localización del usuario
                     viewPager.setCurrentItem(0);//Nos movemos a la primera sección
-                    Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos //TODO Aún no he conseguido que se actualice del tirón en la sección offline
+                    Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos
                 }
                 break;
         }
     }
 
     //Methods Fragment Star
-    /**
+    /*/**
      * Interfaz
      * Nombre: removeYourFragment
      * Comentario: Este método nos permite eliminar el fragmento FragmentStartLocalizationPointClick de la actividad actual.
      * Cabecera: public void removeYourFragment()
      * Postcondiciones: El método elimina el fragmento FragmentStartLocalizationPointClick de la actividad actual.
      * */
-    public void removeYourFragment(){
+    /*public void removeYourFragment(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (fragment != null) {
             transaction.remove(fragment);
@@ -293,7 +296,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             fragment = null;
         }
-    }
+    }*()
 
     /**
      * Interfaz
@@ -371,15 +374,14 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
             String localizationId = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
 
             if(btnChild.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si la ruta esta marcada como favorita
                 btnChild.setBackgroundResource(R.drawable.empty_star);
-                databaseReference.child(FirebaseAuth.getInstance().
-                        getCurrentUser().getUid()).child("localizationsId").child(localizationId).removeValue();//Desmarcamos la localización como favorita
+                databaseReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(localizationId).removeValue();//Desmarcamos la localización como favorita
             }else{
                 btnChild.setBackgroundResource(R.drawable.fill_star);
-                databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
+                databaseReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(localizationId).setValue(localizationId);//Almacenamos el id de la localización en una lista de favoritas
             }
 
             reloadInitialFragment();//Recargamos el mapa principal
@@ -410,15 +412,15 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             ImageButton btnChild = (ImageButton)vwParentRow.getChildAt(0);//Obtenemos el botón de favoritos
             String id = (String) btnChild.getTag();//Obtenemos el id de la ruta a modificar
 
-            DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference("Localizations");
+            DatabaseReference localizationference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
 
-            localizationference.orderByChild("localizationPointId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            localizationference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     double latitude = 0, longitude = 0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {//Obtenemos la posición del punto de localización
-                        latitude = data.child("latitude").getValue(Double.class);
-                        longitude = data.child("longitude").getValue(Double.class);
+                        latitude = data.child(ApplicationConstants.FB_LOCATION_LATITUDE).getValue(Double.class);
+                        longitude = data.child(ApplicationConstants.FB_LOCATION_LONGITUDE).getValue(Double.class);
                     }
                     viewModel.set_latLngToNavigate(new LatLng(latitude, longitude));//Almacenamos lo posición del punto de localización en el VM
                     reloadInitialFragment();//Recargamos el fragmento inicial
@@ -441,10 +443,13 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Nombre: reloadInitialFragment
      * Comentario: Este método nos permite recargar el fragmento inicial de la aplicación.
      * Cabecera: public void reloadInitialFragment()
+     * Precondiciones:
+     *  -el viewpager que contiene los fragmentos debe contar con un adaptador
      * Postcondiciones: El método recarga el fragmento inicial de la aplicación.
      */
     public void reloadInitialFragment(){
-        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
+        if(viewPager.getAdapter() != null)
+            viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento inicial
     }
 
     /**
@@ -452,11 +457,15 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Nombre: reloadOfflineFragment
      * Comentario: Este método nos permite recargar el fragmento offline de la aplicación.
      * Cabecera: public void reloadOfflineFragment()
+     * Precondiciones:
+     *  -el viewpager que contiene los fragmentos debe contar con un adaptador
      * Postcondiciones: El método recarga el fragmento offline de la aplicación.
      */
     public void reloadOfflineFragment(){
-        viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento offline
-        viewPager.setCurrentItem(3);
+        if(viewPager.getAdapter() != null){
+            viewPager.getAdapter().notifyDataSetChanged();//Recargamos el fragmento offline
+            viewPager.setCurrentItem(3);
+        }
     }
 
     //GoogleMapsStartFragment and FragmentMaps (Métodos para la creación de un punto de localización)
@@ -486,9 +495,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         }
 
         Intent intent = new Intent(this, CreateLocalizationPointActivity.class);
-        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualLatitude", latitude);
-        intent.putExtra("ActualLongitude", longitude);
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LATITUDE, latitude);
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LONGITUDE, longitude);
         startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT);
     }
 
@@ -497,9 +506,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ApplicationConstants.REQUEST_CODE_CREATE_LOCALIZATION_POINT) {//Al salir del formulario de creación de una ruta
-            if (resultCode == Activity.RESULT_OK) {//Si se confirmó el guardado del nuevo punto de localización
-                viewModel.set_localizationToSave((ClsLocalizationPoint) data.getExtras().getSerializable("LocalizationToSave"));//Guardamos la localización en el VM
-                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra("LocalizationTypesToSave"));//Obtenemos los tipos de la localización
+            if (resultCode == Activity.RESULT_OK && data != null && data.getExtras() != null) {//Si se confirmó el guardado del nuevo punto de localización y se obtuvieron datos de respuesta
+                viewModel.set_localizationToSave((ClsLocalizationPoint) data.getExtras().getSerializable(ApplicationConstants.DATA_LOCALIZATION_TO_SAVE));//Guardamos la localización en el VM
+                viewModel.set_localizationTypesToSave((ArrayList<String>)data.getSerializableExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES_TO_SAVE));//Obtenemos los tipos de la localización
 
                 viewModel.saveLocalizationPoint();//Almacenamos el punto de localización en FireBase
                 Toast.makeText(this, R.string.localization_point_created, Toast.LENGTH_SHORT).show();

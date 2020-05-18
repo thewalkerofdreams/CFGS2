@@ -2,6 +2,7 @@ package com.example.adventuremaps.Activities.Tutorial;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -25,7 +26,7 @@ public class SectionsPagerAdapterTutorial extends FragmentPagerAdapter {
         mContext = context;
     }
 
-    @Override
+    @Override @NonNull
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
