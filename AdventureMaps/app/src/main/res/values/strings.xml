@@ -210,4 +210,7 @@
 
     <string name="email_format_error">Wrong format for email!</string>
     <string name="error_upload_image_without_connection">You cannot upload an image without connection!</string>
+
+    <string name="delete">Delete</string>
+    <string name="details">Details</string>
 </resources>

@@ -66,6 +66,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -181,6 +182,9 @@ public class FragmentMaps extends Fragment {
             listenerOnMapClick = new MapboxMap.OnMapClickListener() {
                 @Override
                 public boolean onMapClick(@NonNull LatLng point) {
+                    //Mostramos la latitud y longitud de donde se ha clicado en el mapa
+                    Toast.makeText(getActivity(), String.format(Locale.getDefault(), "Lat/Lng = (%f,%f)", point.getLatitude(), point.getLongitude()), Toast.LENGTH_SHORT).show();
+
                     tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
                     mostrarAccionesSobreElMapa();//Mostramos los iconos para interactuar con el mapa
                     viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado

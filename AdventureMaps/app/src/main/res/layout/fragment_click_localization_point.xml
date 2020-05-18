@@ -11,12 +11,20 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textColor="@color/colorPrimary"
+            android:textSize="8sp"></TextView>
+
         <Button
             android:id="@+id/btnDeleteLocalizationPointFragmentStart"
             android:layout_width="60sp"
             android:layout_height="60sp"
             android:layout_gravity="center"
             android:background="@drawable/trash"></Button>
+
 
     </LinearLayout>
 
@@ -26,6 +34,13 @@
         android:layout_weight="50"
         android:orientation="vertical"
         android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/details"
+            android:textColor="@color/colorPrimary"
+            android:textSize="8sp"></TextView>
 
         <Button
             android:id="@+id/btnDetailsLocalizationPointFragmentStart"
