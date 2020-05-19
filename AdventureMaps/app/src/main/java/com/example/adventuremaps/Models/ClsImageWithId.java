@@ -65,7 +65,7 @@ public class ClsImageWithId implements Serializable {
         if(this == obj){
             ret = true;
         }else{
-            if(obj != null && obj instanceof ClsImageWithId){
+            if(obj instanceof ClsImageWithId){
                 ClsImageWithId aux = (ClsImageWithId) obj;
                 if(aux.get_imageId().equals(this.get_imageId()) &&
                         aux.get_userEmailCreator().equals(this.get_userEmailCreator())){

@@ -44,6 +44,9 @@ public class ApplicationConstants {
     public final static String INTENT_ACTUAL_LATITUDE = "ActualLatitude";
     public final static String INTENT_ACTUAL_LONGITUDE = "ActualLongitude";
 
+    public final static String INTENT_ACTUAL_ROUTE_ID = "ActualIdRoute";
+    public final static String INTENT_ACTUAL_ROUTE_NAME = "ActualRouteName";
+
     public final static String INTENT_ACTUAL_LOCALIZATION = "ActualLocalization";
     public final static String INTENT_ACTUAL_LOCALIZATION_POINT = "ActualLocalizationPoint";
 
@@ -74,6 +77,7 @@ public class ApplicationConstants {
 
     public final static String FB_ROUTES_ADDRESS = "routes";
     public final static String FB_ROUTE_FAVOURITE_CHILD = "favourite";
+    public final static String FB_ROUTE_NAME_CHILD = "name";
     public final static String FB_ROUTE_POINTS_CHILD = "routePoints";
 
     public final static String FB_LOCALIZATIONS_ADDRESS = "Localizations";
@@ -101,4 +105,8 @@ public class ApplicationConstants {
     public final static String MIUI_AUTO_START_MANAGEMENT = "com.miui.permcenter.autostart.AutoStartManagementActivity";
     public final static String MIUI_POWER_HIDE_MODE_LIST = "miui.intent.action.POWER_HIDE_MODE_APP_LIST";
     public final static String MIUI_POWER_SETTINGS = "com.miui.powercenter.PowerSettings";
+
+    //JSON
+    public final static String JSON_CHARSET = "UTF-8";
+    public final static String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
 }

@@ -85,7 +85,7 @@ public class ClsRoute {
         if(this == obj){
             ret = true;
         }else{
-            if(obj != null && obj instanceof ClsRoute){
+            if(obj instanceof ClsRoute){
                 ClsRoute aux = (ClsRoute) obj;
                 if(aux.getRouteId().equals(this.getRouteId()) &&
                         aux.getName().equals(this.getName()) &&

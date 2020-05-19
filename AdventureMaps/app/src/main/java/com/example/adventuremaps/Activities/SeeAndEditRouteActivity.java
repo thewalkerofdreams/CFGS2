@@ -16,12 +16,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,8 +36,9 @@ import java.util.Map;
 public class SeeAndEditRouteActivity extends AppCompatActivity {
 
     private RouteActivitiesVM viewModel;
-    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference("ClsRoute");
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference routeReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_ROUTES_ADDRESS);
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
     private ProgressDialog progressDialog;
 
     @Override
@@ -45,13 +48,16 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
 
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(RouteActivitiesVM.class);
-        viewModel.set_actualEmailUser(getIntent().getStringExtra("ActualEmail"));
-        viewModel.set_actualIdRoute(getIntent().getStringExtra("ActualIdRoute"));
-        viewModel.set_actualRouteName(getIntent().getStringExtra("ActualRouteName"));
+        viewModel.set_actualEmailUser(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_EMAIL));
+        viewModel.set_actualIdRoute(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_ROUTE_ID));
+        viewModel.set_actualRouteName(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_ROUTE_NAME));
+
+        //Obtenemos una referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Instanciamos los elementos de la UI
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Saving changes");
+        progressDialog.setMessage(getString(R.string.saving_changes));
     }
 
     /**
@@ -72,7 +78,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
             GoogleMapsFragment fragment = (GoogleMapsFragment)fm.findFragmentById(R.id.fragmentGoogleMapsCreateRouteActivity);
             LatLng latLng = new LatLng(viewModel.get_lastLocalizationClicked().getLatitude(), viewModel.get_lastLocalizationClicked().getLongitude());
             //Marcamos esa posición
-            fragment.colocarMarcador(latLng);
+            if(fragment != null)//Si se pudo instanciar correctamente el fragmento
+                fragment.colocarMarcador(latLng);
         }
     }
 
@@ -108,8 +115,8 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                                 //Cambiamos el nombre de la ruta si ha cambiado
                                 if(!viewModel.get_actualRouteName().equals(nameEdit.getText().toString())){
                                     Map<String, Object> hopperUpdates = new HashMap<>();
-                                    hopperUpdates.put("name", nameEdit.getText().toString());
-                                    userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute()).updateChildren(hopperUpdates);
+                                    hopperUpdates.put(ApplicationConstants.FB_ROUTE_NAME_CHILD, nameEdit.getText().toString());
+                                    userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute()).updateChildren(hopperUpdates);
                                 }
 
                                 //Eliminamos los anteriores puntos de la ruta
@@ -140,8 +147,9 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
      * Postcondiciones: El método elimina todos los puntos de localización de la ruta actual.
      */
     public void deleteOldRoutePoints(){
-        DatabaseReference drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().
-                getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute()).child("routePoints");
+        DatabaseReference drRoutePoint = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS)
+                .child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute())
+                .child(ApplicationConstants.FB_ROUTE_POINTS_CHILD);
         drRoutePoint.removeValue();
     }
 
@@ -159,9 +167,9 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
             ClsRoutePoint newRoutePoint = new ClsRoutePoint(routePointId,(long) viewModel.get_localizationPoints().get(i).getPriority(),
                     viewModel.get_actualIdRoute(), viewModel.get_localizationPoints().get(i).getMarker().getPosition().latitude, viewModel.get_localizationPoints().get(i).getMarker().getPosition().longitude);
 
-            FirebaseDatabase.getInstance().getReference("Users").
-                    child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_actualIdRoute())
-                    .child("routePoints").child(newRoutePoint.getRoutePointId())
+            FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).
+                    child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute())
+                    .child(ApplicationConstants.FB_ROUTE_POINTS_CHILD).child(newRoutePoint.getRoutePointId())
                     .setValue(newRoutePoint).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -181,16 +189,18 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Read from the database
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {//Los datos del usuario actual
+        userReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {//Los datos del usuario actual
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_routePoints().clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     ClsUser user = datas.getValue(ClsUser.class);
-                        FirebaseDatabase.getInstance().getReference("Users").child(user.getUserId()).child("routes").child(viewModel.get_actualIdRoute()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    if(user != null){//Si se ha podido obtener los datos del usuario
+                        FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).child(user.getUserId())
+                                .child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                                for(DataSnapshot points : dataSnapshot2.child("routePoints").getChildren()){
+                                for(DataSnapshot points : dataSnapshot2.child(ApplicationConstants.FB_ROUTE_POINTS_CHILD).getChildren()){
                                     ClsRoutePoint routePoint = points.getValue(ClsRoutePoint.class);
                                     viewModel.get_routePoints().add(routePoint);//Almacenamos los puntos de la ruta
                                 }
@@ -203,6 +213,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
 
                             }
                         });
+                    }
                 }
             }
 
@@ -231,7 +242,7 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                 latLng = new LatLng(viewModel.get_routePoints().get(i).getLatitude(), viewModel.get_routePoints().get(i).getLongitude());
                 fragment.colocarMarcador(latLng); //Comenzamos a marcar los puntos de la ruta almacenada
             }
-            fragment.moveCamera(new LatLng(viewModel.get_routePoints().get(0).getLatitude(), viewModel.get_routePoints().get(0).getLongitude()), 13);
+            fragment.moveCamera(new LatLng(viewModel.get_routePoints().get(0).getLatitude(), viewModel.get_routePoints().get(0).getLongitude()), ApplicationConstants.DEFAULT_LEVEL_ZOOM);
         }
     }
 }

@@ -538,9 +538,9 @@ public class FragmentMaps extends Fragment {
                 byte[] metadata;
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put(viewModel.getJsonFieldRegionName(), regionName);
+                    jsonObject.put(ApplicationConstants.JSON_FIELD_REGION_NAME, regionName);
                     String json = jsonObject.toString();//Pasamos el objeto a un String
-                    metadata = json.getBytes(viewModel.getJsonCharset());//Pasamos esa cadena a un array de bytes
+                    metadata = json.getBytes(ApplicationConstants.JSON_CHARSET);//Pasamos esa cadena a un array de bytes
                 } catch (Exception exception) {
                     Timber.e("Failed to encode metadata: %s", exception.getMessage());//Utilizamos Timber en vez de un Log
                     metadata = null;

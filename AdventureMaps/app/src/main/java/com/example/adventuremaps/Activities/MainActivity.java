@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.adventuremaps.Activities.AutoRestartApp.MyExceptionHandler;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));//Si la aplicación llegará a crasher por algún casual, la reiniciamos
-        if (getIntent().getBooleanExtra("crash", false)) {
+        if (getIntent().getBooleanExtra(ApplicationConstants.AUTORESTART_APP_CRASH, false)) {
             Toast.makeText(this, R.string.reloading_datas, Toast.LENGTH_SHORT).show();
         }
 
@@ -52,12 +53,11 @@ public class MainActivity extends AppCompatActivity {
         textEmail = findViewById(R.id.EditTextNickNameActivityLogin);
         textPassword = findViewById(R.id.EditTextPasswordActivityLogin);
         progressDialog = new ProgressDialog(this);
-
-        progressDialog.setMessage("Performing online consultation");
+        progressDialog.setMessage(getString(R.string.performing_online_consultation));
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){//Si ya existe una sesión iniciada
-            startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
+            startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
             finish();
         }
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                                 //Verificamos que se pudo registrar el usuario
                                 if(task.isSuccessful()){
                                     Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra("LoginEmail", viewModel.get_email()));
+                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
                                     finish();//Finalizamos la actividad actual
                                 }else{
                                     Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();

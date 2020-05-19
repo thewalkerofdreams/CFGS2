@@ -39,9 +39,9 @@ public class RouteActivitiesVM extends AndroidViewModel {
     public RouteActivitiesVM(Application application){
         super(application);
         _context = application.getBaseContext();
-        _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
+        _locManager = (LocationManager)_context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
-        _localizationPoints = new ArrayList<ClsMarkerWithPriority>();
+        _localizationPoints = new ArrayList<>();
         _route = new ClsRoute();
         _lastLocalizationClicked = null;
         _zoom = 13;

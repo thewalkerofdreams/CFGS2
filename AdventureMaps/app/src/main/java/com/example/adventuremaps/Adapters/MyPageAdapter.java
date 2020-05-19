@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -34,8 +35,8 @@ public class MyPageAdapter extends PagerAdapter
         return images.size();
     }
 
-    @Override
-    public Object instantiateItem(ViewGroup collection, int position)//cargará el archivo de la página XML a mostrar
+    @Override @NonNull
+    public Object instantiateItem(@NonNull ViewGroup collection, int position)//cargará el archivo de la página XML a mostrar
     {
         loadImage(position);
 
@@ -78,13 +79,13 @@ public class MyPageAdapter extends PagerAdapter
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object)
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object)
     {
         return view == object;
     }
 
     @Override
-    public void destroyItem(View collection, int position, Object view)
+    public void destroyItem(@NonNull View collection, int position, @NonNull Object view)
     {
         ((ViewPager) collection).removeView((View) view);
     }

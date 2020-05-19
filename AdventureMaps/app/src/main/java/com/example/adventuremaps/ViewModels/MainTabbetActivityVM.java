@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
@@ -48,8 +49,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private String _actualEmailUser;
 
     //Fragment Offline Maps Part
-    private final String JSON_CHARSET = "UTF-8";
-    private final String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
     private LocationManager _locManager; //This class provides access to the system location services
     private Location _actualLocation;
     private Context _context;
@@ -96,7 +95,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
         //Fragment Offline Maps Part
         _context = application.getBaseContext();
-        _locManager = (LocationManager)_context.getApplicationContext().getSystemService(_context.LOCATION_SERVICE);
+        _locManager = (LocationManager)_context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         _actualLocation = getLastKnownLocation();
         _regionSelected = 0;
         _localizationPointsMapbox = new ArrayList<>();
@@ -132,7 +131,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _localizationTypesToSave = new ArrayList<>();
         _checkedFilters = new ArrayList<>();
         _dialogPostisionsChecked = new boolean[10];
-        for(int i = 0; i < _dialogPostisionsChecked.length; i++){//Inicializamos el filtrado sobr el mapa
+        for(int i = 0; i < _dialogPostisionsChecked.length; i++){//Inicializamos el filtrado sobre el mapa
             _dialogPostisionsChecked[i] = true;
         }
         _selectedLocalizationPoint = null;
@@ -163,14 +162,6 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_regionSelected(int _regionSelected) {
         this._regionSelected = _regionSelected;
-    }
-
-    public String getJsonCharset() {
-        return JSON_CHARSET;
-    }
-
-    public String getJsonFieldRegionName() {
-        return JSON_FIELD_REGION_NAME;
     }
 
     public ArrayList<ClsLocalizationPoint> get_localizationPointsMapbox() {
@@ -465,11 +456,10 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         String regionName;
         try {
             byte[] metadata = offlineRegion.getMetadata();
-            String json = new String(metadata, JSON_CHARSET);
+            String json = new String(metadata, ApplicationConstants.JSON_CHARSET);
             JSONObject jsonObject = new JSONObject(json);
-            regionName = jsonObject.getString(JSON_FIELD_REGION_NAME);
+            regionName = jsonObject.getString(ApplicationConstants.JSON_FIELD_REGION_NAME);
         } catch (Exception exception) {
-            Timber.e("Failed to decode metadata: %s", exception.getMessage());
             regionName = "DEFAULT";
         }
         return regionName;
@@ -489,9 +479,9 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * del VM.
      */
     public void shareLocalizationPoint(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Localizations");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
         Map<String, Object> hopperUpdates = new HashMap<>();
-        hopperUpdates.put("shared", true);
+        hopperUpdates.put(ApplicationConstants.FB_LOCATION_SHARED_CHILD, true);
         databaseReference.child(get_selectedLocalizations().get(0).get_localizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
     }
 
@@ -543,20 +533,20 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Postcondiciones: El método almacena un punto de localización en la plataforma FireBase.
      */
     public void saveLocalizationPoint(){
-        DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+        DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
 
         //Almacenamos el punto de localización en la plataforma
-        FirebaseDatabase.getInstance().getReference("Localizations").
-                child(get_localizationToSave().getLocalizationPointId())
+        localizationReference.child(get_localizationToSave().getLocalizationPointId())
                 .setValue(get_localizationToSave());
 
         //Almacenamos los tipos del punto de localización
         String typeId;
         for(int i = 0; i < get_localizationTypesToSave().size(); i++){
             typeId = localizationReference.push().getKey();
-            FirebaseDatabase.getInstance().getReference("Localizations").
-                    child(get_localizationToSave().getLocalizationPointId()).child("types")
-                    .child(typeId).setValue(get_localizationTypesToSave().get(i));
+            if(typeId != null){//Si se pudo obtener un id para el tipo
+                localizationReference.child(get_localizationToSave().getLocalizationPointId()).child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD)
+                        .child(typeId).setValue(get_localizationTypesToSave().get(i));
+            }
         }
     }
 
@@ -578,18 +568,19 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      * Postcondiciones: El método elimina el punto de localización seleccionado.
      */
     public void eliminarPuntoDeLocalizacionSeleccionado(final Context context, final int callSection){
-        final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-        final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+        final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
 
         if(get_selectedLocalizationPoint() != null){
             drUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ClsUser user = null;
+                    ClsUser user;
                     for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo habrá como máximo uno
                         user = datas.getValue(ClsUser.class);
+                        if(user != null)//Si se pudo obtener los datos del usuario
                         //Eliminamos el id del punto de localización asignado a la lista de favoritos de los usuarios que lo tengan asignado como favorito
-                        drUser.child(user.getUserId()).child("localizationsId").child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
+                        drUser.child(user.getUserId()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
                     }
                     //Eliminamos el punto de localización
                     drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
