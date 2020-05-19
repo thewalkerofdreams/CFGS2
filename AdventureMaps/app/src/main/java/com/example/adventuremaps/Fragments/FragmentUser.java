@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.database.DataSnapshot;
@@ -25,8 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 public class FragmentUser extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
-    private DatabaseReference localiationReference = FirebaseDatabase.getInstance().getReference("Localizations");
+    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private DatabaseReference localiationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
     private MainTabbetActivityVM viewModel;
     private TextView txtEmail, txtNickName, numberOfRoutes, numberOfLocalizations;
 
@@ -39,7 +41,9 @@ public class FragmentUser extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+        //Instanciamos el VM
+        if(getActivity() != null)
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
         //Instanciamos los elementos de la vista
         txtEmail = view.findViewById(R.id.TextViewEmailInfoActivity);
@@ -61,16 +65,16 @@ public class FragmentUser extends Fragment {
     public void onStart() {
         super.onStart();
         // Read from the database
-        myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myDataBaseReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String email = "", nickName = "";
                 int routesCreated = 0;
                 for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
-                    email=datas.child("email").getValue().toString();
-                    nickName = datas.child("nickName").getValue().toString();
+                    email=datas.child(ApplicationConstants.FB_USER_EMAIL_CHILD).getValue().toString();
+                    nickName = datas.child(ApplicationConstants.FB_USER_NICKNAME_CHILD).getValue().toString();
 
-                    for(DataSnapshot routes: datas.child("routes").getChildren()){//Se repetirá por cada ruta que haya creado el usuario
+                    for(DataSnapshot routes: datas.child(ApplicationConstants.FB_ROUTES_ADDRESS).getChildren()){//Se repetirá por cada ruta que haya creado el usuario
                         routesCreated++;
                     }
                 }
@@ -82,7 +86,7 @@ public class FragmentUser extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
@@ -97,9 +101,9 @@ public class FragmentUser extends Fragment {
      * usuario actual.
      */
     private void getNumberOfLocalizationPointsCreated(){
-        localiationReference.orderByChild("emailCreator").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        localiationReference.orderByChild(ApplicationConstants.FB_LOCATION_EMAIL_CREATOR_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int localizationsCreated = 0;
                 for(DataSnapshot datas: dataSnapshot.getChildren()){//Solo se repetirá una vez
                     localizationsCreated++;
@@ -108,7 +112,7 @@ public class FragmentUser extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
@@ -124,7 +128,6 @@ public class FragmentUser extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 

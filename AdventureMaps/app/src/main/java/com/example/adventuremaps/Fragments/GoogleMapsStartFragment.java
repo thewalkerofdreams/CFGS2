@@ -48,10 +48,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
     private GoogleMap map;
     private MainTabbetActivityVM viewModel;
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
-    //private BitmapDrawable bitmapdraw;
-    //private Bitmap smallMarker;
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);//Tomamos referencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
     private ValueEventListener listener;
     //ClusterItem
     private ClusterManager<MyClusterItem> mClusterManager;
@@ -123,7 +121,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ApplicationConstants.DEFAULT_LEVEL_ZOOM));//Movemos la camara según los valores definidos
         //Si la aplicación tiene los permisos necesarios de localización, añadimos el botón de centrar la cámara en la posición actual del usuario y señalamos a la persona en el mapa con un icono
-        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+        if(getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             map.setMyLocationEnabled(true);//Nos permite indicar donde se encuentra el usuario actual, además activa el botón para centrar la cámara
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {//Modificamos la acción del botón de centrar localización
@@ -145,10 +143,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         }
 
         //Inicializamos el cluster manager
-        mClusterManager = new ClusterManager<MyClusterItem>(getActivity(), this.map);
-        //Utilizamos un render personalizado para cambiar el icono por defecto de los marcadores
-        myClusterRenderer = new MyClusterRenderer(getActivity(), this.map, mClusterManager);
-        mClusterManager.setRenderer(myClusterRenderer);
+        if(getActivity() != null){
+            mClusterManager = new ClusterManager<>(getActivity(), this.map);
+            //Utilizamos un render personalizado para cambiar el icono por defecto de los marcadores
+            myClusterRenderer = new MyClusterRenderer(getActivity(), this.map, mClusterManager);
+            mClusterManager.setRenderer(myClusterRenderer);
+        }
 
         //Declaramos los eventos
         final CameraPosition[] mPreviousCameraPosition = {null};
@@ -175,7 +175,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onMapLongClick(LatLng latLng) {
         //Si la aplicación tiene los permisos necesarios, mostramos un dialogo de inserción
-        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+        if(getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             viewModel.set_longClickPosition(latLng);//Almacenamos la posición seleccionada en el mapa en el VM
             viewModel.insertLocalizationDialog(getActivity(), 1);//Comenzamos un dialogo de inserción
@@ -196,14 +196,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private void adjustPaddingMap(GoogleMap map){
         int googleMapPadding;
         TypedValue tv = new TypedValue();
-        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
-        {
-            googleMapPadding = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el padding según el tamaño de la pantalla
-        }else{
-            googleMapPadding = ApplicationConstants.DEFAULT_RIGHT_PADDING_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un padding por defecto
+        if(getActivity() != null){
+            if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
+            {
+                googleMapPadding = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el padding según el tamaño de la pantalla
+            }else{
+                googleMapPadding = ApplicationConstants.DEFAULT_RIGHT_PADDING_MAP_BUT_NO_ACTIONBARSIZE_FOUND;//Le damos un padding por defecto
+            }
+            //Modificamos el padding del mapa
+            map.setPadding(getActivity().getWindowManager().getDefaultDisplay().getWidth() - (googleMapPadding * 2 + ApplicationConstants.DEFAULT_RIGHT_MARGIN_MAP), 0, 0, 0);
         }
-        //Modificamos el padding del mapa
-        map.setPadding(getActivity().getWindowManager().getDefaultDisplay().getWidth() - (googleMapPadding * 2 + ApplicationConstants.DEFAULT_RIGHT_MARGIN_MAP), 0, 0, 0);
     }
 
     /**
@@ -319,12 +321,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         String tag = "";
 
         if(viewModel.get_localizationsIdActualUser() != null && viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si el usuario marcó como favorita la localización
-            tag = "Fav";
+            tag = ApplicationConstants.TAG_LOCATION_FAV_TYPE;
         }else{
             if(localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización es del usuario actual
-                tag = "Owner";
+                tag = ApplicationConstants.TAG_LOCATION_OWNER_TYPE;
             }else{//Si la loclización no es del usuario actual
-                tag = "NoOwner";
+                tag = ApplicationConstants.TAG_LOCATION_NO_OWNER_TYPE;
             }
         }
 
@@ -341,7 +343,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método restablece el icono por defecto de un macador.
      */
     private void restoreIconMarker(Marker marker){
-        if(marker != null && marker.getTag() != null){
+        if(marker != null && marker.getTag() != null && getContext() != null){
             BitmapDrawable bitmapDrawable = null;
             switch (marker.getTag().toString()){
                 case "Fav":
@@ -386,7 +388,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         // Read from the database
         listener = localizationReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(getContext() != null){//Si se encuentra en el contexto actual
                     viewModel.get_localizationPoints().clear();//Limpiamos la lista de puntos de localización
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
@@ -395,7 +397,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                         if(localizationPoint != null && ((localizationPoint.isShared() || (localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()))))){ //Si la localización esta compartida o es del usuario actual
 
                             ArrayList<String> actualTypes = new ArrayList<>();
-                            for(DataSnapshot types : datas.child("types").getChildren()){
+                            for(DataSnapshot types : datas.child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD).getChildren()){
                                 actualTypes.add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización actual
                             }
 
@@ -422,12 +424,12 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método almacena las id's de las localizaciones favoritas del usuario actual en el VM.
      */
     private void storeFavouriteLocalizationsId(){
-        userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
+        userReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
+                    for(DataSnapshot booksSnapshot : datas.child(ApplicationConstants.FB_LOCALIZATIONS_ID).getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
                         String localizationId = booksSnapshot.getValue(String.class);
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
@@ -436,7 +438,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
@@ -471,15 +473,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Postcondiciones: El método agrega un icono a un marcador.
      */
     private void setIconToMarker(final Marker marker, final String addressIcon){
-        /*getActivity().runOnUiThread(new Runnable() {//TODO el icono de inserta en un hilo secundario
-            public void run() {
-                bitmapdraw = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));
-                smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-            }
-        });*/
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));//Le colocamos el icono al marcador
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
+        if(getContext() != null){
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));//Le colocamos el icono al marcador
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
+        }
     }
 
     //Método para cargar el fragmento inferior
@@ -488,10 +485,10 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      * Nombre: replaceFragment
      * Comentario: Este método nos permite remplazar el contenido de nuestro
      * FrameLayout "FrameLayout02" por el fragmento "FragmentStartLocalizationPointClick".
-     * Cabecera: public void replaceFragment()
+     * Cabecera: private void replaceFragment()
      * Postcondiciones: El método reemplaza el contenido del FrameLayout por el fragmento FragmentStartLocalizationPointClick.
      * */
-    public void replaceFragment(){
+    private void replaceFragment(){
         FragmentTransaction transation = getFragmentManager().beginTransaction();
         transation.replace(R.id.FrameLayout02, new FragmentStartLocalizationPointClick());
         transation.addToBackStack(null);//add the transaction to the back stack so the user can navigate back

@@ -18,8 +18,6 @@ public class StartSection02Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Inflamos el layout del fragmento
-        View rootView = inflater.inflate(R.layout.fragment_start_section_02, container, false);
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_start_section_02, container, false);
     }
 }

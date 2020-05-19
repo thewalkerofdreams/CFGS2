@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,10 +28,12 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.adventuremaps.Activities.SeeAndEditRouteActivity;
 import com.example.adventuremaps.Adapters.RouteListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsRoute;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Management.OrderLists;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 public class FragmentRoutes extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference myDataBaseReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
     private ListView listView;
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteRoute, alertDialogShortList;
@@ -59,12 +63,17 @@ public class FragmentRoutes extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_routes, container, false);
 
-        //Instanciamos los SharedPreference
-        sharedpreferencesField = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);
-        sharedPreferencesFav = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);
+        if(getActivity() != null){
+            //Instanciamos los SharedPreference
+            sharedpreferencesField = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FIELD, Context.MODE_PRIVATE);
+            sharedPreferencesFav = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, Context.MODE_PRIVATE);
 
-        //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+            //Instanciamos el VM
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+        }
+
+        //Obtenemos la referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Instanciamos los elementos de la UI
         btnFav = view.findViewById(R.id.btnFavFragmentRoutes);
@@ -74,12 +83,12 @@ public class FragmentRoutes extends Fragment {
                 SharedPreferences.Editor editor02 = sharedPreferencesFav.edit();
                 if(btnFav.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el filtro estaba activado
                     btnFav.setBackgroundResource(R.drawable.empty_star);
-                    editor02.putBoolean("OrderRouteListFav", false);
+                    editor02.putBoolean(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, false);
                 }else{
                     btnFav.setBackgroundResource(R.drawable.fill_star);
-                    editor02.putBoolean("OrderRouteListFav", true);
+                    editor02.putBoolean(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, true);
                 }
-                editor02.commit();
+                editor02.apply();
                 loadList();//Recargamos la lista
             }
         });
@@ -111,7 +120,7 @@ public class FragmentRoutes extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClsRoute item = (ClsRoute) parent.getItemAtPosition(position);//Obtenemos el item de la posición clicada
                 if(viewModel.get_selectedRoutes().isEmpty()){//Si no hay ninguna ruta seleccionada
-                    if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    if(getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                             ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){//Si el usuario concedió los permisos de localización
                         throwSeeAndEditRouteActivity(item);//Lanzamos la actividad SeeAndEditRouteActivity, mostrando la ruta clicada
                     }else{
@@ -142,7 +151,7 @@ public class FragmentRoutes extends Fragment {
             }
         });
 
-        if(sharedPreferencesFav.getBoolean("OrderRouteListFav", false))//Si el filtro de favoritos se encuentra activo
+        if(sharedPreferencesFav.getBoolean(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, false))//Si el filtro de favoritos se encuentra activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
         if(savedInstanceState != null){//Si la actividad tiene datos almacenados
@@ -175,9 +184,9 @@ public class FragmentRoutes extends Fragment {
      */
     private void throwSeeAndEditRouteActivity(ClsRoute route){
         Intent intent = new Intent(getActivity(), SeeAndEditRouteActivity.class);
-        intent.putExtra("ActualIdRoute", route.getRouteId());
-        intent.putExtra("ActualEmail", viewModel.get_actualEmailUser());
-        intent.putExtra("ActualRouteName", route.getName());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_ROUTE_ID, route.getRouteId());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_EMAIL, viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_ROUTE_NAME, route.getName());
         startActivity(intent);
     }
 
@@ -204,12 +213,12 @@ public class FragmentRoutes extends Fragment {
      */
     private void storeAndLoadRoutesFromActualUser(){
         // Read from the database
-        listener = myDataBaseReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = myDataBaseReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_itemsRouteList().clear();//Limpiamos la lista de rutas
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("routes").getChildren()){
+                    for(DataSnapshot booksSnapshot : datas.child(ApplicationConstants.FB_ROUTES_ADDRESS).getChildren()){
                         ClsRoute route = booksSnapshot.getValue(ClsRoute.class);
                         viewModel.get_itemsRouteList().add(route);
                     }
@@ -218,7 +227,7 @@ public class FragmentRoutes extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
             }
         });
@@ -272,7 +281,8 @@ public class FragmentRoutes extends Fragment {
         DatabaseReference drRoutePoint;
 
         for(int i = 0; i < viewModel.get_selectedRoutes().size(); i++){
-            drRoutePoint = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("routes").child(viewModel.get_selectedRoutes().get(i).getRouteId());
+            drRoutePoint = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).child(firebaseCurrentUser.getUid())
+                    .child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_selectedRoutes().get(i).getRouteId());
             drRoutePoint.removeValue();
         }
 
@@ -291,12 +301,12 @@ public class FragmentRoutes extends Fragment {
 
         //Instanciamos los SharedPreference (Este método es llamado desde onStart, por lo que también debemos instanciarlos aquí también)
         if(getActivity() != null){
-            sharedpreferencesField = getActivity().getSharedPreferences("OrderRouteListField", Context.MODE_PRIVATE);
-            sharedPreferencesFav = getActivity().getSharedPreferences("OrderRouteListFav", Context.MODE_PRIVATE);
+            sharedpreferencesField = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FIELD, Context.MODE_PRIVATE);
+            sharedPreferencesFav = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, Context.MODE_PRIVATE);
         }
 
-        int field = sharedpreferencesField.getInt("OrderRouteListField", 1);
-        boolean favourite = sharedPreferencesFav.getBoolean("OrderRouteListFav", false);
+        int field = sharedpreferencesField.getInt(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FIELD, 1);
+        boolean favourite = sharedPreferencesFav.getBoolean(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FAV, false);
         orderList(field, favourite);//Ordenamos la lista
 
         RouteListAdapter adapter = new RouteListAdapter(getActivity(), R.layout.route_list_item, viewModel.get_itemsRouteList()){
@@ -329,12 +339,11 @@ public class FragmentRoutes extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteRoute != null && alertDialogDeleteRoute.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
@@ -384,16 +393,6 @@ public class FragmentRoutes extends Fragment {
         }
     }
 
-    /*@Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {//Nos permite controlar la orientación permitida en cada página del ViewPager
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser) {
-            Activity actualActivity = getActivity();
-            if(actualActivity != null)
-                actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-        }
-    }*/
-
     /**
      * Interfaz
      * Nombre: showOrderRoutesListDialog
@@ -408,7 +407,7 @@ public class FragmentRoutes extends Fragment {
         final CharSequence [] orderTypes = {getResources().getString(R.string.name),
                 getResources().getString(R.string.date_of_creation)};
 
-        viewModel.set_positionSelectedOrderTypesRoutes(sharedpreferencesField.getInt("OrderRouteListField", 1) -1);//Obtenemos el último tipo de selección, si lo hubiera
+        viewModel.set_positionSelectedOrderTypesRoutes(sharedpreferencesField.getInt(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FIELD, 1) -1);//Obtenemos el último tipo de selección, si lo hubiera
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.order_types);
@@ -423,8 +422,8 @@ public class FragmentRoutes extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
-                editor01.putInt("OrderRouteListField", viewModel.get_positionSelectedOrderTypesRoutes()+1);
-                editor01.commit();
+                editor01.putInt(ApplicationConstants.SP_ORDER_ROUTE_LIST_BY_FIELD, viewModel.get_positionSelectedOrderTypesRoutes()+1);
+                editor01.apply();
                 loadList();//Recargamos la lista
 
                 viewModel.set_dialogShortRouteListShowing(false);//Indicamos que el dialogo finalizó

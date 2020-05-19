@@ -157,7 +157,7 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
                 //Cambiamos la descripción del punto de localización si ha cambiado
                 if(!viewModel.get_actualLocalizationPoint().getDescription().equals(viewModel.get_newDescription())){
                     Map<String, Object> hopperUpdates = new HashMap<>();
-                    hopperUpdates.put(ApplicationConstants.Fb_LOCATION_DESCRIPTION_CHILD, viewModel.get_newDescription());
+                    hopperUpdates.put(ApplicationConstants.FB_LOCATION_DESCRIPTION_CHILD, viewModel.get_newDescription());
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).updateChildren(hopperUpdates);
                 }
 

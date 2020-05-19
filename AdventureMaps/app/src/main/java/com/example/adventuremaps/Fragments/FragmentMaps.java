@@ -85,8 +85,8 @@ public class FragmentMaps extends Fragment {
     private OfflineManager offlineManager;
     private OfflineRegion offlineRegion;
     //Insert Markers
-    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference("Localizations");//Tomamos referencia de las Localizaciones
-    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);//Tomamos referencia de las Localizaciones
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
     private SymbolManager symbolManager;
     //Center User Location
     private Button btnCenterLocation;
@@ -106,15 +106,17 @@ public class FragmentMaps extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+        if(getActivity() != null){
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
-        //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
-        Mapbox.getInstance(getActivity(), getString(R.string.access_token));
+            //Instanciamos Mapbox con una de sus claves, la obtenemos a través de una cuenta (En este caso utilizamos una de prueba).
+            Mapbox.getInstance(getActivity(), getString(R.string.access_token));
 
-        HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs, para poder cargar zonas online
+            HttpRequestUtil.setLogEnabled(true);//Habilitamos los logs, para poder cargar zonas online
+        }
 
         //Inflamos el layout para este fragmento
         final View view = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -330,7 +332,7 @@ public class FragmentMaps extends Fragment {
     private void adjustMarginCompass(MapboxMap map){
         int mapboxMarginCompass;
         TypedValue tv = new TypedValue();
-        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
+        if (getActivity() != null && getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))//Si existe el tipo especificado en el tema actual
         {
             mapboxMarginCompass = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());//Calculamos el margen según el tamaño de la pantalla
         }else{
@@ -404,8 +406,8 @@ public class FragmentMaps extends Fragment {
         LocationComponent locationComponent = mapboxMap.getLocationComponent();
 
         // Activate with options
-        locationComponent.activateLocationComponent(
-                LocationComponentActivationOptions.builder(getActivity(), style).build());
+        if(getActivity() != null)
+            locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(getActivity(), style).build());
 
         // Enable to make component visible
         locationComponent.setLocationComponentEnabled(true);
@@ -542,23 +544,24 @@ public class FragmentMaps extends Fragment {
                     String json = jsonObject.toString();//Pasamos el objeto a un String
                     metadata = json.getBytes(ApplicationConstants.JSON_CHARSET);//Pasamos esa cadena a un array de bytes
                 } catch (Exception exception) {
-                    Timber.e("Failed to encode metadata: %s", exception.getMessage());//Utilizamos Timber en vez de un Log
                     metadata = null;
                 }
 
                 //Creamos la región offline y lanzamos la descarga
-                offlineManager.createOfflineRegion(definition, metadata, new OfflineManager.CreateOfflineRegionCallback() {
-                    @Override
-                    public void onCreate(OfflineRegion offlineRegion) {
-                        FragmentMaps.this.offlineRegion = offlineRegion;
-                        launchDownload();//Comenzamos la descarga de la región
-                    }
+                if(metadata != null){
+                    offlineManager.createOfflineRegion(definition, metadata, new OfflineManager.CreateOfflineRegionCallback() {
+                        @Override
+                        public void onCreate(OfflineRegion offlineRegion) {
+                            FragmentMaps.this.offlineRegion = offlineRegion;
+                            launchDownload();//Comenzamos la descarga de la región
+                        }
 
-                    @Override
-                    public void onError(String error) {
-                        Timber.e( "Error: %s" , error);
-                    }
-                });
+                        @Override
+                        public void onError(String error) {
+                            Timber.e( "Error: %s" , error);
+                        }
+                    });
+                }
             }
         });
     }
@@ -821,7 +824,6 @@ public class FragmentMaps extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -933,13 +935,13 @@ public class FragmentMaps extends Fragment {
      * usuario actual.
      */
     private void storeFavoutireLocalizationsId(){
-        listenerFavouriteLocationsId = userReference.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listenerFavouriteLocationsId = userReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_localizationPointsMapbox().clear();//Limpiamos la lista de puntos de localización del VM
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
+                    for(DataSnapshot booksSnapshot : datas.child(ApplicationConstants.FB_LOCALIZATIONS_ID).getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
                         String localizationId = booksSnapshot.getValue(String.class);
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
@@ -948,7 +950,7 @@ public class FragmentMaps extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

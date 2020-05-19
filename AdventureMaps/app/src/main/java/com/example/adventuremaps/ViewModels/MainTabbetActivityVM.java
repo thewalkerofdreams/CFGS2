@@ -561,13 +561,13 @@ public class MainTabbetActivityVM extends AndroidViewModel {
      *  2 --> Mapa offline
      * De esta manera se actualizará una parte de la interfaz trás la eliminación del punto
      * de localización.
-     * Cabecera: public void eliminarPuntoDeLocalizacionSeleccionado(int callSection)
+     * Cabecera: private void eliminarPuntoDeLocalizacionSeleccionado(int callSection)
      * Entrada:
      *  -final Context context,
      *  -final int callSection
      * Postcondiciones: El método elimina el punto de localización seleccionado.
      */
-    public void eliminarPuntoDeLocalizacionSeleccionado(final Context context, final int callSection){
+    private void eliminarPuntoDeLocalizacionSeleccionado(final Context context, final int callSection){
         final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
         final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
 

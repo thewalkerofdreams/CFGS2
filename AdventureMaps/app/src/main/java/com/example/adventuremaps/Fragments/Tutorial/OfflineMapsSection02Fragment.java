@@ -18,8 +18,6 @@ public class OfflineMapsSection02Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Inflamos el layout del fragment
-        View rootView = inflater.inflate(R.layout.fragment_offline_maps_section_02, container, false);
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_offline_maps_section_02, container, false);
     }
 }

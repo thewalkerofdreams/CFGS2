@@ -39,7 +39,8 @@ public class FragmentStartLocalizationPointClick extends Fragment {
         View view = inflater.inflate(R.layout.fragment_click_localization_point, container, false);
 
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+        if(getActivity() != null)
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
         btnDelete = view.findViewById(R.id.btnDeleteLocalizationPointFragmentStart);
         btnDetails = view.findViewById(R.id.btnDetailsLocalizationPointFragmentStart);
@@ -47,8 +48,8 @@ public class FragmentStartLocalizationPointClick extends Fragment {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-                drLocalization.orderByChild("index").equalTo(viewModel.get_localizationPointClicked().getPosition().latitude+"~"+viewModel.get_localizationPointClicked().getPosition().longitude).addListenerForSingleValueEvent(new ValueEventListener() {
+                final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+                drLocalization.orderByChild(ApplicationConstants.FB_LOCATION_INDEX_CHILD).equalTo(viewModel.get_localizationPointClicked().getPosition().latitude+"~"+viewModel.get_localizationPointClicked().getPosition().longitude).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ClsLocalizationPoint localizationPointToDelete = null;
@@ -70,8 +71,8 @@ public class FragmentStartLocalizationPointClick extends Fragment {
         btnDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-                drLocalization.orderByChild("index").equalTo(viewModel.get_localizationPointClicked().getPosition().latitude+"~"+viewModel.get_localizationPointClicked().getPosition().longitude).addListenerForSingleValueEvent(new ValueEventListener() {
+                final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+                drLocalization.orderByChild(ApplicationConstants.FB_LOCATION_INDEX_CHILD).equalTo(viewModel.get_localizationPointClicked().getPosition().latitude+"~"+viewModel.get_localizationPointClicked().getPosition().longitude).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ClsLocalizationPoint localizationPointToDelete = null;
@@ -124,8 +125,8 @@ public class FragmentStartLocalizationPointClick extends Fragment {
             Toast.makeText(getContext(), R.string.error_localization_no_exist, Toast.LENGTH_LONG).show();
         }else{
             Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
-            intent.putExtra("ActualLocalization", viewModel.get_selectedLocalizationPoint());
-            intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+            intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION, viewModel.get_selectedLocalizationPoint());
+            intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
             startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_DETAILS_LOCALIZATION_POINT);
         }
     }

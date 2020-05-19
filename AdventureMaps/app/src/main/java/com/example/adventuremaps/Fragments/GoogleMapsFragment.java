@@ -44,7 +44,8 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(RouteActivitiesVM.class);
+        if(getActivity() != null)
+            viewModel = ViewModelProviders.of(getActivity()).get(RouteActivitiesVM.class);
 
         return view;
     }
@@ -91,8 +92,8 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
 
 
         if(viewModel.get_actualLocation() == null){//Si no podemos obtener la localización actusal del usuario
-            latLng = new LatLng(40.4636688, -3.7492199);//Le daremos un valor por defecto
-            zoom = 13;
+            latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
+            zoom = ApplicationConstants.DEFAULT_LEVEL_ZOOM;
         }else{
             latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
             zoom = viewModel.get_zoom();
@@ -209,12 +210,14 @@ public class GoogleMapsFragment extends SupportMapFragment implements OnMapReady
      * Postcondiciones: El método agrega el icono de punto de ruta a un marcador.
      */
     private void setIconToMarker(final Marker marker){
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.route_point);
-                Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-            }
-        });
+        if(getActivity() != null){
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.route_point);
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), ApplicationConstants.MARKER_WITH_SIZE, ApplicationConstants.MARKER_HEIGHT_SIZE, false);
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                }
+            });
+        }
     }
 }

@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Activities.DetailsLocalizationPointActivity;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Models.ClsLocalizationPointWithFav;
 import com.example.adventuremaps.Adapters.LocalizationListAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -34,6 +35,7 @@ import com.example.adventuremaps.Management.OrderLists;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,8 +51,9 @@ public class FragmentLocalizations extends Fragment {
     private MainTabbetActivityVM viewModel;
     private AlertDialog alertDialogDeleteLocalization, alertDialogShareLocalization, alertDialogShortList;
     private Button btnFav, btnDelete, btnShare, btnOrderLocalizations;
-    private DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference("Localizations");
-    private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference("Users");
+    private DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+    private DatabaseReference drUser = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+    private FirebaseUser firebaseCurrentUser;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
     private ValueEventListener listener;
@@ -66,13 +69,18 @@ public class FragmentLocalizations extends Fragment {
         View view = inflater.inflate(R.layout.fragment_localizations, container, false);
 
         //Instanciamos los SharedPreference
-        sharedpreferencesField = getActivity().getSharedPreferences("OrderLocalizationListField", Context.MODE_PRIVATE);
-        sharedPreferencesFav = getActivity().getSharedPreferences("OrderLocalizationListFav", Context.MODE_PRIVATE);
+        if(getActivity() != null){
+            sharedpreferencesField = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FIELD, Context.MODE_PRIVATE);
+            sharedPreferencesFav = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, Context.MODE_PRIVATE);
 
-        //Instanciamos el VM
-        viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
-        viewModel.set_localizationsActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cargar la lista de localizaciones
-        viewModel.set_localizationsIdActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cagar la lista de localizaciones
+            //Instanciamos el VM
+            viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
+            viewModel.set_localizationsActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cargar la lista de localizaciones
+            viewModel.set_localizationsIdActualUser(null);//Le asignamos un valor nulo para evitar fallos a la hora de cagar la lista de localizaciones
+        }
+
+        //Obtenemos la referencia del usuario actual
+        firebaseCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //Instanciamos los elementos de la UI
         btnFav = view.findViewById(R.id.btnFavFragmentLocaliaztions);//Botón para ordenar la lista por favoritos
@@ -82,12 +90,12 @@ public class FragmentLocalizations extends Fragment {
                 SharedPreferences.Editor editor02 = sharedPreferencesFav.edit();
                 if(btnFav.getBackground().getConstantState() == getResources().getDrawable(R.drawable.fill_star).getConstantState()){//Si el filtro estaba activado
                     btnFav.setBackgroundResource(R.drawable.empty_star);
-                    editor02.putBoolean("OrderLocalizationListFav", false);
+                    editor02.putBoolean(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, false);
                 }else{
                     btnFav.setBackgroundResource(R.drawable.fill_star);
-                    editor02.putBoolean("OrderLocalizationListFav", true);
+                    editor02.putBoolean(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, true);
                 }
-                editor02.commit();
+                editor02.apply();
                 loadList();//Recargamos la lista
             }
         });
@@ -175,7 +183,7 @@ public class FragmentLocalizations extends Fragment {
             }
         });
 
-        if(sharedPreferencesFav.getBoolean("OrderLocalizationListFav", false))//Si el filtro de favoritos se encuentraba activo
+        if(sharedPreferencesFav.getBoolean(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, false))//Si el filtro de favoritos se encuentraba activo
             btnFav.setBackgroundResource(R.drawable.fill_star);
 
         if(savedInstanceState != null){//Si la actividad ya contiene datos almacenados
@@ -218,8 +226,8 @@ public class FragmentLocalizations extends Fragment {
      */
     private void throwDetailsLocalizationPointActivity(ClsLocalizationPointWithFav localizationPoint){
         Intent intent = new Intent(getActivity(), DetailsLocalizationPointActivity.class);
-        intent.putExtra("ActualLocalization", localizationPoint.get_localizationPoint());
-        intent.putExtra("ActualEmailUser", viewModel.get_actualEmailUser());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION, localizationPoint.get_localizationPoint());
+        intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
         startActivity(intent);
     }
 
@@ -247,12 +255,12 @@ public class FragmentLocalizations extends Fragment {
      * en la plataforma Firebase, luego lanza la función "loadLocalizationsUserFromPlataform".
      */
     private void storeIdLocalizationPointsFavourites(){
-        listener = drUser.orderByChild("email").equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
+        listener = drUser.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsIdActualUser(new ArrayList<String>());//Limpiamos la lista de puntos de localización favoritos
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    for(DataSnapshot booksSnapshot : datas.child("localizationsId").getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
+                    for(DataSnapshot booksSnapshot : datas.child(ApplicationConstants.FB_LOCALIZATIONS_ID).getChildren()){//Almacenamos las id's de las localizaciones favoritas del usuario
                         String localizationId = booksSnapshot.getValue(String.class);
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
@@ -262,7 +270,7 @@ public class FragmentLocalizations extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
             }
         });
@@ -273,18 +281,18 @@ public class FragmentLocalizations extends Fragment {
      * Nombre: loadLocalizationsUserFromPlataform
      * Comentario: Este método nos permite cargar las localizaciones del usuario actual desde
      * la plataforma de Firebase.
-     * Cabecera: public void loadLocalizationsUserFromPlataform()
+     * Cabecera: private void loadLocalizationsUserFromPlataform()
      * Postcondiciones: El método carga las localizaciones del usuario actual.
      */
-    public void loadLocalizationsUserFromPlataform(){
+    private void loadLocalizationsUserFromPlataform(){
         drLocalization.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     ClsLocalizationPoint localizationPoint = datas.getValue(ClsLocalizationPoint.class);
-                    if(localizationPoint != null && localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
-                            viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId())){//Si la localización pertenece al usuario o la tiene en favoritos
+                    if(localizationPoint != null && (localizationPoint.getEmailCreator() != null && localizationPoint.getEmailCreator().equals(viewModel.get_actualEmailUser()) ||
+                            viewModel.get_localizationsIdActualUser().contains(localizationPoint.getLocalizationPointId()))){//Si la localización pertenece al usuario o la tiene en favoritos
                         viewModel.get_localizationsActualUser().add(localizationPoint);//Almacenamos el punto de localización
                     }
                 }
@@ -309,11 +317,11 @@ public class FragmentLocalizations extends Fragment {
      * Comentario: Este método muestra un dialogo por pantalla para eliminar una localización seleccionada.
      * Si el usuario confirma la eliminación, se eliminará la localización de la plataforma FireBase, en caso
      * contrario no sucederá nada.
-     * Cabecera: public void showDeleteLocalizationDialog()
+     * Cabecera: private void showDeleteLocalizationDialog()
      * Postcondiciones: El método muestra un dialogo por pantalla, si el usuario lo confirma eliminará
      * la localización seleccionada, en caso contrario no sucederá nada.
      */
-    public void showDeleteLocalizationDialog(){
+    private void showDeleteLocalizationDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.confirm_delete);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_delete_localization_point);// Setting Alert Dialog Message
@@ -326,7 +334,7 @@ public class FragmentLocalizations extends Fragment {
                 //Eliminamos las localizaciones seleccionadas
                 for(int i = 0; i < viewModel.get_selectedLocalizations().size(); i++){
                     //Eliminamos el id del punto de localización asignado a la lista de favoritos del usuario si este lo tuviera asignado como favorito
-                    drUser.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("localizationsId").child(viewModel.get_selectedLocalizations()
+                    drUser.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(viewModel.get_selectedLocalizations()
                             .get(i).get_localizationPoint().getLocalizationPointId()).removeValue();
                     //Eliminamos el punto de localización
                     drLocalization.child(viewModel.get_selectedLocalizations().get(i).get_localizationPoint().getLocalizationPointId()).removeValue();
@@ -360,10 +368,10 @@ public class FragmentLocalizations extends Fragment {
      * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar las rutas del usuario en la lista actual.
-     * Cabecera: public void loadList()
+     * Cabecera: private void loadList()
      * Postcondiciones: El método carga la lista rutas del usuario actual.
      */
-    public void loadList(){
+    private void loadList(){
 
         if(viewModel.get_localizationsActualUser() != null && viewModel.get_localizationsIdActualUser() != null){//Si se han cargado las dos búsquedas necesarias desde FireBase
             if(viewModel.get_selectedLocalizations().isEmpty())//Si la lista de seleccionadas se encuentra vacía
@@ -373,12 +381,12 @@ public class FragmentLocalizations extends Fragment {
 
             //Instanciamos los SharedPreference (Este método es llamado desde onStart, por lo que también debemos instanciarlos aquí también)
             if(getActivity() != null){
-                sharedpreferencesField = getActivity().getSharedPreferences("OrderLocalizationListField", Context.MODE_PRIVATE);
-                sharedPreferencesFav = getActivity().getSharedPreferences("OrderLocalizationListFav", Context.MODE_PRIVATE);
+                sharedpreferencesField = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FIELD, Context.MODE_PRIVATE);
+                sharedPreferencesFav = getActivity().getSharedPreferences(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, Context.MODE_PRIVATE);
             }
 
-            int field = sharedpreferencesField.getInt("OrderLocalizationListField", 1);
-            boolean favourite = sharedPreferencesFav.getBoolean("OrderLocalizationListFav", false);
+            int field = sharedpreferencesField.getInt(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FIELD, 1);
+            boolean favourite = sharedPreferencesFav.getBoolean(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FAV, false);
             orderList(field, favourite);//Ordenamos la lista
 
             LocalizationListAdapter adapter = new LocalizationListAdapter(getActivity(), R.layout.localization_list_item, viewModel.get_itemsLocalizationList()){
@@ -411,12 +419,12 @@ public class FragmentLocalizations extends Fragment {
      * -Amarillo si el usuario ya compartió la localizacióon.
      * -Blanco si no cumple ninguno de los tres criterios anteriores.
      * Realizamos este método para evitar repetir código.
-     * Cabecera: public void changeBackgroundColorItemView(View view, int position)
+     * Cabecera: private void changeBackgroundColorItemView(View view, int position)
      *  -View view
      *  -int position
      * Postcondiciones: El método cambiar el color de un item según el estado de este.
      */
-    public void changeBackgroundColorItemView(View view, int position){
+    private void changeBackgroundColorItemView(View view, int position){
         if(!viewModel.get_itemsLocalizationList().get(position).get_localizationPoint().getEmailCreator().equals(viewModel.get_actualEmailUser())){//Si la localización no es del usuario actual
             setBackgroundAnimation(view, R.drawable.gradient_no_owner_list);
         }else{
@@ -458,10 +466,10 @@ public class FragmentLocalizations extends Fragment {
      * del usuario y otro atributo booleano que indicará si el usuario tiene marcada como favorita
      * dicha localización. Para crear esta lista, el método utiliza la lista de _localizationsIdActualUser
      * y _localizationsActualUser del VM.
-     * Cabecera: public void loadLocalizationModelList()
+     * Cabecera: private void loadLocalizationModelList()
      * Postcondiciones: El método carga un listado de la clase modelo ClsLocalizationPointWithFav en el atributo _itemsLocalizationList del VM.
      */
-    public void loadLocalizationModelList(){
+    private void loadLocalizationModelList(){
         boolean fav;
         viewModel.get_itemsLocalizationList().clear();//Limpiamos los items de la lista
         for(int i = 0; i < viewModel.get_localizationsActualUser().size(); i++){
@@ -482,12 +490,11 @@ public class FragmentLocalizations extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if(alertDialogDeleteLocalization != null && alertDialogDeleteLocalization.isShowing()) {//Si se encuentra abierto el dialogo de deleteGameMode
@@ -521,7 +528,7 @@ public class FragmentLocalizations extends Fragment {
      * Favourite:
      *  -true (Order by favourite localizations)
      *  -false (Does not take into account favorite localizations)
-     * Cabecera: public void orderList(int field, boolean favourite)
+     * Cabecera: private void orderList(int field, boolean favourite)
      * Entrada:
      *  -int field
      *  -boolean favourite
@@ -530,7 +537,7 @@ public class FragmentLocalizations extends Fragment {
      * Postcondiciones: El método ordena la lista de localizaciones según los criterios introducidos
      * por parámetros.
      */
-    public void orderList(int field, boolean favourite){
+    private void orderList(int field, boolean favourite){
         if(favourite){//Si la lista se encuentra ordenada por favoritos
             switch (field){
                 case 1:
@@ -582,13 +589,13 @@ public class FragmentLocalizations extends Fragment {
      * Comentario: Este método muestra por pantalla un dialogo para compartir una localización seleccionada
      * con la plataforma. Si el usuario confirma la acción, se comparte el punto de localización y en caso
      * contrario no sucede nada.
-     * Cabecera: public void openShareDialog()
+     * Cabecera: private void openShareDialog()
      * Precondiciones:
      *  -Solo debe haber una ruta seleccionada almacenada en el VM.
      * Postcondiciones: Si el usuario confirma el dialogo, se compartirá la ruta seleccionada y en caso contrario
      * no sucede nada.
      */
-    public void openShareDialog(){
+    private void openShareDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.confirm_share);// Setting Alert Dialog Title
         alertDialogBuilder.setMessage(R.string.question_share_localization_point);// Setting Alert Dialog Message
@@ -633,16 +640,16 @@ public class FragmentLocalizations extends Fragment {
      * Comentario: Este método muestra por pantalla un dialogo con los diferentes tipos de ordenación, que se puede aplicar
      * sobre la lista de localizaciones, si el usuario confirma el dialogo, se ordenará la lista actual dependiendo
      * del tipo seleccionado.
-     * Cabecera: public void showOrderLocalizationListDialog()
+     * Cabecera: private void showOrderLocalizationListDialog()
      * Postcondiciones: El método abre un dialogo de ordenación, si el usuario confirma el dialogo se
      * ordena la lista de localizaciones por el criterio seleccionado.
      */
-    public void showOrderLocalizationListDialog() {
+    private void showOrderLocalizationListDialog() {
         final CharSequence [] orderTypes = {getResources().getString(R.string.name),
                 getResources().getString(R.string.date_of_creation), getResources().getString(R.string.shared_by_name), getResources().getString(R.string.shared_by_date_of_creaction),
                 getResources().getString(R.string.no_owner_by_name), getResources().getString(R.string.no_owner_by_date_of_creation)};
 
-        viewModel.set_positionSelectedOrderTypesLocations(sharedpreferencesField.getInt("OrderLocalizationListField", 1) -1);
+        viewModel.set_positionSelectedOrderTypesLocations(sharedpreferencesField.getInt(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FIELD, 1) -1);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.order_types);
@@ -657,8 +664,8 @@ public class FragmentLocalizations extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences.Editor editor01 = sharedpreferencesField.edit();//Guardamos los filtros
-                editor01.putInt("OrderLocalizationListField", viewModel.get_positionSelectedOrderTypesLocations()+1);
-                editor01.commit();
+                editor01.putInt(ApplicationConstants.SP_ORDER_LOCALIZATION_LIST_BY_FIELD, viewModel.get_positionSelectedOrderTypesLocations()+1);
+                editor01.apply();
                 loadList();//Recargamos la lista
 
                 viewModel.set_dialogShortLocalizationListShowing(false);//Indicamos que se finalizó el dialogo

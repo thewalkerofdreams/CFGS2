@@ -70,10 +70,17 @@ public class ApplicationConstants {
     //SharedPreferences
     public final static String SP_ACTUAL_USER_EMAIL = "UserActualEmail";
 
+    public final static String SP_ORDER_LOCALIZATION_LIST_BY_FIELD = "OrderLocalizationListField";
+    public final static String SP_ORDER_LOCALIZATION_LIST_BY_FAV = "OrderLocalizationListFav";
+
+    public final static String SP_ORDER_ROUTE_LIST_BY_FIELD = "OrderRouteListField";
+    public final static String SP_ORDER_ROUTE_LIST_BY_FAV = "OrderRouteListFav";
+
     //Firebase Addresses
     public final static String FB_USERS_ADDRESS = "Users";
     public final static String FB_LOCALIZATIONS_ID = "localizationsId";
     public final static String FB_USER_EMAIL_CHILD = "email";
+    public final static String FB_USER_NICKNAME_CHILD = "nickName";
 
     public final static String FB_ROUTES_ADDRESS = "routes";
     public final static String FB_ROUTE_FAVOURITE_CHILD = "favourite";
@@ -86,7 +93,9 @@ public class ApplicationConstants {
     public final static String FB_LOCATION_LONGITUDE = "longitude";
     public final static String FB_LOCATION_SHARED_CHILD = "shared";
     public final static String FB_LOCATION_NAME_CHILD = "name";
-    public final static String Fb_LOCATION_DESCRIPTION_CHILD = "description";
+    public final static String FB_LOCATION_DESCRIPTION_CHILD = "description";
+    public final static String FB_LOCATION_EMAIL_CREATOR_CHILD = "emailCreator";
+    public final static String FB_LOCATION_INDEX_CHILD = "index";
 
     public final static String FB_LOCALIZATION_VALORATIONS_CHILD = "valorations";
     public final static String FB_LOCALIZATION_VALORATION_CHILD = "Valoration";
@@ -109,4 +118,9 @@ public class ApplicationConstants {
     //JSON
     public final static String JSON_CHARSET = "UTF-8";
     public final static String JSON_FIELD_REGION_NAME = "FIELD_REGION_NAME";
+
+    //TAGS
+    public final static String TAG_LOCATION_FAV_TYPE = "Fav";
+    public final static String TAG_LOCATION_OWNER_TYPE = "Owner";
+    public final static String TAG_LOCATION_NO_OWNER_TYPE = "NoOwner";
 }
