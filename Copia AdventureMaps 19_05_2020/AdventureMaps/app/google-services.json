@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "557289030505",
+    "firebase_url": "https://adventurercmaps.firebaseio.com",
+    "project_id": "adventurercmaps",
+    "storage_bucket": "adventurercmaps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557289030505:android:4d5309fc807e22323e73f8",
+        "android_client_info": {
+          "package_name": "com.example.adventuremaps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "557289030505-4llo187h9tit9023dkdljkhus93a4mfh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adventuremaps",
+            "certificate_hash": "4e0f7fff4c2515ff74f9c4c9ef8abb5c6a6e6046"
+          }
+        },
+        {
+          "client_id": "557289030505-4t334r9u2g2u04lklps7mrn3fiutsjfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtkpvzmZV9On5cPohMEkc0DtY9Ony0_nM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "557289030505-4t334r9u2g2u04lklps7mrn3fiutsjfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
