@@ -32,7 +32,6 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     private ImageGalleryViewPagerActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
     private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
