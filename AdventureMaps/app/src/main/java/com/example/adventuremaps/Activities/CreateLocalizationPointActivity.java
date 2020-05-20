@@ -260,21 +260,6 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
 
     /**
      * Interfaz
-     * Nombre: getExtension
-     * Comentario: Este método nos permite obtener la extensión de una dirección Uri.
-     * Cabecera: public String getExtension(Uri uri)
-     * Entrada:
-     *  -Uri uri
-     * Postcondiciones: El método devuelve la extensión de la dirección uri asociada al nombre.
-     */
-    public String getExtension(Uri uri){
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-
-    /**
-     * Interfaz
      * Nombre: insertImagesToFireBase
      * Comentario: Este método nos permite insertar las imagenes asigandas al nuevo punto de localización
      * en la plataforma Firebase.
@@ -286,40 +271,40 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      */
     public void insertImagesToFireBase(final String localizationPointId){
         for(int i = 0; i < viewModel.get_imagesToSave().size(); i++){
-            final StorageReference storageReference = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(localizationPointId).child(viewModel.get_actualEmailUser()).
-                    child(System.currentTimeMillis()+""+getExtension(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri())));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
+            final String imageId = localizationReference.push().getKey();//Obtenemos un id para la imagen
+            if(imageId != null) {//Si se pudo obtener un id de la plataforma para la imagen
+                final StorageReference storageReference = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(localizationPointId).child(viewModel.get_actualEmailUser()).
+                        child(imageId);//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
-            storageReference.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            if (taskSnapshot.getMetadata() != null) {//Si los metadatos no son nulos
-                                if (taskSnapshot.getMetadata().getReference() != null) {//Y podemos obtener una referencia al storage
-                                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
-                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
-                                            String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
-                                            if(imageId != null){//Si se pudo obtener una id para la imagen
+                storageReference.putFile(Uri.parse(viewModel.get_imagesToSave().get(i).get_uri()))
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                if (taskSnapshot.getMetadata() != null) {//Si los metadatos no son nulos
+                                    if (taskSnapshot.getMetadata().getReference() != null) {//Y podemos obtener una referencia al storage
+                                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                                 //Insertamos la dirección de la imagen en la base de datos
                                                 localizationReference.child(localizationPointId).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES)
                                                         .child(imageId).child(ApplicationConstants.FB_IMAGES_URI_CHILD).setValue(imageUrl);
 
                                                 Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         }
     }
 
