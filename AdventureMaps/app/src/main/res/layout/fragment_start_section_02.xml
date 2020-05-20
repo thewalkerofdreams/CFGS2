@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:layout_margin="5sp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/filter">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/startMap_description_filter"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/general_marker_tutorial">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/different_markers_description"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="33"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:background="@drawable/cluster_map_tutorial">
+            </ImageView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:text="@string/cluster_map_description"></TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
