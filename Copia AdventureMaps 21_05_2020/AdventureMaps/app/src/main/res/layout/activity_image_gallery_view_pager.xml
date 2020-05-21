@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutRatingBar"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="8"
+        android:gravity="center">
+
+        <RatingBar
+            android:id="@+id/RatingBarGeneralImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:numStars="5"
+            android:isIndicator="true">
+        </RatingBar>
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="77"/>
+
+    <LinearLayout
+        android:id="@+id/FrameLayoutRatingBar"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="15"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <RatingBar
+            android:id="@+id/RatingBarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ></RatingBar>
+
+    </LinearLayout>
+
+
+</LinearLayout>

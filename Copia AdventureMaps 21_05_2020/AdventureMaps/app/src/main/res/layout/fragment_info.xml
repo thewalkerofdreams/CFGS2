@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutInfo01"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="30"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="25"
+            android:layout_marginTop="15sp"
+            android:layout_marginBottom="5sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/email_form"
+                android:layout_marginRight="5sp"></TextView>
+
+            <TextView
+                android:id="@+id/TextViewEmailInfoActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="25"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/nickName_form"
+                android:layout_marginRight="5sp"></TextView>
+
+            <TextView
+                android:id="@+id/TextViewNickNameInfoActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="25"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/number_user_localizations_form"
+                android:layout_marginRight="5sp"></TextView>
+
+            <TextView
+                android:id="@+id/TextViewNumberLocalizationsInfoActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="25"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/number_user_routes_form"
+                android:layout_marginRight="5sp"></TextView>
+
+            <TextView
+                android:id="@+id/TextViewNumberRoutesInfoActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"></TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="70"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:layout_marginStart="25sp"
+                android:layout_marginEnd="25sp"
+                android:text="@string/tutorial"
+                android:onClick="throwTutorialViewPagerActivity"></Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:layout_marginStart="25sp"
+                android:layout_marginEnd="25sp"
+                android:text="@string/change_password"
+                android:onClick="throwChangePasswordActivity"></Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:layout_marginStart="25sp"
+                android:layout_marginEnd="25sp"
+                android:text="@string/logout"
+                android:onClick="showLogoutDialog"></Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
