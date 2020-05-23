@@ -62,52 +62,52 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         });
 
         water = findViewById(R.id.checkboxWater);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.potable_water)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_potable_water)))
             water.setChecked(true);
         checkBoxes.add(water);
 
         food = findViewById(R.id.checkboxFood);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.food)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_food)))
             food.setChecked(true);
         checkBoxes.add(food);
 
         restArea = findViewById(R.id.checkboxRestArea);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.rest_area)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_rest_area)))
             restArea.setChecked(true);
         checkBoxes.add(restArea);
 
         hunting = findViewById(R.id.checkboxHunting);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.hunting)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_hunting)))
             hunting.setChecked(true);
         checkBoxes.add(hunting);
 
         culture = findViewById(R.id.checkboxCulture);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.culture)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_culture)))
             culture.setChecked(true);
         checkBoxes.add(culture);
 
         hotel = findViewById(R.id.checkboxHotel);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.hotel)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_hotel)))
             hotel.setChecked(true);
         checkBoxes.add(hotel);
 
         naturalSite = findViewById(R.id.checkboxNaturalSite);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.natural_site)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_natural_site)))
             naturalSite.setChecked(true);
         checkBoxes.add(naturalSite);
 
         fishing = findViewById(R.id.checkboxFishing);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.fishing)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_fishing)))
             fishing.setChecked(true);
         checkBoxes.add(fishing);
 
         vivac = findViewById(R.id.checkboxVivac);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.vivac)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_vivac)))
             vivac.setChecked(true);
         checkBoxes.add(vivac);
 
         camping = findViewById(R.id.checkboxCamping);
-        if(viewModel.get_localizationTypes().contains(getString(R.string.camping)))
+        if(viewModel.get_localizationTypes().contains(getString(R.string.key_camping)))
             camping.setChecked(true);
         checkBoxes.add(camping);
 
@@ -140,7 +140,7 @@ public class EditLocalizationPointActivity extends AppCompatActivity {
         viewModel.get_localizationTypes().clear();//Limpiamos el listado de tipos
         for(int i = 0; i < checkBoxes.size(); i++){
             if(checkBoxes.get(i).isChecked()){//Si el tipo se encuentra chequeado
-                viewModel.get_localizationTypes().add(checkBoxes.get(i).getText().toString());
+                viewModel.get_localizationTypes().add(checkBoxes.get(i).getTag().toString());
             }
         }
 

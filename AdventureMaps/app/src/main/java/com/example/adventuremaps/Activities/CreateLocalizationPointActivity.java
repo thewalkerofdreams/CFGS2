@@ -222,7 +222,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
         viewModel.get_localizationTypes().clear();//Limpiamos el listado de tipos
         for(int i = 0; i < checkBoxes.size(); i++){
             if(checkBoxes.get(i).isChecked()){//Si el tipo se encuentra chequeado
-                viewModel.get_localizationTypes().add(checkBoxes.get(i).getText().toString());
+                viewModel.get_localizationTypes().add(checkBoxes.get(i).getTag().toString());
             }
         }
 
