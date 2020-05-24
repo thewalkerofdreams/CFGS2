@@ -299,11 +299,17 @@ public class ImageGalleryActivity extends AppCompatActivity {
      */
     private void deleteSelectedImages(){
         DatabaseReference drImages;
+        StorageReference riversRef;
 
         for(int i = 0; i < viewModel.get_imagesSelected().size(); i++){
+            //Eliminamos el enlace de la imagen en la base de datos
             drImages = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).
                     child(viewModel.get_imagesSelected().get(i).get_userEmailCreator().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesSelected().get(i).get_imageId());
             drImages.removeValue();
+            //Eliminamos los datos de la imagen almacenados en el storage de Firebase
+            riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
+                    child(viewModel.get_imagesSelected().get(i).get_imageId());
+            riversRef.delete();
         }
         viewModel.get_imagesSelected().clear();//Vaciamos la lista de imagenes selecionadas
     }
@@ -328,26 +334,26 @@ public class ImageGalleryActivity extends AppCompatActivity {
      * Postcondiciones: El método sube una imagen a la plataforma FireBase.
      */
     public void insertImageToFireBase(Uri image){
-        final StorageReference riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
-                child(System.currentTimeMillis()+""+getExtension(image));//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
+        final String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
+        if(imageId != null) {//Si se pudo obtener una id de la plataforma para la imagen
+            final StorageReference riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_actualEmailUser()).
+                    child(imageId);//La imagen se colgará con la fecha de subida como nombre y su correspondiente extensión
 
-        progressDialog = new ProgressDialog(this);//Isntanciamos el progressDialog
-        showProgressDialogWithTitle(getString(R.string.uploading_image), getString(R.string.wait_a_moment));
+            progressDialog = new ProgressDialog(this);//Isntanciamos el progressDialog
+            showProgressDialogWithTitle(getString(R.string.uploading_image), getString(R.string.wait_a_moment));
 
-        riversRef.putFile(image)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        hideProgressDialogWithTitle();
-                        if (taskSnapshot.getMetadata() != null) {
-                            if (taskSnapshot.getMetadata().getReference() != null) {
-                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
-                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
-                                        String imageId = localizationReference.push().getKey();//Obtenemos una id para la imagen
-                                        if(imageId != null){//Si se pudo obtener una id de la plataforma para la imagen
+            riversRef.putFile(image)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            hideProgressDialogWithTitle();
+                            if (taskSnapshot.getMetadata() != null) {
+                                if (taskSnapshot.getMetadata().getReference() != null) {
+                                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String imageUrl = uri.toString();//Necesitamos transformarla en un String para subirla a la plataforma
                                             //Insertamos la dirección de la imagen en la base de datos
                                             localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES)
                                                     .child(viewModel.get_actualEmailUser().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_IMAGES)
@@ -355,42 +361,27 @@ public class ImageGalleryActivity extends AppCompatActivity {
 
                                             viewModel.get_imagesToLoad().add(new ClsImageWithId(uri.toString(), viewModel.get_actualEmailUser(), imageId));//Almacenamos la imagen en el VM
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
+                            Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
                         }
-                        Toast.makeText(getApplication(), R.string.image_uploaded, Toast.LENGTH_SHORT).show();//Indicamos que la imagen se ha subido
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        hideProgressDialogWithTitle();
-                        Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setProgress((int) progress);
-                    }
-                });
-    }
-
-    /**
-     * Interfaz
-     * Nombre: getExtension
-     * Comentario: Este método nos permite obtener la extensión de una dirección Uri.
-     * Cabecera: public String getExtension(Uri uri)
-     * Entrada:
-     *  -Uri uri
-     * Postcondiciones: El método devuelve la extensión de la dirección uri asociada al nombre.
-     */
-    public String getExtension(Uri uri){
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            hideProgressDialogWithTitle();
+                            Toast.makeText(getApplication(), R.string.error_upload_image, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setProgress((int) progress);
+                        }
+                    });
+        }
     }
 
     @Override

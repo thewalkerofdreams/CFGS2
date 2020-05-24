@@ -164,7 +164,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplication(), EditLocalizationPointActivity.class);
         intent.putExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL, viewModel.get_actualEmailUser());
         intent.putExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION, viewModel.get_actualLocalizationPoint());
-        intent.putStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES, viewModel.get_localizationTypes());
+        intent.putStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATION_TYPES, viewModel.get_localizationKeyTypes());
         intent.putStringArrayListExtra(ApplicationConstants.DATA_LOCALIZATIONS_ID_ACTUAL_USER, viewModel.get_localizationsIdActualUser());
         startActivityForResult(intent, ApplicationConstants.REQUEST_CODE_EDIT_LOCALIZATION_POINT);
     }
@@ -192,12 +192,13 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
         localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                viewModel.get_localizationTypes().clear();
+                viewModel.get_localizationKeyTypes().clear();
                 for(DataSnapshot datas: dataSnapshot.getChildren()){
                     for(DataSnapshot types : datas.child(ApplicationConstants.FB_LOCALIZATION_TYPES_CHILD).getChildren()){
-                        viewModel.get_localizationTypes().add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización
+                        viewModel.get_localizationKeyTypes().add(String.valueOf(types.getValue()));//Almacenamos los tipos de la localización
                     }
                 }
+                getTranslateNameTypes();
                 loadList();
             }
 
@@ -232,13 +233,59 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
 
     /**
      * Interfaz
+     * Nombre: getTranslateNameTypes
+     * Comentario: El método almacena en el VM una lista con los nombres de los tipos de la localización
+     * traducidos al idioma del dispositivo actual.
+     * Cabecera: private void getTranslateNameTypes()
+     * Postcondiciones: El método almacena en el VM los nombres traducidos de los tipos de la localización.
+     */
+    private void getTranslateNameTypes(){
+        viewModel.get_localizationNameTypes().clear();//Vaciamos la lista de tipos
+        for(int i = 0; i < viewModel.get_localizationKeyTypes().size(); i++){
+            switch (viewModel.get_localizationKeyTypes().get(i)){
+                case "Camping":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.camping));
+                    break;
+                case "Vivac":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.vivac));
+                    break;
+                case "Fishing":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.fishing));
+                    break;
+                case "Natural Site":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.natural_site));
+                    break;
+                case "Lodging house/Hotel":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.hotel));
+                    break;
+                case "Culture":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.culture));
+                    break;
+                case "Hunting":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.hunting));
+                    break;
+                case "Rest Area":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.rest_area));
+                    break;
+                case "Food":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.food));
+                    break;
+                case "Potable Water":
+                    viewModel.get_localizationNameTypes().add(getString(R.string.potable_water));
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Interfaz
      * Nombre: loadList
      * Comentario: Este método nos permite cargar la lista de tipos del punto de localización actual.
      * Cabecera: public void loadList()
      * Postcondiciones: El método nos permite cargar los tipos del punto de localización actual en una lista.
      */
     public void loadList(){
-        TypeLocalizationPointsAdapter adapter = new TypeLocalizationPointsAdapter(this, R.layout.localization_type_item_list, viewModel.get_localizationTypes());
+        TypeLocalizationPointsAdapter adapter = new TypeLocalizationPointsAdapter(this, R.layout.localization_type_item_list, viewModel.get_localizationNameTypes());
         localizationTypesList.setAdapter(adapter);
     }
 

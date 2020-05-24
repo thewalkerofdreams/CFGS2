@@ -322,9 +322,9 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 if(isChecked){//Si se ha chequeado un filtro
-                    viewModel.get_checkedFilters().add(filterItems[which]);//Añadimos el filtro en la lista del VM
+                    addFilterFromCheckedList(which);//Añadimos el filtro en la lista del VM
                 }else{
-                    viewModel.get_checkedFilters().remove(filterItems[which]);//Eliminamos el filtro en la lista del VM
+                    removeFilterFromCheckedList(which);//Eliminamos el filtro en la lista del VM
                 }
             }
         });
@@ -337,6 +337,98 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
         dialog.show();//Mostramos el dialogo por pantalla
+    }
+
+    /**
+     * Interfaz
+     * Nombre: removeFilterFromCheckedList
+     * Comentario: El método remueve un filtro de la lista de filtros seleccionados para el mapa de inicio.
+     * Cabecera: private void removeFilterFromCheckedList(int filterPosition)
+     * Entrada:
+     *  -int filterPosition
+     * Precondiciones:
+     *  -filterPosition debe ser un número entre 0 y 9.
+     * Postcondiciones: El método elimina un filtro de la lista de filtros seleccionados.
+     */
+    private void removeFilterFromCheckedList(int filterPosition){
+        switch(filterPosition){
+            case 0:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_potable_water));//Añadimos el filtro en la lista del VM
+                break;
+            case 1:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_food));
+                break;
+            case 2:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_rest_area));
+                break;
+            case 3:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_hunting));
+                break;
+            case 4:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_hotel));
+                break;
+            case 5:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_natural_site));
+                break;
+            case 6:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_fishing));
+                break;
+            case 7:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_vivac));
+                break;
+            case 8:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_culture));
+                break;
+            case 9:
+                viewModel.get_checkedFilters().remove(getString(R.string.key_camping));
+                break;
+        }
+    }
+
+    /**
+     * Interfaz
+     * Nombre: addFilterFromCheckedList
+     * Comentario: El método añade un filtro a la lista de filtros seleccionados para el mapa de inicio.
+     * Cabecera: private void addFilterFromCheckedList(int filterPosition)
+     * Entrada:
+     *  -int filterPosition
+     * Precondiciones:
+     *  -filterPosition debe ser un número entre 0 y 9.
+     * Postcondiciones: El método añade un filtro a la lista de filtros seleccionados.
+     */
+    private void addFilterFromCheckedList(int filterPosition){
+        switch(filterPosition){
+            case 0:
+                viewModel.get_checkedFilters().add(getString(R.string.key_potable_water));//Añadimos el filtro en la lista del VM
+                break;
+            case 1:
+                viewModel.get_checkedFilters().add(getString(R.string.key_food));
+                break;
+            case 2:
+                viewModel.get_checkedFilters().add(getString(R.string.key_rest_area));
+                break;
+            case 3:
+                viewModel.get_checkedFilters().add(getString(R.string.key_hunting));
+                break;
+            case 4:
+                viewModel.get_checkedFilters().add(getString(R.string.key_hotel));
+                break;
+            case 5:
+                viewModel.get_checkedFilters().add(getString(R.string.key_natural_site));
+                break;
+            case 6:
+                viewModel.get_checkedFilters().add(getString(R.string.key_fishing));
+                break;
+            case 7:
+                viewModel.get_checkedFilters().add(getString(R.string.key_vivac));
+                break;
+            case 8:
+                viewModel.get_checkedFilters().add(getString(R.string.key_culture));
+                break;
+            case 9:
+                viewModel.get_checkedFilters().add(getString(R.string.key_camping));
+                break;
+        }
     }
 
     /**

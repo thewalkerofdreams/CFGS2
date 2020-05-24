@@ -79,8 +79,8 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
         tabs.setupWithViewPager(viewPager);
 
         //Cargamos los filtros chequeados, al principio todos los filtros se encuentran check
-        final String[] filterItems = {getResources().getString(R.string.potable_water), getResources().getString(R.string.food), getResources().getString(R.string.rest_area), getResources().getString(R.string.hunting),
-                getResources().getString(R.string.hotel), getResources().getString(R.string.natural_site), getResources().getString(R.string.fishing), getResources().getString(R.string.vivac), getResources().getString(R.string.culture),  getResources().getString(R.string.camping)};
+        final String[] filterItems = {getResources().getString(R.string.key_potable_water), getResources().getString(R.string.key_food), getResources().getString(R.string.key_rest_area), getResources().getString(R.string.key_hunting),
+                getResources().getString(R.string.key_hotel), getResources().getString(R.string.key_natural_site), getResources().getString(R.string.key_fishing), getResources().getString(R.string.key_vivac), getResources().getString(R.string.key_culture),  getResources().getString(R.string.key_camping)};
         viewModel.set_checkedFilters(new ArrayList<>(Arrays.asList(filterItems)));
 
         String email = getIntent().getStringExtra(ApplicationConstants.INTENT_LOGIN_EMAIL);//Si la cuenta ya estaba abierta, email se encontrará vacío.

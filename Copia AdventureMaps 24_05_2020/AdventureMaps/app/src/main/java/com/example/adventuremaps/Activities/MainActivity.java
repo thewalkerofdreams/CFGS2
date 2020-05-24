@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_SHORT).show();//Indicamos el fallo
+                            Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();//Indicamos el fallo
                         }
                 });
             }else{

@@ -21,8 +21,8 @@
     <string name="tab_text_1">Start</string>
     <string name="tab_text_2">Localizations</string>
     <string name="tab_text_3">Routes</string>
-    <string name="tab_text_4">Maps</string>
-    <string name="tab_text_5">User</string>
+    <string name="tab_text_4">Offline</string>
+    <string name="tab_text_5">Info</string>
     <string name="nickName_form">NickName: </string>
     <string name="email_form">Email: </string>
     <string name="number_user_routes_form">Routes created: </string>
@@ -59,7 +59,7 @@
     <string name="navigate_title">Maps</string>
     <string name="navigate_positive_button">Navigate to</string>
     <string name="navigate_negative_button_title">Cancel</string>
-    <string name="toast_region_deleted">Region eliminated</string>
+    <string name="toast_region_deleted">Region eliminated!</string>
     <string name="navigate_neutral_button_title">Delete</string>
     <string name="region_name">region_name</string>
     <string name="exceeded_download_limit">Exceeded download limit</string>
@@ -85,12 +85,12 @@
     <string name="no_exist_selected_route">There is no selected route!</string>
 
     <string name="question_delete_localization_point">Do you really want delete this localization point?</string>
-    <string name="localization_point_deleted">Localization point deleted!</string>
+    <string name="localization_point_deleted">Localization point deleted</string>
     <string name="error_owner_localization_point">You do not own this location point. You can"'t delete it!</string>
     <string name="confirm_insert">Confirm insertion</string>
     <string name="localization_point_created">Localization point created!</string>
-    <string name="question_create_localization_point">Do you really want create an route in this coordenates?</string>
-    <string name="cant_delete_localization_owner">You are not the owner, you cannot delete it.</string>
+    <string name="question_create_localization_point">Do you really want create a localization point in this coordenates?</string>
+    <string name="cant_delete_localization_owner">You are not the owner, you cannot delete it!</string>
 
     <string name="description">Description</string>
     <string name="localization_types">Localization Types</string>
@@ -110,7 +110,7 @@
 
     <string name="name_form">Name: </string>
     <string name="description_form">Description: </string>
-    <string name="edit_localization_point">Edit Locallization Point</string>
+    <string name="edit_localization_point">Edit Localization Point</string>
 
     <string name="save_datas">Save Datas</string>
     <string name="localization_point_saved">Localization Point Saved!</string>
@@ -219,4 +219,15 @@
     <string name="uploading_image">Uploading the image</string>
     <string name="wait_a_moment">Wait a moment please...</string>
     <string name="performing_online_consultation">Performing online consultation</string>
+
+    <string name="key_potable_water">Potable Water</string>
+    <string name="key_food">Food</string>
+    <string name="key_rest_area">Rest Area</string>
+    <string name="key_hunting">Hunting</string>
+    <string name="key_culture">Culture</string>
+    <string name="key_hotel">Lodging house/Hotel</string>
+    <string name="key_natural_site">Natural Site</string>
+    <string name="key_fishing">Fishing</string>
+    <string name="key_vivac">Vivac</string>
+    <string name="key_camping">Camping</string>
 </resources>

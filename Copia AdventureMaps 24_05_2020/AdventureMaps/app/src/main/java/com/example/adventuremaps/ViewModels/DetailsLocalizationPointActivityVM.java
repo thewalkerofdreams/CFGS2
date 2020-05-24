@@ -10,7 +10,8 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
 
     private String _actualEmailUser;
     private ClsLocalizationPoint _actualLocalizationPoint;
-    private ArrayList<String> _localizationTypes;
+    private ArrayList<String> _localizationKeyTypes;
+    private ArrayList<String> _localizationNameTypes;
     private ArrayList<String> _localizationsIdActualUser;
     private boolean _goodValorationDialogShowing;
     private boolean _badValorationDialogShowing;
@@ -18,7 +19,8 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
     public DetailsLocalizationPointActivityVM(){
         _actualEmailUser = "";
         _actualLocalizationPoint = null;
-        _localizationTypes = new ArrayList<>();
+        _localizationKeyTypes = new ArrayList<>();
+        _localizationNameTypes = new ArrayList<>();
         _localizationsIdActualUser = new ArrayList<>();
         _goodValorationDialogShowing = false;
         _badValorationDialogShowing = false;
@@ -41,12 +43,20 @@ public class DetailsLocalizationPointActivityVM extends ViewModel {
         this._actualLocalizationPoint = _actualLocalizationPoint;
     }
 
-    public ArrayList<String> get_localizationTypes() {
-        return _localizationTypes;
+    public ArrayList<String> get_localizationKeyTypes() {
+        return _localizationKeyTypes;
     }
 
-    public void set_localizationTypes(ArrayList<String> _localizationTypes) {
-        this._localizationTypes = _localizationTypes;
+    public void set_localizationKeyTypes(ArrayList<String> _localizationKeyTypes) {
+        this._localizationKeyTypes = _localizationKeyTypes;
+    }
+
+    public ArrayList<String> get_localizationNameTypes() {
+        return _localizationNameTypes;
+    }
+
+    public void set_localizationNameTypes(ArrayList<String> _localizationNameTypes) {
+        this._localizationNameTypes = _localizationNameTypes;
     }
 
     public ArrayList<String> get_localizationsIdActualUser() {
