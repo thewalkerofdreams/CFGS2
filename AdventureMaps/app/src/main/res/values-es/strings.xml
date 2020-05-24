@@ -155,17 +155,17 @@
     <string name="next_fragment">Siguiente</string>
     <string name="last_fragment">Anterior</string>
     <string name="startMap_description_simple_click">Puedes clicar donde quieras en el mapa para obtener las coordenadas de la posición.</string>
-    <string name="startMap_description_long_click">Puedes mantener pulsado en cualquier parte del mapa que no contenga un marcador para abrir un dialogo de creación de un nuevo punto de localización.</string>
+    <string name="startMap_description_long_click">Puedes mantener pulsado en cualquier parte del mapa que no contenga un marcador para abrir un diálogo de creación de un nuevo punto de localización.</string>
     <string name="startMap_description_click_marker">Si clicas en un marcador, se cargará una barra inferior que te permitira eliminar o ver los detalles de la localización.</string>
-    <string name="startMap_description_filter">Pinchando en el botón de filtros del mapa de inicio, podrás hacer que solo se muestren las localización que compartan uno o varios tipos específicos seleccionados.</string>
-    <string name="marker_general_description">El nombre y la descripción se mostrarán en la pantalla de detalles de la localización. Además de mostrar también los tipos de la localización y contará con un botón para acceder a la galería de imágenes de la localización.</string>
+    <string name="startMap_description_filter">Pinchando en el botón de filtros del mapa de inicio, podrás hacer que solo se muestren las localización que posean los tipos específicos seleccionados.</string>
+    <string name="marker_general_description">El nombre y la descripción se mostrarán en la pantalla de detalles de la localización. Además de mostrar también los tipos de la localización, contará con un botón para acceder a la galería de imágenes de la localización.</string>
     <string name="marker_description_validate_location">Puedes clicar en un botón de valoración para opinar si la localización es válida según tu criterio.</string>
     <string name="marker_image_gallery_multiple_selection">Dejando pulsado en una imagen activarás la selección múltiple. Solo puedes seleccionar las imágenes que insertaste o todas si la localización te pertenece. Tus imágenes destacarán con un fondo verde.</string>
     <string name="marker_image_gallery_delete_images">Para eliminar una o más imágenes, estas deben estar seleccionadas.</string>
     <string name="marker_image_gallery_upload_image">Presiona este icono para subir una imagen desde la galería del dispositivo.</string>
     <string name="marker_image_gallery_show_image">Pincha en una imagen sin tener activada la selección  múltiple para verla más de cerca. Ahora si vuelves a clicar en la imagen, una barra de estrellas aparecera en la parte inferior para que puedas valorarla.</string>
     <string name="localizations_description_simple_click">Puedes clicar en una de las localizaciones de la lista para entrar en sus detalles.</string>
-    <string name="localizations_description_multiple_selection">Si dejas pulsado un item de la lista se activará la selección múltiple. Solo puedes seleccionar las localizaciones que has creado.</string>
+    <string name="localizations_description_multiple_selection">Si dejas pulsado un ítem de la lista se activará la selección múltiple. Solo puedes seleccionar las localizaciones que has creado.</string>
     <string name="localizations_description_fav">Puedes guardar y dejar de guardar puntos de localización que no te pertenecen añadiendolos a favoritos.</string>
     <string name="localizations_description_multiple_delete">Puedes eliminar las localizaciones seleccionadas.</string>
     <string name="lists_description_order_by">Puedes ordenar la lista por propiedades y/o favoritos.</string>
@@ -198,12 +198,12 @@
     <string name="error_item_selected">¡Para cambiar el estado de favorito, no debe haber ningún ítem seleccionado en la lista!</string>
 
     <string name="different_markers_description">Las localizaciones que marques como favoritas aparecerán doradas en el mapa de inicio y las que no, apareceran con un icono de usuario si son tuyas o rojas si no lo son.</string>
-    <string name="different_offline_markers_description">Solo las localizaciones favoritas del usuario aparecerán en el mapa offline con un icono dorado, el resto serán localizaciones que el usuario haya creado, estas se mostrarán con una símbolo de usuario.</string>
+    <string name="different_offline_markers_description">Solo las localizaciones favoritas del usuario aparecerán en el mapa offline con un icono dorado, el resto serán localizaciones que el usuario haya creado, estas se mostrarán con un símbolo de usuario.</string>
     <string name="cluster_map_description">Automáticamente con el cambio de zoom en el mapa, las localizaciones se agruparán en regiones cuando se encuentren muy cerca y se separarán cuando se incremente el zoom en el mapa.</string>
     <string name="routes_description_simple_click">Puedes pinchar en una de las rutas de la lista para entrar en ella.</string>
     <string name="routes_description_fav">Puedes marcar rutas como favoritas.</string>
     <string name="offlineMap_description_click_marker">Si clicas en un marcador, los botones inferiores se reemplazarán por otros que te permitirán eliminar la localización si es tuya o entrar en sus detalles.</string>
-    <string name="offlineMap_description_simple_click">Puedes clicar en cualquier parte del mapa para obtener las coordenadas de la posición, además se reemplazarán los botones inferiores para interactuar con el mapa, es decir, descargar una región offline y/o entrar en la lista de regiones descargadas.</string>
+    <string name="offlineMap_description_simple_click">Puedes clicar en cualquier parte del mapa para obtener las coordenadas de la posición, además se reemplazarán los botones inferiores para interactuar con el mapa, es decir, para descargar una región offline y/o entrar en la lista de regiones descargadas.</string>
 
     <string name="compass_description">Si cambias la orientación del mapa mientras te mueves, una brújula aparecerá en la parte superior derecha de la pantalla. Si clicas en ella se reajustará la orientación del mapa.</string>
     <string name="center_location_button_description">Si pinchas en el botón con este icono, centrarás la cámara del mapa en tu posición actual.</string>
