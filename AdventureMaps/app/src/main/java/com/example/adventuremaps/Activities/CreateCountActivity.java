@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Management.UtilStrings;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.CreateCountActivityVM;
@@ -48,7 +49,7 @@ public class CreateCountActivity extends AppCompatActivity {
         textPassword01 = findViewById(R.id.EditTextPasswor01dActivityCreateCount);
         textPassword02 = findViewById(R.id.EditTextPasswor02dActivityCreateCount);
         progressDialog = new ProgressDialog(this);//Instanciamos la barra de carga
-        progressDialog.setMessage("Performing online registration");//Le damos un mensaje
+        progressDialog.setMessage(getString(R.string.performing_online_registration));//Le damos un mensaje
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape eliminamos el icono de la aplicación
             LinearLayout linearLayout = findViewById(R.id.ImageViewCreateCountActivity);
@@ -93,7 +94,7 @@ public class CreateCountActivity extends AppCompatActivity {
                                                 Toast.makeText(getApplication(), R.string.create_count_successful, Toast.LENGTH_SHORT).show();
                                                 //Almacenamos los datos del nuevo usuario
                                                 ClsUser nuevoUsuario = new ClsUser(firebaseCurrentUser.getUid(), viewModel.get_nickName(), viewModel.get_email());
-                                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
+                                                FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(nuevoUsuario);
                                                 finish();//Finalizamos la actividad
                                             }
                                         }else{

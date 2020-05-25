@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 
 public class FragmentStart extends Fragment {
@@ -59,8 +60,11 @@ public class FragmentStart extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
             Activity actualActivity = getActivity();
-            if(actualActivity != null)
-                actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if(actualActivity != null){//Si el dispositivo actual no es una tablet
+                if(getContext() != null && !UtilDispositive.isTablet(getContext())){//Si el dispositivo actual no es una tablet
+                    actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+            }
         }
     }
 }

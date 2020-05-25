@@ -219,6 +219,7 @@
     <string name="uploading_image">Subiendo la imagen</string>
     <string name="wait_a_moment">Espera un momento, por favor...</string>
     <string name="performing_online_consultation">Realizando consulta en línea</string>
+    <string name="performing_online_registration">Realizando registro en línea</string>
 
     <string name="key_potable_water">Potable Water</string>
     <string name="key_food">Food</string>

@@ -425,6 +425,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                 }
             }
         }
+
         return bestLocation;
     }
 

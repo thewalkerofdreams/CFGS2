@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -161,13 +162,6 @@ public class FragmentRoutes extends Fragment {
                 if(viewModel.is_dialogShortRouteListShowing())//Si el dialogo de ordenación estaba abierto
                     showOrderRoutesListDialog();
             }
-        }
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
-            LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutTabRoutes);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (float) 1.0);
-            param.weight = 40;
-            linearLayout.setLayoutParams(param);
         }
 
         return view;

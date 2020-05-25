@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainTabbetActivityVM;
 import com.google.firebase.database.DataSnapshot;
@@ -832,8 +833,11 @@ public class FragmentMaps extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
             Activity actualActivity = getActivity();
-            if(actualActivity != null)
-                actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if(actualActivity != null){//Si el dispositivo actual no es una tablet
+                if(getContext() != null && !UtilDispositive.isTablet(getContext())){//Si el dispositivo actual no es una tablet
+                    actualActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+            }
         }
     }
 

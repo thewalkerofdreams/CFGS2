@@ -199,17 +199,6 @@ public class FragmentLocalizations extends Fragment {
             }
         }
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla
-            LinearLayout linearLayout = view.findViewById(R.id.LinearLayoutTabLocalizations);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    0,
-                    (float) 1.0
-            );
-            param.weight = 40;
-            linearLayout.setLayoutParams(param);
-        }
-
         return view;
     }
 

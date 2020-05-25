@@ -131,7 +131,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                         viewModel.reloadActualLocalization();//Recargamos la localización actual del usuario
                         //Centramos la cámara
                         map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), ApplicationConstants.DEFAULT_LEVEL_ZOOM));
+                        if(viewModel.get_actualLocation() != null){//Si se pudo obtener la última localización del dispositivo
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude()), ApplicationConstants.DEFAULT_LEVEL_ZOOM));
+                        }else{
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE), ApplicationConstants.DEFAULT_LEVEL_ZOOM));
+                        }
                         adjustPaddingMap(map);//Volvemos a habilitar el padding para la brújula
                     }
 
