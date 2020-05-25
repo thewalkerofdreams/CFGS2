@@ -74,6 +74,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_potable_water"
                 android:text="@string/potable_water"></CheckBox>
 
             <CheckBox
@@ -81,6 +82,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_hotel"
                 android:text="@string/hotel"></CheckBox>
 
         </LinearLayout>
@@ -95,6 +97,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_food"
                 android:text="@string/food"></CheckBox>
 
             <CheckBox
@@ -102,6 +105,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_natural_site"
                 android:text="@string/natural_site"></CheckBox>
 
         </LinearLayout>
@@ -116,6 +120,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_rest_area"
                 android:text="@string/rest_area"></CheckBox>
 
             <CheckBox
@@ -123,6 +128,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_fishing"
                 android:text="@string/fishing"></CheckBox>
 
         </LinearLayout>
@@ -137,6 +143,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_hunting"
                 android:text="@string/hunting"></CheckBox>
 
             <CheckBox
@@ -144,6 +151,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_vivac"
                 android:text="@string/vivac"></CheckBox>
 
         </LinearLayout>
@@ -158,6 +166,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_culture"
                 android:text="@string/culture"></CheckBox>
 
             <CheckBox
@@ -165,6 +174,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
+                android:tag="@string/key_camping"
                 android:text="@string/camping"></CheckBox>
 
         </LinearLayout>

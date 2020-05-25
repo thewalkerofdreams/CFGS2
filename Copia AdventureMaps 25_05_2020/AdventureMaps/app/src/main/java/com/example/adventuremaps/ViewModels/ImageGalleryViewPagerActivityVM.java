@@ -20,7 +20,7 @@ public class ImageGalleryViewPagerActivityVM extends ViewModel {
         _actualUserEmail = "";
         _actualLocalizationPoint = null;
         _imagesToLoad = new ArrayList<>();
-        _positionSelectedImage = 0;
+        _positionSelectedImage = -1;
         _generalRatingOfActualImage = 0;
         _numberOfValorations = 0;
     }

@@ -41,7 +41,8 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(ImageGalleryViewPagerActivityVM.class);
         viewModel.set_actualUserEmail(getIntent().getStringExtra(ApplicationConstants.INTENT_ACTUAL_USER_EMAIL));
         viewModel.set_actualLocalizationPoint((ClsLocalizationPoint) getIntent().getSerializableExtra(ApplicationConstants.INTENT_ACTUAL_LOCALIZATION));
-        viewModel.set_positionSelectedImage(getIntent().getIntExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED,0));
+        if(viewModel.get_positionSelectedImage() == -1)//Si aún no se obtuvo la posición de la imagen a mostrar
+            viewModel.set_positionSelectedImage(getIntent().getIntExtra(ApplicationConstants.INTENT_POSITION_IMAGE_SELECTED,0));
 
         //Instanciamos los elementos de la UI
         ratingBarGeneral = findViewById(R.id.RatingBarGeneralImage);
