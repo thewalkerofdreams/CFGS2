@@ -266,6 +266,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private void tryChangeMarkerToDefaultImage(){
         if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
             restoreIconMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
+            viewModel.set_localizationPointClicked(null);
         }
     }
 

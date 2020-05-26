@@ -25,8 +25,8 @@
     <string name="tab_text_5">Info</string>
     <string name="nickName_form">NickName: </string>
     <string name="email_form">Email: </string>
-    <string name="number_user_routes_form">Routes created: </string>
-    <string name="number_user_localizations_form">Localizations created: </string>
+    <string name="number_user_routes_form">Own Routes: </string>
+    <string name="number_user_localizations_form">Own Localizations: </string>
     <string name="change_password">Change password</string>
     <string name="tutorial">Tutorial</string>
     <string name="logout">Logout</string>
