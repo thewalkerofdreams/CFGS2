@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 
@@ -41,8 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import timber.log.Timber;
 
 public class MainTabbetActivityVM extends AndroidViewModel {
 
@@ -571,6 +571,7 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private void eliminarPuntoDeLocalizacionSeleccionado(final Context context, final int callSection){
         final DatabaseReference drLocalization = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
         final DatabaseReference drUser = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_USERS_ADDRESS);
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
         if(get_selectedLocalizationPoint() != null){
             drUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -583,16 +584,39 @@ public class MainTabbetActivityVM extends AndroidViewModel {
                         //Eliminamos el id del punto de localización asignado a la lista de favoritos de los usuarios que lo tengan asignado como favorito
                         drUser.child(user.getUserId()).child(ApplicationConstants.FB_LOCALIZATIONS_ID).child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue();
                     }
-                    //Eliminamos el punto de localización
-                    drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    //Eliminamos la galería de imágenes del store de Firebase. El storage nos obliga a eliminar los archivos uno por uno.
+                    drLocalization.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(get_selectedLocalizationPoint().getLocalizationPointId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            //Actualizamos la interfaz del mapa actual
-                            if(callSection == 1){//Si es en el mapa de inicio
-                                ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
-                            }else{//Si es en el mapa offline
-                                ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                                for (DataSnapshot userEmailImages : datas.child(ApplicationConstants.FB_EMAIL_IMAGES).getChildren()) {
+                                    String emailImage = userEmailImages.getKey();
+                                    for(DataSnapshot images: userEmailImages.child(ApplicationConstants.FB_LOCALIZATION_IMAGES).getChildren()){
+                                        String imageId = images.getKey();
+                                        //Eliminamos una imagen de la galería
+                                        StorageReference aux = storageReference.child(ApplicationConstants.FB_STORAGE_IMAGES).child(get_selectedLocalizationPoint().getLocalizationPointId()).child(emailImage.replace(" ", ".")).child(imageId);
+                                        aux.delete();
+                                    }
+                                }
                             }
+
+                            //Eliminamos el punto de localización
+                            drLocalization.child(get_selectedLocalizationPoint().getLocalizationPointId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    //Actualizamos la interfaz del mapa actual
+                                    if(callSection == 1){//Si es en el mapa de inicio
+                                        ((MainTabbetActivity) context).findViewById(R.id.FrameLayout02).setVisibility(View.GONE);//Volvemos invisible el fragmento FragmentStartLocalizationPointClick
+                                    }else{//Si es en el mapa offline
+                                        ((MainTabbetActivity) context).reloadOfflineFragment();//Recargamos el fragmento offline
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
                 }
