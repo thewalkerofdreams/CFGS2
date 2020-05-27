@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.adventuremaps.Activities.AutoRestartApp.MyExceptionHandler;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage(getString(R.string.performing_online_consultation));
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){//Si ya existe una sesión iniciada
+        if(user != null && !viewModel.get_email().equals("")){//Si ya existe una sesión iniciada
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
             finish();
         }
@@ -93,27 +94,31 @@ public class MainActivity extends AppCompatActivity {
 
         if(!viewModel.get_email().isEmpty()){
             if(!viewModel.get_password().isEmpty()){
-                progressDialog.show();
-                firebaseAuth.signInWithEmailAndPassword(viewModel.get_email(), viewModel.get_password())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                //Verificamos que se pudo registrar el usuario
-                                if(task.isSuccessful()){
-                                    Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
-                                    finish();//Finalizamos la actividad actual
-                                }else{
-                                    Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
+                if(UtilDispositive.isOnline(this)){
+                    progressDialog.show();
+                    firebaseAuth.signInWithEmailAndPassword(viewModel.get_email(), viewModel.get_password())
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    //Verificamos que se pudo registrar el usuario
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
+                                        finish();//Finalizamos la actividad actual
+                                    }else{
+                                        Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                    progressDialog.dismiss();
                                 }
-                                progressDialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
+                            }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();//Indicamos el fallo
                         }
-                });
+                    });
+                }else{
+                    Toast.makeText(this, R.string.error_login_without_connection, Toast.LENGTH_SHORT).show();
+                }
             }else{
                 Toast.makeText(this, R.string.password_empty, Toast.LENGTH_SHORT).show();
             }

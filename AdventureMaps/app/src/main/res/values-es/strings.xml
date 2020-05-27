@@ -210,6 +210,7 @@
 
     <string name="email_format_error">¡Formato incorrecto para el correo electrónico!</string>
     <string name="error_upload_image_without_connection">¡No puedes subir una imagen sin conexión!</string>
+    <string name="error_login_without_connection">¡No puedes loguearte sin conexión!</string>
 
     <string name="delete">Eliminar</string>
     <string name="details">Detalles</string>
