@@ -68,6 +68,10 @@ public class ApplicationConstants {
     public final static String DATA_LOCALIZATIONS_ID_ACTUAL_USER = "LocationsIdActualUser";
 
     //SharedPreferences
+    public final static String SP_USER_LOGGED = "UserLogged";
+    public final static String USER_LOGGED = "Logged";
+    public final static String USER_NO_LOGGED = "NoLogged";
+
     public final static String SP_ACTUAL_USER_EMAIL = "UserActualEmail";
 
     public final static String SP_ORDER_LOCALIZATION_LIST_BY_FIELD = "OrderLocalizationListField";

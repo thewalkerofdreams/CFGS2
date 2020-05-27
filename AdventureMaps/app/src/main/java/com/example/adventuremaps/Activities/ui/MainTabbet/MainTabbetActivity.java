@@ -206,6 +206,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
+                //Instanciamos el objeto SharedPreference
+                SharedPreferences sharedpreferences = getSharedPreferences(ApplicationConstants.SP_USER_LOGGED, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();//Indicamos que se ha logueado un usuario
+                editor.putString(ApplicationConstants.SP_ACTUAL_USER_EMAIL, ApplicationConstants.USER_NO_LOGGED);
+                editor.apply();
+
                 FirebaseAuth.getInstance().signOut();//Le indicamos a la plataforma el logout del usuario
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));//Lanzamos la actividad MainActivity
                 finish();//Cerramos la actividad actual
