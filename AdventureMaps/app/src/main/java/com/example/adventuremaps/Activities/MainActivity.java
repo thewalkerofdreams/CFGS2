@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage(getString(R.string.performing_online_consultation));
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null && !viewModel.get_email().equals("")){//Si ya existe una sesión iniciada
+        if(user != null){//Si ya existe una sesión iniciada
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
             finish();
         }
