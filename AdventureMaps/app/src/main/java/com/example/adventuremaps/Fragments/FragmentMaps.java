@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +100,8 @@ public class FragmentMaps extends Fragment {
     private MapboxMap.OnMapClickListener listenerOnMapClick = null;
     private MapboxMap.OnMapLongClickListener listenerOnMapLongClick = null;
     private OnSymbolClickListener listenerMarkerClick = null;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     private OnFragmentInteractionListener mListener;
 
@@ -122,12 +125,23 @@ public class FragmentMaps extends Fragment {
         //Inflamos el layout para este fragmento
         final View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        //Comprobamos que tiene los permisos, si no los tiene enviamos un dialogo
-        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS);
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    //Comprobamos que tiene los permisos, si no los tiene enviamos un dialogo
+                    if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_MAP);
+                    }
+                }
+            };
+            mainHandler.post(myRunnable);
         }
+
         //Si se han aceptado los permisos continuamos
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -871,9 +885,13 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        storeActualPositionAndZoom();//Almacenamos la última posición de la cámara sobre el mapa
-        HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
+        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            storeActualPositionAndZoom();//Almacenamos la última posición de la cámara sobre el mapa
+        }
+        HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actividad se pause
         clearAmbientCache();//Limpiamos la caché del mapa
+        mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
 
         if(mapView != null)
             mapView.onPause();
