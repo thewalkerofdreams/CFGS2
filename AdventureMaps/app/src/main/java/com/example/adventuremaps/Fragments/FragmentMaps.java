@@ -198,7 +198,6 @@ public class FragmentMaps extends Fragment {
             listenerOnMapLongClick = new MapboxMap.OnMapLongClickListener() {
                 @Override
                 public boolean onMapLongClick(@NonNull LatLng point) {
-                    storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
                     viewModel.set_symbolClicked(null);//Indicamos que ya no hay ningún simbolo(marcador) seleccionado
                     viewModel.set_longClickPositionMapbox(point);//Almacenamos la posición seleccionada en el mapa en el VM
                     viewModel.insertLocalizationDialog(getActivity(), 2);//Comenzamos un dialogo de inserción
@@ -210,7 +209,7 @@ public class FragmentMaps extends Fragment {
                 @Override
                 public void onAnnotationClick(Symbol symbol) {
                     tryChangeMarkerToDefaultImage();//Si ya se había clicado sobre otro marcador, se modifica el icono de este
-                    storeActualPositionAndZoom();//Almacenamos el zoom y la posición actual sobre el mapa
+                    storeActualPositionAndZoom();//Almacenamos en el VM la localización de la cámara y el zoom actual
 
                     viewModel.set_symbolClicked(symbol);//Almacenamos el simbolo clicado en el VM
                     symbol.setIconImage(ApplicationConstants.MARKER_SELECTED_ICON_OFFLINE_MAPS);//Cambiamos su icono
@@ -361,10 +360,6 @@ public class FragmentMaps extends Fragment {
                 .tilt(20)
                 .build();
         map.setCameraPosition(position);
-
-        //Inicializamos por defecto el nivel de zoom y posición actual
-        viewModel.set_actualCameraZoom(0);
-        viewModel.set_actualCameraPosition(null);
     }
 
     /**
@@ -876,6 +871,7 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        storeActualPositionAndZoom();//Almacenamos la última posición de la cámara sobre el mapa
         HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actuvidad se pause
         clearAmbientCache();//Limpiamos la caché del mapa
 
