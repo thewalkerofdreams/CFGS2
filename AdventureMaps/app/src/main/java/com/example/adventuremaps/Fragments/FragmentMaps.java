@@ -311,7 +311,7 @@ public class FragmentMaps extends Fragment {
                             viewModel.get_markersInserted().add(symbol);
                         }
 
-                        if(viewModel.get_actualCameraPosition() != null){//Si ya se había guardado una posición sobre el mapa
+                        if(viewModel.get_actualCameraPositionOfflineMap() != null){//Si ya se había guardado una posición sobre el mapa
                             moveMapCameraToLastPosition();
                         }else{
                             moveMapCameraToActualUserLocation();//Centramos la cámara en la posición actual del usuario
@@ -330,8 +330,8 @@ public class FragmentMaps extends Fragment {
      * Postcondiciones: Se almacena la actual posición y zoom de la cámara sobre el mapa.
      */
     private void storeActualPositionAndZoom(){
-        viewModel.set_actualCameraZoom(map.getCameraPosition().zoom);
-        viewModel.set_actualCameraPosition(map.getCameraPosition().target);
+        viewModel.set_actualCameraZoomOfflineMap(map.getCameraPosition().zoom);
+        viewModel.set_actualCameraPositionOfflineMap(map.getCameraPosition().target);
     }
 
     /**
@@ -369,8 +369,8 @@ public class FragmentMaps extends Fragment {
      */
     private void moveMapCameraToLastPosition(){
         CameraPosition position = new CameraPosition.Builder()//Movemos la camara hacie la última posición almacenada
-                .target(viewModel.get_actualCameraPosition())
-                .zoom(viewModel.get_actualCameraZoom())
+                .target(viewModel.get_actualCameraPositionOfflineMap())
+                .zoom(viewModel.get_actualCameraZoomOfflineMap())
                 .tilt(20)
                 .build();
         map.setCameraPosition(position);
