@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ImageGalleryViewPagerActivity extends AppCompatActivity {
 
@@ -31,7 +33,7 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     private RatingBar ratingBar, ratingBarGeneral;
     private ImageGalleryViewPagerActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
-    private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
+    private boolean checkedImageToDelete = true;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,8 +222,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
                             ratingBarGeneral.setRating(viewModel.get_generalRatingOfActualImage());//Insertamos la valoración en el ratingBarGeneral
 
                             loadValoration();//Cargamos la valoración dada por el usuario actual, si tiene una
-                            if(!checkedImageToDelete)//Si aún no se ha comprobado si se debe eliminar la imagen
+                            if(!checkedImageToDelete){//Si aún no se ha comprobado si se debe eliminar la imagen
                                 tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
+                            }
                         }
 
                         @Override
@@ -243,14 +246,18 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void tryToDeleteImageFromFireBase(){
         if(viewModel.get_numberOfValorations() > 2 && (double) viewModel.get_generalRatingOfActualImage() < 2){//Si se cumple las restricciones de eliminación
-            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+            //Eliminamos el enlace de la imagen almacenada en la localización
+            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator()).
                     child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).removeValue();
 
+            //Eliminamos los datos de la imagen del store de Firebase
+            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll(" ", ".")).
+                    child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId());
+            riversRef.delete();
+
             if(!viewModel.get_imagesToLoad().isEmpty()){//Si la lista de imagenes no se encuentra vacía
-                //Modificamos la posición de la imagen seleccionada
-                viewModel.set_positionSelectedImage(viewModel.get_positionSelectedImage() > 0 ? (viewModel.get_positionSelectedImage() - 1): 0);
-                loadViewPager();//Recargamos el ViewPager
-                checkedImageToDelete = true;
+                checkedImageToDelete = true;//Indicamos que se ha eliminado la imagen
             }else{
                 finish();//Finalizamos la actividad actual
             }
