@@ -206,6 +206,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
+                //Instanciamos el objeto SharedPreference
+                SharedPreferences sharedpreferences = getSharedPreferences(ApplicationConstants.SP_USER_LOGGED, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();//Indicamos que se ha logueado un usuario
+                editor.putString(ApplicationConstants.SP_ACTUAL_USER_EMAIL, ApplicationConstants.USER_NO_LOGGED);
+                editor.apply();
+
                 FirebaseAuth.getInstance().signOut();//Le indicamos a la plataforma el logout del usuario
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));//Lanzamos la actividad MainActivity
                 finish();//Cerramos la actividad actual
@@ -263,20 +269,12 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     @Override//Controlamos la respuesta a los permisos
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch (requestCode){
-            case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos de localización
-                    viewModel.reloadActualLocalization();//Recargamos la localización del usuario
-                    reloadInitialFragment();//Recargamos el fragment inicial
-                }
-                break;
-            case ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//Si se concedieron los permisos para la descarga de mapas offline
-                    viewModel.reloadActualLocalization();//Recargamos la localización del usuario
-                    viewPager.setCurrentItem(0);//Nos movemos a la primera sección
-                    Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos
-                }
-                break;
+        if (requestCode == ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_MAP &&
+                grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){//Si se concedieron los permisos de localización
+            viewModel.reloadActualLocalization();//Recargamos la localización del usuario
+            viewPager.setCurrentItem(0);
+            reloadInitialFragment();//Recargamos el fragment inicial
+            Toast.makeText(this, R.string.permission_acepted, Toast.LENGTH_SHORT).show();//Indicamos que se aceptaron los permisos
         }
     }
 

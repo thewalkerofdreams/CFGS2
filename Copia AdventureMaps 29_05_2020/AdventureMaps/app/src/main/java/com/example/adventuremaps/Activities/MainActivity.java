@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.adventuremaps.Activities.AutoRestartApp.MyExceptionHandler;
 import com.example.adventuremaps.Activities.ui.MainTabbet.MainTabbetActivity;
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.MainActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
     private MainActivityVM viewModel;
+    private SharedPreferences sharedpreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         //Instanciamos el VM
         viewModel = ViewModelProviders.of(this).get(MainActivityVM.class);
 
+        //Instanciamos el objeto SharedPreference
+        sharedpreferences = this.getSharedPreferences(ApplicationConstants.SP_USER_LOGGED, MODE_PRIVATE);
+
         //Inicializamos el objeto FireBaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -55,8 +62,11 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.performing_online_consultation));
 
+        //Obtenemos una clave que nos indicará si ya hay un usuario logueado en la aplicación
+        String userLogged = sharedpreferences.getString(ApplicationConstants.SP_USER_LOGGED, "");
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){//Si ya existe una sesión iniciada
+        if(user != null && userLogged.equals(ApplicationConstants.USER_LOGGED)){//Si ya existe una sesión iniciada
             startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
             finish();
         }
@@ -93,27 +103,35 @@ public class MainActivity extends AppCompatActivity {
 
         if(!viewModel.get_email().isEmpty()){
             if(!viewModel.get_password().isEmpty()){
-                progressDialog.show();
-                firebaseAuth.signInWithEmailAndPassword(viewModel.get_email(), viewModel.get_password())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                //Verificamos que se pudo registrar el usuario
-                                if(task.isSuccessful()){
-                                    Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
-                                    finish();//Finalizamos la actividad actual
-                                }else{
-                                    Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
+                if(UtilDispositive.isOnline(this)){
+                    progressDialog.show();
+                    firebaseAuth.signInWithEmailAndPassword(viewModel.get_email(), viewModel.get_password())
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    //Verificamos que se pudo registrar el usuario
+                                    if(task.isSuccessful()){
+                                        SharedPreferences.Editor editor = sharedpreferences.edit();//Indicamos que se ha logueado un usuario
+                                        editor.putString(ApplicationConstants.SP_USER_LOGGED, ApplicationConstants.USER_LOGGED);
+                                        editor.apply();
+
+                                        Toast.makeText(getApplication(), R.string.login_successful, Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getApplication(), MainTabbetActivity.class).putExtra(ApplicationConstants.INTENT_LOGIN_EMAIL, viewModel.get_email()));
+                                        finish();//Finalizamos la actividad actual
+                                    }else{
+                                        Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                    progressDialog.dismiss();
                                 }
-                                progressDialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
+                            }).addOnFailureListener(new OnFailureListener() {//Si ocurrió algún error en la conexión con el servidor
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getApplication(), R.string.login_error, Toast.LENGTH_SHORT).show();//Indicamos el fallo
                         }
-                });
+                    });
+                }else{
+                    Toast.makeText(this, R.string.error_login_without_connection, Toast.LENGTH_SHORT).show();
+                }
             }else{
                 Toast.makeText(this, R.string.password_empty, Toast.LENGTH_SHORT).show();
             }

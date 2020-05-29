@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.Models.ClsImageWithId;
 import com.example.adventuremaps.Adapters.ImageAdapter;
 import com.example.adventuremaps.FireBaseEntities.ClsLocalizationPoint;
@@ -209,7 +210,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ApplicationConstants.REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY) {
             if (resultCode == RESULT_OK && data != null) {//Si el usuario seleccionó una imagen de la galería y se obtuvieron datos de respuesta
-                if(isOnline(this)){//Si el dispositivo tiene conexión a Internet
+                if(UtilDispositive.isOnline(this)){//Si el dispositivo tiene conexión a Internet
                     final Uri imageUri = data.getData();
                     insertImageToFireBase(imageUri);//Almacenamos la imagen en FireBase
                     loadGallery();//Volvemos a cargar la galería
@@ -445,23 +446,5 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private void hideProgressDialogWithTitle() {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.dismiss();
-    }
-
-    /**
-     * Interfaz
-     * Nombre: isOnline
-     * Comentario: Este método nos permite verificar si el dispositivo actual tiene conexión a Internet.
-     * Cabecera: public boolean isOnline(Context context)
-     * Entrada:
-     *  -Context context
-     * Salida:
-     *  -boolean connection
-     * Postcondiciones: El método devuelve un valor booleano asociado al nombre, true si el dispositivo
-     * actual tiene conexión a Internet o false en caso contrario.
-     */
-    public boolean isOnline(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 }

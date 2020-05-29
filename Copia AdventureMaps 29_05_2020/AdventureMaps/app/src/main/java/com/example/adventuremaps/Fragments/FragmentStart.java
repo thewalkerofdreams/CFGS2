@@ -1,19 +1,15 @@
 package com.example.adventuremaps.Fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 
@@ -29,16 +25,7 @@ public class FragmentStart extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_start, container, false);
-
-        //Si la aplicación no tiene los permisos necesarios, muestra por pantalla un dialogo para obtenerlos
-        if(getActivity() != null && (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_start, container, false);
     }
 
     /**
@@ -67,4 +54,5 @@ public class FragmentStart extends Fragment {
             }
         }
     }
+
 }

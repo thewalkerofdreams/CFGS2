@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private MyClusterRenderer myClusterRenderer;//Nos permite modificar características especiales de los items del cluster
     //For GPS
     private LocationManager manager = null;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -266,6 +269,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private void tryChangeMarkerToDefaultImage(){
         if(viewModel.get_localizationPointClicked() != null) {//Si existe un marcador seleccionado
             restoreIconMarker(viewModel.get_localizationPointClicked());//Restauramos el icono del marcador seleccionado
+            viewModel.set_localizationPointClicked(null);
         }
     }
 
@@ -438,7 +442,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
                 }
-                loadLocalizationPoints();
+                loadLocalizationPoints();//Cargamos los puntos de localización sobre el mapa
+                tryRequestLocationPermissions();//Si la aplicación no tiene los permisos de localización los pide
             }
 
             @Override
@@ -450,7 +455,37 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onPause() {
         super.onPause();
+        mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
         localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryRequestLocationPermissions
+     * Comentario: Si la aplicación no tiene concedidos los permisos de localización, el método pide
+     * estos permisos al usuario a través de un diálogo por pantalla. Si el usuario acepta, la
+     * aplicación obtiene los permisos de localización.
+     * Cabecera: private void tryRequestLocationPermissions()
+     * Postcondiciones: Si la aplicación no tiene concedidos los permisos de localización, el método
+     * se los pide al usuario, si este los acepta la aplicación los obtiene.
+     */
+    private void tryRequestLocationPermissions(){
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    //Si la aplicación no tiene los permisos necesarios, muestra por pantalla un dialogo para obtenerlos
+                    if(getActivity() != null && (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_MAP);
+                    }
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
     }
 
     /**

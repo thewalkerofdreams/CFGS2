@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,7 +54,7 @@ public class FragmentLocalizations extends Fragment {
     private FirebaseUser firebaseCurrentUser;
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
-    private ValueEventListener listener;
+    private ValueEventListener listener, localizationsListener;
 
     public FragmentLocalizations() {
         // Required empty public constructor
@@ -274,7 +272,11 @@ public class FragmentLocalizations extends Fragment {
      * Postcondiciones: El método carga las localizaciones del usuario actual.
      */
     private void loadLocalizationsUserFromPlataform(){
-        drLocalization.addListenerForSingleValueEvent(new ValueEventListener() {
+        if(localizationsListener != null){
+            drLocalization.removeEventListener(localizationsListener);
+        }
+
+        localizationsListener = drLocalization.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.set_localizationsActualUser(new ArrayList<ClsLocalizationPoint>());//Limpiamos la lista de puntos de localización
@@ -298,6 +300,7 @@ public class FragmentLocalizations extends Fragment {
     public void onPause() {
         super.onPause();
         drUser.removeEventListener(listener);
+        drLocalization.removeEventListener(localizationsListener);
     }
 
     /**

@@ -2,8 +2,7 @@ package com.example.adventuremaps.Management;
 
 public class ApplicationConstants {
     //Permissions
-    public final static int REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_OFFLINE_MAPS = 1;
-    public final static int REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_START_MAP = 2;
+    public final static int REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_MAP = 2;
     public final static int REQUEST_CODE_PERMISSIONS_READ_EXTERNAL_STORAGE = 3;
     public final static int REQUEST_CODE_START_ACTIVITY_FOR_RESULT_IMAGE_GALLERY = 4;
     public final static int REQUEST_CODE_UPLOAD_IMAGE_FROM_OWN_GALLERY = 5;
@@ -68,6 +67,10 @@ public class ApplicationConstants {
     public final static String DATA_LOCALIZATIONS_ID_ACTUAL_USER = "LocationsIdActualUser";
 
     //SharedPreferences
+    public final static String SP_USER_LOGGED = "UserLogged";
+    public final static String USER_LOGGED = "Logged";
+    public final static String USER_NO_LOGGED = "NoLogged";
+
     public final static String SP_ACTUAL_USER_EMAIL = "UserActualEmail";
 
     public final static String SP_ORDER_LOCALIZATION_LIST_BY_FIELD = "OrderLocalizationListField";
