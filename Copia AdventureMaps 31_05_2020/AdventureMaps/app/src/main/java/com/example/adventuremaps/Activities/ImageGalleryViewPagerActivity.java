@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ImageGalleryViewPagerActivity extends AppCompatActivity {
 
@@ -31,7 +33,10 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
     private RatingBar ratingBar, ratingBarGeneral;
     private ImageGalleryViewPagerActivityVM viewModel;
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
-    private boolean checkedImageToDelete = false;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
+    private DatabaseReference ratingImageReference;//Lo necesitamos para poder reciclar los eventos de escucha
+    private boolean checkedImageToDelete = true;//Centinela que nos permitirá realizar correctamente las eliminaciones de las imagenes con baja valoración
+    private ValueEventListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,10 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {//Cuando se pase de una imagen a otra
                 viewModel.set_positionSelectedImage(position);//Guardamos la posición de la imagen seleccionada en el VM
+
+                if(ratingImageReference != null && listener != null)//Si ya existía la referencia y el evento de escucha
+                    ratingImageReference.removeEventListener(listener);//Eliminamos el evento de la referecencia
+
                 setGeneralRatingOfActualImage();//Obtenemos el nuevo valor del ratingBarGeneral
             }
 
@@ -67,6 +76,33 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        //Instanciamos el evento listener para obtener los datos de valoración de la imagen mostrada actualmente
+        listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int auxCounter = 0;
+                float totalValoration = 0;
+                for(DataSnapshot emails: dataSnapshot.getChildren()){//Obtenemos la valoración de todos los usuarios
+                    totalValoration += (float)(double)emails.child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).getValue(Double.class);
+                    auxCounter++;
+                }
+
+                float generalRating = auxCounter == 0 ? 0: (totalValoration / auxCounter);
+                viewModel.set_generalRatingOfActualImage(generalRating);//Almacenamos la valoración general en el VM
+                viewModel.set_numberOfValorations(auxCounter);//Obtenemos el número de valoraciones, útil para la eliminación de una imagen
+                ratingBarGeneral.setRating(viewModel.get_generalRatingOfActualImage());//Insertamos la valoración en el ratingBarGeneral
+
+                loadValoration();//Cargamos la valoración dada por el usuario actual, si tiene una
+                if(!checkedImageToDelete){//Si aún no se ha comprobado si se debe eliminar la imagen
+                    tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){//Ajustamos la pantalla, en landscape ajustamos el layout del rating bar
             LinearLayout linearLayout = findViewById(R.id.LinearLayoutRatingBar);
@@ -119,7 +155,6 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void loadValoration(){
         reloadRatingBar(0);//Recargamos el ratingBar inferior
-
         localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
                 child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).
                 child(viewModel.get_actualUserEmail().replaceAll("[.]", " ")).child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -202,32 +237,9 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void setGeneralRatingOfActualImage(){
         if(viewModel.get_positionSelectedImage() < viewModel.get_imagesToLoad().size()){//Si la posición seleccionada es menor que el tamaño de las imagenes de la gelería
-            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
-                    child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD).
-                    addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            int auxCounter = 0;
-                            float totalValoration = 0;
-                            for(DataSnapshot emails: dataSnapshot.getChildren()){//Obtenemos la valoración de todos los usuarios
-                                totalValoration += (float)(double)emails.child(ApplicationConstants.FB_LOCALIZATION_VALORATION_CHILD).getValue(Double.class);
-                                auxCounter++;
-                            }
-
-                            float generalRating = auxCounter == 0 ? 0: (totalValoration / auxCounter);
-                            viewModel.set_generalRatingOfActualImage(generalRating);//Almacenamos la valoración general en el VM
-                            viewModel.set_numberOfValorations(auxCounter);//Obtenemos el número de valoraciones, útil para la eliminación de una imagen
-                            ratingBarGeneral.setRating(viewModel.get_generalRatingOfActualImage());//Insertamos la valoración en el ratingBarGeneral
-
-                            loadValoration();//Cargamos la valoración dada por el usuario actual, si tiene una
-                            if(!checkedImageToDelete)//Si aún no se ha comprobado si se debe eliminar la imagen
-                                tryToDeleteImageFromFireBase();//Comprobamos si se debe eliminar la imagen
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
+            ratingImageReference = localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+                    child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).child(ApplicationConstants.FB_LOCALIZATION_VALORATIONS_CHILD);
+            ratingImageReference.addValueEventListener(listener);
         }
     }
 
@@ -243,14 +255,18 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      */
     public void tryToDeleteImageFromFireBase(){
         if(viewModel.get_numberOfValorations() > 2 && (double) viewModel.get_generalRatingOfActualImage() < 2){//Si se cumple las restricciones de eliminación
-            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll("[.]", " ")).
+            //Eliminamos el enlace de la imagen almacenada en la localización
+            localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator()).
                     child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).removeValue();
 
+            //Eliminamos los datos de la imagen del store de Firebase
+            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference riversRef = mStorageRef.child(ApplicationConstants.FB_STORAGE_IMAGES).child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator().replaceAll(" ", ".")).
+                    child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId());
+            riversRef.delete();
+
             if(!viewModel.get_imagesToLoad().isEmpty()){//Si la lista de imagenes no se encuentra vacía
-                //Modificamos la posición de la imagen seleccionada
-                viewModel.set_positionSelectedImage(viewModel.get_positionSelectedImage() > 0 ? (viewModel.get_positionSelectedImage() - 1): 0);
-                loadViewPager();//Recargamos el ViewPager
-                checkedImageToDelete = true;
+                checkedImageToDelete = true;//Indicamos que se ha eliminado la imagen
             }else{
                 finish();//Finalizamos la actividad actual
             }
@@ -286,5 +302,11 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ratingImageReference.removeEventListener(listener);//Eliminamos el evento de la referecencia
     }
 }

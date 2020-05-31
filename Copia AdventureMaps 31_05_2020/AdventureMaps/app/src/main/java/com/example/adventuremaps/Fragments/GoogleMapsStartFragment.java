@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     private MyClusterRenderer myClusterRenderer;//Nos permite modificar características especiales de los items del cluster
     //For GPS
     private LocationManager manager = null;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,19 +110,26 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onMapReady(final GoogleMap map) {
         this.map = map;
         LatLng latLng;
+        double zoom = ApplicationConstants.DEFAULT_LEVEL_ZOOM;
 
         if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
-            if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si no podemos obtener la localización actual del usuario
-                latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
+            if(viewModel.get_lastCameraPositionStartMap() != null){//Si se almacenó una última posición en el mapa
+                latLng = new LatLng(viewModel.get_lastCameraPositionStartMap().latitude, viewModel.get_lastCameraPositionStartMap().longitude);
+                zoom = viewModel.get_lastCameraZoomStartMap();
+                viewModel.set_lastCameraPositionStartMap(null);//Eliminamos la última posición del VM
             }else{
-                latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+                if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si no podemos obtener la localización actual del usuario
+                    latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
+                }else{
+                    latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+                }
             }
         }else{
             latLng = viewModel.get_latLngToNavigate();
             viewModel.set_latLngToNavigate(null);//Indicamos que ya se ha desplazado hacia el punto de navegación
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ApplicationConstants.DEFAULT_LEVEL_ZOOM));//Movemos la camara según los valores definidos
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) zoom));//Movemos la camara según los valores definidos
         //Si la aplicación tiene los permisos necesarios de localización, añadimos el botón de centrar la cámara en la posición actual del usuario y señalamos a la persona en el mapa con un icono
         if(getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -439,7 +449,8 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
                         viewModel.get_localizationsIdActualUser().add(localizationId);
                     }
                 }
-                loadLocalizationPoints();
+                loadLocalizationPoints();//Cargamos los puntos de localización sobre el mapa
+                tryRequestLocationPermissions();//Si la aplicación no tiene los permisos de localización los pide
             }
 
             @Override
@@ -451,7 +462,42 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onPause() {
         super.onPause();
+        mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
         localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+
+        map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
+        viewModel.set_lastCameraPositionStartMap(map.getCameraPosition().target);//Almacenamos la posición actual de la cámara en el VM
+
+        viewModel.set_lastCameraZoomStartMap(map.getCameraPosition().zoom);//Almacenamos el zoom actual de la cámara en el VM
+    }
+
+    /**
+     * Interfaz
+     * Nombre: tryRequestLocationPermissions
+     * Comentario: Si la aplicación no tiene concedidos los permisos de localización, el método pide
+     * estos permisos al usuario a través de un diálogo por pantalla. Si el usuario acepta, la
+     * aplicación obtiene los permisos de localización.
+     * Cabecera: private void tryRequestLocationPermissions()
+     * Postcondiciones: Si la aplicación no tiene concedidos los permisos de localización, el método
+     * se los pide al usuario, si este los acepta la aplicación los obtiene.
+     */
+    private void tryRequestLocationPermissions(){
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    //Si la aplicación no tiene los permisos necesarios, muestra por pantalla un dialogo para obtenerlos
+                    if(getActivity() != null && (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ApplicationConstants.REQUEST_CODE_PERMISSIONS_MAIN_TABBET_ACTIVITY_WITH_MAP);
+                    }
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
     }
 
     /**
