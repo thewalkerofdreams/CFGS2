@@ -169,7 +169,7 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
      * Nombre: isIntentResolved
      * Comentario: Este método nos permite verificar si un intent contiene un componente (en nuestro caso una versión miui)
      * que se encuentra en los paquetes instalados del dispositivo actual.
-     * Cabecera: private static boolean isIntentResolved(Context ctx, Intent intent)
+     * Cabecera: private static boolean isIntentResolved(Context context, Intent intent)
      * Entrada:
      *  -Context context
      *  -Intent intent
@@ -261,12 +261,12 @@ public class CreateLocalizationPointActivity extends AppCompatActivity {
     /**
      * Interfaz
      * Nombre: insertImagesToFireBase
-     * Comentario: Este método nos permite insertar las imagenes asigandas al nuevo punto de localización
+     * Comentario: Este método nos permite insertar las imágenes asigandas al nuevo punto de localización
      * en la plataforma Firebase.
      * Cabecera: public void insertImagesToFireBase(final String localizationPointId)
      * Entrada:
      *  -String localizationPointId
-     * Postcondiciones: El método inserta las imagenes asignadas al nuevo punto de localización en la
+     * Postcondiciones: El método inserta las imágenes asignadas al nuevo punto de localización en la
      * plataforma Firebase.
      */
     public void insertImagesToFireBase(final String localizationPointId){

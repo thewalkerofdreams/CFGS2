@@ -18,7 +18,7 @@ import com.example.adventuremaps.R;
 public class SectionsPagerAdapterTutorial extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.page_1, R.string.page_2, R.string.page_3, R.string.page_4, R.string.page_5};//Declaramos los titulos de las secciones
+    private static final int[] TAB_TITLES = new int[]{R.string.page_1, R.string.page_2, R.string.page_3, R.string.page_4, R.string.page_5};//Declaramos los títulos de las secciones
     private final Context mContext;
 
     public SectionsPagerAdapterTutorial(Context context, FragmentManager fm) {

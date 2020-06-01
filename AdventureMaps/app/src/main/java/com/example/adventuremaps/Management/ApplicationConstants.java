@@ -111,6 +111,9 @@ public class ApplicationConstants {
 
     public final static String FB_STORAGE_IMAGES = "Images";
 
+    //Firebase Keys
+    public final static int FB_MIN_PASSWORD_SIZE = 6;
+
     //MIUI
     public final static String MIUI_OP_AUTO_START = "miui.intent.action.OP_AUTO_START";
     public final static String MIUI_SECURITY_CENTER = "com.miui.securitycenter";
