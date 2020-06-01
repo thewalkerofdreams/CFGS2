@@ -126,6 +126,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
             }
         }else{
             latLng = viewModel.get_latLngToNavigate();
+            zoom = ApplicationConstants.NAVIGATION_ZOOM;
             viewModel.set_latLngToNavigate(null);//Indicamos que ya se ha desplazado hacia el punto de navegación
         }
 
@@ -467,6 +468,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
         map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
         viewModel.set_lastCameraPositionStartMap(map.getCameraPosition().target);//Almacenamos la posición actual de la cámara en el VM
+        adjustPaddingMap(map);//Volvemos a habilitar el padding para la brújula
 
         viewModel.set_lastCameraZoomStartMap(map.getCameraPosition().zoom);//Almacenamos el zoom actual de la cámara en el VM
     }
