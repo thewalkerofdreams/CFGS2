@@ -18,6 +18,7 @@ import com.example.adventuremaps.FireBaseEntities.ClsRoute;
 import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
@@ -103,7 +104,11 @@ public class CreateRouteActivity extends AppCompatActivity implements ActivityCo
                             if (routeName.isEmpty()) {//Si el nombre está vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                saveRoute(routeName);//Almacenamos la nueva ruta en la plataforma Firebase
+                                if(!UtilDispositive.isOnline(getApplication())){//Si el dispositivo no tiene conexión a Internet
+                                    Toast.makeText(getApplication(), getApplication().getString(R.string.error_connection_route), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    saveRoute(routeName);//Almacenamos la nueva ruta en la plataforma Firebase
+                                }
                             }
                         }
                     })

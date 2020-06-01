@@ -222,6 +222,8 @@
     <string name="performing_online_consultation">Realizando consulta en línea</string>
     <string name="performing_online_registration">Realizando registro en línea</string>
 
+    <string name="error_connection_route">¡Necesitas conexión para guardar una ruta!</string>
+
     <string name="key_potable_water">Potable Water</string>
     <string name="key_food">Food</string>
     <string name="key_rest_area">Rest Area</string>
