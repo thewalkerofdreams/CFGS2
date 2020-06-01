@@ -110,19 +110,26 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public void onMapReady(final GoogleMap map) {
         this.map = map;
         LatLng latLng;
+        double zoom = ApplicationConstants.DEFAULT_LEVEL_ZOOM;
 
         if(viewModel.get_latLngToNavigate() == null){//Si no se ha especificado una localización a la que navegar
-            if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si no podemos obtener la localización actual del usuario
-                latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
+            if(viewModel.get_lastCameraPositionStartMap() != null){//Si se almacenó una última posición en el mapa
+                latLng = new LatLng(viewModel.get_lastCameraPositionStartMap().latitude, viewModel.get_lastCameraPositionStartMap().longitude);
+                zoom = viewModel.get_lastCameraZoomStartMap();
+                viewModel.set_lastCameraPositionStartMap(null);//Eliminamos la última posición del VM
             }else{
-                latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+                if(viewModel.get_actualLocation() == null || (manager != null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER))){//Si no podemos obtener la localización actual del usuario
+                    latLng = new LatLng(ApplicationConstants.SEVILLE_LATITUDE, ApplicationConstants.SEVILLE_LONGITUDE);//Le daremos un valor por defecto
+                }else{
+                    latLng = new LatLng(viewModel.get_actualLocation().getLatitude(), viewModel.get_actualLocation().getLongitude());
+                }
             }
         }else{
             latLng = viewModel.get_latLngToNavigate();
             viewModel.set_latLngToNavigate(null);//Indicamos que ya se ha desplazado hacia el punto de navegación
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ApplicationConstants.DEFAULT_LEVEL_ZOOM));//Movemos la camara según los valores definidos
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, (float) zoom));//Movemos la camara según los valores definidos
         //Si la aplicación tiene los permisos necesarios de localización, añadimos el botón de centrar la cámara en la posición actual del usuario y señalamos a la persona en el mapa con un icono
         if(getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -457,6 +464,11 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
         super.onPause();
         mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
         localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+
+        map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
+        viewModel.set_lastCameraPositionStartMap(map.getCameraPosition().target);//Almacenamos la posición actual de la cámara en el VM
+
+        viewModel.set_lastCameraZoomStartMap(map.getCameraPosition().zoom);//Almacenamos el zoom actual de la cámara en el VM
     }
 
     /**

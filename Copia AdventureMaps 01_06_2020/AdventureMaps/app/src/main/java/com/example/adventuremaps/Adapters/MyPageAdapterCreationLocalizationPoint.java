@@ -59,7 +59,7 @@ public class MyPageAdapterCreationLocalizationPoint extends PagerAdapter
     private void loadImage(int position){
         itemImage = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_image_view_pager_simple, null);
         ImageView image = itemImage.findViewById(R.id.itemImage);
-        Picasso.with(context).load(images.get(position).get_uri()).fit().centerCrop().into(image);
+        Picasso.with(context).load(images.get(position).get_uri()).fit().noPlaceholder().into(image);
     }
 
     @Override

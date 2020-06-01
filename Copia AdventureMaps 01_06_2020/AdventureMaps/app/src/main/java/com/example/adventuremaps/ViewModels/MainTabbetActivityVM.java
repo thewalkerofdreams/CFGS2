@@ -57,8 +57,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private ArrayList<Symbol> _markersInserted;
     private com.mapbox.mapboxsdk.geometry.LatLng _longClickPositionMapbox;//Para crear un nuevo punto de localización
     private Symbol _symbolClicked;
-    private double _actualCameraZoom;
-    private com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPosition;
+    private double _actualCameraZoomOfflineMap;
+    private com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPositionOfflineMap;
 
     //Fragment Localizations
     private boolean _dialogDeleteLocalizationShowing;
@@ -88,6 +88,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
     private boolean[] _dialogPostisionsChecked;
     private ClsLocalizationPoint _selectedLocalizationPoint;
     private MyClusterItem _itemSelected;//Item seleccionado del cluster manager
+    private LatLng _lastCameraPositionStartMap;
+    private double _lastCameraZoomStartMap;
 
     public MainTabbetActivityVM(Application application){
         super(application);
@@ -102,8 +104,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         _markersInserted = new ArrayList<>();
         _longClickPositionMapbox = null;
         _symbolClicked = null;
-        _actualCameraZoom = 0;
-        _actualCameraPosition = null;
+        _actualCameraZoomOfflineMap = 0;
+        _actualCameraPositionOfflineMap = null;
 
         //Fragment Localizations
         _dialogDeleteLocalizationShowing = false;
@@ -136,6 +138,8 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         }
         _selectedLocalizationPoint = null;
         _itemSelected = null;
+        _lastCameraPositionStartMap = null;
+        _lastCameraZoomStartMap = 0;
     }
 
     //Get y Set
@@ -196,20 +200,20 @@ public class MainTabbetActivityVM extends AndroidViewModel {
         this._symbolClicked = _symbolClicked;
     }
 
-    public double get_actualCameraZoom() {
-        return _actualCameraZoom;
+    public double get_actualCameraZoomOfflineMap() {
+        return _actualCameraZoomOfflineMap;
     }
 
-    public void set_actualCameraZoom(double _actualCameraZoom) {
-        this._actualCameraZoom = _actualCameraZoom;
+    public void set_actualCameraZoomOfflineMap(double _actualCameraZoomOfflineMap) {
+        this._actualCameraZoomOfflineMap = _actualCameraZoomOfflineMap;
     }
 
-    public com.mapbox.mapboxsdk.geometry.LatLng get_actualCameraPosition() {
-        return _actualCameraPosition;
+    public com.mapbox.mapboxsdk.geometry.LatLng get_actualCameraPositionOfflineMap() {
+        return _actualCameraPositionOfflineMap;
     }
 
-    public void set_actualCameraPosition(com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPosition) {
-        this._actualCameraPosition = _actualCameraPosition;
+    public void set_actualCameraPositionOfflineMap(com.mapbox.mapboxsdk.geometry.LatLng _actualCameraPositionOfflineMap) {
+        this._actualCameraPositionOfflineMap = _actualCameraPositionOfflineMap;
     }
 
     //Gets y Sets Fragment Localizations
@@ -397,6 +401,22 @@ public class MainTabbetActivityVM extends AndroidViewModel {
 
     public void set_itemSelected(MyClusterItem _itemSelected) {
         this._itemSelected = _itemSelected;
+    }
+
+    public LatLng get_lastCameraPositionStartMap() {
+        return _lastCameraPositionStartMap;
+    }
+
+    public void set_lastCameraPositionStartMap(LatLng _lastCameraPositionStartMap) {
+        this._lastCameraPositionStartMap = _lastCameraPositionStartMap;
+    }
+
+    public double get_lastCameraZoomStartMap() {
+        return _lastCameraZoomStartMap;
+    }
+
+    public void set_lastCameraZoomStartMap(double _lastCameraZoomStartMap) {
+        this._lastCameraZoomStartMap = _lastCameraZoomStartMap;
     }
 
     //Functions Fragment Offline Maps Part
