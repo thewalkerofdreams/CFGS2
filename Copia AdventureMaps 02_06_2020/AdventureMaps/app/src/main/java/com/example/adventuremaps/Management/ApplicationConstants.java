@@ -23,6 +23,7 @@ public class ApplicationConstants {
 
     //Maps Settings
     public final static int DEFAULT_LEVEL_ZOOM = 13;
+    public final static int NAVIGATION_ZOOM = 20;
     public final static double MIN_ZOOM_LEVEL_OFFLINE_MAP = 2;
 
     public final static String DEFAULT_MARKER_ICON_OFFLINE_MAPS = "DEFAULT_ICON";
@@ -110,6 +111,9 @@ public class ApplicationConstants {
     public final static String FB_LOCALIZATION_TYPES_CHILD = "types";
 
     public final static String FB_STORAGE_IMAGES = "Images";
+
+    //Firebase Keys
+    public final static int FB_MIN_PASSWORD_SIZE = 6;
 
     //MIUI
     public final static String MIUI_OP_AUTO_START = "miui.intent.action.OP_AUTO_START";

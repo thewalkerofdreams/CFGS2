@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.adventuremaps.Management.ApplicationConstants;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.ChangePasswordActivityVM;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,19 +65,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
         viewModel.set_newPassword02(textNewPassword02.getText().toString().trim());
 
         if(!viewModel.get_email().isEmpty() && !viewModel.get_oldPassword().isEmpty() && !viewModel.get_newPassword01().isEmpty() && !viewModel.get_newPassword02().isEmpty()){//Si se rellenaron todos los campos
-            // Get auth credentials from the user for re-authentication. The example below shows
-            // email and password credentials but there are multiple possible providers,
-            // such as GoogleAuthProvider or FacebookAuthProvider.
+            //Get auth credentials from the user for re-authentication.
             AuthCredential credential = EmailAuthProvider.getCredential(viewModel.get_email(), viewModel.get_oldPassword());//Comprobamos si el usuario y la antigua contraseña son correctos
 
-            // Prompt the user to re-provide their sign-in credentials
+            //Prompt the user to re-provide their sign-in credentials
             user.reauthenticate(credential)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {//Si el email y la vieja contraseña son correctos
                                 if(viewModel.get_newPassword01().equals(viewModel.get_newPassword02())){//Si la repetición de la nueva contraseña es correcta
-                                    if(viewModel.get_newPassword01().length() >= 6){//Si supera el número mínimo de carácteres obligatorios
+                                    if(viewModel.get_newPassword01().length() >= ApplicationConstants.FB_MIN_PASSWORD_SIZE){//Si supera el número mínimo de carácteres obligatorios
                                         user.updatePassword(viewModel.get_newPassword01()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {//Se realiza el cambio de contraseña

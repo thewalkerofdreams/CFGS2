@@ -129,7 +129,7 @@
     <string name="error_selected_localizations_empty">¡No has seleccionado ninguna localización!</string>
     <string name="error_selected_localizations_overflowed">¡Solo puedes compartir una localización a la vez!</string>
     <string name="confirm_share">Confirma que compartirás la localización</string>
-    <string name="question_share_localization_point">¿Realmente quieres compartir la localización? ¡No podrás dejar de compartila después!</string>
+    <string name="question_share_localization_point">¿Realmente quieres compartir la localización? ¡No podrás dejar de compartirla después!</string>
     <string name="localization_point_shared">¡Localización compartida!</string>
     <string name="error_selected_localizations_already_shared">La localización ya se encuentra compartida</string>
     <string name="error_selected_localizations_no_owner">¡No puedes seleccionar una localización que no te pertenece!</string>
@@ -221,6 +221,8 @@
     <string name="wait_a_moment">Espera un momento, por favor...</string>
     <string name="performing_online_consultation">Realizando consulta en línea</string>
     <string name="performing_online_registration">Realizando registro en línea</string>
+
+    <string name="error_connection_route">¡Necesitas conexión para guardar una ruta!</string>
 
     <string name="key_potable_water">Potable Water</string>
     <string name="key_food">Food</string>

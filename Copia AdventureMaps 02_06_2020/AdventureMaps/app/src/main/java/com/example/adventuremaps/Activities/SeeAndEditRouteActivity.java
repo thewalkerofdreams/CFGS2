@@ -17,6 +17,7 @@ import com.example.adventuremaps.FireBaseEntities.ClsRoutePoint;
 import com.example.adventuremaps.FireBaseEntities.ClsUser;
 import com.example.adventuremaps.Fragments.GoogleMapsFragment;
 import com.example.adventuremaps.Management.ApplicationConstants;
+import com.example.adventuremaps.Management.UtilDispositive;
 import com.example.adventuremaps.R;
 import com.example.adventuremaps.ViewModels.RouteActivitiesVM;
 import com.google.android.gms.maps.model.LatLng;
@@ -112,17 +113,21 @@ public class SeeAndEditRouteActivity extends AppCompatActivity {
                             if (routeName.isEmpty()) {//Si el nombre de la ruta se encuentra vacío
                                 Toast.makeText(getApplication(), getApplication().getString(R.string.route_name_empty), Toast.LENGTH_SHORT).show();
                             } else {
-                                //Cambiamos el nombre de la ruta si ha cambiado
-                                if(!viewModel.get_actualRouteName().equals(nameEdit.getText().toString())){
-                                    Map<String, Object> hopperUpdates = new HashMap<>();
-                                    hopperUpdates.put(ApplicationConstants.FB_ROUTE_NAME_CHILD, nameEdit.getText().toString());
-                                    userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute()).updateChildren(hopperUpdates);
-                                }
+                                if(!UtilDispositive.isOnline(getApplication())){
+                                    Toast.makeText(getApplication(), getApplication().getString(R.string.error_connection_route), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    //Cambiamos el nombre de la ruta si ha cambiado
+                                    if(!viewModel.get_actualRouteName().equals(nameEdit.getText().toString())){
+                                        Map<String, Object> hopperUpdates = new HashMap<>();
+                                        hopperUpdates.put(ApplicationConstants.FB_ROUTE_NAME_CHILD, nameEdit.getText().toString());
+                                        userReference.child(firebaseCurrentUser.getUid()).child(ApplicationConstants.FB_ROUTES_ADDRESS).child(viewModel.get_actualIdRoute()).updateChildren(hopperUpdates);
+                                    }
 
-                                //Eliminamos los anteriores puntos de la ruta
-                                deleteOldRoutePoints();
-                                //Almacenamos los puntos actuales de la ruta
-                                saveActualRoutePoints();
+                                    //Eliminamos los anteriores puntos de la ruta
+                                    deleteOldRoutePoints();
+                                    //Almacenamos los puntos actuales de la ruta
+                                    saveActualRoutePoints();
+                                }
                             }
                         }
                     })

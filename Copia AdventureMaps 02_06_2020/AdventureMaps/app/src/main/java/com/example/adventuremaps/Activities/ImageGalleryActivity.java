@@ -2,17 +2,12 @@ package com.example.adventuremaps.Activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -52,6 +47,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     private ImageGalleryActivityVM viewModel;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     private DatabaseReference localizationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
+    private ValueEventListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -389,7 +385,7 @@ public class ImageGalleryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Read from the database
-        localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
+        listener = localizationReference.orderByChild(ApplicationConstants.FB_LOCALIZATION_POINT_ID).equalTo(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 viewModel.get_imagesToLoad().clear();
@@ -412,6 +408,12 @@ public class ImageGalleryActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        localizationReference.removeEventListener(listener);//Eliminamos el listener asociado a la referencia
     }
 
     //Metodos para el progressDialog

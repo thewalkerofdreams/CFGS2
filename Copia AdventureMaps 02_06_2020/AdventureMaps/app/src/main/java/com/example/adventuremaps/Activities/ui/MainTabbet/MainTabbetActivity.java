@@ -233,7 +233,7 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
      * Interfaz
      * Nombre: onClickRouteFav
      * Comentario: Este método nos permite modificar el estado de favorito de una ruta del usuario actual.
-     * En el caso de que no haya ningún ítem selecciondo en la lista de rutas, en caso contrario el método
+     * En el caso de que no haya ningún ítem seleccionado en la lista de rutas, en caso contrario el método
      * muestra un mensaje de error por pantalla.
      * Cabecera: public void onClickRouteFav(View v)
      * @param v
@@ -279,22 +279,6 @@ public class MainTabbetActivity extends AppCompatActivity implements FragmentSta
     }
 
     //Methods Fragment Star
-    /*/**
-     * Interfaz
-     * Nombre: removeYourFragment
-     * Comentario: Este método nos permite eliminar el fragmento FragmentStartLocalizationPointClick de la actividad actual.
-     * Cabecera: public void removeYourFragment()
-     * Postcondiciones: El método elimina el fragmento FragmentStartLocalizationPointClick de la actividad actual.
-     * */
-    /*public void removeYourFragment(){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (fragment != null) {
-            transaction.remove(fragment);
-            transaction.commit();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-            fragment = null;
-        }
-    }*()
 
     /**
      * Interfaz
