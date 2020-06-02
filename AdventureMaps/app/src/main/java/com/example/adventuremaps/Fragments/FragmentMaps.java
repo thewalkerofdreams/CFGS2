@@ -70,8 +70,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import timber.log.Timber;
-
 public class FragmentMaps extends Fragment {
 
     //ViewModel
@@ -568,7 +566,6 @@ public class FragmentMaps extends Fragment {
 
                         @Override
                         public void onError(String error) {
-                            Timber.e( "Error: %s" , error);
                         }
                     });
                 }
@@ -605,8 +602,6 @@ public class FragmentMaps extends Fragment {
 
             @Override
             public void onError(OfflineRegionError error) {
-                Timber.e("onError reason: %s", error.getReason());
-                Timber.e("onError message: %s", error.getMessage());
             }
 
             @Override
@@ -620,7 +615,6 @@ public class FragmentMaps extends Fragment {
 
                     @Override
                     public void onError(String error) {
-                        Timber.e( "Error: %s", error);
                     }
                 });
             }
@@ -694,7 +688,6 @@ public class FragmentMaps extends Fragment {
 
             @Override
             public void onError(String error) {
-                Timber.e( "Error: %s", error);
             }
         });
     }
@@ -733,7 +726,6 @@ public class FragmentMaps extends Fragment {
                             public void onError(String error) {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 progressBar.setIndeterminate(false);
-                                Timber.e( "Error: %s", error);
                             }
                         });
                     }
