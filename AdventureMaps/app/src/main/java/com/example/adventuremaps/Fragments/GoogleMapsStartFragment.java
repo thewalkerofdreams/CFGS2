@@ -55,6 +55,9 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     //ClusterItem
     private ClusterManager<MyClusterItem> mClusterManager;
     private MyClusterRenderer myClusterRenderer;//Nos permite modificar características especiales de los items del cluster
+    //Bitmaps
+    private BitmapDrawable bitmapDrawable;
+    private Bitmap favIcon, ownIcon, noOwnIcon;
     //For GPS
     private LocationManager manager = null;
     //Manejador de hilos
@@ -64,7 +67,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        if(getActivity() != null){//Si la actividad no es nula
+        if(getActivity() != null && getContext() != null){//Si ni la actividad ni el contexto es nulo
             //Instanciamos el VM
             viewModel = ViewModelProviders.of(getActivity()).get(MainTabbetActivityVM.class);
 
@@ -73,6 +76,16 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
 
             //Instanciamos la variable LocationManager
             manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            //Instanciamos los objetos Bitmap que contendrán los iconos de las localizaciones
+            bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.marker_fav);
+            favIcon = bitmapDrawable.getBitmap();
+
+            bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.own_location);
+            ownIcon = bitmapDrawable.getBitmap();
+
+            bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.simple_marker);
+            noOwnIcon = bitmapDrawable.getBitmap();
         }
 
         return view;
@@ -360,22 +373,17 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      */
     private void restoreIconMarker(Marker marker){
         if(marker != null && marker.getTag() != null && getContext() != null){
-            BitmapDrawable bitmapDrawable = null;
             switch (marker.getTag().toString()){
                 case "Fav":
-                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.marker_fav);//Le colocamos el icono al marcador
-                    //setIconToMarker(marker, String.valueOf(R.drawable.marker_fav));//Le colocamos el icono al marcador
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(favIcon)));//Le colocamos el icono al marcador
                     break;
                 case "Owner":
-                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.own_location);//Le colocamos el icono al marcador
-                    //setIconToMarker(marker, String.valueOf(R.drawable.own_location));//Le colocamos el icono al marcador
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(ownIcon)));//Le colocamos el icono al marcador
                     break;
                 case "NoOwner":
-                    bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.simple_marker);//Le colocamos el icono al marcador
-                    //setIconToMarker(marker, String.valueOf(R.drawable.simple_marker));//Le colocamos el icono al marcador
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(noOwnIcon)));//Le colocamos el icono al marcador
                     break;
             }
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
         }
     }
 
@@ -527,7 +535,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
      */
     private void setIconToMarker(final Marker marker, final String addressIcon){
         if(getContext() != null){
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));//Le colocamos el icono al marcador
+            bitmapDrawable = (BitmapDrawable) getContext().getResources().getDrawable(Integer.valueOf(addressIcon));//Le colocamos el icono al marcador
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(bitmapDrawable.getBitmap())));
         }
     }
