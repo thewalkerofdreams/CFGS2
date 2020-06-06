@@ -99,7 +99,7 @@ public class FragmentMaps extends Fragment {
     private MapboxMap.OnMapLongClickListener listenerOnMapLongClick = null;
     private OnSymbolClickListener listenerMarkerClick = null;
     //Manejador de hilos
-    private Handler mainHandler;
+    private Handler mainHandler, dataHandler;
 
     private OnFragmentInteractionListener mListener;
 
@@ -868,7 +868,18 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        storeFavoutireLocalizationsId();//Comenzamos a obtener los datos de la plataforma FireBase
+
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            dataHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    storeFavoutireLocalizationsId();//Comenzamos a obtener los datos de la plataforma FireBase
+                }
+            };
+            dataHandler.post(myRunnable);
+        }
 
         if(mapView != null)
             mapView.onStart();
@@ -877,13 +888,17 @@ public class FragmentMaps extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+        if(getActivity() !=null && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             storeActualPositionAndZoom();//Almacenamos la última posición de la cámara sobre el mapa
         }
         HttpRequestUtil.setLogEnabled(false);//Nos permite deshabilitar los logs cuando la actividad se pause
         clearAmbientCache();//Limpiamos la caché del mapa
-        mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
+        if(mainHandler != null)
+            mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
+
+        if(dataHandler != null)
+            dataHandler.removeCallbacksAndMessages(null);
 
         if(mapView != null)
             mapView.onPause();

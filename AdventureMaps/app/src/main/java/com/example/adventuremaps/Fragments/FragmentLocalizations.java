@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,8 @@ public class FragmentLocalizations extends Fragment {
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
     private ValueEventListener listener, localizationsListener;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     public FragmentLocalizations() {
         // Required empty public constructor
@@ -221,13 +224,17 @@ public class FragmentLocalizations extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        storeIdLocalizationPointsFavourites();//Cargamos las id's de las localizaaciones favoritas del usuario actual
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        drUser.removeEventListener(listener);//Eliminamos el evento unido a la referencia de los usuarios
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    storeIdLocalizationPointsFavourites();//Cargamos las id's de las localizaaciones favoritas del usuario actual
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
     }
 
     /**
@@ -299,8 +306,14 @@ public class FragmentLocalizations extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        drUser.removeEventListener(listener);
-        drLocalization.removeEventListener(localizationsListener);
+        if(listener != null)
+            drUser.removeEventListener(listener);
+
+        if(localizationsListener != null)
+            drLocalization.removeEventListener(localizationsListener);
+
+        if(mainHandler != null)
+            mainHandler.removeCallbacksAndMessages(null);
     }
 
     /**

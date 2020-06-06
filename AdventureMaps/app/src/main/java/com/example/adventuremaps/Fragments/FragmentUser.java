@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ public class FragmentUser extends Fragment {
     private DatabaseReference localiationReference = FirebaseDatabase.getInstance().getReference(ApplicationConstants.FB_LOCALIZATIONS_ADDRESS);
     private MainTabbetActivityVM viewModel;
     private TextView txtEmail, txtNickName, numberOfRoutes, numberOfLocalizations;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     public FragmentUser() {
         // Required empty public constructor
@@ -64,7 +67,37 @@ public class FragmentUser extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Read from the database
+
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    getCurrentUserInfo();//Obtenemos información del usuario actual y la colocamos en la actividad actual
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mainHandler != null)
+            mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
+    }
+
+    /**
+     * Interfaz
+     * Nombre: getCurrentUserInfo
+     * Comentario: El método nos permite obtener información del usuario actual (email, nickname y número
+     * de rutas y localizaciones creadas) a través de la plataforma Firebase, colocando esta información
+     * en TextViews de la actividad actual.
+     * Cabecera: private void getCurrentUserInfo()
+     * Postcondiciones: El método obtiene y coloca información del usuario en TextViews de la actividad actual.
+     */
+    private void getCurrentUserInfo(){
         myDataBaseReference.orderByChild(ApplicationConstants.FB_USER_EMAIL_CHILD).equalTo(viewModel.get_actualEmailUser()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

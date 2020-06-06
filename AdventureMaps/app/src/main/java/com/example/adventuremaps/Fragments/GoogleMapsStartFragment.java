@@ -61,7 +61,7 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     //For GPS
     private LocationManager manager = null;
     //Manejador de hilos
-    private Handler mainHandler;
+    private Handler mainHandler, dataHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -390,13 +390,18 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onStart() {
         super.onStart();
-        storeLocalizationPointsToShow();//Almacenamos los puntos de localización a mostrar
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            dataHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    storeLocalizationPointsToShow();//Almacenamos los puntos de localización a mostrar
+                }
+            };
+            dataHandler.post(myRunnable);
+        }
     }
 
     /**
@@ -471,8 +476,14 @@ public class GoogleMapsStartFragment extends SupportMapFragment implements OnMap
     @Override
     public void onPause() {
         super.onPause();
-        mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
-        localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
+        if(mainHandler != null)
+            mainHandler.removeCallbacksAndMessages(null);//Removemos los mensajes y callbacks del controlador
+
+        if(dataHandler != null)
+            dataHandler.removeCallbacksAndMessages(null);
+
+        if(listener != null)
+            localizationReference.removeEventListener(listener);//Eliminamos el evento unido a la referencia de las localizaciones
 
         map.setPadding(0, 0, 0,0);//Deshabilitamos un momento el padding para centrar la cámara
         viewModel.set_lastCameraPositionStartMap(map.getCameraPosition().target);//Almacenamos la posición actual de la cámara en el VM

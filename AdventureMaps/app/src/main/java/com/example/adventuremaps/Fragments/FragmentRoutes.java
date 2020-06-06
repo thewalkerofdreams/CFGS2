@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,8 @@ public class FragmentRoutes extends Fragment {
     private SharedPreferences sharedpreferencesField;
     private SharedPreferences sharedPreferencesFav;
     private ValueEventListener listener;
+    //Manejador de hilos
+    private Handler mainHandler;
 
     public FragmentRoutes() {
         // Required empty public constructor
@@ -184,13 +187,27 @@ public class FragmentRoutes extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        storeAndLoadRoutesFromActualUser();//Obtenemos las rutas del usuario actual y cargamos la lista con ellas
+        if(getContext() != null){
+            //Instanciamos un manejador para el hilo secundario, esta parte del código se ejecutará una vez el código main haya finalizado
+            mainHandler = new Handler(getContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    storeAndLoadRoutesFromActualUser();//Obtenemos las rutas del usuario actual y cargamos la lista con ellas
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        myDataBaseReference.removeEventListener(listener);
+    public void onPause() {
+        super.onPause();
+        if(listener != null)
+            myDataBaseReference.removeEventListener(listener);
+
+        if(mainHandler != null)
+            mainHandler.removeCallbacksAndMessages(null);
     }
 
     /**
