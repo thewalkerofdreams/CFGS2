@@ -254,7 +254,8 @@ public class ImageGalleryViewPagerActivity extends AppCompatActivity {
      * ya han valorado más de 10 usuarios la imagen, el método la eliminará de la plataforma FireBase.
      */
     public void tryToDeleteImageFromFireBase(){
-        if(viewModel.get_numberOfValorations() > 2 && (double) viewModel.get_generalRatingOfActualImage() < 2){//Si se cumple las restricciones de eliminación
+        if(viewModel.get_numberOfValorations() > ApplicationConstants.MIN_NUMBER_VALORATIONS_TO_TRY_DELETE_IMAGE &&
+                (double) viewModel.get_generalRatingOfActualImage() < ApplicationConstants.AVERAGE_VALORATION_TO_DELETE_IMAGE){//Si se cumplen las restricciones de eliminación
             //Eliminamos el enlace de la imagen almacenada en la localización
             localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_EMAIL_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_userEmailCreator()).
                     child(ApplicationConstants.FB_LOCALIZATION_IMAGES).child(viewModel.get_imagesToLoad().get(viewModel.get_positionSelectedImage()).get_imageId()).removeValue();
