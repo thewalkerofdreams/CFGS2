@@ -132,6 +132,6 @@ public class ApplicationConstants {
     public final static String TAG_LOCATION_NO_OWNER_TYPE = "NoOwner";
 
     //Image Gallery
-    public final static int MIN_NUMBER_VALORATIONS_TO_TRY_DELETE_IMAGE = 2;
+    public final static int MIN_NUMBER_VALORATIONS_TO_TRY_DELETE_IMAGE = 10;
     public final static int AVERAGE_VALORATION_TO_DELETE_IMAGE = 2;
 }

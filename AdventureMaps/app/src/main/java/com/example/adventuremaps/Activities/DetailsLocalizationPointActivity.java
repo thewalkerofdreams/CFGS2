@@ -428,7 +428,7 @@ public class DetailsLocalizationPointActivity extends AppCompatActivity {
                     }
                 }
 
-                if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas //TODO Falta tener en cuenta el numero de votos pero lo dejo para las pruebas
+                if(badValorationCounter > (80 * (goodValorationCounter + badValorationCounter) / 100)){//Si se ha superado el 80 por ciento de valoraciones negativas
                     localizationReference.child(viewModel.get_actualLocalizationPoint().getLocalizationPointId()).child(ApplicationConstants.FB_LOCATION_SHARED_CHILD).setValue(false);//Dejamos de compartir el punto de localización actual
                     desmarcarLocalizacionDeFavoritos();
 
